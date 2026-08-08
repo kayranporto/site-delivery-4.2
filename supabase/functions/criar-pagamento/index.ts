@@ -1,14 +1,28 @@
 import { createClient } from "supabase";
 import { corsHeaders, json } from "../_shared/cors.ts";
 
-function checkoutUrlValida(value: unknown) {
+type MercadoPagoMode = "sandbox" | "production";
+
+function mercadoPagoMode(): MercadoPagoMode {
+  const raw = String(Deno.env.get("MERCADO_PAGO_ENVIRONMENT") || "sandbox").trim().toLowerCase();
+  return raw === "production" ? "production" : "sandbox";
+}
+
+function checkoutUrlValida(value: unknown, mode: MercadoPagoMode) {
   try {
     const url = new URL(String(value || ""));
-    return url.protocol === "https:"
-      && (url.hostname.endsWith("mercadopago.com") || url.hostname.endsWith("mercadopago.com.br"));
+    const hostMercadoPago = url.hostname.endsWith("mercadopago.com") || url.hostname.endsWith("mercadopago.com.br");
+    if (url.protocol !== "https:" || !hostMercadoPago) return false;
+    const isSandbox = url.hostname.startsWith("sandbox.");
+    return mode === "sandbox" ? isSandbox : !isSandbox;
   } catch {
     return false;
   }
+}
+
+function credencialCompativel(accessToken: string, mode: MercadoPagoMode) {
+  const isTest = accessToken.startsWith("TEST-");
+  return mode === "sandbox" ? isTest : !isTest;
 }
 
 Deno.serve(async (request) => {
@@ -24,9 +38,18 @@ Deno.serve(async (request) => {
     const accessToken = Deno.env.get("MERCADO_PAGO_ACCESS_TOKEN") ?? "";
     const siteUrl = (Deno.env.get("SITE_URL") ?? "").replace(/\/$/, "");
     const authorization = request.headers.get("Authorization") ?? "";
+    const mode = mercadoPagoMode();
 
     if (!supabaseUrl || !publishableKey || !serviceKey || !accessToken || !siteUrl) {
       return json(request, { error: "Pagamento online ainda não foi configurado pelo administrador." }, 503);
+    }
+    if (!credencialCompativel(accessToken, mode)) {
+      console.error("Credencial do Mercado Pago incompatível com o ambiente configurado", { mode });
+      return json(request, {
+        error: mode === "sandbox"
+          ? "O checkout está em sandbox e exige uma credencial TEST do Mercado Pago."
+          : "O checkout está em produção e não aceita credencial TEST do Mercado Pago."
+      }, 503);
     }
 
     const userClient = createClient(supabaseUrl, publishableKey, {
@@ -55,10 +78,14 @@ Deno.serve(async (request) => {
     if (pedido.status === "cancelado") return json(request, { error: "Pedido cancelado não pode ser pago." }, 409);
     if (pedido.pagamento_status === "pago") return json(request, { error: "Este pedido já está pago." }, 409);
 
-    if (pedido.pagamento_preferencia_id && checkoutUrlValida(pedido.pagamento_url)) {
+    if (pedido.pagamento_preferencia_id) {
+      if (!checkoutUrlValida(pedido.pagamento_url, mode)) {
+        return json(request, { error: "A preferência existente pertence a outro ambiente de pagamento e precisa ser revisada." }, 409);
+      }
       return json(request, {
         checkout_url: pedido.pagamento_url,
         preference_id: pedido.pagamento_preferencia_id,
+        ambiente: mode,
         reutilizada: true,
       });
     }
@@ -70,11 +97,11 @@ Deno.serve(async (request) => {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
-        "X-Idempotency-Key": `pref-${pedido.id}`,
+        "X-Idempotency-Key": `pref-${mode}-${pedido.id}`,
       },
       body: JSON.stringify({
         external_reference: pedido.id,
-        metadata: { pedido_id: pedido.id, usuario_id: user.id, integracao: "multi_delivery_4" },
+        metadata: { pedido_id: pedido.id, usuario_id: user.id, integracao: "multi_delivery_4_2_4", ambiente: mode },
         items: [{
           id: pedido.id,
           title: `Pedido #${pedido.numero} — ${pedido.empresa_nome}`.slice(0, 120),
@@ -99,14 +126,15 @@ Deno.serve(async (request) => {
       console.error("Falha Mercado Pago", {
         status: preferenceResponse.status,
         code: preference?.error || preference?.message,
+        mode,
       });
       return json(request, { error: "Não foi possível iniciar o pagamento." }, 502);
     }
 
-    const checkoutUrl = preference.init_point || preference.sandbox_init_point;
-    if (!checkoutUrlValida(checkoutUrl)) {
-      console.error("URL de checkout inesperada", checkoutUrl);
-      return json(request, { error: "O provedor retornou uma URL de pagamento inválida." }, 502);
+    const checkoutUrl = mode === "sandbox" ? preference.sandbox_init_point : preference.init_point;
+    if (!checkoutUrlValida(checkoutUrl, mode)) {
+      console.error("URL de checkout incompatível com o ambiente", { mode, checkoutUrl });
+      return json(request, { error: "O provedor não retornou uma URL compatível com o ambiente de pagamento." }, 502);
     }
 
     const { data: registro, error: registroError } = await adminClient.rpc("registrar_preferencia_pagamento", {
@@ -120,6 +148,7 @@ Deno.serve(async (request) => {
     return json(request, {
       checkout_url: checkoutUrl,
       preference_id: preference.id,
+      ambiente: mode,
       registro,
       reutilizada: false,
     });
