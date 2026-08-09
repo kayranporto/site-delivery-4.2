@@ -1,7 +1,8 @@
 "use strict";
 
-const CACHE = "multi-delivery-v4.2.0";
-const DYNAMIC_CACHE = "multi-delivery-dynamic-v4.2.0";
+const VERSION = "4.2.6";
+const CACHE = `multi-delivery-v${VERSION}`;
+const DYNAMIC_CACHE = `multi-delivery-dynamic-v${VERSION}`;
 const SHELL = [
   "./",
   "./index.html",
@@ -11,29 +12,48 @@ const SHELL = [
   "./assets/favicon.svg",
   "./assets/produto-padrao.svg",
   "./assets/logo-restaurante.svg",
+  "./assets/banner-padrao.svg",
   "./assets/banner1.svg",
   "./css/style.css?v=4.2.0",
   "./css/home-4.2.1.css?v=4.2.1",
   "./css/paginas.css?v=4.2.0",
   "./css/accessibility.css?v=4.2.0",
-  "./css/enhancements.css?v=4.2.0",
+  "./css/enhancements.css?v=4.2.6",
   "./css/suporte.css?v=4.2.0",
+  "./css/restaurante-4.2.2.css",
+  "./css/carrinho-4.2.5.css?v=4.2.5",
+  "./css/checkout-4.2.3.css?v=4.2.3",
   "./js/app-utils.js?v=4.2.0",
   "./js/config.js?v=4.2.0",
   "./js/monitoring.js?v=4.2.0",
   "./js/notifications.js?v=4.2.0",
   "./js/favorites-sync.js?v=4.2.0",
   "./js/home.js?v=4.2.0",
+  "./js/cart-store.js?v=4.2.0",
+  "./js/carrinho-4.2.5.js?v=4.2.5",
+  "./js/checkout-4.2.3.js?v=4.2.3",
   "./js/suporte.js?v=4.2.0",
-  "./js/site-enhancements.js?v=4.2.0"
+  "./js/site-enhancements.js?v=4.2.6"
 ];
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(SHELL)).then(() => self.skipWaiting()));
+  event.waitUntil(
+    caches.open(CACHE)
+      .then((cache) => cache.addAll(SHELL))
+      .then(() => self.skipWaiting())
+  );
 });
 
 self.addEventListener("activate", (event) => {
-  event.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((key) => key !== CACHE && key !== DYNAMIC_CACHE).map((key) => caches.delete(key)))).then(() => self.clients.claim()));
+  event.waitUntil(
+    caches.keys()
+      .then((keys) => Promise.all(
+        keys
+          .filter((key) => key.startsWith("multi-delivery-") && key !== CACHE && key !== DYNAMIC_CACHE)
+          .map((key) => caches.delete(key))
+      ))
+      .then(() => self.clients.claim())
+  );
 });
 
 async function redePrimeiro(request, cacheName, fallback) {
@@ -67,7 +87,7 @@ self.addEventListener("fetch", (event) => {
     return;
   }
   const destination = event.request.destination;
-  if (destination === "style" || destination === "script") {
+  if (destination === "style" || destination === "script" || destination === "manifest") {
     event.respondWith(redePrimeiro(event.request, DYNAMIC_CACHE));
     return;
   }
@@ -76,10 +96,19 @@ self.addEventListener("fetch", (event) => {
   }
 });
 
+self.addEventListener("message", (event) => {
+  if (event.data?.type === "SKIP_WAITING") self.skipWaiting();
+});
+
 self.addEventListener("push", (event) => {
   let payload = { title: "Multi Delivery", body: "Você tem uma nova atualização.", url: "./perfil.html" };
   try { payload = { ...payload, ...event.data.json() }; } catch { /* Usa mensagem padrão. */ }
-  event.waitUntil(self.registration.showNotification(payload.title, { body: payload.body, icon: "./assets/favicon.svg", badge: "./assets/favicon.svg", data: { url: payload.url } }));
+  event.waitUntil(self.registration.showNotification(payload.title, {
+    body: payload.body,
+    icon: "./assets/favicon.svg",
+    badge: "./assets/favicon.svg",
+    data: { url: payload.url }
+  }));
 });
 
 self.addEventListener("notificationclick", (event) => {
