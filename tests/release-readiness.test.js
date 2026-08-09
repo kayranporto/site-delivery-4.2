@@ -107,8 +107,8 @@ test("versão de assets e caches é consistente", () => {
         .filter((name) => name.endsWith(".html")).map(read)];
     const joined = sources.join("\n");
     assert.doesNotMatch(joined, /\?v=(?:2\.|3\.)/);
-    assert.match(read("sw.js"), /multi-delivery-v4\.2\.0/);
-    assert.match(read("js/site-enhancements.js"), /sw\.js\?v=4\.2\.0/);
+    assert.match(read("sw.js"), /const VERSION = "4\.2\.6"/);
+    assert.match(read("js/site-enhancements.js"), /sw\.js\?v=4\.2\.6/);
 });
 
 test("ajustes básicos de acessibilidade estão presentes", () => {
