@@ -1,20 +1,23 @@
 {
+  "id": "./",
   "name": "Multi Delivery",
-  "short_name": "Delivery",
-  "description": "Peça em restaurantes próximos e acompanhe seus pedidos.",
+  "short_name": "Multi Delivery",
+  "description": "Peça em restaurantes próximos, personalize seu pedido e acompanhe a entrega.",
   "lang": "pt-BR",
-  "start_url": "./index.html",
+  "start_url": "./index.html?source=pwa",
   "scope": "./",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "orientation": "any",
   "background_color": "#f7f7f8",
   "theme_color": "#ea1d2c",
+  "categories": ["food", "shopping", "lifestyle"],
   "icons": [
     {"src": "assets/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable"}
   ],
   "shortcuts": [
-    {"name": "Meus pedidos", "url": "./meus-pedidos.html", "icons": [{"src":"assets/favicon.svg","sizes":"any","type":"image/svg+xml"}]},
-    {"name": "Restaurantes", "url": "./index.html#restaurantes", "icons": [{"src":"assets/favicon.svg","sizes":"any","type":"image/svg+xml"}]},
-    {"name": "Painel do entregador", "url": "./entregador.html", "icons": [{"src":"assets/favicon.svg","sizes":"any","type":"image/svg+xml"}]}
-    ,{"name": "Central de ajuda", "url": "./suporte.html", "icons": [{"src":"assets/favicon.svg","sizes":"any","type":"image/svg+xml"}]}
+    {"name": "Meus pedidos", "short_name": "Pedidos", "url": "./meus-pedidos.html", "icons": [{"src":"assets/favicon.svg","sizes":"any","type":"image/svg+xml"}]},
+    {"name": "Restaurantes", "short_name": "Restaurantes", "url": "./index.html#restaurantes", "icons": [{"src":"assets/favicon.svg","sizes":"any","type":"image/svg+xml"}]},
+    {"name": "Central de ajuda", "short_name": "Ajuda", "url": "./suporte.html", "icons": [{"src":"assets/favicon.svg","sizes":"any","type":"image/svg+xml"}]}
   ]
 }
