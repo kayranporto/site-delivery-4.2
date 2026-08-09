@@ -74,6 +74,6 @@ test("estoque mantém trilha de auditoria protegida", () => {
 test("release 4.2 está versionado de forma consistente", () => {
     assert.equal(JSON.parse(read("package.json")).version, "4.2.0");
     assert.equal(JSON.parse(read("package-lock.json")).version, "4.2.0");
-    assert.match(read("sw.js"), /multi-delivery-v4\.2\.0/);
-    assert.match(read("js/site-enhancements.js"), /sw\.js\?v=4\.2\.0/);
+    assert.match(read("sw.js"), /const VERSION = "4\.2\.6"/);
+    assert.match(read("js/site-enhancements.js"), /sw\.js\?v=4\.2\.6/);
 });
