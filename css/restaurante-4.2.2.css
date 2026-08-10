@@ -20,9 +20,11 @@ body>header .cart{min-width:48px;min-height:48px;border:1px solid #eceef2;backgr
 .categorias{max-width:1180px;margin:12px auto 22px;padding:5px 24px 10px;gap:9px;scrollbar-width:thin}
 .categorias button{padding:10px 16px;border:1px solid #e7e9ee;border-radius:999px;box-shadow:none;font-size:12px;background:#fff}
 .categorias .ativo{border-color:#ea1d2c;background:#ea1d2c;color:#fff;box-shadow:0 9px 20px rgba(234,29,44,.16)}
-.produtos{max-width:1180px;margin:0 auto 42px;padding:0 24px}
-.lista-produtos{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-.produto-card{display:grid;grid-template-columns:145px minmax(0,1fr);min-height:154px;overflow:hidden;border:1px solid #e7e9ee;border-radius:20px;background:#fff;box-shadow:0 9px 26px rgba(17,24,39,.045);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;cursor:pointer;outline:none}
+/* O style.css global usa .produtos como grade de cards da Home. Nesta página,
+   .produtos é apenas o contêiner do cardápio; a grade real é .lista-produtos. */
+.produtos{display:block;max-width:1180px;margin:0 auto 42px;padding:0 24px}
+.lista-produtos{display:grid;width:100%;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.produto-card{display:grid;width:100%;grid-template-columns:145px minmax(0,1fr);grid-template-rows:1fr;min-height:154px;overflow:hidden;border:1px solid #e7e9ee;border-radius:20px;background:#fff;box-shadow:0 9px 26px rgba(17,24,39,.045);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;cursor:pointer;outline:none}
 .produto-card:hover,.produto-card:focus-visible{transform:translateY(-2px);border-color:#d8dbe2;box-shadow:0 16px 34px rgba(17,24,39,.09)}
 .produto-card>img{width:145px;height:100%;min-height:154px;object-fit:cover;background:#f1f3f5}
 .produto-card .produto-info{display:flex;min-width:0;flex-direction:column;padding:17px 18px}
