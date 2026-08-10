@@ -31,8 +31,8 @@ Data: 6 de agosto de 2026
 
 ## Validação executada
 
-- 33 de 33 testes automatizados aprovados;
-- 147 arquivos verificados;
+- 58 de 58 testes automatizados aprovados;
+- 166 arquivos verificados;
 - todos os arquivos JavaScript com sintaxe válida;
 - Edge Functions aprovadas no type-check TypeScript;
 - referências locais e IDs HTML verificados;
