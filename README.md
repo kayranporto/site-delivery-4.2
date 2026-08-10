@@ -9,10 +9,9 @@ Requer Node.js 20 ou superior.
 ```bash
 npm ci
 npm run verify
-npm run check:edge
 ```
 
-A verificação atual cobre 148 arquivos, sintaxe JavaScript, JSON, referências locais, IDs HTML duplicados, exposição de segredos, migrations críticas e 33 testes automatizados.
+A verificação atual cobre 166 arquivos, sintaxe JavaScript, JSON, referências locais, IDs HTML duplicados, exposição de segredos, migrations críticas e 58 testes automatizados.
 
 ## Estrutura canônica
 
@@ -52,7 +51,7 @@ O diretório testado deve ser exatamente o diretório publicado. Não mantenha c
 - histórico automático de movimentações de estoque;
 - fundação de banco para múltiplas unidades;
 - cache e assets atualizados para 4.2.0;
-- 33 testes automatizados.
+- 58 testes automatizados.
 
 ## Implantação
 
