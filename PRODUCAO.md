@@ -5,7 +5,6 @@
 ```bash
 npm ci
 npm run verify
-npm run check:edge
 npm run package
 ```
 
@@ -87,7 +86,7 @@ Configure alertas para:
 ## 8. Aprovação final
 
 - [ ] migrations 014, 015 e 016 aplicadas;
-- [ ] 33 testes automatizados aprovados;
+- [ ] 58 testes automatizados aprovados;
 - [ ] Edge Functions publicadas e segredos configurados;
 - [ ] webhook validado no sandbox;
 - [ ] fluxo completo da cozinha e entrega testado;
