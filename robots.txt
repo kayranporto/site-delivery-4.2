@@ -7,4 +7,4 @@ Disallow: /entregador.html
 Disallow: /empresa-dashboard.html
 Disallow: /perfil.html
 
-Sitemap: https://kayranporto.github.io/site-delivery-3.5/sitemap.xml
+Sitemap: https://kayranporto.github.io/site-delivery-4.2/sitemap.xml

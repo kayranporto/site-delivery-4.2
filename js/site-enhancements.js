@@ -31,7 +31,7 @@
 
   if("serviceWorker" in navigator && location.protocol!=="file:") addEventListener("load",async()=>{
     try{
-      const registro=await navigator.serviceWorker.register("./sw.js?v=4.2.6",{updateViaCache:"none"});
+      const registro=await navigator.serviceWorker.register("./sw.js?v=4.2.8",{updateViaCache:"none"});
       if(registro.waiting)mostrarAtualizacao(registro.waiting);
       registro.addEventListener("updatefound",()=>{const worker=registro.installing;if(!worker)return;worker.addEventListener("statechange",()=>{if(worker.state==="installed"&&navigator.serviceWorker.controller)mostrarAtualizacao(worker)})});
       let refreshing=false;

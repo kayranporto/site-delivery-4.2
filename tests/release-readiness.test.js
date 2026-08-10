@@ -22,7 +22,8 @@ test("release possui uma única árvore canônica e o empacotamento exclui metad
     assert.match(packageScript, /node_modules/);
     assert.equal(fs.existsSync(path.join(root, "site-delivery-3.5-main")), false);
     assert.ok(fs.existsSync(path.join(root, "supabase/migrations/014_producao_financeira.sql")));
-    assert.equal(JSON.parse(read("package.json")).version, "4.2.0");
+    assert.ok(fs.existsSync(path.join(root, "supabase/migrations/018_reconciliacao_catalogo_live_4_2_8.sql")));
+    assert.equal(JSON.parse(read("package.json")).version, "4.2.8");
 });
 
 test("dependências Supabase estão fixadas em versão exata", () => {
@@ -107,8 +108,18 @@ test("versão de assets e caches é consistente", () => {
         .filter((name) => name.endsWith(".html")).map(read)];
     const joined = sources.join("\n");
     assert.doesNotMatch(joined, /\?v=(?:2\.|3\.)/);
-    assert.match(read("sw.js"), /const VERSION = "4\.2\.6"/);
-    assert.match(read("js/site-enhancements.js"), /sw\.js\?v=4\.2\.6/);
+    assert.match(read("sw.js"), /const VERSION = "4\.2\.8"/);
+    assert.match(read("js/site-enhancements.js"), /sw\.js\?v=4\.2\.8/);
+    assert.match(read("sw.js"), /mobile-pwa-4\.2\.6\.css\?v=4\.2\.6/);
+    assert.match(read("sw.js"), /operacao-restaurante-4\.2\.7\.js\?v=4\.2\.7/);
+});
+
+test("SEO canônico não referencia versões antigas do projeto", () => {
+    const robots = read("robots.txt");
+    const sitemap = read("sitemap.xml");
+    assert.match(robots, /site-delivery-4\.2\/sitemap\.xml/);
+    assert.doesNotMatch(robots, /site-delivery-3\.5/);
+    assert.doesNotMatch(sitemap, /site-delivery-3\.5/);
 });
 
 test("ajustes básicos de acessibilidade estão presentes", () => {

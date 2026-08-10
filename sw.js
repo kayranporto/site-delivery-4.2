@@ -1,6 +1,6 @@
 "use strict";
 
-const VERSION = "4.2.6";
+const VERSION = "4.2.8";
 const CACHE = `multi-delivery-v${VERSION}`;
 const DYNAMIC_CACHE = `multi-delivery-dynamic-v${VERSION}`;
 const SHELL = [
@@ -18,11 +18,13 @@ const SHELL = [
   "./css/home-4.2.1.css?v=4.2.1",
   "./css/paginas.css?v=4.2.0",
   "./css/accessibility.css?v=4.2.0",
-  "./css/enhancements.css?v=4.2.6",
+  "./css/enhancements.css?v=4.2.8",
+  "./css/mobile-pwa-4.2.6.css?v=4.2.6",
   "./css/suporte.css?v=4.2.0",
   "./css/restaurante-4.2.2.css",
   "./css/carrinho-4.2.5.css?v=4.2.5",
   "./css/checkout-4.2.3.css?v=4.2.3",
+  "./css/operacao-restaurante-4.2.7.css?v=4.2.7",
   "./js/app-utils.js?v=4.2.0",
   "./js/config.js?v=4.2.0",
   "./js/monitoring.js?v=4.2.0",
@@ -32,8 +34,9 @@ const SHELL = [
   "./js/cart-store.js?v=4.2.0",
   "./js/carrinho-4.2.5.js?v=4.2.5",
   "./js/checkout-4.2.3.js?v=4.2.3",
+  "./js/operacao-restaurante-4.2.7.js?v=4.2.7",
   "./js/suporte.js?v=4.2.0",
-  "./js/site-enhancements.js?v=4.2.6"
+  "./js/site-enhancements.js?v=4.2.8"
 ];
 
 self.addEventListener("install", (event) => {
