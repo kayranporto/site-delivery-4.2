@@ -55,5 +55,5 @@ test("CSS 4.2.7 contempla painel, SLA e mobile", () => {
     ".op427-sla",
     ".op427-recusar"
   ]) assert.ok(css.includes(trecho), `CSS 4.2.7 sem ${trecho}`);
-  assert.match(css, /@media\s*\(max-width:\s*760px\)/);
+  assert.match(css, /@media\s*\(max-width:\s*560px\)/);
 });
