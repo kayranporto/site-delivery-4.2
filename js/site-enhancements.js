@@ -5,6 +5,17 @@
   mobileCss.href = "css/mobile-pwa-4.2.6.css?v=4.2.6";
   document.head.append(mobileCss);
 
+  if (/empresa-dashboard\.html$/i.test(location.pathname)) {
+    const operacaoCss = document.createElement("link");
+    operacaoCss.rel = "stylesheet";
+    operacaoCss.href = "css/operacao-restaurante-4.2.7.css?v=4.2.7";
+    document.head.append(operacaoCss);
+    const operacaoJs = document.createElement("script");
+    operacaoJs.src = "js/operacao-restaurante-4.2.7.js?v=4.2.7";
+    operacaoJs.defer = true;
+    document.head.append(operacaoJs);
+  }
+
   const region=document.createElement("div"); region.className="app-toast-region"; region.setAttribute("aria-live","polite"); document.body.append(region);
   function toast(titulo,mensagem="",tipo="info",tempo=4500){const el=document.createElement("div");el.className=`app-toast ${tipo}`;const box=document.createElement("div");const strong=document.createElement("strong");strong.textContent=titulo;const p=document.createElement("p");p.textContent=mensagem;box.append(strong);if(mensagem)box.append(p);const close=document.createElement("button");close.type="button";close.setAttribute("aria-label","Fechar aviso");close.textContent="×";close.onclick=()=>el.remove();el.append(box,close);region.append(el);if(tempo)setTimeout(()=>el.remove(),tempo);return el}
   window.AppToast=toast;
