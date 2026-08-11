@@ -1,26 +1,25 @@
-# Publicação segura — Multi Delivery 4.2.0
+# Publicação segura — Multi Delivery 4.2.8
 
 ## 1. Gate de release
 
 ```bash
 npm ci
 npm run verify
-npm run check:edge
 npm run package
 ```
 
-O release somente pode avançar com todos os comandos aprovados. O empacotamento exclui `.git`, `node_modules`, releases anteriores e ZIPs antigos.
+`npm run verify` executa a verificação estrutural, os 58 testes automatizados e o type-check TypeScript das Edge Functions. O empacotamento repete o gate antes de gerar o ZIP e exclui `.git`, `node_modules`, releases anteriores e arquivos ZIP antigos.
 
 ## 2. Banco de dados
 
 1. Gere backup e documente o procedimento de restauração.
-2. Aplique as migrations pendentes em ordem: 014, 015 e 016.
+2. Confirme que as migrations 014 a 018 estão aplicadas, na ordem, no projeto hospedado.
 3. Execute Security Advisor e Performance Advisor.
 4. Confirme RLS nas tabelas públicas, inclusive `empresa_unidades`, `produto_variantes` e `estoque_movimentos`.
 5. Teste RPCs com contas separadas de cliente, restaurante, entregador e administrador.
 6. Valide que `private.criar_pedido_impl` não é executável diretamente por clientes.
 
-A migration 016 adiciona variações, cozinha, idempotência do checkout, auditoria de estoque e a fundação multiunidade.
+A migration 016 adiciona variações, cozinha, idempotência do checkout, auditoria de estoque e a fundação multiunidade. A migration 018 reconcilia o catálogo publicado com o estado live e restringe as permissões do papel anônimo.
 
 ## 3. Edge Functions
 
@@ -52,8 +51,8 @@ Registre evidências e resultados antes de usar credenciais reais.
 
 ## 5. Autenticação
 
-- desative **Confirm email** somente se o cadastro imediato for decisão definitiva;
-- ative proteção contra senhas vazadas;
+- mantenha **Confirm email** desativado somente enquanto o cadastro imediato for a decisão vigente;
+- mantenha ativa a proteção contra senhas vazadas e confirme o resultado no Security Advisor;
 - configure Cloudflare Turnstile ou hCaptcha;
 - ajuste rate limits de cadastro, login e recuperação;
 - configure URLs exatas de produção;
@@ -70,7 +69,7 @@ Confirme por inspeção HTTP real:
 - Referrer-Policy;
 - Permissions-Policy;
 - proteção contra framing;
-- cache correto do service worker 4.2.0.
+- cache correto do service worker 4.2.8.
 
 ## 7. Observabilidade
 
@@ -86,12 +85,14 @@ Configure alertas para:
 
 ## 8. Aprovação final
 
-- [ ] migrations 014, 015 e 016 aplicadas;
-- [ ] 33 testes automatizados aprovados;
+- [ ] migrations 014 a 018 confirmadas no projeto hospedado;
+- [ ] 58 testes automatizados aprovados no commit de release;
 - [ ] Edge Functions publicadas e segredos configurados;
 - [ ] webhook validado no sandbox;
 - [ ] fluxo completo da cozinha e entrega testado;
+- [ ] RLS validada com contas de cada papel;
 - [ ] backup e restauração testados;
+- [ ] proteção contra senhas vazadas confirmada no Security Advisor;
 - [ ] CAPTCHA e rate limits configurados;
 - [ ] cabeçalhos confirmados no domínio;
 - [ ] política de privacidade revisada;
