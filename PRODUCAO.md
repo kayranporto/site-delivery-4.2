@@ -8,7 +8,7 @@ npm run verify
 npm run package
 ```
 
-`npm run verify` executa a verificação estrutural, os 58 testes automatizados e o type-check TypeScript das Edge Functions. O empacotamento repete o gate antes de gerar o ZIP e exclui `.git`, `node_modules`, releases anteriores e arquivos ZIP antigos.
+`npm run verify` executa a verificação estrutural, os 59 testes automatizados e o type-check TypeScript das Edge Functions. O empacotamento repete o gate antes de gerar o ZIP e exclui `.git`, `node_modules`, releases anteriores e arquivos ZIP antigos.
 
 ## 2. Banco de dados
 
@@ -86,7 +86,7 @@ Configure alertas para:
 ## 8. Aprovação final
 
 - [ ] migrations 014 a 019 confirmadas no projeto hospedado;
-- [ ] 58 testes automatizados aprovados no commit de release;
+- [ ] 59 testes automatizados aprovados no commit de release;
 - [ ] Edge Functions publicadas e segredos configurados;
 - [ ] webhook validado no sandbox;
 - [ ] fluxo completo da cozinha e entrega testado;
