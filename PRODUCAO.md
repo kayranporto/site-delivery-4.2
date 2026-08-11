@@ -8,18 +8,18 @@ npm run verify
 npm run package
 ```
 
-`npm run verify` executa a verificação estrutural, os 64 testes automatizados e o type-check TypeScript das Edge Functions. O empacotamento repete o gate antes de gerar o ZIP e exclui `.git`, `node_modules`, releases anteriores e arquivos ZIP antigos.
+`npm run verify` executa a verificação estrutural, os 65 testes automatizados e o type-check TypeScript das Edge Functions. O empacotamento repete o gate antes de gerar o ZIP e exclui `.git`, `node_modules`, releases anteriores e arquivos ZIP antigos.
 
 ## 2. Banco de dados
 
 1. Gere backup e documente o procedimento de restauração.
-2. Confirme que as migrations 014 a 022 estão aplicadas, na ordem, no projeto hospedado.
+2. Confirme que as migrations 014 a 023 estão aplicadas, na ordem, no projeto hospedado.
 3. Execute Security Advisor e Performance Advisor.
 4. Confirme RLS nas tabelas públicas, inclusive `empresa_unidades`, `produto_variantes` e `estoque_movimentos`.
 5. Teste RPCs com contas separadas de cliente, restaurante, entregador e administrador.
 6. Valide que `private.criar_pedido_impl` não é executável diretamente por clientes.
 
-A migration 016 adiciona variações, cozinha, idempotência do checkout, auditoria de estoque e a fundação multiunidade. A migration 018 reconcilia o catálogo publicado com o estado live e restringe as permissões do papel anônimo. A migration 019 elimina políticas redundantes e otimiza chamadas de identidade nas políticas RLS. A migration 020 remove atualizações diretas de estado em pedidos e exige RPCs autenticadas para pagamento presencial e cancelamento não pago. A migration 021 valida a referência do pedido antes de registrar eventos do Mercado Pago e devolve erro controlado para referências inexistentes. A migration 022 impede que pedidos online sem pagamento confirmado avancem para preparo, retirada ou entrega.
+A migration 016 adiciona variações, cozinha, idempotência do checkout, auditoria de estoque e a fundação multiunidade. A migration 018 reconcilia o catálogo publicado com o estado live e restringe as permissões do papel anônimo. A migration 019 elimina políticas redundantes e otimiza chamadas de identidade nas políticas RLS. A migration 020 remove atualizações diretas de estado em pedidos e exige RPCs autenticadas para pagamento presencial e cancelamento não pago. A migration 021 valida a referência do pedido antes de registrar eventos do Mercado Pago e devolve erro controlado para referências inexistentes. A migration 022 impede que pedidos online sem pagamento confirmado avancem para preparo, retirada ou entrega. A migration 023 remove a RPC legada de telemetria de login que não possui consumidores no frontend.
 
 ## 3. Edge Functions
 
@@ -89,8 +89,8 @@ Configure alertas para:
 
 ## 8. Aprovação final
 
-- [ ] migrations 014 a 022 confirmadas no projeto hospedado;
-- [ ] 64 testes automatizados aprovados no commit de release;
+- [ ] migrations 014 a 023 confirmadas no projeto hospedado;
+- [ ] 65 testes automatizados aprovados no commit de release;
 - [ ] Edge Functions publicadas e segredos configurados;
 - [ ] webhook validado no sandbox;
 - [ ] fluxo completo da cozinha e entrega testado;

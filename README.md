@@ -11,7 +11,7 @@ npm ci
 npm run verify
 ```
 
-`npm run verify` cobre 171 arquivos, sintaxe JavaScript, JSON, referências locais, IDs HTML duplicados, exposição de segredos, migrations críticas, 64 testes automatizados e o type-check TypeScript das Edge Functions.
+`npm run verify` cobre 172 arquivos, sintaxe JavaScript, JSON, referências locais, IDs HTML duplicados, exposição de segredos, migrations críticas, 65 testes automatizados e o type-check TypeScript das Edge Functions.
 
 Para gerar o pacote de publicação depois da verificação:
 
@@ -61,9 +61,10 @@ O diretório testado deve ser exatamente o diretório publicado. Não mantenha c
 - transições de pedido restritas a RPCs autenticadas na migration 020;
 - referências externas de pagamento validadas antes do registro de eventos na migration 021;
 - pedidos online pendentes bloqueados antes da cozinha e da entrega na migration 022;
+- RPC legada de tentativas de login removida na migration 023;
 - pagamento online desativado por padrão até a validação do gateway em sandbox;
 - cache, PWA e assets unificados na versão 4.2.8;
-- 64 testes automatizados.
+- 65 testes automatizados.
 
 ## Implantação
 
@@ -76,4 +77,4 @@ Leia, nesta ordem:
 5. `RUNBOOK-OPERACIONAL.md`
 6. `ROADMAP-PLATAFORMA.md`
 
-A aplicação não deve receber pagamentos reais antes da confirmação das migrations 014 a 022 no projeto hospedado, da publicação das Edge Functions, da configuração dos segredos, da conclusão dos testes de sandbox descritos em `PRODUCAO.md` e da ativação explícita de `pagamentoOnlineAtivo` em `js/config.js`.
+A aplicação não deve receber pagamentos reais antes da confirmação das migrations 014 a 023 no projeto hospedado, da publicação das Edge Functions, da configuração dos segredos, da conclusão dos testes de sandbox descritos em `PRODUCAO.md` e da ativação explícita de `pagamentoOnlineAtivo` em `js/config.js`.
