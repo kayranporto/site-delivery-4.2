@@ -24,6 +24,7 @@ test("release possui uma única árvore canônica e o empacotamento exclui metad
     assert.ok(fs.existsSync(path.join(root, "supabase/migrations/014_producao_financeira.sql")));
     assert.ok(fs.existsSync(path.join(root, "supabase/migrations/018_reconciliacao_catalogo_live_4_2_8.sql")));
     assert.ok(fs.existsSync(path.join(root, "supabase/migrations/020_protege_transicoes_pedido_4_2_8.sql")));
+    assert.ok(fs.existsSync(path.join(root, "supabase/migrations/021_valida_pedido_antes_evento_pagamento_4_2_8.sql")));
     assert.equal(JSON.parse(read("package.json")).version, "4.2.8");
 });
 
@@ -85,6 +86,17 @@ test("migração 020 obriga mudanças de pedido a passar por RPCs protegidas", (
     assert.match(restaurante, /rpc\("empresa_marcar_pagamento_offline"/);
     assert.match(restaurante, /rpc\("empresa_cancelar_pedido_nao_pago"/);
     assert.doesNotMatch(restaurante, /from\(["']pedidos["']\)\.update/);
+});
+
+test("migração 021 valida o pedido antes de registrar o evento de pagamento", () => {
+    const sql = read("supabase/migrations/021_valida_pedido_antes_evento_pagamento_4_2_8.sql");
+    const buscaPedido = sql.indexOf("select * into v_pedido");
+    const registraEvento = sql.indexOf("insert into public.pagamento_eventos");
+    assert.ok(buscaPedido >= 0, "migração 021 não busca o pedido");
+    assert.ok(registraEvento > buscaPedido, "evento é registrado antes da validação do pedido");
+    assert.match(sql, /Pedido não encontrado para a referência externa\./);
+    assert.match(sql, /^begin;[\s\S]*commit;\s*$/im);
+    assert.equal((sql.match(/\$\$/g) || []).length % 2, 0);
 });
 
 test("webhook valida assinatura e reconcilia valor, moeda e idempotência no banco", () => {
