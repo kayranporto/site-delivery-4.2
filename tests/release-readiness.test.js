@@ -32,9 +32,15 @@ test("dependências Supabase estão fixadas em versão exata", () => {
     assert.doesNotMatch(html, /@supabase\/supabase-js@2(?:["'/?<])/);
     assert.match(html, /@supabase\/supabase-js@2\.111\.0/);
 
-    for (const name of ["criar-pagamento", "mercado-pago-webhook", "processar-reembolso", "enviar-push"]) {
+    const versions = {
+        "criar-pagamento": "npm:@supabase/supabase-js@2.111.0",
+        "mercado-pago-webhook": "npm:@supabase/supabase-js@2.111.0",
+        "processar-reembolso": "npm:@supabase/supabase-js@2.111.0",
+        "enviar-push": "npm:@supabase/supabase-js@2.112.0",
+    };
+    for (const [name, version] of Object.entries(versions)) {
         const config = JSON.parse(read(`supabase/functions/${name}/deno.json`));
-        assert.equal(config.imports.supabase, "npm:@supabase/supabase-js@2.111.0");
+        assert.equal(config.imports.supabase, version);
     }
 });
 
