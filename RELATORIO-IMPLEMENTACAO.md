@@ -15,7 +15,7 @@ Data: 10 de agosto de 2026
 
 ### Operação e estabilização
 
-- migrations operacionais 014 a 018 versionadas;
+- migrations operacionais 014 a 019 versionadas;
 - fila de cozinha com SLA e destaque de atrasos;
 - registro de início do preparo, pedido pronto, retirada e entrega;
 - transições operacionais protegidas por RPC;
@@ -28,12 +28,13 @@ Data: 10 de agosto de 2026
 - fundação multiunidade com unidade principal e RLS;
 - painel dividido em dez telas internas;
 - catálogo público reconciliado com o estado live e menor privilégio para o papel anônimo;
+- políticas RLS otimizadas sem alterar as regras de autorização;
 - versão PWA unificada em 4.2.8.
 
 ## Validação do repositório
 
 - 58 de 58 testes automatizados aprovados na preparação do gate;
-- 166 arquivos verificados;
+- 167 arquivos verificados;
 - todos os arquivos JavaScript com sintaxe válida;
 - Edge Functions incluídas no gate principal de type-check TypeScript;
 - referências locais e IDs HTML verificados;
@@ -45,7 +46,7 @@ Data: 10 de agosto de 2026
 Ainda exigem confirmação ou execução no projeto hospedado:
 
 - backup antes de alterações e teste documentado de restauração;
-- histórico das migrations 014 a 018 sincronizado;
+- histórico das migrations 014 a 019 sincronizado;
 - nova execução do Security Advisor e do Performance Advisor;
 - confirmação da proteção contra senhas vazadas no Security Advisor;
 - publicação ou conferência das Edge Functions;
