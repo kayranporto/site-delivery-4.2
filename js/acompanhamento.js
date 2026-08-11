@@ -136,7 +136,7 @@ function render(pedido) {
         ? "pago"
         : pedido.pagamento_status === "estornado" ? "estornado" : pedido.pagamento_modalidade === "online" ? "aguardando pagamento online" : "pendente na entrega";
     document.getElementById("pagamentoPedido").textContent = `${pedido.pagamento || "—"} • ${pagamentoStatus}`;
-    document.getElementById("pagarOnline").hidden = pedido.pagamento_modalidade !== "online" || pedido.pagamento_status === "pago" || status === "cancelado";
+    document.getElementById("pagarOnline").hidden = window.DELIVERY_CONFIG?.pagamentoOnlineAtivo !== true || pedido.pagamento_modalidade !== "online" || pedido.pagamento_status === "pago" || status === "cancelado";
     document.getElementById("dataPedido").textContent = dataBr(pedido.created_at);
 
     const telefone = document.getElementById("telefoneEmpresa");

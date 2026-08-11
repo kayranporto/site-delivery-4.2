@@ -96,11 +96,11 @@
             <span class="payment-copy"><strong>Dinheiro</strong><small>Informe o troco se necessário</small></span>
             <span class="payment-check" aria-hidden="true"></span>
           </label>
-          <label class="payment-option online-payment-option">
-            <input name="pagamento" type="radio" value="Online"/>
+          <label class="payment-option online-payment-option" data-pagamento-indisponivel="true">
+            <input disabled name="pagamento" type="radio" value="Online"/>
             <span class="payment-icon" aria-hidden="true">🛡️</span>
-            <span class="payment-copy"><strong>Pagar online</strong><small>PIX ou cartão pelo Mercado Pago</small></span>
-            <span class="payment-badge">ONLINE</span>
+            <span class="payment-copy"><strong>Pagar online</strong><small id="pagamentoOnlineStatus">Temporariamente indisponível</small></span>
+            <span class="payment-badge" id="pagamentoOnlineBadge">EM BREVE</span>
             <span class="payment-check" aria-hidden="true"></span>
           </label>
         </div>
@@ -164,6 +164,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.111.0"></script>
   <script src="js/app-utils.js?v=4.2.0"></script>
+  <script src="js/config.js?v=4.2.8"></script>
   <script src="js/supabase.js?v=4.2.0"></script>
   <script src="js/dialogs.js?v=4.2.0"></script>
   <script src="js/cart-store.js?v=4.2.0"></script>

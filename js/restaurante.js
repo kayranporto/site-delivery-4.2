@@ -46,6 +46,9 @@ function atualizarCarrinhoTopo() {
     document.querySelectorAll(".cart span").forEach((span) => { span.textContent = String(quantidade); });
 }
 
+window.addEventListener("carrinho-atualizado", atualizarCarrinhoTopo);
+window.addEventListener("carrinho-sincronizar", atualizarCarrinhoTopo);
+
 async function carregarAvaliacaoRestaurante() {
     if (!avaliacaoRestaurante || !empresaId) return;
     const { data, error } = await window.db.from("avaliacoes_resumo")

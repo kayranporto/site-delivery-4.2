@@ -163,11 +163,13 @@ function renderizarEmpresas(lista) {
         const card = document.createElement("article");
         card.className = "card";
         card.dataset.id = empresa.id;
-        card.tabIndex = 0;
-        card.setAttribute("role", "link");
-        card.setAttribute("aria-label", `Abrir ${empresa.nome}`);
 
-        card.append(imagemComFallback(empresa.logo, empresa.nome));
+        const link = document.createElement("a");
+        link.className = "card-link";
+        link.href = `restaurante.html?id=${encodeURIComponent(empresa.id)}`;
+        link.setAttribute("aria-label", `Abrir cardápio de ${empresa.nome}`);
+
+        link.append(imagemComFallback(empresa.logo, empresa.nome));
 
         const body = document.createElement("div");
         body.className = "card-body";
@@ -184,8 +186,6 @@ function renderizarEmpresas(lista) {
         favorite.textContent = favoritado ? "❤️" : "🤍";
         favorite.setAttribute("aria-label", favoritado ? `Remover ${empresa.nome} dos favoritos` : `Adicionar ${empresa.nome} aos favoritos`);
         favorite.setAttribute("aria-pressed", String(favoritado));
-        header.append(favorite);
-
         body.append(header);
         body.append(criarTexto("p", "descricao", empresa.descricao || "Confira o cardápio deste restaurante."));
 
@@ -209,7 +209,8 @@ function renderizarEmpresas(lista) {
         const aberta = empresa.status !== false;
         const status = criarTexto("span", `status ${aberta ? "aberto" : "fechado"}`, aberta ? "Aberto" : "Fechado");
         body.append(status);
-        card.append(body);
+        link.append(body);
+        card.append(link, favorite);
         fragmento.append(card);
     });
 
@@ -307,10 +308,10 @@ async function carregarDestaques() {
     }
 
     data.forEach((produto) => {
-        const card = document.createElement("article");
+        const card = document.createElement("a");
         card.className = "produto-destaque";
-        card.tabIndex = 0;
-        card.setAttribute("role", "link");
+        card.href = `restaurante.html?id=${encodeURIComponent(produto.empresa_id)}`;
+        card.setAttribute("aria-label", `Ver ${produto.nome} no cardápio`);
         card.append(imagemComFallback(produto.imagem, produto.nome, "assets/produto-padrao.svg"));
         const corpo = document.createElement("div");
         const titulo = criarTexto("h3", "", produto.nome || "Produto");
@@ -319,11 +320,6 @@ async function carregarDestaques() {
         const preco = criarTexto("strong", "", dinheiro(promocao > 0 ? promocao : produto.preco));
         corpo.append(titulo, descricao, preco);
         card.append(corpo);
-        const abrir = () => { window.location.href = `restaurante.html?id=${encodeURIComponent(produto.empresa_id)}`; };
-        card.addEventListener("click", abrir);
-        card.addEventListener("keydown", (event) => {
-            if (event.key === "Enter" || event.key === " ") { event.preventDefault(); abrir(); }
-        });
         container.append(card);
     });
 }
@@ -417,11 +413,6 @@ function atualizarContadoresCarrinho() {
     });
 }
 
-function abrirRestaurante(card) {
-    const id = card?.dataset.id;
-    if (id) window.location.href = `restaurante.html?id=${encodeURIComponent(id)}`;
-}
-
 cards?.addEventListener("click", async (event) => {
     const favorito = event.target.closest("[data-favorite-id]");
     if (favorito) {
@@ -445,15 +436,6 @@ cards?.addEventListener("click", async (event) => {
         return;
     }
 
-    abrirRestaurante(event.target.closest(".card"));
-});
-
-cards?.addEventListener("keydown", (event) => {
-    if (event.target.closest("[data-favorite-id]")) return;
-    if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        abrirRestaurante(event.target.closest(".card"));
-    }
 });
 
 pesquisa?.addEventListener("input", aplicarFiltros);

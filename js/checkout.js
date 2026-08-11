@@ -439,6 +439,9 @@ async function finalizarPedido() {
 
     const pagamento = document.querySelector("input[name='pagamento']:checked")?.value;
     if (!pagamento) return avisarCheckout("Selecione uma forma de pagamento.", "info");
+    if (pagamento === "Online" && window.DELIVERY_CONFIG?.pagamentoOnlineAtivo !== true) {
+        return avisarCheckout("O pagamento online está temporariamente indisponível. Escolha uma forma de pagamento na entrega.", "info");
+    }
 
     const troco = pagamento === "Dinheiro" ? valorTroco() : null;
     if (pagamento === "Dinheiro" && trocoPara.value.trim() && (troco === null || troco < calcularTotal())) {
@@ -525,6 +528,22 @@ document.querySelectorAll("input[name='pagamento']").forEach((input) => {
             : "O pagamento será realizado diretamente ao restaurante na entrega. Nenhum dado de cartão é solicitado neste site.";
     });
 });
+
+const pagamentoOnline = document.querySelector("input[name='pagamento'][value='Online']");
+const pagamentoOnlineAtivo = window.DELIVERY_CONFIG?.pagamentoOnlineAtivo === true;
+if (pagamentoOnline) {
+    pagamentoOnline.disabled = !pagamentoOnlineAtivo;
+    pagamentoOnline.closest(".payment-option")?.toggleAttribute("data-pagamento-indisponivel", !pagamentoOnlineAtivo);
+    const statusOnline = document.getElementById("pagamentoOnlineStatus");
+    const badgeOnline = document.getElementById("pagamentoOnlineBadge");
+    if (statusOnline) statusOnline.textContent = pagamentoOnlineAtivo ? "PIX ou cartão pelo Mercado Pago" : "Temporariamente indisponível";
+    if (badgeOnline) badgeOnline.textContent = pagamentoOnlineAtivo ? "ONLINE" : "EM BREVE";
+    if (!pagamentoOnlineAtivo && pagamentoOnline.checked) {
+        pagamentoOnline.checked = false;
+        const pix = document.querySelector("input[name='pagamento'][value='PIX']");
+        if (pix) pix.checked = true;
+    }
+}
 observacoes.addEventListener("input", () => {
     if (observacoesContador) observacoesContador.textContent = `${observacoes.value.length}/500`;
 });
