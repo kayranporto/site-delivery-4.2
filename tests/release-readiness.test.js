@@ -26,6 +26,7 @@ test("release possui uma única árvore canônica e o empacotamento exclui metad
     assert.ok(fs.existsSync(path.join(root, "supabase/migrations/020_protege_transicoes_pedido_4_2_8.sql")));
     assert.ok(fs.existsSync(path.join(root, "supabase/migrations/021_valida_pedido_antes_evento_pagamento_4_2_8.sql")));
     assert.ok(fs.existsSync(path.join(root, "supabase/migrations/022_bloqueia_operacao_pagamento_online_pendente_4_2_8.sql")));
+    assert.ok(fs.existsSync(path.join(root, "supabase/migrations/023_remove_rpc_login_legada_4_2_8.sql")));
     assert.equal(JSON.parse(read("package.json")).version, "4.2.8");
 });
 
@@ -114,6 +115,13 @@ test("migração 022 bloqueia pedido online pendente em todas as rotas operacion
     ]) assert.ok(sql.includes(trecho), `migração 022 sem ${trecho}`);
     assert.match(sql, /^begin;[\s\S]*commit;\s*$/im);
     assert.equal((sql.match(/\$\$/g) || []).length % 2, 0);
+});
+
+test("migração 023 remove a RPC de login legada e não utilizada", () => {
+    const sql = read("supabase/migrations/023_remove_rpc_login_legada_4_2_8.sql");
+    assert.match(sql, /revoke all on function public\.registrar_tentativa_login\(text, boolean\)/);
+    assert.match(sql, /drop function if exists public\.registrar_tentativa_login\(text, boolean\)/);
+    assert.match(sql, /^begin;[\s\S]*commit;\s*$/im);
 });
 
 test("checkout falha com segurança enquanto o gateway online está indisponível", () => {
