@@ -1,4 +1,4 @@
-# Multi Delivery 4.2.0
+# Multi Delivery 4.2.8
 
 Aplicação web integrada ao Supabase para marketplace de restaurantes, pedidos, cozinha, entregadores, suporte e pagamentos pelo Mercado Pago.
 
@@ -9,10 +9,15 @@ Requer Node.js 20 ou superior.
 ```bash
 npm ci
 npm run verify
-npm run check:edge
 ```
 
-A verificação atual cobre 148 arquivos, sintaxe JavaScript, JSON, referências locais, IDs HTML duplicados, exposição de segredos, migrations críticas e 33 testes automatizados.
+`npm run verify` cobre 166 arquivos, sintaxe JavaScript, JSON, referências locais, IDs HTML duplicados, exposição de segredos, migrations críticas, 58 testes automatizados e o type-check TypeScript das Edge Functions.
+
+Para gerar o pacote de publicação depois da verificação:
+
+```bash
+npm run package
+```
 
 ## Estrutura canônica
 
@@ -40,7 +45,7 @@ O diretório testado deve ser exatamente o diretório publicado. Não mantenha c
 - painel do restaurante por telas;
 - exportação e solicitação de exclusão de dados.
 
-## Novidades da versão 4.2
+## Operação 4.2 e estabilizações 4.2.8
 
 - fila de cozinha com pedidos recebidos, em preparo, prontos e atrasados;
 - tempo estimado, início do preparo e horários reais de conclusão;
@@ -51,8 +56,9 @@ O diretório testado deve ser exatamente o diretório publicado. Não mantenha c
 - entregadores visualizam somente pedidos marcados como prontos;
 - histórico automático de movimentações de estoque;
 - fundação de banco para múltiplas unidades;
-- cache e assets atualizados para 4.2.0;
-- 33 testes automatizados.
+- reconciliação do catálogo publicado e permissões de menor privilégio na migration 018;
+- cache, PWA e assets unificados na versão 4.2.8;
+- 58 testes automatizados.
 
 ## Implantação
 
@@ -65,4 +71,4 @@ Leia, nesta ordem:
 5. `RUNBOOK-OPERACIONAL.md`
 6. `ROADMAP-PLATAFORMA.md`
 
-A aplicação não deve receber pagamentos reais antes da aplicação das migrations 014, 015 e 016, publicação das Edge Functions e conclusão dos testes de sandbox.
+A aplicação não deve receber pagamentos reais antes da confirmação das migrations 014 a 018 no projeto hospedado, da publicação das Edge Functions, da configuração dos segredos e da conclusão dos testes de sandbox descritos em `PRODUCAO.md`.
