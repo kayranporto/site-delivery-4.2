@@ -13,13 +13,13 @@ npm run package
 ## 2. Banco de dados
 
 1. Gere backup e documente o procedimento de restauração.
-2. Confirme que as migrations 014 a 018 estão aplicadas, na ordem, no projeto hospedado.
+2. Confirme que as migrations 014 a 019 estão aplicadas, na ordem, no projeto hospedado.
 3. Execute Security Advisor e Performance Advisor.
 4. Confirme RLS nas tabelas públicas, inclusive `empresa_unidades`, `produto_variantes` e `estoque_movimentos`.
 5. Teste RPCs com contas separadas de cliente, restaurante, entregador e administrador.
 6. Valide que `private.criar_pedido_impl` não é executável diretamente por clientes.
 
-A migration 016 adiciona variações, cozinha, idempotência do checkout, auditoria de estoque e a fundação multiunidade. A migration 018 reconcilia o catálogo publicado com o estado live e restringe as permissões do papel anônimo.
+A migration 016 adiciona variações, cozinha, idempotência do checkout, auditoria de estoque e a fundação multiunidade. A migration 018 reconcilia o catálogo publicado com o estado live e restringe as permissões do papel anônimo. A migration 019 elimina políticas redundantes e otimiza chamadas de identidade nas políticas RLS.
 
 ## 3. Edge Functions
 
@@ -85,7 +85,7 @@ Configure alertas para:
 
 ## 8. Aprovação final
 
-- [ ] migrations 014 a 018 confirmadas no projeto hospedado;
+- [ ] migrations 014 a 019 confirmadas no projeto hospedado;
 - [ ] 58 testes automatizados aprovados no commit de release;
 - [ ] Edge Functions publicadas e segredos configurados;
 - [ ] webhook validado no sandbox;
