@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://kayranporto.github.io/site-delivery-4.2/</loc><lastmod>2026-08-07</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
-  <url><loc>https://kayranporto.github.io/site-delivery-4.2/index.html</loc><lastmod>2026-08-07</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
-  <url><loc>https://kayranporto.github.io/site-delivery-4.2/login.html</loc><lastmod>2026-08-07</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://kayranporto.github.io/site-delivery-4.2/cadastro.html</loc><lastmod>2026-08-07</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://kayranporto.github.io/site-delivery-4.2/empresa-cadastro.html</loc><lastmod>2026-08-07</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://kayranporto.github.io/site-delivery-4.2/privacidade.html</loc><lastmod>2026-08-07</lastmod><changefreq>yearly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://kayranporto.github.io/site-delivery-4.2/</loc><lastmod>2026-08-11</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://kayranporto.github.io/site-delivery-4.2/index.html</loc><lastmod>2026-08-11</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://kayranporto.github.io/site-delivery-4.2/restaurante.html?id=2a15cbed-20ef-4d37-b368-5804aa53cb68</loc><lastmod>2026-08-11</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://kayranporto.github.io/site-delivery-4.2/login.html</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://kayranporto.github.io/site-delivery-4.2/cadastro.html</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://kayranporto.github.io/site-delivery-4.2/empresa-cadastro.html</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://kayranporto.github.io/site-delivery-4.2/suporte.html</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://kayranporto.github.io/site-delivery-4.2/privacidade.html</loc><lastmod>2026-08-11</lastmod><changefreq>yearly</changefreq><priority>0.4</priority></url>
 </urlset>

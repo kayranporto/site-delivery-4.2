@@ -25,6 +25,7 @@ test("release possui uma única árvore canônica e o empacotamento exclui metad
     assert.ok(fs.existsSync(path.join(root, "supabase/migrations/018_reconciliacao_catalogo_live_4_2_8.sql")));
     assert.ok(fs.existsSync(path.join(root, "supabase/migrations/020_protege_transicoes_pedido_4_2_8.sql")));
     assert.ok(fs.existsSync(path.join(root, "supabase/migrations/021_valida_pedido_antes_evento_pagamento_4_2_8.sql")));
+    assert.ok(fs.existsSync(path.join(root, "supabase/migrations/022_bloqueia_operacao_pagamento_online_pendente_4_2_8.sql")));
     assert.equal(JSON.parse(read("package.json")).version, "4.2.8");
 });
 
@@ -97,6 +98,47 @@ test("migração 021 valida o pedido antes de registrar o evento de pagamento", 
     assert.match(sql, /Pedido não encontrado para a referência externa\./);
     assert.match(sql, /^begin;[\s\S]*commit;\s*$/im);
     assert.equal((sql.match(/\$\$/g) || []).length % 2, 0);
+});
+
+test("migração 022 bloqueia pedido online pendente em todas as rotas operacionais", () => {
+    const sql = read("supabase/migrations/022_bloqueia_operacao_pagamento_online_pendente_4_2_8.sql");
+    for (const trecho of [
+        "private.validar_transicao_pedido",
+        "empresa_atualizar_operacao_pedido",
+        "listar_entregas_disponiveis",
+        "entregador_aceitar_pedido",
+        "entregador_atualizar_status",
+        "pagamento_modalidade = 'online'",
+        "pagamento_status is distinct from 'pago'",
+        "Aguarde a confirmação do pagamento online"
+    ]) assert.ok(sql.includes(trecho), `migração 022 sem ${trecho}`);
+    assert.match(sql, /^begin;[\s\S]*commit;\s*$/im);
+    assert.equal((sql.match(/\$\$/g) || []).length % 2, 0);
+});
+
+test("checkout falha com segurança enquanto o gateway online está indisponível", () => {
+    const config = read("js/config.js");
+    const html = read("checkout.html");
+    const checkout = read("js/checkout.js");
+    const acompanhamento = read("js/acompanhamento.js");
+    assert.match(config, /pagamentoOnlineAtivo:\s*false/);
+    assert.match(html, /<input disabled name="pagamento" type="radio" value="Online"/);
+    assert.match(html, /js\/config\.js\?v=4\.2\.8/);
+    assert.match(checkout, /pagamentoOnlineAtivo !== true/);
+    assert.match(acompanhamento, /pagamentoOnlineAtivo !== true/);
+});
+
+test("carrinho sincroniza contadores e a home publica links rastreáveis", () => {
+    const restaurante = read("js/restaurante.js");
+    const home = read("js/home.js");
+    const sitemap = read("sitemap.xml");
+    assert.match(restaurante, /addEventListener\("carrinho-atualizado", atualizarCarrinhoTopo\)/);
+    assert.match(restaurante, /addEventListener\("carrinho-sincronizar", atualizarCarrinhoTopo\)/);
+    assert.match(home, /link\.href = `restaurante\.html\?id=/);
+    assert.match(home, /document\.createElement\("a"\)/);
+    assert.doesNotMatch(home, /setAttribute\("role", "link"\)/);
+    assert.match(sitemap, /restaurante\.html\?id=2a15cbed-20ef-4d37-b368-5804aa53cb68/);
+    assert.match(sitemap, /suporte\.html/);
 });
 
 test("webhook valida assinatura e reconcilia valor, moeda e idempotência no banco", () => {

@@ -226,6 +226,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 
 .payment-option:hover { transform: translateY(-2px); border-color: #f2bfc4; box-shadow: 0 9px 22px rgba(17, 24, 39, .06); }
+.payment-option:has(input:disabled) { opacity: .62; cursor: not-allowed; }
+.payment-option:has(input:disabled):hover { transform: none; border-color: var(--checkout-line); box-shadow: none; }
 .payment-option:has(input:checked) { border-color: var(--checkout-red); background: #fff7f8; box-shadow: 0 0 0 3px rgba(234, 29, 44, .07); }
 .payment-option input { position: absolute; width: 1px; height: 1px; opacity: 0; }
 

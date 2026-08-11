@@ -11,7 +11,7 @@ npm ci
 npm run verify
 ```
 
-`npm run verify` cobre 170 arquivos, sintaxe JavaScript, JSON, referências locais, IDs HTML duplicados, exposição de segredos, migrations críticas, 61 testes automatizados e o type-check TypeScript das Edge Functions.
+`npm run verify` cobre 171 arquivos, sintaxe JavaScript, JSON, referências locais, IDs HTML duplicados, exposição de segredos, migrations críticas, 64 testes automatizados e o type-check TypeScript das Edge Functions.
 
 Para gerar o pacote de publicação depois da verificação:
 
@@ -39,7 +39,7 @@ O diretório testado deve ser exatamente o diretório publicado. Não mantenha c
 - reconciliação de valor, moeda e identificadores do Mercado Pago;
 - snapshot transacional de preços e adicionais;
 - tratamento de pagamento aprovado depois do cancelamento;
-- CSP, cabeçalhos de segurança, lockfile e CI;
+- CSP em meta, política de referência, lockfile e CI;
 - cadastro imediato sem confirmação obrigatória de e-mail;
 - CAPTCHA opcional e política de senha centralizada;
 - painel do restaurante por telas;
@@ -60,8 +60,10 @@ O diretório testado deve ser exatamente o diretório publicado. Não mantenha c
 - políticas RLS otimizadas e redundâncias removidas na migration 019;
 - transições de pedido restritas a RPCs autenticadas na migration 020;
 - referências externas de pagamento validadas antes do registro de eventos na migration 021;
+- pedidos online pendentes bloqueados antes da cozinha e da entrega na migration 022;
+- pagamento online desativado por padrão até a validação do gateway em sandbox;
 - cache, PWA e assets unificados na versão 4.2.8;
-- 61 testes automatizados.
+- 64 testes automatizados.
 
 ## Implantação
 
@@ -74,4 +76,4 @@ Leia, nesta ordem:
 5. `RUNBOOK-OPERACIONAL.md`
 6. `ROADMAP-PLATAFORMA.md`
 
-A aplicação não deve receber pagamentos reais antes da confirmação das migrations 014 a 021 no projeto hospedado, da publicação das Edge Functions, da configuração dos segredos e da conclusão dos testes de sandbox descritos em `PRODUCAO.md`.
+A aplicação não deve receber pagamentos reais antes da confirmação das migrations 014 a 022 no projeto hospedado, da publicação das Edge Functions, da configuração dos segredos, da conclusão dos testes de sandbox descritos em `PRODUCAO.md` e da ativação explícita de `pagamentoOnlineAtivo` em `js/config.js`.
