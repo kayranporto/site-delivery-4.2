@@ -23,6 +23,7 @@ test("release possui uma única árvore canônica e o empacotamento exclui metad
     assert.equal(fs.existsSync(path.join(root, "site-delivery-3.5-main")), false);
     assert.ok(fs.existsSync(path.join(root, "supabase/migrations/014_producao_financeira.sql")));
     assert.ok(fs.existsSync(path.join(root, "supabase/migrations/018_reconciliacao_catalogo_live_4_2_8.sql")));
+    assert.ok(fs.existsSync(path.join(root, "supabase/migrations/020_protege_transicoes_pedido_4_2_8.sql")));
     assert.equal(JSON.parse(read("package.json")).version, "4.2.8");
 });
 
@@ -62,6 +63,28 @@ test("migração 014 contém reconciliação idempotente e snapshot atômico", (
     assert.doesNotMatch(sql, /auth\.role\(\)/);
     assert.equal((sql.match(/\$\$/g) || []).length % 2, 0);
     assert.match(sql, /^begin;[\s\S]*commit;\s*$/im);
+});
+
+test("migração 020 obriga mudanças de pedido a passar por RPCs protegidas", () => {
+    const sql = read("supabase/migrations/020_protege_transicoes_pedido_4_2_8.sql");
+    for (const trecho of [
+        "revoke all on table public.pedidos from anon",
+        "revoke update (status, pagamento_status)",
+        "drop policy if exists \"restaurante atualiza pedidos\"",
+        "empresa_marcar_pagamento_offline",
+        "empresa_cancelar_pedido_nao_pago",
+        "Autenticação obrigatória.",
+        "e.usuario_id = auth.uid()",
+        "from public, anon",
+        "to authenticated, service_role"
+    ]) assert.ok(sql.includes(trecho), `migração 020 sem ${trecho}`);
+    assert.match(sql, /^begin;[\s\S]*commit;\s*$/im);
+    assert.equal((sql.match(/\$\$/g) || []).length % 2, 0);
+
+    const restaurante = read("js/empresa-dashboard.js");
+    assert.match(restaurante, /rpc\("empresa_marcar_pagamento_offline"/);
+    assert.match(restaurante, /rpc\("empresa_cancelar_pedido_nao_pago"/);
+    assert.doesNotMatch(restaurante, /from\(["']pedidos["']\)\.update/);
 });
 
 test("webhook valida assinatura e reconcilia valor, moeda e idempotência no banco", () => {

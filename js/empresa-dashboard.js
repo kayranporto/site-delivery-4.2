@@ -236,17 +236,28 @@ function pedidosVisiveis() {
     });
 }
 
-async function atualizarPedido(pedido, alteracoes, botao) {
+async function atualizarPedido(pedido, alteracoes, botao, motivo = "") {
     if (botao) botao.disabled = true;
     const anterior = { status: pedido.status, pagamento_status: pedido.pagamento_status };
-    const { error } = await window.db.from("pedidos").update(alteracoes).eq("id", pedido.id);
+    let resposta;
+    if (alteracoes.pagamento_status === "pago" && Object.keys(alteracoes).length === 1) {
+        resposta = await window.db.rpc("empresa_marcar_pagamento_offline", { p_pedido_id: pedido.id });
+    } else if (alteracoes.status === "cancelado" && Object.keys(alteracoes).length === 1) {
+        resposta = await window.db.rpc("empresa_cancelar_pedido_nao_pago", {
+            p_pedido_id: pedido.id,
+            p_motivo: String(motivo || "").trim().slice(0, 500)
+        });
+    } else {
+        resposta = { data: null, error: new Error("Alteração direta de pedido não permitida.") };
+    }
     if (botao) botao.disabled = false;
-    if (error) {
+    const { data, error } = resposta;
+    if (error || !data) {
         pedido.status = anterior.status; pedido.pagamento_status = anterior.pagamento_status;
-        alert(`Não foi possível atualizar o pedido: ${error.message}`);
+        alert(`Não foi possível atualizar o pedido: ${App.mensagemErro(error)}`);
         return false;
     }
-    Object.assign(pedido, alteracoes);
+    Object.assign(pedido, data);
     renderizarPedidos(); atualizarIndicadores();
     window.AppToast?.("Pedido atualizado", `Pedido #${pedido.numero || String(pedido.id).slice(0, 8)}: ${textoStatusPedido(pedido)}.`, "success");
     return true;
@@ -333,7 +344,7 @@ function criarCardPedido(pedido, indice) {
     }
     if (pedido.pagamento_status !== "pago" && pedido.status !== "cancelado" && pedido.pagamento_modalidade !== "online") { const pago = criarElemento("button", "order-action secondary", "Marcar pago"); pago.type = "button"; pago.addEventListener("click", () => atualizarPedido(pedido, { pagamento_status: "pago" }, pago)); acoes.append(pago); }
     const chat = criarElemento("button", "order-action secondary", "Chat"); chat.type = "button"; chat.addEventListener("click", () => abrirChatPedido(pedido)); acoes.append(chat);
-    if (["recebido", "preparando"].includes(pedido.status) && pedido.pagamento_status !== "pago") { const cancelar = criarElemento("button", "order-action cancel", "×"); cancelar.type = "button"; cancelar.setAttribute("aria-label", "Cancelar pedido"); cancelar.addEventListener("click", () => { if (confirm(`Cancelar o pedido #${pedido.numero || ""}?`)) atualizarPedido(pedido, { status: "cancelado" }, cancelar); }); acoes.append(cancelar); }
+    if (["recebido", "preparando"].includes(pedido.status) && pedido.pagamento_status !== "pago") { const cancelar = criarElemento("button", "order-action cancel", "×"); cancelar.type = "button"; cancelar.setAttribute("aria-label", "Cancelar pedido"); cancelar.addEventListener("click", () => { const motivo = prompt("Motivo do cancelamento (obrigatório):", "Item indisponível"); if (!motivo?.trim()) return; if (confirm(`Cancelar o pedido #${pedido.numero || ""}?`)) atualizarPedido(pedido, { status: "cancelado" }, cancelar, motivo); }); acoes.append(cancelar); }
     if (acoes.children.length) card.append(acoes);
     return card;
 }
