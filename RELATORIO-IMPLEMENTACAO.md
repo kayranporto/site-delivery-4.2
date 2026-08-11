@@ -33,8 +33,8 @@ Data: 10 de agosto de 2026
 
 ## Validação do repositório
 
-- 58 de 58 testes automatizados aprovados na preparação do gate;
-- 167 arquivos verificados;
+- 59 de 59 testes automatizados aprovados na preparação do gate;
+- 168 arquivos verificados;
 - todos os arquivos JavaScript com sintaxe válida;
 - Edge Functions incluídas no gate principal de type-check TypeScript;
 - referências locais e IDs HTML verificados;
