@@ -90,7 +90,7 @@ Configure alertas para:
 ## 8. Aprovação final
 
 - [ ] migrations 014 a 023 confirmadas no projeto hospedado;
-- [ ] 65 testes automatizados aprovados no commit de release;
+- [x] 65 testes automatizados aprovados no commit de release;
 - [ ] Edge Functions publicadas e segredos configurados;
 - [ ] webhook validado no sandbox;
 - [ ] fluxo completo da cozinha e entrega testado;
@@ -101,3 +101,24 @@ Configure alertas para:
 - [ ] cabeçalhos confirmados no domínio;
 - [ ] política de privacidade revisada;
 - [ ] responsáveis operacionais definidos.
+
+## 9. Auditoria técnica — 12/08/2026
+
+Validações executadas no ambiente hospedado e no commit de produção:
+
+- o workflow de publicação da `main` executou `npm ci` e `npm run verify` antes do deploy e concluiu com sucesso;
+- Security Advisor e Performance Advisor foram executados no projeto Supabase;
+- nenhuma tabela do schema `public` foi encontrada com RLS desativada na auditoria de metadados;
+- `private.criar_pedido_impl(text,text,text,text,text,jsonb)` não é executável diretamente pelos papéis `anon` nem `authenticated`;
+- `criar-pagamento`, `mercado-pago-webhook` e `processar-reembolso` estão publicadas e ativas;
+- o webhook do Mercado Pago valida assinatura HMAC, consulta o pagamento diretamente no provedor e usa chave de deduplicação antes da conciliação;
+- `pagamentoOnlineAtivo` permanece `false` até a conclusão dos testes de sandbox.
+
+Pendências que impedem aprovação final:
+
+- o Security Advisor informa que a proteção contra senhas vazadas está desativada;
+- os testes de sandbox de pagamento, reembolso, concorrência e ordem de webhooks ainda precisam de evidências operacionais;
+- a validação de RLS ainda precisa ser concluída com contas reais separadas de cliente, restaurante, entregador e administrador;
+- o histórico de migrations do projeto hospedado usa timestamps e nomes de implantação que não correspondem literalmente à numeração 014–023; a equivalência deve ser documentada antes de marcar esse item como concluído;
+- avisos de funções `SECURITY DEFINER` expostas devem ser revisados individualmente; não aplicar revogação em massa porque várias RPCs possuem checagens internas de papel e propriedade;
+- backup/restauração, CAPTCHA/rate limits, cabeçalhos do domínio, privacidade e responsáveis operacionais continuam pendentes.
