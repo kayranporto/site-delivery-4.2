@@ -54,7 +54,8 @@ Registre evidências e resultados antes de usar credenciais reais.
 ## 5. Autenticação
 
 - mantenha **Confirm email** desativado somente enquanto o cadastro imediato for a decisão vigente;
-- mantenha ativa a proteção contra senhas vazadas e confirme o resultado no Security Advisor;
+- mantenha senha mínima de 8 caracteres no backend e a política local de letra + número no frontend;
+- ative proteção contra senhas vazadas quando o projeto estiver em plano Pro ou superior; no plano Free trate a ausência como risco residual documentado;
 - configure Cloudflare Turnstile ou hCaptcha;
 - ajuste rate limits de cadastro, login e recuperação;
 - configure URLs exatas de produção;
@@ -96,7 +97,7 @@ Configure alertas para:
 - [ ] fluxo completo da cozinha e entrega testado;
 - [ ] RLS validada com contas de cada papel;
 - [ ] backup e restauração testados;
-- [ ] proteção contra senhas vazadas confirmada no Security Advisor;
+- [ ] proteção contra senhas vazadas ativada (Pro+) ou risco formalmente aceito enquanto permanecer no Free;
 - [ ] CAPTCHA e rate limits configurados;
 - [ ] cabeçalhos confirmados no domínio;
 - [ ] política de privacidade revisada;
@@ -115,7 +116,9 @@ Validações executadas no ambiente hospedado e no commit de produção:
 - `pagamentoOnlineAtivo` permanece `false` até a conclusão dos testes de sandbox;
 - a migration hospedada `20260812232054_restringe_execucao_funcoes_futuras_4_2_8` foi aplicada com sucesso;
 - privilégios padrão de funções novas no schema `public`, quando criadas pelo papel `postgres`, agora exigem concessão explícita para `anon`, `authenticated` e `service_role`;
-- `private.normalizar_autor_mensagem()`, `private.notificar_evento_pedido()` e `private.notificar_mensagem_pedido()` permanecem vinculadas aos respectivos triggers, mas não são mais executáveis diretamente por papéis da API.
+- `private.normalizar_autor_mensagem()`, `private.notificar_evento_pedido()` e `private.notificar_mensagem_pedido()` permanecem vinculadas aos respectivos triggers, mas não são mais executáveis diretamente por papéis da API;
+- a organização Supabase está atualmente no plano Free; a proteção HIBP não é disponibilizada nesse plano;
+- `scripts/configurar-auth-sem-confirmacao.sh` foi ajustado para aplicar a configuração básica primeiro e ativar HIBP separadamente apenas quando `ENABLE_HIBP=true`.
 
 Revisão das RPCs `SECURITY DEFINER`:
 
@@ -126,7 +129,7 @@ Revisão das RPCs `SECURITY DEFINER`:
 
 Pendências que impedem aprovação final:
 
-- o Security Advisor informa que a proteção contra senhas vazadas está desativada;
+- a proteção contra senhas vazadas permanece indisponível enquanto a organização estiver no plano Free;
 - os testes de sandbox de pagamento, reembolso, concorrência e ordem de webhooks ainda precisam de evidências operacionais;
 - a validação de RLS ainda precisa ser concluída com contas reais separadas de cliente, restaurante, entregador e administrador;
 - o histórico de migrations do projeto hospedado usa timestamps e nomes de implantação que não correspondem literalmente à numeração 014–023; a equivalência deve ser documentada antes de marcar esse item como concluído;
