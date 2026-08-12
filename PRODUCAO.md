@@ -120,6 +120,13 @@ Validações executadas no ambiente hospedado e no commit de produção:
 - a organização Supabase está atualmente no plano Free; a proteção HIBP não é disponibilizada nesse plano;
 - `scripts/configurar-auth-sem-confirmacao.sh` foi ajustado para aplicar a configuração básica primeiro e ativar HIBP separadamente apenas quando `ENABLE_HIBP=true`.
 
+Validação de RLS por impersonação do papel `authenticated` com JWT controlado:
+
+- cliente: vê apenas o próprio perfil e zero pedidos de terceiros;
+- restaurante: vê 8 pedidos, todos vinculados à própria empresa, e zero pedidos de outra empresa;
+- administrador: `private.is_admin()` retorna verdadeiro e a conta vê o conjunto administrativo esperado;
+- entregador: ainda não há uma identidade isolada para teste positivo. O único registro de entregador atual utiliza a mesma identidade que também possui papel administrativo e é proprietária dos pedidos de teste, portanto esse cenário não comprova isolamento de entregador.
+
 Revisão das RPCs `SECURITY DEFINER`:
 
 - as duas RPCs anônimas (`calcular_entrega_empresa` e `empresa_disponibilidade`) são endpoints públicos intencionais de cálculo/disponibilidade e delegam para helpers no schema privado;
@@ -131,6 +138,6 @@ Pendências que impedem aprovação final:
 
 - a proteção contra senhas vazadas permanece indisponível enquanto a organização estiver no plano Free;
 - os testes de sandbox de pagamento, reembolso, concorrência e ordem de webhooks ainda precisam de evidências operacionais;
-- a validação de RLS ainda precisa ser concluída com contas reais separadas de cliente, restaurante, entregador e administrador;
+- a validação de RLS ainda precisa de uma conta de entregador separada de administrador/cliente para o teste positivo isolado;
 - o histórico de migrations do projeto hospedado usa timestamps e nomes de implantação que não correspondem literalmente à numeração 014–023; a equivalência deve ser documentada antes de marcar esse item como concluído;
 - backup/restauração, CAPTCHA/rate limits, cabeçalhos do domínio, privacidade e responsáveis operacionais continuam pendentes.
