@@ -13,13 +13,13 @@ npm run package
 ## 2. Banco de dados
 
 1. Gere backup e documente o procedimento de restauração.
-2. Confirme que as migrations 014 a 023 estão aplicadas, na ordem, no projeto hospedado.
+2. Confirme que as migrations 014 a 024 estão aplicadas, na ordem, no projeto hospedado.
 3. Execute Security Advisor e Performance Advisor.
 4. Confirme RLS nas tabelas públicas, inclusive `empresa_unidades`, `produto_variantes` e `estoque_movimentos`.
 5. Teste RPCs com contas separadas de cliente, restaurante, entregador e administrador.
 6. Valide que `private.criar_pedido_impl` não é executável diretamente por clientes.
 
-A migration 016 adiciona variações, cozinha, idempotência do checkout, auditoria de estoque e a fundação multiunidade. A migration 018 reconcilia o catálogo publicado com o estado live e restringe as permissões do papel anônimo. A migration 019 elimina políticas redundantes e otimiza chamadas de identidade nas políticas RLS. A migration 020 remove atualizações diretas de estado em pedidos e exige RPCs autenticadas para pagamento presencial e cancelamento não pago. A migration 021 valida a referência do pedido antes de registrar eventos do Mercado Pago e devolve erro controlado para referências inexistentes. A migration 022 impede que pedidos online sem pagamento confirmado avancem para preparo, retirada ou entrega. A migration 023 remove a RPC legada de telemetria de login que não possui consumidores no frontend.
+A migration 016 adiciona variações, cozinha, idempotência do checkout, auditoria de estoque e a fundação multiunidade. A migration 018 reconcilia o catálogo publicado com o estado live e restringe as permissões do papel anônimo. A migration 019 elimina políticas redundantes e otimiza chamadas de identidade nas políticas RLS. A migration 020 remove atualizações diretas de estado em pedidos e exige RPCs autenticadas para pagamento presencial e cancelamento não pago. A migration 021 valida a referência do pedido antes de registrar eventos do Mercado Pago e devolve erro controlado para referências inexistentes. A migration 022 impede que pedidos online sem pagamento confirmado avancem para preparo, retirada ou entrega. A migration 023 remove a RPC legada de telemetria de login que não possui consumidores no frontend. A migration 024 restringe privilégios padrão de funções novas e remove `EXECUTE` direto de funções privadas utilizadas exclusivamente como triggers.
 
 ## 3. Edge Functions
 
@@ -89,7 +89,7 @@ Configure alertas para:
 
 ## 8. Aprovação final
 
-- [ ] migrations 014 a 023 confirmadas no projeto hospedado;
+- [ ] migrations 014 a 024 confirmadas no projeto hospedado;
 - [x] 65 testes automatizados aprovados no commit de release;
 - [ ] Edge Functions publicadas e segredos configurados;
 - [ ] webhook validado no sandbox;
@@ -112,7 +112,17 @@ Validações executadas no ambiente hospedado e no commit de produção:
 - `private.criar_pedido_impl(text,text,text,text,text,jsonb)` não é executável diretamente pelos papéis `anon` nem `authenticated`;
 - `criar-pagamento`, `mercado-pago-webhook` e `processar-reembolso` estão publicadas e ativas;
 - o webhook do Mercado Pago valida assinatura HMAC, consulta o pagamento diretamente no provedor e usa chave de deduplicação antes da conciliação;
-- `pagamentoOnlineAtivo` permanece `false` até a conclusão dos testes de sandbox.
+- `pagamentoOnlineAtivo` permanece `false` até a conclusão dos testes de sandbox;
+- a migration hospedada `20260812232054_restringe_execucao_funcoes_futuras_4_2_8` foi aplicada com sucesso;
+- privilégios padrão de funções novas no schema `public`, quando criadas pelo papel `postgres`, agora exigem concessão explícita para `anon`, `authenticated` e `service_role`;
+- `private.normalizar_autor_mensagem()`, `private.notificar_evento_pedido()` e `private.notificar_mensagem_pedido()` permanecem vinculadas aos respectivos triggers, mas não são mais executáveis diretamente por papéis da API.
+
+Revisão das RPCs `SECURITY DEFINER`:
+
+- as duas RPCs anônimas (`calcular_entrega_empresa` e `empresa_disponibilidade`) são endpoints públicos intencionais de cálculo/disponibilidade e delegam para helpers no schema privado;
+- as RPCs administrativas inspecionadas validam `private.is_admin()` antes de acessar ou alterar dados privilegiados;
+- as RPCs de cliente, restaurante e entregador inspecionadas vinculam a operação a `auth.uid()` e/ou à propriedade/atribuição do pedido;
+- os avisos do Security Advisor permanecem porque funções `SECURITY DEFINER` intencionalmente expostas continuam sendo reportadas pelo linter; não deve ser feita revogação em massa sem substituir a arquitetura de autorização.
 
 Pendências que impedem aprovação final:
 
@@ -120,5 +130,4 @@ Pendências que impedem aprovação final:
 - os testes de sandbox de pagamento, reembolso, concorrência e ordem de webhooks ainda precisam de evidências operacionais;
 - a validação de RLS ainda precisa ser concluída com contas reais separadas de cliente, restaurante, entregador e administrador;
 - o histórico de migrations do projeto hospedado usa timestamps e nomes de implantação que não correspondem literalmente à numeração 014–023; a equivalência deve ser documentada antes de marcar esse item como concluído;
-- avisos de funções `SECURITY DEFINER` expostas devem ser revisados individualmente; não aplicar revogação em massa porque várias RPCs possuem checagens internas de papel e propriedade;
 - backup/restauração, CAPTCHA/rate limits, cabeçalhos do domínio, privacidade e responsáveis operacionais continuam pendentes.
