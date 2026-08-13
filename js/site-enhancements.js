@@ -14,6 +14,17 @@
     operacaoJs.src = "js/operacao-restaurante-4.2.7.js?v=4.2.7";
     operacaoJs.defer = true;
     document.head.append(operacaoJs);
+
+    const nav = document.querySelector(".dashboard-sidebar nav");
+    if (nav && !nav.querySelector('a[href="empresa-equipe.html"]')) {
+      const link = document.createElement("a");
+      link.href = "empresa-equipe.html";
+      const icon = document.createElement("span");
+      icon.setAttribute("aria-hidden", "true");
+      icon.textContent = "♟";
+      link.append(icon, document.createTextNode(" Equipe"));
+      nav.append(link);
+    }
   }
 
   const region=document.createElement("div"); region.className="app-toast-region"; region.setAttribute("aria-live","polite"); document.body.append(region);
