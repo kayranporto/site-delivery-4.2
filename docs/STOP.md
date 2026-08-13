@@ -1,1 +1,0 @@
-Escopo pronto para revisão.
