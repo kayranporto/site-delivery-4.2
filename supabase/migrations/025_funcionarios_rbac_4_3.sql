@@ -43,7 +43,7 @@ using (exists (
     and e.usuario_id = (select auth.uid())
 ));
 
-revoke all on table public.empresa_funcionarios from anon, authenticated;
+revoke all on table public.empresa_funcionarios from public, anon, authenticated;
 grant select on table public.empresa_funcionarios to authenticated;
 
 create or replace function private.eh_proprietario_empresa(p_empresa_id text)
@@ -113,7 +113,7 @@ as $$
   where f.usuario_id = auth.uid()
     and f.ativo = true
     and e.usuario_id is distinct from auth.uid()
-  order by proprietario desc, empresa_nome;
+  order by 4 desc, 2;
 $$;
 
 -- Lista a equipe sem conceder SELECT direto em auth.users. Apenas o
@@ -141,7 +141,7 @@ begin
   return query
   select
     f.usuario_id,
-    coalesce(nullif(trim(concat_ws(' ', u.nome, u.sobrenome)), ''), au.email)::text as nome,
+    coalesce(nullif(trim(concat_ws(' ', u.nome, u.sobrenome)), ''), au.email)::text,
     au.email::text,
     f.papel::text,
     f.ativo,
@@ -151,7 +151,7 @@ begin
   join auth.users au on au.id = f.usuario_id
   left join public.usuarios u on u.id = f.usuario_id
   where f.empresa_id::text = p_empresa_id::text
-  order by f.ativo desc, nome, au.email;
+  order by 5 desc, 2, 3;
 end;
 $$;
 
@@ -175,7 +175,7 @@ begin
     raise exception 'Apenas o proprietário pode gerenciar a equipe.';
   end if;
 
-  if p_papel not in ('gerente', 'cozinha', 'atendente', 'financeiro') then
+  if p_papel is null or p_papel not in ('gerente', 'cozinha', 'atendente', 'financeiro') then
     raise exception 'Papel de funcionário inválido.';
   end if;
 
