@@ -31,6 +31,32 @@ async function obterOuCriarEmpresa(user) {
     return resposta.data;
 }
 
+async function resolverAcessoEmpresa(user) {
+    const { data: acessos, error: erroAcessos } = await window.db.rpc("empresa_meu_acesso");
+    if (erroAcessos) throw erroAcessos;
+    const lista = Array.isArray(acessos) ? acessos : [];
+    const proprietario = lista.find((item) => item.proprietario === true);
+
+    if (proprietario) {
+        const { data: empresa, error } = await window.db.from("empresas").select("*").eq("id", proprietario.empresa_id).single();
+        if (error || !empresa) throw error || new Error("Restaurante não encontrado.");
+        return { destino: "empresa-dashboard.html", empresa, acesso: proprietario };
+    }
+
+    const colaborador = lista.find((item) => item.proprietario !== true);
+    if (colaborador) {
+        return { destino: "empresa-colaborador.html", empresa: null, acesso: colaborador };
+    }
+
+    const empresa = await obterOuCriarEmpresa(user);
+    if (!empresa) return null;
+    return {
+        destino: "empresa-dashboard.html",
+        empresa,
+        acesso: { empresa_id: String(empresa.id), empresa_nome: empresa.nome, papel: "proprietario", proprietario: true }
+    };
+}
+
 if (!form || !email || !senha || !submitButton) {
     console.error("Formulário de login da empresa não encontrado.");
 } else {
@@ -46,6 +72,7 @@ if (!form || !email || !senha || !submitButton) {
         if (!window.DeliveryCaptcha?.validar()) return;
 
         App.definirCarregando(submitButton, true, "Entrando...");
+        let autenticado = false;
         try {
             const captchaToken = window.DeliveryCaptcha?.getToken() || undefined;
             const credentials = { email: emailDigitado, password: senhaDigitada };
@@ -53,13 +80,26 @@ if (!form || !email || !senha || !submitButton) {
             const { data, error } = await window.db.auth.signInWithPassword(credentials);
             if (error) throw error;
             if (!data?.user) throw new Error("Usuário não encontrado.");
+            autenticado = true;
             App.salvarJSON(CHAVE_TENTATIVAS, { email: emailDigitado, falhas: 0, bloqueadoAte: 0 });
-            const empresa = await obterOuCriarEmpresa(data.user);
-            if (!empresa) { await window.db.auth.signOut(); throw new Error("Esta conta ainda não possui um restaurante cadastrado."); }
-            App.vincularUsuarioLocal(data.user.id); App.salvarJSON("empresaLogada", empresa);
-            window.location.replace("empresa-dashboard.html");
+
+            const resolvido = await resolverAcessoEmpresa(data.user);
+            if (!resolvido) {
+                await window.db.auth.signOut();
+                throw new Error("Esta conta não possui acesso a um restaurante ou equipe.");
+            }
+
+            App.vincularUsuarioLocal(data.user.id);
+            App.salvarJSON("empresaAcesso", resolvido.acesso);
+            if (resolvido.empresa) App.salvarJSON("empresaLogada", resolvido.empresa);
+            else localStorage.removeItem("empresaLogada");
+            window.location.replace(resolvido.destino);
         } catch (erro) {
             console.error("Erro no login da empresa:", erro);
+            if (autenticado && /não possui acesso|incompletos|Restaurante não encontrado/i.test(String(erro?.message || ""))) {
+                mensagemLogin(App.mensagemErro(erro), true);
+                return;
+            }
             estado.falhas = Number(estado.falhas || 0) + 1;
             if (estado.falhas >= 5) estado.bloqueadoAte = Date.now() + 60000;
             App.salvarJSON(CHAVE_TENTATIVAS, estado);
