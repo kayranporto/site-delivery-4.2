@@ -222,19 +222,90 @@ async function carregarPerfil() {
     }
 }
 
+function criarModalLogout() {
+    const estilo = document.createElement("style");
+    estilo.textContent = `
+        .logout-dialog{width:min(440px,calc(100vw - 32px));max-width:440px;padding:0;border:0;border-radius:24px;background:transparent;color:#17171c}
+        .logout-dialog::backdrop{background:rgba(17,17,22,.58);backdrop-filter:blur(4px)}
+        .logout-dialog-card{overflow:hidden;border:1px solid rgba(232,232,236,.92);border-radius:24px;background:#fff;box-shadow:0 28px 80px rgba(16,16,20,.28);animation:logoutDialogIn .18s ease-out}
+        .logout-dialog-body{display:grid;justify-items:center;padding:30px 30px 24px;text-align:center}
+        .logout-dialog-icon{display:grid;width:58px;height:58px;place-items:center;margin-bottom:18px;border-radius:18px;background:#fff0f1;color:#d71928;font-size:25px;font-weight:800}
+        .logout-dialog-eyebrow{margin:0 0 6px;color:#d71928;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+        .logout-dialog h2{margin:0;color:#17171c;font-size:22px;line-height:1.25}
+        .logout-dialog-copy{max-width:340px;margin:10px 0 0;color:#68686f;font-size:13px;line-height:1.65}
+        .logout-dialog-note{display:flex;width:100%;align-items:flex-start;gap:10px;margin-top:20px;padding:13px 14px;border-radius:14px;background:#f7f7f9;color:#55555d;text-align:left;font-size:11px;line-height:1.5}
+        .logout-dialog-note span:first-child{display:grid;width:22px;height:22px;flex:0 0 auto;place-items:center;border-radius:50%;background:#e9e9ed;color:#3c3c43;font-weight:800}
+        .logout-dialog-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:18px 22px 22px;border-top:1px solid #eeeef1;background:#fbfbfc}
+        .logout-dialog-actions button{min-height:46px;padding:10px 14px;border-radius:13px;cursor:pointer;font:700 12px Poppins,system-ui,sans-serif;transition:transform .16s ease,background .16s ease,border-color .16s ease,box-shadow .16s ease}
+        .logout-dialog-actions button:hover{transform:translateY(-1px)}
+        .logout-dialog-cancel{border:1px solid #dedee3;background:#fff;color:#303038}
+        .logout-dialog-cancel:hover{border-color:#cfcfd5;background:#f5f5f7}
+        .logout-dialog-confirm{border:1px solid #d71928;background:#d71928;color:#fff;box-shadow:0 8px 20px rgba(215,25,40,.18)}
+        .logout-dialog-confirm:hover{border-color:#bd1623;background:#bd1623}
+        .logout-dialog-actions button:focus-visible{outline:3px solid rgba(234,29,44,.22);outline-offset:2px}
+        @keyframes logoutDialogIn{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+        @media(max-width:520px){.logout-dialog-body{padding:26px 22px 20px}.logout-dialog-actions{grid-template-columns:1fr;padding:14px 18px 18px}.logout-dialog-confirm{order:1}.logout-dialog-cancel{order:2}}
+        @media(prefers-reduced-motion:reduce){.logout-dialog-card{animation:none}.logout-dialog-actions button{transition:none}}
+    `;
+    document.head.append(estilo);
+
+    const dialog = document.createElement("dialog");
+    dialog.className = "logout-dialog";
+    dialog.setAttribute("aria-labelledby", "logoutDialogTitulo");
+    dialog.setAttribute("aria-describedby", "logoutDialogDescricao");
+
+    const card = criar("div", "logout-dialog-card");
+    const body = criar("div", "logout-dialog-body");
+    const icon = criar("div", "logout-dialog-icon", "↪");
+    icon.setAttribute("aria-hidden", "true");
+    const eyebrow = criar("p", "logout-dialog-eyebrow", "Encerrar sessão");
+    const titulo = criar("h2", "", "Deseja sair da sua conta?");
+    titulo.id = "logoutDialogTitulo";
+    const descricao = criar("p", "logout-dialog-copy", "Você será desconectado deste dispositivo e voltará para a página inicial.");
+    descricao.id = "logoutDialogDescricao";
+    const nota = criar("div", "logout-dialog-note");
+    nota.append(criar("span", "", "i"), criar("span", "", "Seus pedidos, favoritos e dados da conta continuarão salvos para o próximo acesso."));
+    body.append(icon, eyebrow, titulo, descricao, nota);
+
+    const actions = criar("div", "logout-dialog-actions");
+    const cancelar = criar("button", "logout-dialog-cancel", "Continuar conectado");
+    cancelar.type = "button";
+    const confirmar = criar("button", "logout-dialog-confirm", "Sair da conta");
+    confirmar.type = "button";
+    actions.append(cancelar, confirmar);
+    card.append(body, actions);
+    dialog.append(card);
+    document.body.append(dialog);
+
+    cancelar.addEventListener("click", () => dialog.close("cancelar"));
+    dialog.addEventListener("click", (evento) => {
+        if (evento.target === dialog) dialog.close("cancelar");
+    });
+
+    return { dialog, confirmar };
+}
+
 const logout = document.getElementById("logout");
-logout.addEventListener("click", async () => {
-    if (!confirm("Deseja sair da sua conta?")) return;
-    App.definirCarregando(logout, true, "Saindo...");
+const modalLogout = criarModalLogout();
+
+logout.addEventListener("click", () => {
+    if (!modalLogout.dialog.open) modalLogout.dialog.showModal();
+});
+
+modalLogout.confirmar.addEventListener("click", async () => {
+    modalLogout.confirmar.disabled = true;
+    modalLogout.confirmar.textContent = "Saindo...";
     try {
         const { error } = await window.db.auth.signOut();
         if (error) throw error;
         App.limparDadosPrivados();
         window.location.replace("index.html");
     } catch (erro) {
+        modalLogout.dialog.close();
         window.AppToast?.("Não foi possível sair", App.mensagemErro(erro), "error");
     } finally {
-        App.definirCarregando(logout, false);
+        modalLogout.confirmar.disabled = false;
+        modalLogout.confirmar.textContent = "Sair da conta";
     }
 });
 
