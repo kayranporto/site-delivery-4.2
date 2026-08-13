@@ -33,7 +33,7 @@ test("gestão da equipe passa apenas por RPCs autenticadas do proprietário", ()
         assert.ok(sql.includes(`grant execute on function ${funcao} to authenticated`), `${funcao} sem grant autenticado`);
     }
     assert.match(sql, /not private\.eh_proprietario_empresa\(p_empresa_id\)/);
-    assert.match(sql, /revoke all on table public\.empresa_funcionarios from anon, authenticated/);
+    assert.match(sql, /revoke all on table public\.empresa_funcionarios from public, anon, authenticated/);
     assert.match(sql, /grant select on table public\.empresa_funcionarios to authenticated/);
 });
 
