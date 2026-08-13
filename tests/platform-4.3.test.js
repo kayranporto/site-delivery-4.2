@@ -50,7 +50,8 @@ test("vínculo por e-mail não expõe auth.users diretamente ao frontend", () =>
     assert.match(sql, /from auth\.users au/);
     assert.match(sql, /lower\(au\.email\) = lower\(trim\(p_email\)\)/);
     assert.match(sql, /O usuário precisa criar uma conta antes de ser vinculado à equipe/);
-    assert.doesNotMatch(sql, /grant\s+select[\s\S]*auth\.users/i);
+    const grantsSelect = sql.match(/grant\s+select[^;]*;/gi) || [];
+    assert.equal(grantsSelect.some((grant) => /auth\.users/i.test(grant)), false);
 });
 
 test("primeira etapa de RBAC permanece fail-closed para dados operacionais", () => {
