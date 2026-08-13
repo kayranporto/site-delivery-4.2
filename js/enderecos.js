@@ -16,6 +16,10 @@ if (continuar && destino !== "perfil.html") {
     continuar.hidden = false;
 }
 
+function avisarEndereco(titulo, mensagem, tipo = "info") {
+    if (window.AppToast) window.AppToast(titulo, mensagem, tipo);
+}
+
 function normalizarCep(valor) {
     const numeros = App.somenteNumeros(valor).slice(0, 8);
     return numeros.length > 5 ? `${numeros.slice(0, 5)}-${numeros.slice(5)}` : numeros;
@@ -75,10 +79,10 @@ function renderizar() {
             try {
                 await tornarPrincipal(endereco.id);
                 await carregar();
-                window.AppToast?.("Endereço selecionado", "O próximo pedido usará este endereço.", "success");
+                avisarEndereco("Endereço selecionado", "O próximo pedido usará este endereço.", "success");
             } catch (erro) {
                 usar.disabled = false;
-                alert(`Não foi possível selecionar o endereço: ${App.mensagemErro(erro)}`);
+                avisarEndereco("Não foi possível selecionar", App.mensagemErro(erro), "error");
             }
         });
 
@@ -87,7 +91,21 @@ function renderizar() {
         remover.type = "button";
         remover.textContent = "Remover";
         remover.addEventListener("click", async () => {
-            if (!confirm(`Remover o endereço “${endereco.apelido || "Endereço"}”?`)) return;
+            const nome = endereco.apelido || "Endereço";
+            const confirmado = window.AppConfirm
+                ? await window.AppConfirm({
+                    titulo: `Remover ${nome}?`,
+                    mensagem: "Este endereço deixará de aparecer nas opções de entrega da sua conta.",
+                    confirmar: "Remover endereço",
+                    cancelar: "Manter endereço",
+                    perigoso: true,
+                    icone: "⌖",
+                    etiqueta: "Endereço",
+                    nota: endereco.principal ? "Como este é o endereço principal, outro endereço será selecionado automaticamente quando possível." : "Você poderá cadastrar este endereço novamente depois."
+                })
+                : false;
+            if (!confirmado) return;
+
             remover.disabled = true;
             const { error } = await window.db.from("enderecos")
                 .delete()
@@ -95,7 +113,7 @@ function renderizar() {
                 .eq("usuario_id", usuarioAtual.id);
             if (error) {
                 remover.disabled = false;
-                alert(`Não foi possível remover: ${App.mensagemErro(error)}`);
+                avisarEndereco("Não foi possível remover", App.mensagemErro(error), "error");
                 return;
             }
             enderecos = enderecos.filter((itemEndereco) => itemEndereco.id !== endereco.id);
@@ -103,6 +121,7 @@ function renderizar() {
                 try { await tornarPrincipal(enderecos[0].id); } catch (erro) { console.error(erro); }
             }
             await carregar();
+            avisarEndereco("Endereço removido", `${nome} foi removido da sua conta.`, "success");
         });
 
         actions.append(usar, remover);
@@ -129,8 +148,16 @@ form.addEventListener("submit", async (event) => {
     const botao = form.querySelector("button[type='submit']");
     const cep = normalizarCep(document.getElementById("cep").value);
     const uf = document.getElementById("uf").value.trim().toUpperCase();
-    if (!/^\d{5}-\d{3}$/.test(cep)) return alert("Informe um CEP válido.");
-    if (!/^[A-Z]{2}$/.test(uf)) return alert("Informe uma UF válida com duas letras.");
+    if (!/^\d{5}-\d{3}$/.test(cep)) {
+        avisarEndereco("CEP inválido", "Informe um CEP no formato 00000-000.", "error");
+        document.getElementById("cep").focus();
+        return;
+    }
+    if (!/^[A-Z]{2}$/.test(uf)) {
+        avisarEndereco("UF inválida", "Informe a sigla do estado com duas letras.", "error");
+        document.getElementById("uf").focus();
+        return;
+    }
 
     const payload = {
         usuario_id: usuarioAtual.id,
@@ -162,9 +189,9 @@ form.addEventListener("submit", async (event) => {
         document.getElementById("apelido").value = "Casa";
         document.getElementById("principal").checked = true;
         await carregar();
-        window.AppToast?.("Endereço salvo", "O endereço já pode ser usado no checkout.", "success");
+        avisarEndereco("Endereço salvo", "O endereço já pode ser usado no checkout.", "success");
     } catch (erro) {
-        alert(`Não foi possível salvar o endereço: ${App.mensagemErro(erro)}`);
+        avisarEndereco("Não foi possível salvar o endereço", App.mensagemErro(erro), "error");
     } finally {
         App.definirCarregando(botao, false);
     }

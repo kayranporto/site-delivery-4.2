@@ -9,6 +9,10 @@
         return `${produto.id}|${produto.variante_id || "sem-variante"}|${adicionais}|${produto.observacao || ""}`;
     }
 
+    function avisar(titulo, mensagem, tipo = "info", tempo = 5500) {
+        if (window.AppToast) window.AppToast(titulo, mensagem, tipo, tempo);
+    }
+
     function alterarBotao(botao, carregando) {
         if (!botao) return;
         if (carregando) {
@@ -23,13 +27,24 @@
 
     async function pedirNovamente(pedido, botao) {
         if (!pedido?.empresa_id || !Array.isArray(pedido.pedido_itens) || !pedido.pedido_itens.length) {
-            alert("Não foi possível recuperar os itens deste pedido.");
+            avisar("Pedido indisponível", "Não foi possível recuperar os itens deste pedido.", "error");
             return;
         }
 
         const carrinhoExistente = App.lerJSON("carrinho", []);
         if (Array.isArray(carrinhoExistente) && carrinhoExistente.length) {
-            const substituir = confirm("Pedir novamente substituirá os itens que já estão no carrinho. Deseja continuar?");
+            const substituir = window.AppConfirm
+                ? await window.AppConfirm({
+                    titulo: "Substituir o carrinho atual?",
+                    mensagem: "Ao pedir novamente, os itens que já estão no carrinho serão removidos e substituídos pelos itens deste pedido.",
+                    confirmar: "Substituir e continuar",
+                    cancelar: "Manter carrinho",
+                    perigoso: true,
+                    icone: "↻",
+                    etiqueta: "Pedir novamente",
+                    nota: "Você ainda poderá revisar itens, valores e endereço antes de finalizar o novo pedido."
+                })
+                : false;
             if (!substituir) return;
         }
 
@@ -81,7 +96,7 @@
 
             const empresa = empresaResposta.data;
             if (empresa.status === false) {
-                alert("Este restaurante está fechado agora. Você poderá repetir o pedido quando ele voltar a receber pedidos.");
+                avisar("Restaurante fechado", "Você poderá repetir este pedido quando o restaurante voltar a receber pedidos.", "warning", 6500);
                 return;
             }
 
@@ -140,8 +155,8 @@
             });
 
             if (!carrinho.length) {
-                alert("Os itens deste pedido não estão mais disponíveis. Abriremos o cardápio para você escolher outras opções.");
-                location.href = `restaurante.html?id=${encodeURIComponent(empresa.id)}`;
+                avisar("Itens indisponíveis", "Os itens deste pedido não estão mais disponíveis. Vamos abrir o cardápio para você escolher outras opções.", "warning", 6500);
+                setTimeout(() => { location.href = `restaurante.html?id=${encodeURIComponent(empresa.id)}`; }, 900);
                 return;
             }
 
@@ -172,7 +187,7 @@
             location.href = "checkout.html";
         } catch (error) {
             console.error("Erro ao repetir pedido:", error);
-            alert(`Não foi possível repetir o pedido agora. ${App.mensagemErro(error)}`);
+            avisar("Não foi possível repetir o pedido", App.mensagemErro(error), "error", 6500);
         } finally {
             alterarBotao(botao, false);
         }
