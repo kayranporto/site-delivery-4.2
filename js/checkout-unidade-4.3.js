@@ -14,13 +14,31 @@
     if (instalado) return;
     instalado = true;
     window.db.rpc = function rpcComUnidade(nome, parametros = {}, opcoes) {
-      if (nome !== "criar_pedido_operacional") return originalRpc(nome, parametros, opcoes);
       const meta = metaCarrinho();
       if (!meta?.unidade_id) return originalRpc(nome, parametros, opcoes);
-      return originalRpc("criar_pedido_operacional_unidade", {
-        ...parametros,
-        p_unidade_id: String(meta.unidade_id)
-      }, opcoes);
+
+      if (nome === "calcular_entrega_empresa") {
+        return originalRpc("calcular_entrega_unidade", {
+          ...parametros,
+          p_unidade_id: String(meta.unidade_id)
+        }, opcoes);
+      }
+
+      if (nome === "empresa_disponibilidade") {
+        return originalRpc("empresa_disponibilidade_unidade", {
+          ...parametros,
+          p_unidade_id: String(meta.unidade_id)
+        }, opcoes);
+      }
+
+      if (nome === "criar_pedido_operacional") {
+        return originalRpc("criar_pedido_operacional_unidade", {
+          ...parametros,
+          p_unidade_id: String(meta.unidade_id)
+        }, opcoes);
+      }
+
+      return originalRpc(nome, parametros, opcoes);
     };
   }
 
