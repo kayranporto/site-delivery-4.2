@@ -8,7 +8,7 @@ const path = require("node:path");
 const root = path.resolve(__dirname, "..");
 const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
 
-const migration = () => read("supabase/migrations/035_logistica_distancia_proximidade_4_4.sql");
+const migration = () => read("supabase/migrations/20260814013639_logistica_distancia_proximidade_4_4.sql");
 
 test("4.4 adiciona coordenadas opcionais e distância sem tarifa por km", () => {
   const sql = migration();
@@ -22,7 +22,7 @@ test("4.4 adiciona coordenadas opcionais e distância sem tarifa por km", () => 
 });
 
 test("hardening exige par de coordenadas e limita Haversine", () => {
-  const sql = read("supabase/migrations/036_hardening_coordenadas_distancia_4_4.sql");
+  const sql = read("supabase/migrations/20260814013655_hardening_coordenadas_distancia_4_4.sql");
   for (const tabela of ["empresa_unidades", "enderecos", "entregadores"]) {
     assert.match(sql, new RegExp(`alter table public\\.${tabela}[\\s\\S]{0,260}latitude is not null and longitude is not null`));
   }
