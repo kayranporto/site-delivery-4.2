@@ -3,27 +3,64 @@
 const form = document.getElementById("cadastroForm");
 const submitButton = form.querySelector("button[type='submit']");
 
+function avisarCadastro(titulo, mensagem, tipo = "info", campo = null) {
+    window.AppToast?.(titulo, mensagem, tipo);
+    campo?.focus?.();
+}
+
 form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    const nome = document.getElementById("nome").value.trim();
-    const sobrenome = document.getElementById("sobrenome").value.trim();
-    const telefone = document.getElementById("telefone").value.trim();
-    const email = document.getElementById("email").value.trim().toLowerCase();
-    const cpf = App.somenteNumeros(document.getElementById("cpf").value);
-    const senha = document.getElementById("senha").value;
-    const confirmarSenha = document.getElementById("confirmarSenha").value;
+    const nomeCampo = document.getElementById("nome");
+    const sobrenomeCampo = document.getElementById("sobrenome");
+    const telefoneCampo = document.getElementById("telefone");
+    const emailCampo = document.getElementById("email");
+    const cpfCampo = document.getElementById("cpf");
+    const senhaCampo = document.getElementById("senha");
+    const confirmarSenhaCampo = document.getElementById("confirmarSenha");
 
-    if (!nome || !sobrenome || !telefone || !email || !senha || !confirmarSenha) {
-        alert("Preencha todos os campos obrigatórios.");
+    const nome = nomeCampo.value.trim();
+    const sobrenome = sobrenomeCampo.value.trim();
+    const telefone = telefoneCampo.value.trim();
+    const email = emailCampo.value.trim().toLowerCase();
+    const cpf = App.somenteNumeros(cpfCampo.value);
+    const senha = senhaCampo.value;
+    const confirmarSenha = confirmarSenhaCampo.value;
+
+    const obrigatorios = [
+        [nomeCampo, nome],
+        [sobrenomeCampo, sobrenome],
+        [telefoneCampo, telefone],
+        [emailCampo, email],
+        [senhaCampo, senha],
+        [confirmarSenhaCampo, confirmarSenha]
+    ];
+    const faltando = obrigatorios.find(([, valor]) => !valor);
+    if (faltando) {
+        avisarCadastro("Revise seu cadastro", "Preencha todos os campos obrigatórios antes de continuar.", "warning", faltando[0]);
         return;
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return alert("Informe um e-mail válido.");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        avisarCadastro("E-mail inválido", "Informe um endereço de e-mail válido.", "error", emailCampo);
+        return;
+    }
     const politica = window.AuthPolicy?.validar(senha);
-    if (!politica?.valida) return alert(politica?.mensagem || "Informe uma senha segura.");
-    if (senha !== confirmarSenha) return alert("As senhas não coincidem.");
-    if (!App.validarTelefone(telefone)) return alert("Informe um telefone com DDD e 10 ou 11 números.");
-    if (cpf && !App.validarCPF(cpf)) return alert("Informe um CPF válido ou deixe o campo vazio.");
+    if (!politica?.valida) {
+        avisarCadastro("Senha não atende aos requisitos", politica?.mensagem || "Informe uma senha segura.", "error", senhaCampo);
+        return;
+    }
+    if (senha !== confirmarSenha) {
+        avisarCadastro("Senhas diferentes", "A confirmação precisa ser igual à senha informada.", "error", confirmarSenhaCampo);
+        return;
+    }
+    if (!App.validarTelefone(telefone)) {
+        avisarCadastro("Telefone inválido", "Informe um telefone com DDD e 10 ou 11 números.", "error", telefoneCampo);
+        return;
+    }
+    if (cpf && !App.validarCPF(cpf)) {
+        avisarCadastro("CPF inválido", "Informe um CPF válido ou deixe o campo vazio.", "error", cpfCampo);
+        return;
+    }
     if (!window.DeliveryCaptcha?.validar()) return;
 
     App.definirCarregando(submitButton, true, "Criando conta...");
@@ -50,7 +87,7 @@ form.addEventListener("submit", async (event) => {
         window.location.replace(App.destinoInterno(solicitado, "perfil.html?cadastro=sucesso"));
     } catch (erro) {
         console.error("Erro ao criar conta:", erro);
-        alert(`Não foi possível criar a conta: ${App.mensagemErro(erro, "erro desconhecido")}`);
+        avisarCadastro("Não foi possível criar a conta", App.mensagemErro(erro, "erro desconhecido"), "error");
     } finally {
         window.DeliveryCaptcha?.reset();
         App.definirCarregando(submitButton, false);
