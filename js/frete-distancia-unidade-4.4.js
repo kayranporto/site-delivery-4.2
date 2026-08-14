@@ -160,13 +160,13 @@
     status.setAttribute("role", "status");
     status.style.cssText = "margin:12px 0;color:#6b7280;font-size:10px;line-height:1.5";
 
-    const salvar = criar("button", "Salvar configuração de frete");
-    salvar.id = "salvarFreteDistancia44";
-    salvar.type = "submit";
-    salvar.className = "btn primary";
-    salvar.style.cssText = "border:0;border-radius:11px;padding:11px 14px;background:#20242e;color:#fff;cursor:pointer;font:700 10px Poppins,sans-serif";
+    const salvarBotao = criar("button", "Salvar configuração de frete");
+    salvarBotao.id = "salvarFreteDistancia44";
+    salvarBotao.type = "submit";
+    salvarBotao.className = "btn primary";
+    salvarBotao.style.cssText = "border:0;border-radius:11px;padding:11px 14px;background:#20242e;color:#fff;cursor:pointer;font:700 10px Poppins,sans-serif";
 
-    form.append(topo, grade, status, salvar);
+    form.append(topo, grade, status, salvarBotao);
     form.addEventListener("submit", salvar);
     card.append(titulo, descricao, form);
 
