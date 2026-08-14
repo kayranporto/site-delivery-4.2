@@ -30,6 +30,11 @@
     unidadesJs.src = "js/empresa-unidades-4.3.js?v=4.3.0";
     unidadesJs.async = false;
     document.body.append(unidadesJs);
+
+    const operacaoUnidadesJs = document.createElement("script");
+    operacaoUnidadesJs.src = "js/operacao-unidades-4.3.js?v=4.3.0";
+    operacaoUnidadesJs.async = false;
+    document.body.append(operacaoUnidadesJs);
   }
 
   if (/restaurante\.html$/i.test(location.pathname)) {
@@ -37,6 +42,11 @@
     unidadesPublicasJs.src = "js/restaurante-unidades-4.3.js?v=4.3.0";
     unidadesPublicasJs.async = false;
     document.body.append(unidadesPublicasJs);
+
+    const statusUnidadeJs = document.createElement("script");
+    statusUnidadeJs.src = "js/restaurante-status-unidade-4.3.js?v=4.3.0";
+    statusUnidadeJs.async = false;
+    document.body.append(statusUnidadeJs);
   }
 
   if (/checkout\.html$/i.test(location.pathname)) {
