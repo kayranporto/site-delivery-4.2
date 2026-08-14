@@ -25,6 +25,11 @@
       link.append(icon, document.createTextNode(" Equipe"));
       nav.append(link);
     }
+
+    const unidadesJs = document.createElement("script");
+    unidadesJs.src = "js/empresa-unidades-4.3.js?v=4.3.0";
+    unidadesJs.async = false;
+    document.body.append(unidadesJs);
   }
 
   const region=document.createElement("div");
