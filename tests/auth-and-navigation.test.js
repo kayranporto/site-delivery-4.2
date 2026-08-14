@@ -57,7 +57,7 @@ test("login não chama telemetria controlada pelo cliente", () => {
         assert.doesNotMatch(read(name), /registrar_tentativa_login/);
         assert.match(read(name), /pausa local/);
     }
-    const migration = read("supabase/migrations/015_auth_sem_confirmacao_e_hardening.sql");
+    const migration = read("supabase/migrations/20260801001500_auth_sem_confirmacao_e_hardening.sql");
     assert.match(migration, /drop function if exists public\.registrar_tentativa_login/);
     assert.match(migration, /revoke all on function public\.admin_atualizar_reembolso/);
 });
