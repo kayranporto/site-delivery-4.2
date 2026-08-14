@@ -20,6 +20,10 @@ function elemento(tag, classe, texto) {
     return item;
 }
 
+function avisarEntregador(titulo, mensagem, tipo = "info") {
+    window.AppToast?.(titulo, mensagem, tipo);
+}
+
 function dataHora(valor) {
     const data = new Date(valor);
     return Number.isFinite(data.getTime()) ? data.toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" }) : "Agora";
@@ -40,9 +44,12 @@ async function aceitar(pedidoId, botao) {
     App.definirCarregando(botao, true, "Aceitando...");
     const { data, error } = await db.rpc("entregador_aceitar_pedido", { p_pedido_id: pedidoId });
     App.definirCarregando(botao, false);
-    if (error || data !== true) return alert(`Não foi possível aceitar: ${App.mensagemErro(error, "A entrega já foi aceita.")}`);
+    if (error || data !== true) {
+        avisarEntregador("Não foi possível aceitar", App.mensagemErro(error, "A entrega já foi aceita."), "error");
+        return;
+    }
     await carregarEntregas();
-    window.AppToast?.("Entrega aceita", "O endereço completo e as ações de rota já estão disponíveis.", "success");
+    avisarEntregador("Entrega aceita", "O endereço completo e as ações de rota já estão disponíveis.", "success");
 }
 
 async function mudarStatus(pedido, status, pagamentoRecebido, botao) {
@@ -53,18 +60,100 @@ async function mudarStatus(pedido, status, pagamentoRecebido, botao) {
         p_pagamento_recebido: pagamentoRecebido
     });
     App.definirCarregando(botao, false);
-    if (error || data !== true) return alert(`Não foi possível atualizar: ${App.mensagemErro(error)}`);
+    if (error || data !== true) {
+        avisarEntregador("Não foi possível atualizar", App.mensagemErro(error), "error");
+        return;
+    }
     await carregarEntregas();
+    avisarEntregador(
+        status === "entregue" ? "Entrega concluída" : "Status atualizado",
+        status === "entregue" ? "A entrega foi marcada como concluída." : "A entrega agora está em rota.",
+        "success"
+    );
+}
+
+function pedirRespostaChat(pedido, historico) {
+    return new Promise((resolve) => {
+        const fundo = elemento("div", "app-confirm");
+        const painel = elemento("section", "app-confirm-panel");
+        painel.setAttribute("role", "dialog");
+        painel.setAttribute("aria-modal", "true");
+        painel.setAttribute("aria-labelledby", "entregadorChatTitulo");
+
+        const corpo = elemento("div", "app-confirm-body");
+        const icone = elemento("div", "app-confirm-icon", "✉");
+        icone.setAttribute("aria-hidden", "true");
+        const etiqueta = elemento("div", "app-confirm-eyebrow", "Chat da entrega");
+        const titulo = elemento("h2", "", `Pedido #${pedido.numero}`);
+        titulo.id = "entregadorChatTitulo";
+        const descricao = elemento("p", "app-confirm-copy", "Confira a conversa e envie uma resposta ao cliente ou restaurante.");
+
+        const historicoBox = elemento("div", "");
+        historicoBox.textContent = historico;
+        historicoBox.style.cssText = "width:100%;max-height:190px;overflow:auto;margin-top:16px;padding:13px 14px;border-radius:14px;background:#f7f7f9;color:#55555d;text-align:left;white-space:pre-wrap;font:500 11px/1.55 Poppins,system-ui,sans-serif";
+
+        const campo = document.createElement("textarea");
+        campo.maxLength = 1000;
+        campo.rows = 4;
+        campo.placeholder = "Digite sua mensagem...";
+        campo.setAttribute("aria-label", "Mensagem do entregador");
+        campo.style.cssText = "width:100%;margin-top:14px;padding:12px 13px;border:1px solid #dcdce2;border-radius:13px;resize:vertical;font:500 12px/1.5 Poppins,system-ui,sans-serif;outline:none";
+
+        corpo.append(icone, etiqueta, titulo, descricao, historicoBox, campo);
+
+        const acoes = elemento("div", "app-confirm-actions");
+        const cancelar = elemento("button", "secondary", "Fechar");
+        const enviar = elemento("button", "primary", "Enviar mensagem");
+        cancelar.type = enviar.type = "button";
+        acoes.append(cancelar, enviar);
+        painel.append(corpo, acoes);
+        fundo.append(painel);
+
+        let encerrado = false;
+        const fechar = (valor) => {
+            if (encerrado) return;
+            encerrado = true;
+            fundo.remove();
+            resolve(valor);
+        };
+        cancelar.addEventListener("click", () => fechar(null));
+        enviar.addEventListener("click", () => {
+            const mensagem = campo.value.trim();
+            if (!mensagem) {
+                campo.focus();
+                avisarEntregador("Digite uma mensagem", "Escreva uma resposta antes de enviar.", "warning");
+                return;
+            }
+            fechar(mensagem.slice(0, 1000));
+        });
+        fundo.addEventListener("click", (event) => { if (event.target === fundo) fechar(null); });
+        fundo.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") {
+                event.preventDefault();
+                fechar(null);
+            }
+        });
+
+        document.body.append(fundo);
+        campo.focus();
+    });
 }
 
 async function abrirChat(pedido) {
     const { data, error } = await db.from("pedido_mensagens").select("autor_tipo,mensagem,created_at").eq("pedido_id", pedido.id).order("created_at").limit(30);
-    if (error) return alert(`Não foi possível abrir o chat: ${App.mensagemErro(error)}`);
+    if (error) {
+        avisarEntregador("Não foi possível abrir o chat", App.mensagemErro(error), "error");
+        return;
+    }
     const historico = (data || []).map((item) => `[${new Date(item.created_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}] ${item.autor_tipo}: ${item.mensagem}`).join("\n") || "Ainda não há mensagens.";
-    const resposta = prompt(`Conversa do pedido #${pedido.numero}\n\n${historico}\n\nDigite uma resposta:`);
-    if (!resposta?.trim()) return;
-    const { error: envioErro } = await db.from("pedido_mensagens").insert({ pedido_id: pedido.id, autor_id: usuario.id, autor_tipo: "entregador", mensagem: resposta.trim().slice(0, 1000) });
-    if (envioErro) alert(`Não foi possível enviar: ${App.mensagemErro(envioErro)}`);
+    const resposta = await pedirRespostaChat(pedido, historico);
+    if (!resposta) return;
+    const { error: envioErro } = await db.from("pedido_mensagens").insert({ pedido_id: pedido.id, autor_id: usuario.id, autor_tipo: "entregador", mensagem: resposta });
+    if (envioErro) {
+        avisarEntregador("Não foi possível enviar", App.mensagemErro(envioErro), "error");
+        return;
+    }
+    avisarEntregador("Mensagem enviada", "A conversa da entrega foi atualizada.", "success");
 }
 
 function cardDisponivel(pedido) {
@@ -148,6 +237,7 @@ function gerenciarLocalizacao() {
         if (error) window.Monitoramento?.registrar("warning", "localizacao_entregador", App.mensagemErro(error));
     }, () => {
         document.getElementById("statusLocalizacao").textContent = "Permissão necessária";
+        avisarEntregador("Localização necessária", "Permita o acesso à localização para compartilhar a rota durante uma entrega.", "warning");
     }, { enableHighAccuracy: true, maximumAge: 15000, timeout: 20000 });
 }
 
@@ -155,9 +245,14 @@ online.addEventListener("change", async () => {
     online.disabled = true;
     const { data, error } = await db.rpc("entregador_definir_online", { p_online: online.checked });
     online.disabled = false;
-    if (error || data !== true) { online.checked = !online.checked; return alert(`Não foi possível alterar seu status: ${App.mensagemErro(error)}`); }
+    if (error || data !== true) {
+        online.checked = !online.checked;
+        avisarEntregador("Não foi possível alterar seu status", App.mensagemErro(error), "error");
+        return;
+    }
     entregador.online = online.checked;
     document.getElementById("textoEntregadorOnline").textContent = online.checked ? "Online" : "Offline";
+    avisarEntregador(online.checked ? "Você está online" : "Você está offline", online.checked ? "Novas entregas disponíveis serão exibidas aqui." : "Você não receberá novas entregas enquanto estiver offline.", "info");
     await carregarEntregas();
 });
 
@@ -171,8 +266,12 @@ document.getElementById("entregadorForm").addEventListener("submit", async (even
         p_placa: document.getElementById("entregadorPlaca").value.trim() || null
     });
     App.definirCarregando(botao, false);
-    if (error) return alert(`Não foi possível enviar: ${App.mensagemErro(error)}`);
+    if (error) {
+        avisarEntregador("Não foi possível enviar", App.mensagemErro(error), "error");
+        return;
+    }
     entregador = data; cadastro.hidden = true; pendente.hidden = false;
+    avisarEntregador("Cadastro enviado", "Seu cadastro foi recebido e aguarda aprovação.", "success");
 });
 
 async function iniciar() {
