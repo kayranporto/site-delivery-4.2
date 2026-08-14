@@ -77,6 +77,17 @@
   }
   window.AppToast=toast;
 
+  const paginasComAlertasLegados=/(?:acompanhamento|admin|empresa-dashboard|empresa-colaborador)\.html$/i;
+  if(paginasComAlertasLegados.test(location.pathname)){
+    const alertaNativo=window.alert.bind(window);
+    window.alert=(mensagem)=>{
+      if(!window.AppToast){alertaNativo(mensagem);return;}
+      const texto=String(mensagem??"").trim()||"A operação não pôde ser concluída.";
+      const pareceErro=/não foi possível|erro|falha|inválid|indisponível|negad|expirad/i.test(texto);
+      window.AppToast(pareceErro?"Não foi possível concluir":"Aviso",texto,pareceErro?"error":"info",6500);
+    };
+  }
+
   function confirmar({
     titulo="Confirmar ação",
     mensagem="Deseja continuar?",
