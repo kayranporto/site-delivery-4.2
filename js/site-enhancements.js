@@ -35,6 +35,18 @@
     operacaoUnidadesJs.src = "js/operacao-unidades-4.3.js?v=4.3.0";
     operacaoUnidadesJs.async = false;
     document.body.append(operacaoUnidadesJs);
+
+    const planoEmpresaJs = document.createElement("script");
+    planoEmpresaJs.src = "js/empresa-plano-4.3.js?v=4.3.0";
+    planoEmpresaJs.async = false;
+    document.body.append(planoEmpresaJs);
+  }
+
+  if (/admin\.html$/i.test(location.pathname)) {
+    const adminPlanosJs = document.createElement("script");
+    adminPlanosJs.src = "js/admin-planos-4.3.js?v=4.3.0";
+    adminPlanosJs.async = false;
+    document.body.append(adminPlanosJs);
   }
 
   if (/restaurante\.html$/i.test(location.pathname)) {
