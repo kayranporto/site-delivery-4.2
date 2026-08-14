@@ -7,7 +7,7 @@ const path = require("node:path");
 
 const root = path.resolve(__dirname, "..");
 const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
-const migration = "supabase/migrations/025_funcionarios_rbac_4_3.sql";
+const migration = "supabase/migrations/20260813222945_funcionarios_rbac_4_3.sql";
 
 test("4.3 cria vínculos de funcionários com papéis explícitos e RLS", () => {
     const sql = read(migration);
