@@ -7,6 +7,10 @@
     const criar = (tag, classe, texto) => { const item = document.createElement(tag); if (classe) item.className = classe; if (texto !== undefined) item.textContent = texto; return item; };
     const nomesStatus = { aberto: "Aberto", em_analise: "Em análise", respondido: "Respondido", fechado: "Fechado" };
 
+    function avisar(titulo, mensagem, tipo = "info") {
+        window.AppToast?.(titulo, mensagem, tipo);
+    }
+
     function renderizar() {
         $("chamadosAbertos").textContent = String(chamados.filter((item) => !["fechado", "respondido"].includes(item.status)).length);
         const lista = $("listaChamados"); lista.replaceChildren();
@@ -44,11 +48,15 @@
         const botao = event.currentTarget.querySelector("button"); App.definirCarregando(botao, true, "Enviando...");
         const { data, error } = await window.db.rpc("abrir_chamado_suporte", { p_categoria: $("suporteCategoria").value, p_assunto: $("suporteAssunto").value.trim(), p_mensagem: $("suporteMensagem").value.trim(), p_pedido_id: $("suportePedido").value || null });
         App.definirCarregando(botao, false);
-        if (error) return window.AppToast?.("Não foi possível enviar", App.mensagemErro(error), "error") || alert(App.mensagemErro(error));
+        if (error) {
+            avisar("Não foi possível enviar", App.mensagemErro(error), "error");
+            return;
+        }
         event.currentTarget.reset();
         const { data: novo } = await window.db.from("chamados_suporte").select("*").eq("id", data).single();
         if (novo) chamados.unshift(novo);
-        renderizar(); window.AppToast?.("Solicitação enviada", "A equipe de suporte já pode analisar seu chamado.", "success");
+        renderizar();
+        avisar("Solicitação enviada", "A equipe de suporte já pode analisar seu chamado.", "success");
     });
 
     carregar().catch((error) => { console.error(error); App.mostrarErroPagina(`Não foi possível carregar o suporte: ${App.mensagemErro(error)}`); });
