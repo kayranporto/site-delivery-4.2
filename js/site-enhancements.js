@@ -37,17 +37,23 @@
     const tipos=new Set(["success","error","warning","info"]);
     const tipoNormalizado=tipos.has(tipo)?tipo:"info";
     const icones={success:"✓",error:"!",warning:"!",info:"i"};
+    const cores={success:"#168821",error:"#c62828",warning:"#a96300",info:"#315ca8"};
+    const fundos={success:"#edf8ef",error:"#fff0f1",warning:"#fff6e7",info:"#eef4ff"};
+
     const el=document.createElement("div");
     el.className=`app-toast ${tipoNormalizado}`;
     el.setAttribute("role",tipoNormalizado==="error"||tipoNormalizado==="warning"?"alert":"status");
+    el.style.borderLeftColor=cores[tipoNormalizado];
 
     const icon=document.createElement("span");
     icon.className="app-toast-icon";
     icon.setAttribute("aria-hidden","true");
     icon.textContent=icones[tipoNormalizado];
+    icon.style.cssText=`display:grid;width:30px;height:30px;flex:0 0 30px;place-items:center;border-radius:10px;background:${fundos[tipoNormalizado]};color:${cores[tipoNormalizado]};font-size:14px;font-weight:900`;
 
     const box=document.createElement("div");
     box.className="app-toast-copy";
+    box.style.cssText="min-width:0;flex:1;padding-top:1px";
     const strong=document.createElement("strong");
     strong.textContent=titulo;
     const p=document.createElement("p");
