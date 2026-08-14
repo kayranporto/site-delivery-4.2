@@ -27,8 +27,48 @@
     }
   }
 
-  const region=document.createElement("div"); region.className="app-toast-region"; region.setAttribute("aria-live","polite"); document.body.append(region);
-  function toast(titulo,mensagem="",tipo="info",tempo=4500){const el=document.createElement("div");el.className=`app-toast ${tipo}`;const box=document.createElement("div");const strong=document.createElement("strong");strong.textContent=titulo;const p=document.createElement("p");p.textContent=mensagem;box.append(strong);if(mensagem)box.append(p);const close=document.createElement("button");close.type="button";close.setAttribute("aria-label","Fechar aviso");close.textContent="×";close.onclick=()=>el.remove();el.append(box,close);region.append(el);if(tempo)setTimeout(()=>el.remove(),tempo);return el}
+  const region=document.createElement("div");
+  region.className="app-toast-region";
+  region.setAttribute("aria-live","polite");
+  region.setAttribute("aria-relevant","additions");
+  document.body.append(region);
+
+  function toast(titulo,mensagem="",tipo="info",tempo=4500){
+    const tipos=new Set(["success","error","warning","info"]);
+    const tipoNormalizado=tipos.has(tipo)?tipo:"info";
+    const icones={success:"✓",error:"!",warning:"!",info:"i"};
+    const el=document.createElement("div");
+    el.className=`app-toast ${tipoNormalizado}`;
+    el.setAttribute("role",tipoNormalizado==="error"||tipoNormalizado==="warning"?"alert":"status");
+
+    const icon=document.createElement("span");
+    icon.className="app-toast-icon";
+    icon.setAttribute("aria-hidden","true");
+    icon.textContent=icones[tipoNormalizado];
+
+    const box=document.createElement("div");
+    box.className="app-toast-copy";
+    const strong=document.createElement("strong");
+    strong.textContent=titulo;
+    const p=document.createElement("p");
+    p.textContent=mensagem;
+    box.append(strong);
+    if(mensagem)box.append(p);
+
+    const close=document.createElement("button");
+    close.type="button";
+    close.className="app-toast-close";
+    close.setAttribute("aria-label","Fechar aviso");
+    close.textContent="×";
+
+    let timer=null;
+    const remover=()=>{if(timer)clearTimeout(timer);el.remove()};
+    close.addEventListener("click",remover);
+    el.append(icon,box,close);
+    region.append(el);
+    if(tempo)timer=setTimeout(remover,tempo);
+    return el;
+  }
   window.AppToast=toast;
 
   function confirmar({
