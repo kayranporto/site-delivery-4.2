@@ -22,14 +22,14 @@ test("referências locais das páginas existem", () => {
 });
 
 test("migração 008 contém RLS e funções críticas", () => {
-    const sql = fs.readFileSync(path.join(root, "supabase/migrations/008_entregas_tempo_real.sql"), "utf8");
+    const sql = fs.readFileSync(path.join(root, "supabase/migrations/20260801000800_entregas_tempo_real.sql"), "utf8");
     for (const trecho of ["enable row level security", "entregador_aceitar_pedido", "pedido_mensagens", "admin_relatorio_operacional", "proteger_pagamento_online"]) {
         assert.ok(sql.includes(trecho), `migração sem ${trecho}`);
     }
 });
 
 test("hotfix 009 recupera a coluna de modalidade de pagamento", () => {
-    const sql = fs.readFileSync(path.join(root, "supabase/migrations/009_hotfix_painel_admin.sql"), "utf8");
+    const sql = fs.readFileSync(path.join(root, "supabase/migrations/20260801000900_hotfix_painel_admin.sql"), "utf8");
     assert.match(sql, /add column if not exists pagamento_modalidade/i);
     assert.match(sql, /notify pgrst, 'reload schema'/i);
     const admin = fs.readFileSync(path.join(root, "js/admin.js"), "utf8");
@@ -38,7 +38,7 @@ test("hotfix 009 recupera a coluna de modalidade de pagamento", () => {
 });
 
 test("administração 3.2 possui funções protegidas e interface completa", () => {
-    const sql = fs.readFileSync(path.join(root, "supabase/migrations/010_admin_avancado.sql"), "utf8");
+    const sql = fs.readFileSync(path.join(root, "supabase/migrations/20260801001000_admin_avancado.sql"), "utf8");
     for (const trecho of ["private.is_admin()", "admin_salvar_cupom", "admin_excluir_cupom", "admin_atualizar_restaurante", "admin_obter_pedido", "admin_auditoria"]) {
         assert.ok(sql.includes(trecho), `migração 010 sem ${trecho}`);
     }
@@ -89,7 +89,7 @@ test("carrinho inicializa e adiciona produto no armazenamento", () => {
 });
 
 test("foto de perfil possui bucket protegido e interface de upload", () => {
-    const sql = fs.readFileSync(path.join(root, "supabase/migrations/011_foto_perfil.sql"), "utf8");
+    const sql = fs.readFileSync(path.join(root, "supabase/migrations/20260801001100_foto_perfil.sql"), "utf8");
     for (const trecho of ["avatar_url", "storage.buckets", "file_size_limit", "allowed_mime_types", "storage.foldername(name)", "auth.uid()::text", "for insert", "for update", "for delete"]) {
         assert.ok(sql.includes(trecho), `migração 011 sem ${trecho}`);
     }
@@ -103,7 +103,7 @@ test("foto de perfil possui bucket protegido e interface de upload", () => {
 });
 
 test("versão 3.4 integra mídia, favoritos, segurança e inteligência", () => {
-    const sql = fs.readFileSync(path.join(root, "supabase/migrations/012_experiencia_completa.sql"), "utf8");
+    const sql = fs.readFileSync(path.join(root, "supabase/migrations/20260801001200_experiencia_completa.sql"), "utf8");
     for (const trecho of ["create table if not exists public.favoritos", "bucket_id = 'catalogo'", "storage.foldername(name)", "tentativas_login", "registrar_tentativa_login", "admin_relatorio_clientes_produtos", "sincronizar_identidade_social_usuario"]) {
         assert.ok(sql.includes(trecho), `migração 012 sem ${trecho}`);
     }
@@ -118,7 +118,7 @@ test("versão 3.4 integra mídia, favoritos, segurança e inteligência", () => 
 });
 
 test("versão 3.5 integra operação, estoque, regiões, fidelidade e suporte", () => {
-    const sql = fs.readFileSync(path.join(root, "supabase/migrations/013_operacao_real.sql"), "utf8");
+    const sql = fs.readFileSync(path.join(root, "supabase/migrations/20260801001300_operacao_real.sql"), "utf8");
     for (const trecho of ["empresa_horarios", "empresa_regioes", "reservar_estoque_item", "criar_pedido_operacional", "cliente_solicitar_cancelamento", "programa_fidelidade_empresa", "resgatar_beneficio_fidelidade", "empresa_relatorio_financeiro", "chamados_suporte", "admin_saude_operacao", "admin_atualizar_reembolso", "enable row level security"]) {
         assert.ok(sql.includes(trecho), `migração 013 sem ${trecho}`);
     }
