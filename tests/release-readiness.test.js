@@ -21,12 +21,12 @@ test("release possui uma única árvore canônica e o empacotamento exclui metad
     assert.match(packageScript, /\.git/);
     assert.match(packageScript, /node_modules/);
     assert.equal(fs.existsSync(path.join(root, "site-delivery-3.5-main")), false);
-    assert.ok(fs.existsSync(path.join(root, "supabase/migrations/014_producao_financeira.sql")));
-    assert.ok(fs.existsSync(path.join(root, "supabase/migrations/018_reconciliacao_catalogo_live_4_2_8.sql")));
-    assert.ok(fs.existsSync(path.join(root, "supabase/migrations/020_protege_transicoes_pedido_4_2_8.sql")));
-    assert.ok(fs.existsSync(path.join(root, "supabase/migrations/021_valida_pedido_antes_evento_pagamento_4_2_8.sql")));
-    assert.ok(fs.existsSync(path.join(root, "supabase/migrations/022_bloqueia_operacao_pagamento_online_pendente_4_2_8.sql")));
-    assert.ok(fs.existsSync(path.join(root, "supabase/migrations/023_remove_rpc_login_legada_4_2_8.sql")));
+    assert.ok(fs.existsSync(path.join(root, "supabase/migrations/20260801001400_producao_financeira.sql")));
+    assert.ok(fs.existsSync(path.join(root, "supabase/migrations/20260810230754_reconciliacao_catalogo_live_4_2_8.sql")));
+    assert.ok(fs.existsSync(path.join(root, "supabase/migrations/20260811021309_protege_transicoes_pedido_4_2_8.sql")));
+    assert.ok(fs.existsSync(path.join(root, "supabase/migrations/20260811022438_valida_pedido_antes_evento_pagamento_4_2_8.sql")));
+    assert.ok(fs.existsSync(path.join(root, "supabase/migrations/20260811171220_bloqueia_operacao_pagamento_online_pendente_4_2_8.sql")));
+    assert.ok(fs.existsSync(path.join(root, "supabase/migrations/20260811175328_remove_rpc_login_legada_4_2_8.sql")));
     assert.equal(JSON.parse(read("package.json")).version, "4.2.8");
 });
 
@@ -49,7 +49,7 @@ test("dependências Supabase estão fixadas em versão exata", () => {
 });
 
 test("migração 014 contém reconciliação idempotente e snapshot atômico", () => {
-    const sql = read("supabase/migrations/014_producao_financeira.sql");
+    const sql = read("supabase/migrations/20260801001400_producao_financeira.sql");
     for (const trecho of [
         "create table if not exists public.pagamento_eventos",
         "unique(provider, dedupe_key)",
@@ -69,7 +69,7 @@ test("migração 014 contém reconciliação idempotente e snapshot atômico", (
 });
 
 test("migração 020 obriga mudanças de pedido a passar por RPCs protegidas", () => {
-    const sql = read("supabase/migrations/020_protege_transicoes_pedido_4_2_8.sql");
+    const sql = read("supabase/migrations/20260811021309_protege_transicoes_pedido_4_2_8.sql");
     for (const trecho of [
         "revoke all on table public.pedidos from anon",
         "revoke update (status, pagamento_status)",
@@ -91,7 +91,7 @@ test("migração 020 obriga mudanças de pedido a passar por RPCs protegidas", (
 });
 
 test("migração 021 valida o pedido antes de registrar o evento de pagamento", () => {
-    const sql = read("supabase/migrations/021_valida_pedido_antes_evento_pagamento_4_2_8.sql");
+    const sql = read("supabase/migrations/20260811022438_valida_pedido_antes_evento_pagamento_4_2_8.sql");
     const buscaPedido = sql.indexOf("select * into v_pedido");
     const registraEvento = sql.indexOf("insert into public.pagamento_eventos");
     assert.ok(buscaPedido >= 0, "migração 021 não busca o pedido");
@@ -102,7 +102,7 @@ test("migração 021 valida o pedido antes de registrar o evento de pagamento", 
 });
 
 test("migração 022 bloqueia pedido online pendente em todas as rotas operacionais", () => {
-    const sql = read("supabase/migrations/022_bloqueia_operacao_pagamento_online_pendente_4_2_8.sql");
+    const sql = read("supabase/migrations/20260811171220_bloqueia_operacao_pagamento_online_pendente_4_2_8.sql");
     for (const trecho of [
         "private.validar_transicao_pedido",
         "empresa_atualizar_operacao_pedido",
@@ -118,7 +118,7 @@ test("migração 022 bloqueia pedido online pendente em todas as rotas operacion
 });
 
 test("migração 023 remove a RPC de login legada e não utilizada", () => {
-    const sql = read("supabase/migrations/023_remove_rpc_login_legada_4_2_8.sql");
+    const sql = read("supabase/migrations/20260811175328_remove_rpc_login_legada_4_2_8.sql");
     assert.match(sql, /revoke all on function public\.registrar_tentativa_login\(text, boolean\)/);
     assert.match(sql, /drop function if exists public\.registrar_tentativa_login\(text, boolean\)/);
     assert.match(sql, /^begin;[\s\S]*commit;\s*$/im);
