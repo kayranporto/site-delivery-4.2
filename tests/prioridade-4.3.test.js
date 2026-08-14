@@ -4,7 +4,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
 const root = path.resolve(__dirname, "..");
-const sql = fs.readFileSync(path.join(root, "supabase/migrations/027_corrige_prioridade_operacional_4_3.sql"), "utf8");
+const sql = fs.readFileSync(path.join(root, "supabase/migrations/20260814004217_corrige_prioridade_operacional_4_3.sql"), "utf8");
 
 test("prioridade 0..3 não passa pela validação de minutos", () => {
   assert.match(sql, /p_acao <> 'definir_prioridade'[\s\S]{0,120}p_preparo_estimado < 5/);
