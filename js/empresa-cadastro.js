@@ -3,25 +3,64 @@
 const form = document.getElementById("empresaCadastroForm");
 const submitButton = form?.querySelector("button[type='submit']");
 
+function avisarEmpresaCadastro(titulo, mensagem, tipo = "info", campo = null) {
+    window.AppToast?.(titulo, mensagem, tipo);
+    campo?.focus?.();
+}
+
 if (!form || !submitButton) {
     console.error("Formulário de cadastro da empresa não encontrado.");
 } else {
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
-        const nome = document.getElementById("nome").value.trim();
-        const email = document.getElementById("email").value.trim().toLowerCase();
-        const telefone = document.getElementById("telefone").value.trim();
-        const cnpj = App.somenteNumeros(document.getElementById("cnpj").value);
-        const senha = document.getElementById("senha").value;
-        const confirmarSenha = document.getElementById("confirmarSenha").value;
+        const nomeCampo = document.getElementById("nome");
+        const emailCampo = document.getElementById("email");
+        const telefoneCampo = document.getElementById("telefone");
+        const cnpjCampo = document.getElementById("cnpj");
+        const senhaCampo = document.getElementById("senha");
+        const confirmarSenhaCampo = document.getElementById("confirmarSenha");
 
-        if (!nome || !email || !telefone || !cnpj || !senha || !confirmarSenha) return alert("Preencha todos os campos.");
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return alert("Informe um e-mail válido.");
-        if (!App.validarTelefone(telefone)) return alert("Informe um telefone com DDD e 10 ou 11 números.");
-        if (!App.validarCNPJ(cnpj)) return alert("Informe um CNPJ válido.");
+        const nome = nomeCampo.value.trim();
+        const email = emailCampo.value.trim().toLowerCase();
+        const telefone = telefoneCampo.value.trim();
+        const cnpj = App.somenteNumeros(cnpjCampo.value);
+        const senha = senhaCampo.value;
+        const confirmarSenha = confirmarSenhaCampo.value;
+
+        const obrigatorios = [
+            [nomeCampo, nome],
+            [emailCampo, email],
+            [telefoneCampo, telefone],
+            [cnpjCampo, cnpj],
+            [senhaCampo, senha],
+            [confirmarSenhaCampo, confirmarSenha]
+        ];
+        const faltando = obrigatorios.find(([, valor]) => !valor);
+        if (faltando) {
+            avisarEmpresaCadastro("Revise o cadastro", "Preencha todos os campos obrigatórios antes de continuar.", "warning", faltando[0]);
+            return;
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            avisarEmpresaCadastro("E-mail inválido", "Informe um endereço de e-mail válido.", "error", emailCampo);
+            return;
+        }
+        if (!App.validarTelefone(telefone)) {
+            avisarEmpresaCadastro("Telefone inválido", "Informe um telefone com DDD e 10 ou 11 números.", "error", telefoneCampo);
+            return;
+        }
+        if (!App.validarCNPJ(cnpj)) {
+            avisarEmpresaCadastro("CNPJ inválido", "Informe um CNPJ válido.", "error", cnpjCampo);
+            return;
+        }
         const politica = window.AuthPolicy?.validar(senha);
-        if (!politica?.valida) return alert(politica?.mensagem || "Informe uma senha segura.");
-        if (senha !== confirmarSenha) return alert("As senhas não coincidem.");
+        if (!politica?.valida) {
+            avisarEmpresaCadastro("Senha não atende aos requisitos", politica?.mensagem || "Informe uma senha segura.", "error", senhaCampo);
+            return;
+        }
+        if (senha !== confirmarSenha) {
+            avisarEmpresaCadastro("Senhas diferentes", "A confirmação precisa ser igual à senha informada.", "error", confirmarSenhaCampo);
+            return;
+        }
         if (!window.DeliveryCaptcha?.validar()) return;
 
         App.definirCarregando(submitButton, true, "Criando restaurante...");
@@ -61,11 +100,11 @@ if (!form || !submitButton) {
             const mensagem = App.mensagemErro(erro, "Não foi possível concluir o cadastro. Tente novamente.");
             const normalizada = mensagem.toLowerCase();
             if (/cnpj|empresas_cnpj_unique|duplicate key.*cnpj|já existe.*cnpj/.test(normalizada)) {
-                alert("Não foi possível cadastrar o restaurante. Este CNPJ já está cadastrado.");
+                avisarEmpresaCadastro("CNPJ já cadastrado", "Este CNPJ já está vinculado a outro restaurante.", "error", cnpjCampo);
             } else if (/already registered|user already registered|email.*exist|já possui uma conta/.test(normalizada)) {
-                alert("Este e-mail já possui uma conta. Entre na Área do Restaurante ou use outro e-mail.");
+                avisarEmpresaCadastro("E-mail já cadastrado", "Entre na Área do Restaurante ou use outro e-mail.", "error", emailCampo);
             } else {
-                alert(`Não foi possível cadastrar o restaurante.\n\n${mensagem}`);
+                avisarEmpresaCadastro("Não foi possível cadastrar o restaurante", mensagem, "error");
             }
         } finally {
             window.DeliveryCaptcha?.reset();
