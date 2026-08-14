@@ -24,4 +24,10 @@ O Portal do parceiro usa `empresa_meu_acesso()` após autenticação. Proprietá
 
 ## Deploy
 
-A migration `025_funcionarios_rbac_4_3.sql` já é a fundação de vínculos. A migration `026_equipe_permissoes_4_3.sql` deve ser aplicada somente após revisão, CI verde e aprovação operacional deste PR.
+As migrations `025_funcionarios_rbac_4_3.sql`, `026_equipe_permissoes_4_3.sql` e `027_corrige_prioridade_operacional_4_3.sql` já estão aplicadas no projeto Supabase de produção.
+
+A matriz implantada foi validada diretamente no banco: grants para `authenticated`, bloqueio de `anon`, redaction de telefone/endereço/valores/pagamento para cozinha e prioridade operacional limitada a `0..3`.
+
+## Validação end-to-end
+
+O banco ainda não possui funcionários vinculados. O teste completo de login de `gerente`, `cozinha`, `atendente` e `financeiro` deve ser executado quando existirem contas Supabase Auth reais vinculadas pela tela de Equipe. Até lá, os contratos SQL e permissões implantadas permanecem cobertos pelos testes automatizados e pela validação do schema de produção.
