@@ -68,3 +68,32 @@ test("RPCs públicas de plano exigem autenticação e grants explícitos", () =>
   assert.match(sql, /grant execute on function public\.empresa_meu_plano\(\) to authenticated/);
   assert.doesNotMatch(sql, /grant execute on function public\.empresa_meu_plano\(\) to anon/);
 });
+
+test("admin lista assinaturas por RPC protegida", () => {
+  const sql = read("supabase/migrations/034_admin_assinaturas_listar_4_3.sql");
+  assert.match(sql, /create or replace function public\.admin_assinaturas_listar\(\)/);
+  assert.match(sql, /not coalesce\(private\.is_admin\(\),false\)/);
+  assert.match(sql, /grant execute on function public\.admin_assinaturas_listar\(\)[\s\S]*to authenticated/);
+  assert.doesNotMatch(sql, /grant execute on function public\.admin_assinaturas_listar\(\)[\s\S]*to anon/);
+});
+
+test("dashboard mostra Meu plano sem escrita direta nas tabelas de assinatura", () => {
+  const source = read("js/empresa-plano-4.3.js");
+  const loader = read("js/site-enhancements.js");
+  assert.match(loader, /empresa-plano-4\.3\.js/);
+  assert.match(source, /rpc\("empresa_meu_plano"\)/);
+  assert.doesNotMatch(source, /from\("(?:planos_plataforma|empresa_assinaturas)"\)/);
+  for (const chave of ["unidades", "produtos", "funcionarios", "pedidos_mes"]) {
+    assert.ok(source.includes(`renderUso("${chave}"`), `Meu plano sem uso de ${chave}`);
+  }
+});
+
+test("admin de planos usa apenas RPCs protegidas para plano e assinatura", () => {
+  const source = read("js/admin-planos-4.3.js");
+  const loader = read("js/site-enhancements.js");
+  assert.match(loader, /admin-planos-4\.3\.js/);
+  for (const rpc of ["admin_planos_listar", "admin_assinaturas_listar", "admin_plano_salvar", "admin_assinatura_definir"]) {
+    assert.ok(source.includes(`"${rpc}"`), `Admin 4.3 sem ${rpc}`);
+  }
+  assert.doesNotMatch(source, /from\("(?:planos_plataforma|empresa_assinaturas)"\)/);
+});
