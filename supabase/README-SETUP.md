@@ -1,4 +1,4 @@
-# Configuração do Supabase — Multi Delivery 4.0
+# Configuração do Supabase — Multi Delivery
 
 ## Princípios
 
@@ -6,41 +6,50 @@
 - Nunca publique `service_role`, secret key ou credenciais do Mercado Pago.
 - A chave pública do cliente depende de RLS corretamente configurado.
 - Toda alteração de schema deve ser versionada por migration e validada antes da produção.
+- Arquivos em `supabase/migrations` usam o formato canônico `<timestamp>_<nome>.sql`, compatível com o histórico do Supabase CLI.
+
+## Histórico de migrations
+
+Em 14/08/2026, o histórico local foi reconciliado com `supabase_migrations.schema_migrations` para eliminar divergência entre versões sequenciais antigas (`001_...`, `002_...`) e versões timestampadas registradas pelo Supabase.
+
+As 16 migrations de fundação foram preservadas integralmente e receberam timestamps anteriores à primeira migration originalmente registrada no ambiente remoto:
+
+```text
+20260801000100_delivery_core.sql
+...
+20260801001600_operacao_catalogo_e_escala.sql
+```
+
+Essas 16 versões foram marcadas no histórico remoto como **já aplicadas**. O SQL de fundação não foi executado novamente durante a reconciliação. Os blobs Git originais permanecem como fonte canônica do conteúdo.
+
+Migrations posteriores usam exatamente os timestamps registrados no ambiente remoto, por exemplo:
+
+```text
+20260805224542_production_hardening_v3_6.sql
+20260810141127_operacao_restaurante_4_2_7.sql
+20260813222945_funcionarios_rbac_4_3.sql
+20260814005954_multiunidade_publica_4_3.sql
+20260814215807_frete_distancia_unidade_4_4.sql
+```
+
+Não volte a criar migrations com prefixos sequenciais curtos. Para novas alterações, gere um timestamp único e mantenha o mesmo arquivo/versionamento em todos os ambientes.
 
 ## Instalação nova
 
 1. Crie o projeto Supabase.
 2. Configure as opções do Auth e as URLs permitidas.
-3. Aplique o schema base e as migrations em ordem, de `001_delivery_core.sql` até `014_producao_financeira.sql`.
+3. Aplique os arquivos de `supabase/migrations` em ordem crescente de timestamp.
 4. Execute `CONFIGURAR-ADMIN.sql` depois de substituir o e-mail de exemplo.
 5. Revise Security Advisor e Performance Advisor.
-6. Verifique as 31 tabelas públicas e confirme RLS habilitado em todas.
+6. Confirme RLS nas tabelas públicas que armazenam dados privados ou multi-tenant.
 7. Configure Storage, webhooks e Edge Functions.
 8. Execute os testes funcionais de `PRODUCAO.md`.
 
-Não aplique `SETUP-COMPLETO.sql` e todas as migrations cegamente no mesmo banco sem verificar a versão de origem. Em bancos existentes, use somente as migrations ainda não aplicadas.
-
-## Atualização da versão 3.5
-
-Aplique:
-
-```text
-supabase/migrations/014_producao_financeira.sql
-```
-
-A migration:
-
-- cria `pagamento_eventos` com RLS e chave de idempotência;
-- adiciona identificadores e estados de conciliação aos pedidos;
-- substitui a criação de pedido por snapshot único de preços;
-- corrige devolução de cupom no cancelamento;
-- trata pagamento tardio após cancelamento;
-- disponibiliza RPCs exclusivas do serviço de pagamento;
-- adiciona relatório administrativo de conciliação.
+Não aplique `SETUP-COMPLETO.sql` e todas as migrations cegamente no mesmo banco sem verificar a versão de origem. Em bancos existentes, use somente migrations ainda não aplicadas.
 
 ## Verificações após migration
 
-No SQL Editor, confirme:
+No SQL Editor, confirme RLS:
 
 ```sql
 select relname, relrowsecurity
@@ -51,7 +60,7 @@ where pg_namespace.nspname = 'public'
 order by relname;
 ```
 
-Confirme também:
+Confirme também funções e modo de segurança:
 
 ```sql
 select proname, prosecdef
@@ -62,6 +71,16 @@ order by proname;
 ```
 
 Revise manualmente qualquer função `SECURITY DEFINER`, seus grants e seu `search_path`.
+
+Para auditar a cadeia aplicada:
+
+```sql
+select version, name
+from supabase_migrations.schema_migrations
+order by version;
+```
+
+A lista deve corresponder aos timestamps existentes em `supabase/migrations`.
 
 ## Data API
 
