@@ -9,7 +9,7 @@ const root = path.resolve(__dirname, "..");
 const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
 
 test("4.2.7 cria histórico operacional protegido", () => {
-  const sql = read("supabase/migrations/017_operacao_restaurante_4_2_7.sql");
+  const sql = read("supabase/migrations/20260810141127_operacao_restaurante_4_2_7.sql");
   for (const trecho of [
     "create table if not exists public.pedido_operacao_eventos",
     "enable row level security",
@@ -20,7 +20,7 @@ test("4.2.7 cria histórico operacional protegido", () => {
 });
 
 test("4.2.7 aceita pedido com tempo e registra recusa transacional", () => {
-  const sql = read("supabase/migrations/017_operacao_restaurante_4_2_7.sql");
+  const sql = read("supabase/migrations/20260810141127_operacao_restaurante_4_2_7.sql");
   assert.match(sql, /when 'iniciar_preparo'/);
   assert.match(sql, /preparo_estimado_minutos = coalesce\(p_preparo_estimado/);
   assert.match(sql, /when 'recusar_pedido'/);
