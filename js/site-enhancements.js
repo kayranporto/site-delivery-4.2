@@ -45,6 +45,11 @@
     localizacaoUnidadeJs.src = "js/localizacao-unidade-4.4.js?v=4.4.0";
     localizacaoUnidadeJs.async = false;
     document.body.append(localizacaoUnidadeJs);
+
+    const freteDistanciaJs = document.createElement("script");
+    freteDistanciaJs.src = "js/frete-distancia-unidade-4.4.js?v=4.4.0";
+    freteDistanciaJs.async = false;
+    document.body.append(freteDistanciaJs);
   }
 
   if (/admin\.html$/i.test(location.pathname)) {
