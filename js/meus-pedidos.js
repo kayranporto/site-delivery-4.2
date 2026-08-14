@@ -186,7 +186,10 @@ async function solicitarCancelamento(pedido, botao) {
     App.definirCarregando(botao, true, "Enviando...");
     const { error } = await db.rpc("cliente_solicitar_cancelamento", { p_pedido_id: pedido.id, p_motivo: motivo });
     App.definirCarregando(botao, false);
-    if (error) return window.AppToast?.("Não foi possível solicitar", App.mensagemErro(error), "error") || alert(App.mensagemErro(error));
+    if (error) {
+        window.AppToast?.("Não foi possível solicitar", App.mensagemErro(error), "error");
+        return;
+    }
     pedido.cancelamento_status = "solicitado";
     pedido.cancelamento_motivo = motivo;
     renderizar();
