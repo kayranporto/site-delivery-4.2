@@ -40,6 +40,11 @@
     planoEmpresaJs.src = "js/empresa-plano-4.3.js?v=4.3.0";
     planoEmpresaJs.async = false;
     document.body.append(planoEmpresaJs);
+
+    const localizacaoUnidadeJs = document.createElement("script");
+    localizacaoUnidadeJs.src = "js/localizacao-unidade-4.4.js?v=4.4.0";
+    localizacaoUnidadeJs.async = false;
+    document.body.append(localizacaoUnidadeJs);
   }
 
   if (/admin\.html$/i.test(location.pathname)) {
@@ -66,6 +71,20 @@
     checkoutUnidadeJs.src = "js/checkout-unidade-4.3.js?v=4.3.0";
     checkoutUnidadeJs.async = false;
     document.body.append(checkoutUnidadeJs);
+  }
+
+  if (/enderecos\.html$/i.test(location.pathname)) {
+    const localizacaoEnderecosJs = document.createElement("script");
+    localizacaoEnderecosJs.src = "js/localizacao-enderecos-4.4.js?v=4.4.0";
+    localizacaoEnderecosJs.async = false;
+    document.body.append(localizacaoEnderecosJs);
+  }
+
+  if (/acompanhamento\.html$/i.test(location.pathname)) {
+    const whatsappAcompanhamentoJs = document.createElement("script");
+    whatsappAcompanhamentoJs.src = "js/acompanhamento-whatsapp-4.4.js?v=4.4.0";
+    whatsappAcompanhamentoJs.async = false;
+    document.body.append(whatsappAcompanhamentoJs);
   }
 
   const region=document.createElement("div");
@@ -250,7 +269,7 @@
   });
 
   let installPrompt=null;const install=document.createElement("button");install.className="install-app";install.type="button";install.hidden=true;install.textContent="Instalar Multi Delivery";document.body.append(install);
-  const standalone=matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
+  const standalone=matchMedia("display-mode: standalone").matches||navigator.standalone===true;
   addEventListener("beforeinstallprompt",e=>{e.preventDefault();installPrompt=e;if(!standalone)install.hidden=false});
   install.onclick=async()=>{if(!installPrompt)return;installPrompt.prompt();const escolha=await installPrompt.userChoice;install.hidden=true;installPrompt=null;if(escolha?.outcome==="dismissed")toast("Instalação cancelada","Você pode instalar o aplicativo depois pelo navegador.","info")};
   addEventListener("appinstalled",()=>{install.hidden=true;toast("Aplicativo instalado","O Multi Delivery foi adicionado ao seu dispositivo.","success")});
