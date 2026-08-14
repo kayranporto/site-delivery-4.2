@@ -4,6 +4,11 @@ const formNovaSenha = document.getElementById("novaSenhaForm");
 const statusRecuperacao = document.getElementById("statusRecuperacao");
 const novoLink = document.getElementById("novoLinkRecuperacao");
 
+function avisarNovaSenha(titulo, mensagem, tipo = "info", campo = null, tempo = 5000) {
+    window.AppToast?.(titulo, mensagem, tipo, tempo);
+    campo?.focus?.();
+}
+
 function senhaValida(senha) {
     return senha.length >= 8 && /[A-Za-zÀ-ÿ]/.test(senha) && /\d/.test(senha);
 }
@@ -21,18 +26,35 @@ async function verificarRecuperacao() {
 
 formNovaSenha.addEventListener("submit", async (event) => {
     event.preventDefault();
-    const senha = document.getElementById("novaSenha").value;
-    const confirmacao = document.getElementById("confirmarSenha").value;
-    if (!senhaValida(senha)) return alert("A senha precisa ter pelo menos 8 caracteres, incluindo letra e número.");
-    if (senha !== confirmacao) return alert("As senhas não são iguais.");
-    const botao = event.currentTarget.querySelector("button"); App.definirCarregando(botao, true, "Atualizando...");
-    const { error } = await db.auth.updateUser({ password: senha });
-    App.definirCarregando(botao, false);
-    if (error) return alert(`Não foi possível atualizar a senha: ${App.mensagemErro(error)}`);
-    await db.auth.signOut(); App.limparDadosPrivados();
-    alert("Senha atualizada. Entre novamente com sua nova senha.");
-    location.replace("login.html");
+    const senhaCampo = document.getElementById("novaSenha");
+    const confirmacaoCampo = document.getElementById("confirmarSenha");
+    const senha = senhaCampo.value;
+    const confirmacao = confirmacaoCampo.value;
+
+    if (!senhaValida(senha)) {
+        avisarNovaSenha("Senha fraca", "Use pelo menos 8 caracteres, incluindo uma letra e um número.", "error", senhaCampo);
+        return;
+    }
+    if (senha !== confirmacao) {
+        avisarNovaSenha("Senhas diferentes", "A confirmação precisa ser igual à nova senha.", "error", confirmacaoCampo);
+        return;
+    }
+
+    const botao = event.currentTarget.querySelector("button");
+    App.definirCarregando(botao, true, "Atualizando...");
+    try {
+        const { error } = await db.auth.updateUser({ password: senha });
+        if (error) throw error;
+        await db.auth.signOut();
+        App.limparDadosPrivados();
+        statusRecuperacao.textContent = "Senha atualizada. Redirecionando para o login...";
+        avisarNovaSenha("Senha atualizada", "Entre novamente usando sua nova senha.", "success", null, 6000);
+        setTimeout(() => location.replace("login.html"), 900);
+    } catch (error) {
+        avisarNovaSenha("Não foi possível atualizar a senha", App.mensagemErro(error), "error");
+    } finally {
+        App.definirCarregando(botao, false);
+    }
 });
 
 verificarRecuperacao();
-
