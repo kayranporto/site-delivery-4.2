@@ -5,7 +5,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const root = path.resolve(__dirname, "..");
 const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
-const migration = "supabase/migrations/026_equipe_permissoes_4_3.sql";
+const migration = "supabase/migrations/20260814004156_equipe_permissoes_4_3.sql";
 
 test("4.3 mantém autorização da equipe no banco", () => {
   const sql = read(migration);
