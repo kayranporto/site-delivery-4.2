@@ -32,6 +32,20 @@
     document.body.append(unidadesJs);
   }
 
+  if (/restaurante\.html$/i.test(location.pathname)) {
+    const unidadesPublicasJs = document.createElement("script");
+    unidadesPublicasJs.src = "js/restaurante-unidades-4.3.js?v=4.3.0";
+    unidadesPublicasJs.async = false;
+    document.body.append(unidadesPublicasJs);
+  }
+
+  if (/checkout\.html$/i.test(location.pathname)) {
+    const checkoutUnidadeJs = document.createElement("script");
+    checkoutUnidadeJs.src = "js/checkout-unidade-4.3.js?v=4.3.0";
+    checkoutUnidadeJs.async = false;
+    document.body.append(checkoutUnidadeJs);
+  }
+
   const region=document.createElement("div");
   region.className="app-toast-region";
   region.setAttribute("aria-live","polite");
