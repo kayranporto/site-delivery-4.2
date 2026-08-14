@@ -62,7 +62,7 @@ test("checkout roteia cálculo, disponibilidade e criação pela unidade", () =>
 });
 
 test("migration pública valida unidade e rejeita produto de outra unidade", () => {
-  const sql = read("supabase/migrations/029_multiunidade_publica_4_3.sql");
+  const sql = read("supabase/migrations/20260814005954_multiunidade_publica_4_3.sql");
   assert.match(sql, /create or replace function public\.empresa_unidades_publicas/);
   assert.match(sql, /create or replace function public\.criar_pedido_operacional_unidade/);
   assert.match(sql, /p\.unidade_id is distinct from p_unidade_id/);
@@ -81,7 +81,7 @@ test("operação 4.3 filtra horários, pausas e regiões por unidade", () => {
 });
 
 test("migration 030 move operação para unidade e mantém fallback principal", () => {
-  const sql = read("supabase/migrations/030_operacao_por_unidade_4_3.sql");
+  const sql = read("supabase/migrations/20260814010928_operacao_por_unidade_4_3.sql");
   for (const tabela of ["empresa_horarios", "empresa_pausas", "empresa_regioes"]) {
     assert.match(sql, new RegExp(`alter table public\\.${tabela}[\\s\\S]{0,120}add column if not exists unidade_id`));
   }
@@ -94,7 +94,7 @@ test("migration 030 move operação para unidade e mantém fallback principal", 
 });
 
 test("migration 031 impede unidade de outra empresa", () => {
-  const sql = read("supabase/migrations/031_integridade_empresa_unidade_4_3.sql");
+  const sql = read("supabase/migrations/20260814011033_integridade_empresa_unidade_4_3.sql");
   assert.match(sql, /unique \(id, empresa_id\)/);
   for (const tabela of ["produtos", "categorias", "pedidos", "empresa_horarios", "empresa_pausas", "empresa_regioes"]) {
     assert.match(sql, new RegExp(`alter table public\\.${tabela}[\\s\\S]{0,180}foreign key \\(unidade_id, empresa_id\\)`));
