@@ -53,15 +53,15 @@ for (const file of publicFiles) {
     }
 }
 
-const migration = fs.readFileSync(path.join(root, "supabase/migrations/014_producao_financeira.sql"), "utf8");
+const migration = fs.readFileSync(path.join(root, "supabase/migrations/20260801001400_producao_financeira.sql"), "utf8");
 if ((migration.match(/\$\$/g) || []).length % 2 !== 0) failures.push("Migração 014 possui delimitadores $$ desbalanceados.");
 if (!/^begin;[\s\S]*commit;\s*$/im.test(migration)) failures.push("Migração 014 não está delimitada por BEGIN/COMMIT.");
 
-const authMigration = fs.readFileSync(path.join(root, "supabase/migrations/015_auth_sem_confirmacao_e_hardening.sql"), "utf8");
+const authMigration = fs.readFileSync(path.join(root, "supabase/migrations/20260801001500_auth_sem_confirmacao_e_hardening.sql"), "utf8");
 if (!/^begin;[\s\S]*commit;\s*$/im.test(authMigration)) failures.push("Migração 015 não está delimitada por BEGIN/COMMIT.");
 if (!authMigration.includes("drop function if exists public.registrar_tentativa_login")) failures.push("Migração 015 não remove a RPC legada de login.");
 
-const operationMigration = fs.readFileSync(path.join(root, "supabase/migrations/016_operacao_catalogo_e_escala.sql"), "utf8");
+const operationMigration = fs.readFileSync(path.join(root, "supabase/migrations/20260801001600_operacao_catalogo_e_escala.sql"), "utf8");
 if (!/^begin;[\s\S]*commit;\s*$/im.test(operationMigration)) failures.push("Migração 016 não está delimitada por BEGIN/COMMIT.");
 if ((operationMigration.match(/\$\$/g) || []).length % 2 !== 0) failures.push("Migração 016 possui delimitadores $$ desbalanceados.");
 for (const required of ["produto_variantes", "empresa_unidades", "estoque_movimentos", "pedidos_chave_cliente_idx", "empresa_atualizar_operacao_pedido"]) {
