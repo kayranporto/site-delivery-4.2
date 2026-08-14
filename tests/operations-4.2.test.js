@@ -9,7 +9,7 @@ const root = path.resolve(__dirname, "..");
 const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
 
 test("migração 016 cria fundação multiunidade com RLS", () => {
-    const sql = read("supabase/migrations/016_operacao_catalogo_e_escala.sql");
+    const sql = read("supabase/migrations/20260801001600_operacao_catalogo_e_escala.sql");
     for (const trecho of [
         "create table if not exists public.empresa_unidades",
         "alter table public.empresa_unidades enable row level security",
@@ -21,7 +21,7 @@ test("migração 016 cria fundação multiunidade com RLS", () => {
 });
 
 test("catálogo 4.2 suporta variações com snapshot no pedido", () => {
-    const sql = read("supabase/migrations/016_operacao_catalogo_e_escala.sql");
+    const sql = read("supabase/migrations/20260801001600_operacao_catalogo_e_escala.sql");
     for (const trecho of [
         "create table if not exists public.produto_variantes",
         "variante_id", "variante_nome", "v_preco_unitario",
@@ -41,7 +41,7 @@ test("checkout usa chave idempotente persistida durante a tentativa", () => {
     assert.match(checkout, /crypto\.randomUUID/);
     assert.match(checkout, /sessionStorage/);
     assert.match(checkout, /p_chave_cliente/);
-    const sql = read("supabase/migrations/016_operacao_catalogo_e_escala.sql");
+    const sql = read("supabase/migrations/20260801001600_operacao_catalogo_e_escala.sql");
     assert.match(sql, /pedidos_chave_cliente_idx/);
     assert.match(sql, /exception when unique_violation/);
     assert.match(sql, /'reutilizado', true/);
@@ -50,7 +50,7 @@ test("checkout usa chave idempotente persistida durante a tentativa", () => {
 test("cozinha possui fila, SLA e ações transacionais", () => {
     const html = read("empresa-dashboard.html");
     const js = read("js/empresa-dashboard.js");
-    const sql = read("supabase/migrations/016_operacao_catalogo_e_escala.sql");
+    const sql = read("supabase/migrations/20260801001600_operacao_catalogo_e_escala.sql");
     assert.match(html, /id="cozinha"/);
     assert.match(html, /id="filaCozinha"/);
     assert.match(js, /empresa_atualizar_operacao_pedido/);
@@ -63,7 +63,7 @@ test("cozinha possui fila, SLA e ações transacionais", () => {
 });
 
 test("estoque mantém trilha de auditoria protegida", () => {
-    const sql = read("supabase/migrations/016_operacao_catalogo_e_escala.sql");
+    const sql = read("supabase/migrations/20260801001600_operacao_catalogo_e_escala.sql");
     assert.match(sql, /create table if not exists public\.estoque_movimentos/);
     assert.match(sql, /alter table public\.estoque_movimentos enable row level security/);
     assert.match(sql, /registrar_movimento_estoque/);
