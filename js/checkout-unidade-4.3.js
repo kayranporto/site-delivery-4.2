@@ -10,6 +10,24 @@
     return window.CartStore?.meta?.() || App.lerJSON("carrinhoMeta", null) || null;
   }
 
+  async function resolverEnderecoId() {
+    try {
+      const { data: { user }, error: authError } = await window.db.auth.getUser();
+      if (authError || !user) return "";
+      const { data, error } = await window.db.from("enderecos")
+        .select("id")
+        .eq("usuario_id", user.id)
+        .order("principal", { ascending: false })
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (error || !data?.id) return "";
+      return String(data.id);
+    } catch {
+      return "";
+    }
+  }
+
   function instalarRoteamento() {
     if (instalado) return;
     instalado = true;
@@ -18,10 +36,21 @@
       if (!meta?.unidade_id) return originalRpc(nome, parametros, opcoes);
 
       if (nome === "calcular_entrega_empresa") {
-        return originalRpc("calcular_entrega_unidade", {
-          ...parametros,
-          p_unidade_id: String(meta.unidade_id)
-        }, opcoes);
+        return (async () => {
+          const enderecoId = await resolverEnderecoId();
+          if (enderecoId) {
+            return originalRpc("calcular_entrega_unidade_endereco", {
+              p_empresa_id: String(parametros.p_empresa_id || meta.empresa_id || ""),
+              p_unidade_id: String(meta.unidade_id),
+              p_endereco_id: enderecoId,
+              p_quando: new Date().toISOString()
+            }, opcoes);
+          }
+          return originalRpc("calcular_entrega_unidade", {
+            ...parametros,
+            p_unidade_id: String(meta.unidade_id)
+          }, opcoes);
+        })();
       }
 
       if (nome === "empresa_disponibilidade") {
