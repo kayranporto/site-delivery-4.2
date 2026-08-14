@@ -7,7 +7,7 @@ const path = require("node:path");
 
 const root = path.resolve(__dirname, "..");
 const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
-const migration = "supabase/migrations/032_planos_assinaturas_limites_4_3.sql";
+const migration = "supabase/migrations/20260814011759_planos_assinaturas_limites_4_3.sql";
 
 test("4.3 cria planos e assinaturas sem inventar preço comercial", () => {
   const sql = read(migration);
@@ -36,7 +36,7 @@ test("trial e limites são configuráveis e protegidos no banco", () => {
 
 test("nova empresa recebe assinatura padrão antes de consumir limites", () => {
   const base = read(migration);
-  const hardening = read("supabase/migrations/033_hardening_limites_planos_4_3.sql");
+  const hardening = read("supabase/migrations/20260814011815_hardening_limites_planos_4_3.sql");
   assert.match(base, /create or replace function private\.criar_assinatura_padrao_empresa/);
   assert.match(hardening, /create trigger aa_criar_assinatura_padrao_empresa/);
   assert.match(hardening, /if tg_op='INSERT' then[\s\S]{0,100}v_validar := new\.ativa=true/);
@@ -70,7 +70,7 @@ test("RPCs públicas de plano exigem autenticação e grants explícitos", () =>
 });
 
 test("admin lista assinaturas por RPC protegida", () => {
-  const sql = read("supabase/migrations/034_admin_assinaturas_listar_4_3.sql");
+  const sql = read("supabase/migrations/20260814012002_admin_assinaturas_listar_4_3.sql");
   assert.match(sql, /create or replace function public\.admin_assinaturas_listar\(\)/);
   assert.match(sql, /not coalesce\(private\.is_admin\(\),false\)/);
   assert.match(sql, /grant execute on function public\.admin_assinaturas_listar\(\)[\s\S]*to authenticated/);
