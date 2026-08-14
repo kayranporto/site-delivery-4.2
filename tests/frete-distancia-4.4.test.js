@@ -7,7 +7,7 @@ const path = require("node:path");
 
 const root = path.resolve(__dirname, "..");
 const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
-const migration = () => read("supabase/migrations/037_frete_distancia_unidade_4_4.sql");
+const migration = () => read("supabase/migrations/20260814215807_frete_distancia_unidade_4_4.sql");
 
 test("frete por distância nasce desligado e sem preços comerciais inventados", () => {
   const sql = migration();
