@@ -19,7 +19,6 @@
     if (!btnFinalizar) return;
 
     let cliqueProtegido = false;
-    let atualizandoBotao = false;
     const cart = () => window.CartStore?.ler?.() || App.lerJSON("carrinho", []) || [];
     const meta = () => window.CartStore?.meta?.() || App.lerJSON("carrinhoMeta", null) || {};
     const definirTexto = (elemento, texto) => {
@@ -57,12 +56,18 @@
 
     function definirDisponibilidadeBotao(habilitado, motivo = "") {
         if (cliqueProtegido) return;
-        atualizandoBotao = true;
-        btnFinalizar.disabled = !habilitado;
-        btnFinalizar.setAttribute("aria-disabled", String(!habilitado));
-        btnFinalizar.dataset.checkoutReady = habilitado ? "true" : "false";
+        const desabilitado = !habilitado;
+        const ariaDisabled = String(desabilitado);
+        const checkoutReady = habilitado ? "true" : "false";
+
+        if (btnFinalizar.disabled !== desabilitado) btnFinalizar.disabled = desabilitado;
+        if (btnFinalizar.getAttribute("aria-disabled") !== ariaDisabled) {
+            btnFinalizar.setAttribute("aria-disabled", ariaDisabled);
+        }
+        if (btnFinalizar.dataset.checkoutReady !== checkoutReady) {
+            btnFinalizar.dataset.checkoutReady = checkoutReady;
+        }
         definirTexto(textoBotao(), habilitado ? "Confirmar e finalizar" : (motivo || "Revise o pedido"));
-        atualizandoBotao = false;
     }
 
     function atualizar() {
@@ -179,10 +184,7 @@
         }, 1200);
     }, true);
 
-    const observer = new MutationObserver((mutations) => {
-        if (atualizandoBotao && mutations.every((mutation) => mutation.target === btnFinalizar)) return;
-        atualizar();
-    });
+    const observer = new MutationObserver(() => atualizar());
     [endereco, area, taxa].filter(Boolean).forEach((elemento) => observer.observe(elemento, {
         subtree: true,
         childList: true,
