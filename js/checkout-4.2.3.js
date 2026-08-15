@@ -19,6 +19,7 @@
     if (!btnFinalizar) return;
 
     let cliqueProtegido = false;
+    let atualizandoBotao = false;
     const cart = () => window.CartStore?.ler?.() || App.lerJSON("carrinho", []) || [];
     const meta = () => window.CartStore?.meta?.() || App.lerJSON("carrinhoMeta", null) || {};
     const definirTexto = (elemento, texto) => {
@@ -32,7 +33,11 @@
             && !texto.includes("entre na sua conta")
             && !texto.includes("adicione um endereço");
     };
-    const areaInvalida = () => /fora da área|não atend/i.test(String(area?.textContent || ""));
+    const areaInvalida = (dados = meta()) => {
+        if (dados?.regiao_atendida === false) return true;
+        return /fora da área|fora do raio|raio máximo|não atend/i.test(String(area?.textContent || ""));
+    };
+    const restauranteFechado = (dados = meta()) => dados?.status === false || dados?.aberto_por_horario === false;
     const pagamento = () => document.querySelector("input[name='pagamento']:checked")?.value || "";
     const rotuloPagamento = (valor) => ({
         PIX: "PIX na entrega",
@@ -40,25 +45,52 @@
         Dinheiro: "Dinheiro",
         Online: "Pagamento online"
     })[valor] || "Não selecionado";
+    const subtotalCarrinho = (itens) => itens.reduce((soma, item) => {
+        const quantidade = Number(item?.quantidade) || 0;
+        const preco = Number(item?.preco) || 0;
+        const adicionais = Array.isArray(item?.adicionais)
+            ? item.adicionais.reduce((total, adicional) => total + (Number(adicional?.preco) || 0), 0)
+            : 0;
+        return soma + ((preco + adicionais) * quantidade);
+    }, 0);
+    const textoBotao = () => btnFinalizar.querySelector("span:first-child") || btnFinalizar;
+
+    function definirDisponibilidadeBotao(habilitado, motivo = "") {
+        if (cliqueProtegido) return;
+        atualizandoBotao = true;
+        btnFinalizar.disabled = !habilitado;
+        btnFinalizar.setAttribute("aria-disabled", String(!habilitado));
+        btnFinalizar.dataset.checkoutReady = habilitado ? "true" : "false";
+        definirTexto(textoBotao(), habilitado ? "Confirmar e finalizar" : (motivo || "Revise o pedido"));
+        atualizandoBotao = false;
+    }
 
     function atualizar() {
         const itens = cart();
         const dados = meta();
         const quantidade = itens.reduce((soma, item) => soma + (Number(item?.quantidade) || 0), 0);
+        const subtotal = subtotalCarrinho(itens);
+        const minimo = Math.max(0, Number(dados?.pedido_minimo) || 0);
+        const minimoValido = subtotal >= minimo;
         const possuiEndereco = temEndereco();
-        const enderecoValido = possuiEndereco && !areaInvalida();
+        const foraDaArea = areaInvalida(dados);
+        const fechado = restauranteFechado(dados);
+        const enderecoValido = possuiEndereco && !foraDaArea;
         const formaPagamento = pagamento();
+        const pronto = quantidade > 0 && enderecoValido && formaPagamento && minimoValido && !fechado;
 
         if (stepEndereco) stepEndereco.dataset.estado = possuiEndereco ? (enderecoValido ? "ok" : "erro") : "pendente";
         if (stepPagamento) stepPagamento.dataset.estado = formaPagamento ? "ok" : "pendente";
-        if (stepRevisao) stepRevisao.dataset.estado = quantidade > 0 && enderecoValido && formaPagamento ? "ok" : "pendente";
+        if (stepRevisao) stepRevisao.dataset.estado = pronto ? "ok" : ((foraDaArea || fechado || !minimoValido) ? "erro" : "pendente");
 
         if (enderecoStatus) {
             enderecoStatus.dataset.tipo = possuiEndereco ? (enderecoValido ? "success" : "error") : "info";
             definirTexto(enderecoStatus, possuiEndereco
                 ? (enderecoValido
                     ? `Endereço selecionado. Frete exibido no resumo: ${taxa?.textContent || "a calcular"}.`
-                    : "Este endereço está fora da área de entrega. Escolha outro endereço.")
+                    : (foraDaArea
+                        ? "Este endereço está fora da área ou do raio de entrega. Escolha outro endereço."
+                        : "Não foi possível validar este endereço para entrega."))
                 : "O frete e o total final serão confirmados depois que você selecionar o endereço.");
         }
         if (taxa) {
@@ -68,12 +100,31 @@
 
         definirTexto(pagamentoResumo, `Selecionado: ${rotuloPagamento(formaPagamento)}.`);
         definirTexto(resumo, `${dados.empresa_nome || "Restaurante"} • ${quantidade} ${quantidade === 1 ? "item" : "itens"}`);
-        if (submitStatus && !cliqueProtegido) {
-            if (!quantidade) definirTexto(submitStatus, "Seu carrinho precisa ter pelo menos um item.");
-            else if (!possuiEndereco) definirTexto(submitStatus, "Ao continuar, entre na conta e selecione o endereço de entrega.");
-            else if (!enderecoValido) definirTexto(submitStatus, "Escolha outro endereço antes de enviar o pedido.");
-            else definirTexto(submitStatus, "Revise o total e confirme quando estiver pronto.");
+
+        let motivoBotao = "";
+        let statusEnvio = "Revise o total e confirme quando estiver pronto.";
+        if (!quantidade) {
+            motivoBotao = "Carrinho vazio";
+            statusEnvio = "Seu carrinho precisa ter pelo menos um item.";
+        } else if (fechado) {
+            motivoBotao = "Restaurante fechado";
+            statusEnvio = "Este restaurante ou unidade está fechado no momento.";
+        } else if (!minimoValido) {
+            motivoBotao = "Pedido mínimo não atingido";
+            statusEnvio = `Faltam ${App.dinheiro(minimo - subtotal)} para atingir o pedido mínimo.`;
+        } else if (!possuiEndereco) {
+            motivoBotao = "Selecione um endereço";
+            statusEnvio = "Selecione o endereço de entrega para calcular o frete e continuar.";
+        } else if (!enderecoValido) {
+            motivoBotao = "Endereço não atendido";
+            statusEnvio = "Escolha outro endereço antes de enviar o pedido.";
+        } else if (!formaPagamento) {
+            motivoBotao = "Escolha o pagamento";
+            statusEnvio = "Selecione uma forma de pagamento para continuar.";
         }
+
+        definirDisponibilidadeBotao(pronto, motivoBotao);
+        if (submitStatus && !cliqueProtegido) definirTexto(submitStatus, statusEnvio);
     }
 
     cupom?.addEventListener("input", () => {
@@ -111,7 +162,7 @@
     });
 
     btnFinalizar.addEventListener("click", (event) => {
-        if (cliqueProtegido) {
+        if (cliqueProtegido || btnFinalizar.dataset.checkoutReady !== "true") {
             event.preventDefault();
             event.stopImmediatePropagation();
             return;
@@ -128,13 +179,21 @@
         }, 1200);
     }, true);
 
-    const observer = new MutationObserver(atualizar);
-    [endereco, area].filter(Boolean).forEach((elemento) => observer.observe(elemento, {
+    const observer = new MutationObserver((mutations) => {
+        if (atualizandoBotao && mutations.every((mutation) => mutation.target === btnFinalizar)) return;
+        atualizar();
+    });
+    [endereco, area, taxa].filter(Boolean).forEach((elemento) => observer.observe(elemento, {
         subtree: true,
         childList: true,
         characterData: true
     }));
     observer.observe(btnFinalizar, { attributes: true, attributeFilter: ["disabled"] });
+
+    document.addEventListener("visibilitychange", () => {
+        if (!document.hidden) atualizar();
+    });
+    window.addEventListener("focus", atualizar);
 
     atualizar();
 })();
