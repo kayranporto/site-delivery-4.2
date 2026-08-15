@@ -74,7 +74,7 @@
   function mostrarUnidade() {
     const meta = metaCarrinho();
     if (!meta?.unidade_id || !meta?.unidade_nome || document.getElementById("checkoutUnidade43")) return;
-    const alvo = document.querySelector(".resumo-pedido, .checkout-summary, #listaResumo")?.parentElement;
+    const alvo = document.querySelector(".checkout-flow");
     if (!alvo) return;
     const aviso = document.createElement("div");
     aviso.id = "checkoutUnidade43";
