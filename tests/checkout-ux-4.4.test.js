@@ -18,15 +18,22 @@ test("checkout reconhece endereço fora do raio como inválido", () => {
 test("botão final só habilita quando o checkout está pronto", () => {
   const source = read("js/checkout-4.2.3.js");
   assert.match(source, /const pronto = quantidade > 0 && enderecoValido && formaPagamento && minimoValido && !fechado/);
-  assert.match(source, /btnFinalizar\.disabled = !habilitado/);
-  assert.match(source, /dataset\.checkoutReady = habilitado \? "true" : "false"/);
+  assert.match(source, /btnFinalizar\.disabled !== desabilitado/);
+  assert.match(source, /dataset\.checkoutReady !== checkoutReady/);
   assert.match(source, /Pedido mínimo não atingido/);
   assert.match(source, /Restaurante fechado/);
   assert.match(source, /Endereço não atendido/);
 });
 
+test("observer do checkout não reescreve disabled indefinidamente", () => {
+  const source = read("js/checkout-4.2.3.js");
+  assert.match(source, /if \(btnFinalizar\.disabled !== desabilitado\) btnFinalizar\.disabled = desabilitado/);
+  assert.doesNotMatch(source, /atualizandoBotao/);
+  assert.match(source, /attributeFilter: \["disabled"\]/);
+});
+
 test("checkout publica cache-buster novo para a camada de UX", () => {
   const html = read("checkout.html");
-  assert.match(html, /checkout-4\.2\.3\.js\?v=4\.2\.4/);
+  assert.match(html, /checkout-4\.2\.3\.js\?v=4\.2\.5/);
   assert.match(html, /site-enhancements\.js\?v=4\.4\.1/);
 });
