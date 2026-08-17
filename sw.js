@@ -1,6 +1,6 @@
 "use strict";
 
-const VERSION = "4.2.8";
+const VERSION = "4.4.3";
 const CACHE = `multi-delivery-v${VERSION}`;
 const DYNAMIC_CACHE = `multi-delivery-dynamic-v${VERSION}`;
 const SHELL = [
@@ -26,9 +26,9 @@ const SHELL = [
   "./css/checkout-4.2.3.css?v=4.2.3",
   "./css/operacao-restaurante-4.2.7.css?v=4.2.7",
   "./js/app-utils.js?v=4.2.0",
-  "./js/config.js?v=4.2.0",
+  "./js/config.js?v=4.4.3",
   "./js/monitoring.js?v=4.2.0",
-  "./js/notifications.js?v=4.2.0",
+  "./js/notifications.js?v=4.4.3",
   "./js/favorites-sync.js?v=4.2.0",
   "./js/home.js?v=4.2.0",
   "./js/cart-store.js?v=4.2.0",
@@ -104,21 +104,33 @@ self.addEventListener("message", (event) => {
 });
 
 self.addEventListener("push", (event) => {
-  let payload = { title: "Multi Delivery", body: "Você tem uma nova atualização.", url: "./perfil.html" };
+  let payload = { title: "Multi Delivery", body: "Você tem uma nova atualização.", url: "./perfil.html", tipo: "atualizacao" };
   try { payload = { ...payload, ...event.data.json() }; } catch { /* Usa mensagem padrão. */ }
+  const tag = payload.tag || undefined;
+  const entrega = payload.tipo === "entrega_disponivel";
   event.waitUntil(self.registration.showNotification(payload.title, {
     body: payload.body,
     icon: "./assets/favicon.svg",
     badge: "./assets/favicon.svg",
-    data: { url: payload.url }
+    tag,
+    renotify: Boolean(tag),
+    requireInteraction: entrega,
+    vibrate: entrega ? [180, 100, 180] : [120],
+    data: { url: payload.url, tipo: payload.tipo }
   }));
 });
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
   const destino = new URL(event.notification.data?.url || "./perfil.html", self.registration.scope).href;
-  event.waitUntil(clients.matchAll({ type: "window", includeUncontrolled: true }).then((janelas) => {
-    const aberta = janelas.find((janela) => janela.url === destino);
-    return aberta ? aberta.focus() : clients.openWindow(destino);
+  event.waitUntil(clients.matchAll({ type: "window", includeUncontrolled: true }).then(async (janelas) => {
+    const exata = janelas.find((janela) => janela.url === destino);
+    if (exata) return exata.focus();
+    const aberta = janelas.find((janela) => new URL(janela.url).origin === new URL(destino).origin);
+    if (aberta) {
+      await aberta.navigate(destino);
+      return aberta.focus();
+    }
+    return clients.openWindow(destino);
   }));
 });
