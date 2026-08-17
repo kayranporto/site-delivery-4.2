@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="css/entregador.css?v=4.2.0"/>
   <link rel="stylesheet" href="css/entregador-4.4.1.css?v=4.4.1"/>
   <link rel="stylesheet" href="css/entregador-financeiro-4.4.2.css?v=4.4.2"/>
+  <link rel="stylesheet" href="css/entregador-push-4.4.3.css?v=4.4.3"/>
   <link rel="stylesheet" href="css/accessibility.css?v=4.2.0"/>
   <link rel="stylesheet" href="css/enhancements.css?v=4.2.7.1"/>
 </head>
@@ -55,6 +56,11 @@
         <label class="online-switch"><input id="entregadorOnline" type="checkbox"/><span></span><div><small>SEU STATUS</small><strong id="textoEntregadorOnline">Offline</strong></div></label>
       </section>
 
+      <section class="driver-push-card" id="driverPushCard" aria-labelledby="driverPushTitle">
+        <div class="driver-push-copy"><span class="driver-push-icon" aria-hidden="true">🔔</span><div><strong id="driverPushTitle">Alertas de novas entregas</strong><p>Receba ofertas no dispositivo mesmo com o painel em segundo plano. A proximidade usa sua última localização válida por até 30 minutos.</p></div></div>
+        <div class="driver-push-actions"><button id="ativarPushEntregador" type="button">Ativar notificações</button><small id="driverPushStatus">Verificando este dispositivo...</small></div>
+      </section>
+
       <section class="driver-metrics" aria-label="Resumo das entregas">
         <article><span>◎</span><div><small>Disponíveis</small><strong id="totalDisponiveis">0</strong></div></article>
         <article><span>🛵</span><div><small>Em andamento</small><strong id="totalEmRota">0</strong></div></article>
@@ -77,12 +83,13 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.111.0"></script>
   <script src="js/app-utils.js?v=4.2.0"></script>
   <script src="js/supabase.js?v=4.2.0"></script>
-  <script src="js/config.js?v=4.2.0"></script>
+  <script src="js/config.js?v=4.4.3"></script>
   <script src="js/monitoring.js?v=4.2.0"></script>
-  <script src="js/notifications.js?v=4.2.0"></script>
+  <script src="js/notifications.js?v=4.4.3"></script>
   <script src="js/entregador.js?v=4.2.0"></script>
-  <script src="js/entregador-logistica-4.4.js?v=4.4.0"></script>
+  <script src="js/entregador-logistica-4.4.js?v=4.4.3"></script>
   <script src="js/entregador-ui-4.4.1.js?v=4.4.1"></script>
   <script src="js/entregador-financeiro-4.4.2.js?v=4.4.2"></script>
+  <script src="js/entregador-push-4.4.3.js?v=4.4.3"></script>
 </body>
 </html>
