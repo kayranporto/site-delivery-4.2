@@ -7,6 +7,8 @@
   let timerLista = 0;
   let buscando = false;
   let ultimaPosicaoEm = 0;
+  let focoAplicado = false;
+  const ofertaFoco = new URLSearchParams(location.search).get("oferta");
 
   const toast = (titulo, mensagem = "", tipo = "info") => {
     if (window.AppToast) window.AppToast(titulo, mensagem, tipo);
@@ -61,13 +63,14 @@
     botao.disabled = true;
     const texto = botao.textContent;
     botao.textContent = "Aceitando...";
-    const { error } = await window.db.rpc("entregador_aceitar_pedido", { p_pedido_id: item.pedido_id });
-    if (error) {
+    const { data, error } = await window.db.rpc("entregador_aceitar_pedido", { p_pedido_id: item.pedido_id });
+    if (error || data !== true) {
       botao.disabled = false;
       botao.textContent = texto;
-      return toast("Não foi possível aceitar", error.message || "A entrega pode ter sido aceita por outro entregador.", "error");
+      return toast("Não foi possível aceitar", error?.message || "A entrega já foi aceita ou esta oferta expirou.", "error");
     }
     toast("Entrega aceita", `Pedido #${item.numero} agora está na sua rota.`, "success");
+    if (ofertaFoco === String(item.pedido_id)) history.replaceState(null, "", location.pathname);
     document.getElementById("atualizarEntregas")?.click();
     setTimeout(() => {
       carregarProximidade();
@@ -90,7 +93,8 @@
 
     itens.forEach((item) => {
       const card = document.createElement("article");
-      card.className = "delivery-card available-card";
+      const focada = ofertaFoco && String(item.pedido_id) === ofertaFoco;
+      card.className = `delivery-card available-card${focada ? " push-target" : ""}`;
       card.dataset.pedidoId = item.pedido_id;
 
       const topo = document.createElement("div");
@@ -103,17 +107,19 @@
       tituloBox.append(titulo, unidade);
       const status = document.createElement("span");
       status.className = "delivery-status waiting";
-      status.textContent = "Disponível";
+      status.textContent = focada ? "Nova oferta" : "Disponível";
       topo.append(tituloBox, status);
 
       const meta = document.createElement("div");
       meta.className = "delivery-meta";
+      const ganho = Number(item.ganho_entregador || 0);
       const valores = [
         `📍 ${item.bairro || "Região protegida"}`,
         `💳 ${item.pagamento || "Pagamento"}`,
-        `💰 ${dinheiro(item.total)}`
+        ganho > 0 ? `💵 Ganho ${dinheiro(ganho)}` : "💵 Ganho a definir"
       ];
       if (item.distancia_coleta_km !== null && item.distancia_coleta_km !== undefined) valores.push(`⌖ ${Number(item.distancia_coleta_km).toFixed(2)} km até a coleta`);
+      else valores.push("⌖ Distância da coleta indisponível");
       if (item.distancia_entrega_km !== null && item.distancia_entrega_km !== undefined) valores.push(`↗ ${Number(item.distancia_entrega_km).toFixed(2)} km estimados até o cliente`);
       if (item.agendado_para) valores.push(`🕒 Agendado ${dataBr(item.agendado_para)}`);
       valores.forEach((texto) => { const span = document.createElement("span"); span.textContent = texto; meta.append(span); });
@@ -123,11 +129,16 @@
       const aceitar = document.createElement("button");
       aceitar.type = "button";
       aceitar.className = "driver-primary";
-      aceitar.textContent = "Aceitar entrega";
+      aceitar.textContent = ganho > 0 ? `Aceitar por ${dinheiro(ganho)}` : "Aceitar entrega";
       aceitar.addEventListener("click", () => aceitarPedido(item, aceitar));
       acoes.append(aceitar);
       card.append(topo, meta, acoes);
       container.append(card);
+
+      if (focada && !focoAplicado) {
+        focoAplicado = true;
+        requestAnimationFrame(() => card.scrollIntoView({ behavior: "smooth", block: "center" }));
+      }
     });
   }
 
@@ -209,5 +220,5 @@
     }
   }
 
-  iniciar().catch((erro) => console.error("Logística do entregador 4.4:", erro));
+  iniciar().catch((erro) => console.error("Logística do entregador 4.4.3:", erro));
 })();
