@@ -1,51 +1,107 @@
 import { createClient } from "supabase";
 import webpush from "web-push";
 
+type RuntimeConfig = {
+  webhook_secret?: string;
+  vapid_public?: string;
+  vapid_private?: string;
+  vapid_subject?: string;
+};
+
+type PushNotification = {
+  usuario_id?: string;
+  pedido_id?: string | null;
+  titulo?: string | null;
+  mensagem?: string | null;
+  destino?: string | null;
+  tipo?: string | null;
+};
+
+function adminKey() {
+  const modern = Deno.env.get("SUPABASE_SECRET_KEYS");
+  if (modern) {
+    try {
+      const parsed = JSON.parse(modern);
+      if (parsed?.default) return String(parsed.default);
+    } catch {
+      // Compatibilidade com projetos que ainda usam a chave service_role legada.
+    }
+  }
+  return Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+}
+
 Deno.serve(async (request) => {
   if (request.method !== "POST") return new Response("method", { status: 405 });
-  const webhookSecret = Deno.env.get("PUSH_WEBHOOK_SECRET") ?? "";
-  if (!webhookSecret || request.headers.get("x-delivery-webhook-secret") !== webhookSecret) {
-    return new Response("unauthorized", { status: 401 });
-  }
+
+  const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
+  const secretKey = adminKey();
+  if (!supabaseUrl || !secretKey) return new Response("backend not configured", { status: 503 });
+
+  const supabase = createClient(supabaseUrl, secretKey, { auth: { persistSession: false } });
 
   try {
+    const { data: runtime, error: runtimeError } = await supabase.rpc("push_runtime_config");
+    if (runtimeError) throw runtimeError;
+    const config = (runtime || {}) as RuntimeConfig;
+
+    const recebido = request.headers.get("x-delivery-webhook-secret") ?? "";
+    if (!config.webhook_secret || recebido !== config.webhook_secret) {
+      return new Response("unauthorized", { status: 401 });
+    }
+
     const body = await request.json();
-    const notification = body.record || body;
-    if (!notification?.usuario_id) return new Response("ok", { status: 200 });
+    const notification = (body.record || body) as PushNotification;
+    if (!notification?.usuario_id) return Response.json({ ok: true, enviados: 0 });
 
-    const publicKey = Deno.env.get("VAPID_PUBLIC_KEY") ?? "";
-    const privateKey = Deno.env.get("VAPID_PRIVATE_KEY") ?? "";
-    const subject = Deno.env.get("VAPID_SUBJECT") ?? "mailto:admin@example.com";
-    if (!publicKey || !privateKey) return new Response("not configured", { status: 503 });
-    webpush.setVapidDetails(subject, publicKey, privateKey);
+    if (!config.vapid_public || !config.vapid_private) {
+      return new Response("push not configured", { status: 503 });
+    }
 
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
-      { auth: { persistSession: false } },
+    webpush.setVapidDetails(
+      config.vapid_subject || "https://kayranporto.github.io/site-delivery-4.2/",
+      config.vapid_public,
+      config.vapid_private,
     );
-    const { data: subscriptions, error } = await supabase.from("push_subscriptions")
-      .select("id,subscription").eq("usuario_id", notification.usuario_id);
+
+    const { data: subscriptions, error } = await supabase
+      .from("push_subscriptions")
+      .select("id,subscription")
+      .eq("usuario_id", notification.usuario_id);
     if (error) throw error;
 
+    const destino = notification.destino
+      || (notification.pedido_id ? `./acompanhamento.html?id=${notification.pedido_id}` : "./perfil.html");
     const payload = JSON.stringify({
       title: notification.titulo || "Multi Delivery",
       body: notification.mensagem || "Você tem uma nova atualização.",
-      url: notification.pedido_id ? `./acompanhamento.html?id=${notification.pedido_id}` : "./perfil.html",
+      url: destino,
+      tag: notification.pedido_id ? `pedido-${notification.pedido_id}` : undefined,
+      tipo: notification.tipo || "atualizacao",
     });
+
+    let enviados = 0;
+    let removidos = 0;
     for (const item of subscriptions || []) {
       try {
-        await webpush.sendNotification(item.subscription, payload, { TTL: 300 });
+        await webpush.sendNotification(item.subscription, payload, {
+          TTL: 180,
+          urgency: "high",
+        });
+        enviados += 1;
       } catch (pushError: unknown) {
         const status = Number((pushError as { statusCode?: number })?.statusCode || 0);
-        if (status === 404 || status === 410) await supabase.from("push_subscriptions").delete().eq("id", item.id);
-        else console.error(pushError);
+        if (status === 404 || status === 410) {
+          await supabase.from("push_subscriptions").delete().eq("id", item.id);
+          removidos += 1;
+        } else {
+          console.error("Falha Web Push:", pushError);
+        }
       }
     }
-    return new Response("ok", { status: 200 });
+
+    return Response.json({ ok: true, enviados, removidos });
   } catch (error) {
-    console.error(error);
+    console.error("enviar-push:", error);
     return new Response("error", { status: 500 });
   }
 });
-
