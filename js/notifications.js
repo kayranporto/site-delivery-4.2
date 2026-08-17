@@ -16,6 +16,21 @@
         if (window.AppToast) window.AppToast(titulo, mensagem, tipo, tempo);
     }
 
+    function destinoSeguro(item) {
+        const fallback = item?.pedido_id
+            ? `acompanhamento.html?id=${encodeURIComponent(item.pedido_id)}`
+            : "#";
+        const informado = String(item?.destino || "").trim();
+        if (!informado) return fallback;
+        try {
+            const url = new URL(informado, location.href);
+            if (url.origin !== location.origin) return fallback;
+            return `${url.pathname}${url.search}${url.hash}`;
+        } catch {
+            return fallback;
+        }
+    }
+
     function montarInterface() {
         if (document.getElementById("notificationCenter")) return;
         const centro = criar("div", "notification-center"); centro.id = "notificationCenter";
@@ -43,8 +58,13 @@
         contador.hidden = naoLidas === 0;
         if (!notificacoes.length) { lista.append(criar("p", "notification-empty", "Nenhuma notificação por enquanto.")); return; }
         notificacoes.slice(0, 20).forEach((item) => {
-            const link = criar("a", `notification-item ${item.lida ? "read" : ""}`); link.href = item.pedido_id ? `acompanhamento.html?id=${encodeURIComponent(item.pedido_id)}` : "#";
-            link.append(criar("strong", "", item.titulo), criar("span", "", item.mensagem), criar("small", "", new Date(item.created_at).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })));
+            const link = criar("a", `notification-item ${item.lida ? "read" : ""}`);
+            link.href = destinoSeguro(item);
+            link.append(
+                criar("strong", "", item.titulo),
+                criar("span", "", item.mensagem),
+                criar("small", "", new Date(item.created_at).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" }))
+            );
             lista.append(link);
         });
     }
@@ -76,45 +96,137 @@
         return Uint8Array.from([...binario].map((char) => char.charCodeAt(0)));
     }
 
-    async function ativarPush() {
-        if (!("Notification" in window) || !("serviceWorker" in navigator)) {
-            avisar("Alertas indisponíveis", "Este navegador não oferece suporte às notificações do dispositivo.", "warning", 6500);
+    async function garantirServiceWorker() {
+        if (!("serviceWorker" in navigator)) throw new Error("Service Worker indisponível.");
+        const existente = await navigator.serviceWorker.getRegistration();
+        if (existente) {
+            existente.update().catch(() => {});
+            return existente;
+        }
+        return navigator.serviceWorker.register("./sw.js?v=4.4.3", { updateViaCache: "none" });
+    }
+
+    async function registrarSubscription() {
+        const chave = String(window.DELIVERY_CONFIG?.vapidPublicKey || "").trim();
+        if (!chave) throw new Error("Chave pública Web Push não configurada.");
+        if (!("PushManager" in window)) throw new Error("Web Push não é suportado neste navegador.");
+        const registro = await garantirServiceWorker();
+        await navigator.serviceWorker.ready;
+        let subscription = await registro.pushManager.getSubscription();
+        subscription ||= await registro.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: base64Uint8(chave)
+        });
+        const payload = subscription.toJSON();
+        const { error } = await db.from("push_subscriptions").upsert({
+            usuario_id: usuario.id,
+            endpoint: payload.endpoint,
+            subscription: payload
+        }, { onConflict: "usuario_id,endpoint" });
+        if (error) throw error;
+        return subscription;
+    }
+
+    async function atualizarBotaoPush() {
+        const ativar = document.getElementById("enablePushNotifications");
+        if (!ativar || !("Notification" in window) || !("serviceWorker" in navigator)) return;
+        if (Notification.permission === "denied") {
+            ativar.textContent = "Alertas bloqueados no navegador";
+            ativar.disabled = true;
             return;
         }
-        const permissao = await Notification.requestPermission();
-        if (permissao !== "granted") {
-            avisar("Permissão não concedida", "Você pode ativar as notificações depois nas configurações do navegador.", "warning", 6500);
+        if (Notification.permission !== "granted") {
+            ativar.textContent = "Ativar alertas no dispositivo";
+            ativar.disabled = false;
             return;
         }
         try {
-            const registro = await navigator.serviceWorker.ready;
-            const chave = window.DELIVERY_CONFIG?.vapidPublicKey || "";
-            if (chave && "PushManager" in window) {
-                let subscription = await registro.pushManager.getSubscription();
-                subscription ||= await registro.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: base64Uint8(chave) });
-                const payload = subscription.toJSON();
-                const { error } = await db.from("push_subscriptions").upsert({ usuario_id: usuario.id, endpoint: payload.endpoint, subscription: payload }, { onConflict: "usuario_id,endpoint" });
-                if (error) throw error;
-            }
-            avisar("Alertas ativados", "Você receberá atualizações importantes dos seus pedidos.", "success", 5500);
-            new Notification("Alertas ativados", { body: "Você receberá atualizações importantes dos seus pedidos.", icon: "assets/favicon.svg" });
+            const registro = await navigator.serviceWorker.getRegistration();
+            const subscription = await registro?.pushManager?.getSubscription?.();
+            ativar.textContent = subscription ? "Alertas ativos neste dispositivo" : "Concluir ativação dos alertas";
+            ativar.disabled = Boolean(subscription);
+        } catch {
+            ativar.textContent = "Ativar alertas no dispositivo";
+            ativar.disabled = false;
+        }
+    }
+
+    async function ativarPush() {
+        if (!usuario) return false;
+        if (!("Notification" in window) || !("serviceWorker" in navigator) || !("PushManager" in window)) {
+            avisar("Alertas indisponíveis", "Este navegador não oferece suporte às notificações Web Push.", "warning", 6500);
+            return false;
+        }
+        const chave = String(window.DELIVERY_CONFIG?.vapidPublicKey || "").trim();
+        if (!chave) {
+            avisar("Alertas ainda não configurados", "A chave pública Web Push não está disponível neste ambiente.", "warning", 6500);
+            return false;
+        }
+
+        const permissao = Notification.permission === "granted" ? "granted" : await Notification.requestPermission();
+        if (permissao !== "granted") {
+            avisar("Permissão não concedida", "Ative as notificações deste site nas configurações do navegador para receber novas entregas.", "warning", 6500);
+            await atualizarBotaoPush();
+            window.dispatchEvent(new CustomEvent("multi-delivery:push-state"));
+            return false;
+        }
+
+        try {
+            await registrarSubscription();
+            avisar("Alertas ativados", "Este dispositivo poderá receber novas entregas mesmo com o painel em segundo plano.", "success", 5500);
+            await atualizarBotaoPush();
+            window.dispatchEvent(new CustomEvent("multi-delivery:push-state"));
+            return true;
         } catch (erro) {
             console.error("Erro ao ativar notificações:", erro);
-            avisar("Não foi possível ativar os alertas", "Revise as permissões do navegador e tente novamente.", "error", 6500);
+            avisar("Não foi possível ativar os alertas", erro?.message || "Revise as permissões do navegador e tente novamente.", "error", 6500);
+            await atualizarBotaoPush();
+            window.dispatchEvent(new CustomEvent("multi-delivery:push-state"));
+            return false;
         }
+    }
+
+    function mostrarNotificacaoLocal(item) {
+        if (Notification.permission !== "granted" || !document.hidden) return;
+        const destino = destinoSeguro(item);
+        const alerta = new Notification(item.titulo || "Multi Delivery", {
+            body: item.mensagem || "Você tem uma nova atualização.",
+            icon: "assets/favicon.svg",
+            tag: item.pedido_id ? `pedido-${item.pedido_id}` : undefined
+        });
+        alerta.onclick = () => {
+            window.focus();
+            if (destino && destino !== "#") location.href = destino;
+            alerta.close();
+        };
     }
 
     async function iniciar() {
         if (!window.db) return;
         const { data: { user } } = await db.auth.getUser();
         if (!user) return;
-        usuario = user; montarInterface(); await carregar();
+        usuario = user;
+        montarInterface();
+        await carregar();
+        await atualizarBotaoPush();
+
+        if (Notification.permission === "granted") {
+            registrarSubscription()
+                .then(() => atualizarBotaoPush())
+                .then(() => window.dispatchEvent(new CustomEvent("multi-delivery:push-state")))
+                .catch((erro) => console.warn("Web Push:", erro?.message || erro));
+        }
+
         canal = db.channel(`notificacoes-${user.id}`)
             .on("postgres_changes", { event: "INSERT", schema: "public", table: "notificacoes", filter: `usuario_id=eq.${user.id}` }, (payload) => {
-                notificacoes.unshift(payload.new); renderizar();
-                if (Notification.permission === "granted" && document.hidden) new Notification(payload.new.titulo, { body: payload.new.mensagem, icon: "assets/favicon.svg" });
+                notificacoes.unshift(payload.new);
+                renderizar();
+                mostrarNotificacaoLocal(payload.new);
             }).subscribe();
     }
+
+    window.AtivarPushNotificacoes = ativarPush;
+    window.AtualizarEstadoPush = atualizarBotaoPush;
 
     addEventListener("beforeunload", () => { if (canal) db.removeChannel(canal); });
     iniciar();
