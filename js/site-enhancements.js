@@ -57,6 +57,16 @@
     adminPlanosJs.src = "js/admin-planos-4.3.js?v=4.3.0";
     adminPlanosJs.async = false;
     document.body.append(adminPlanosJs);
+
+    const entregadoresFinanceiroCss = document.createElement("link");
+    entregadoresFinanceiroCss.rel = "stylesheet";
+    entregadoresFinanceiroCss.href = "css/entregador-financeiro-4.4.2.css?v=4.4.2";
+    document.head.append(entregadoresFinanceiroCss);
+
+    const entregadoresFinanceiroJs = document.createElement("script");
+    entregadoresFinanceiroJs.src = "js/admin-entregadores-financeiro-4.4.2.js?v=4.4.2";
+    entregadoresFinanceiroJs.async = false;
+    document.body.append(entregadoresFinanceiroJs);
   }
 
   if (/restaurante\.html$/i.test(location.pathname)) {
