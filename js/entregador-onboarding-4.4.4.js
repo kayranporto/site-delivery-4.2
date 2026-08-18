@@ -80,7 +80,8 @@
     passo.classList.toggle("is-done", Boolean(estado.done));
     passo.classList.toggle("is-warning", Boolean(estado.warning) && !estado.done);
     status.textContent = estado.text;
-    botao.disabled = Boolean(estado.done) || (Boolean(estado.warning) && indice === 2 && Notification?.permission === "denied");
+    const pushBloqueado = indice === 2 && "Notification" in window && Notification.permission === "denied";
+    botao.disabled = Boolean(estado.done) || pushBloqueado;
     botao.textContent = estado.done ? "Concluído" : textoBotao;
   }
 
@@ -122,7 +123,10 @@
   }
 
   async function solicitarLocalizacao(botao) {
-    if (!("geolocation" in navigator)) return atualizar();
+    if (!("geolocation" in navigator)) {
+      window.AppToast?.("Localização indisponível", "Este dispositivo não oferece acesso à localização pelo navegador.", "warning");
+      return atualizar();
+    }
     botao.disabled = true;
     botao.textContent = "Solicitando...";
     await new Promise((resolve) => {
@@ -136,7 +140,11 @@
   }
 
   async function solicitarPush(botao) {
-    if (Notification?.permission === "denied") {
+    if (!("Notification" in window) || !("serviceWorker" in navigator) || !("PushManager" in window)) {
+      window.AppToast?.("Alertas indisponíveis", "Este navegador não oferece suporte ao Web Push.", "warning");
+      return atualizar();
+    }
+    if (Notification.permission === "denied") {
       window.AppToast?.("Notificações bloqueadas", "Abra as configurações do navegador e permita notificações para este site.", "warning");
       return atualizar();
     }
