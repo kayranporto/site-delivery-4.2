@@ -287,6 +287,10 @@ async function executarAcaoOperacional(pedido, acao, botao, preparoEstimado = nu
 
 function criarCardPedido(pedido, indice) {
     const card = criarElemento("article", `order-card${pedido._novo ? " new-order" : ""}`);
+    card.dataset.pedidoId = String(pedido.id || "");
+    card.dataset.unidadeId = String(pedido.unidade_id || "");
+    card.dataset.entregaPronta = String(pedido.status === "preparando" && Boolean(pedido.pronto_em));
+    card.dataset.entregadorAtribuido = String(Boolean(pedido.entregador_id));
     card.style.animationDelay = `${Math.min(indice * 35, 200)}ms`;
     const cabecalho = criarElemento("div", "order-card-head");
     cabecalho.append(criarElemento("strong", "", `#${pedido.numero || String(pedido.id).slice(0, 8)}`), criarElemento("time", "", pedido.created_at ? new Date(pedido.created_at).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) : "—"));
@@ -407,6 +411,10 @@ function criarTicketCozinha(pedido) {
     const atrasado = pedidoAtrasado(pedido);
     const pronto = pedido.status === "preparando" && Boolean(pedido.pronto_em);
     const ticket = criarElemento("article", `kitchen-ticket${atrasado ? " late" : ""}${pronto ? " ready" : ""}`);
+    ticket.dataset.pedidoId = String(pedido.id || "");
+    ticket.dataset.unidadeId = String(pedido.unidade_id || "");
+    ticket.dataset.entregaPronta = String(pronto);
+    ticket.dataset.entregadorAtribuido = String(Boolean(pedido.entregador_id));
     const header = criarElemento("header");
     header.append(
         criarElemento("h3", "", `#${pedido.numero || String(pedido.id).slice(0, 8)}`),

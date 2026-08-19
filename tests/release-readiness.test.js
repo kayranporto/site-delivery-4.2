@@ -27,7 +27,7 @@ test("release possui uma única árvore canônica e o empacotamento exclui metad
     assert.ok(fs.existsSync(path.join(root, "supabase/migrations/20260811022438_valida_pedido_antes_evento_pagamento_4_2_8.sql")));
     assert.ok(fs.existsSync(path.join(root, "supabase/migrations/20260811171220_bloqueia_operacao_pagamento_online_pendente_4_2_8.sql")));
     assert.ok(fs.existsSync(path.join(root, "supabase/migrations/20260811175328_remove_rpc_login_legada_4_2_8.sql")));
-    assert.equal(JSON.parse(read("package.json")).version, "4.2.8");
+    assert.equal(JSON.parse(read("package.json")).version, "4.4.5");
 });
 
 test("dependências Supabase estão fixadas em versão exata", () => {
@@ -199,8 +199,8 @@ test("versão de assets e caches é consistente", () => {
         .filter((name) => name.endsWith(".html")).map(read)];
     const joined = sources.join("\n");
     assert.doesNotMatch(joined, /\?v=(?:2\.|3\.)/);
-    assert.match(read("sw.js"), /const VERSION = "4\.2\.8"/);
-    assert.match(read("js/site-enhancements.js"), /sw\.js\?v=4\.2\.8/);
+    assert.match(read("sw.js"), /const VERSION = "4\.4\.5"/);
+    assert.match(read("js/site-enhancements.js"), /sw\.js\?v=4\.4\.5/);
     assert.match(read("sw.js"), /mobile-pwa-4\.2\.6\.css\?v=4\.2\.6/);
     assert.match(read("sw.js"), /operacao-restaurante-4\.2\.7\.js\?v=4\.2\.7/);
 });

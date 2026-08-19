@@ -1,6 +1,6 @@
 "use strict";
 
-const VERSION = "4.4.3";
+const VERSION = "4.4.5";
 const CACHE = `multi-delivery-v${VERSION}`;
 const DYNAMIC_CACHE = `multi-delivery-dynamic-v${VERSION}`;
 const SHELL = [
@@ -36,7 +36,7 @@ const SHELL = [
   "./js/checkout-4.2.3.js?v=4.2.3",
   "./js/operacao-restaurante-4.2.7.js?v=4.2.7",
   "./js/suporte.js?v=4.2.0",
-  "./js/site-enhancements.js?v=4.2.8"
+  "./js/site-enhancements.js?v=4.4.5"
 ];
 
 self.addEventListener("install", (event) => {
@@ -107,7 +107,7 @@ self.addEventListener("push", (event) => {
   let payload = { title: "Multi Delivery", body: "Você tem uma nova atualização.", url: "./perfil.html", tipo: "atualizacao" };
   try { payload = { ...payload, ...event.data.json() }; } catch { /* Usa mensagem padrão. */ }
   const tag = payload.tag || undefined;
-  const entrega = payload.tipo === "entrega_disponivel";
+  const entrega = ["entrega_disponivel", "entrega_atribuida"].includes(payload.tipo);
   event.waitUntil(self.registration.showNotification(payload.title, {
     body: payload.body,
     icon: "./assets/favicon.svg",
