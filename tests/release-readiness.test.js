@@ -30,6 +30,15 @@ test("release possui uma única árvore canônica e o empacotamento exclui metad
     assert.equal(JSON.parse(read("package.json")).version, "4.4.5");
 });
 
+test("GitHub Pages publica todas as páginas HTML da raiz", () => {
+    const workflow = read(".github/workflows/pages.yml");
+    assert.match(workflow, /cp \.\/\*\.html _site\//);
+    assert.match(workflow, /cp -R assets css js _site\//);
+    for (const pagina of ["empresa-equipe.html", "empresa-colaborador.html"]) {
+        assert.ok(fs.existsSync(path.join(root, pagina)), `${pagina} não existe no repositório`);
+    }
+});
+
 test("dependências Supabase estão fixadas em versão exata", () => {
     const html = [...fs.readdirSync(root).filter((name) => name.endsWith(".html"))]
         .map((name) => read(name)).join("\n");

@@ -45,7 +45,8 @@ jobs:
         run: |
           mkdir -p _site
           cp -R assets css js _site/
-          cp .nojekyll 404.html index.html acompanhamento.html admin.html cadastro.html checkout.html dados.html empresa-cadastro.html empresa-dashboard.html empresa-login.html enderecos.html entregador.html favoritos.html login.html meus-pedidos.html nova-senha.html offline.html pedido-sucesso.html perfil.html privacidade.html recuperar-senha.html restaurante.html suporte.html manifest.webmanifest robots.txt sitemap.xml sw.js _site/
+          cp ./*.html _site/
+          cp .nojekyll manifest.webmanifest robots.txt sitemap.xml sw.js _site/
 
       - name: Enviar artefato
         uses: actions/upload-pages-artifact@v3
