@@ -11,7 +11,7 @@ npm ci
 npm run verify
 ```
 
-`npm run verify` cobre 238 arquivos, sintaxe JavaScript, JSON, referências locais, IDs HTML duplicados, exposição de segredos, migrations críticas, 141 testes automatizados e o type-check TypeScript das Edge Functions.
+`npm run verify` cobre 239 arquivos, sintaxe JavaScript, JSON, referências locais, IDs HTML duplicados, exposição de segredos, migrations críticas, 141 testes automatizados e o type-check TypeScript das Edge Functions.
 
 Para gerar o pacote de publicação depois da verificação:
 

@@ -8,6 +8,7 @@ const path = require("node:path");
 const root = path.resolve(__dirname, "..");
 const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
 const migration = read("supabase/migrations/20260819003047_entrega_propria_hibrida_4_4_5.sql");
+const migrationIndice = read("supabase/migrations/20260819011044_index_empresa_entregadores_criado_por_4_4_5.sql");
 const dashboard = read("js/empresa-entrega-propria-4.4.5.js");
 
 test("migração 4.4.5 cria modalidades e vínculo por unidade", () => {
@@ -29,6 +30,7 @@ test("vínculos próprios usam RLS, privilégios mínimos e índices", () => {
   assert.match(migration, /grant select on table public\.empresa_entregadores to authenticated, service_role/);
   assert.match(migration, /empresa_entregadores_empresa_unidade_ativo_idx/);
   assert.match(migration, /empresa_entregadores_entregador_ativo_idx/);
+  assert.match(migrationIndice, /empresa_entregadores_criado_por_idx/);
 });
 
 test("modo híbrido prioriza próprios e só libera a plataforma após o prazo", () => {

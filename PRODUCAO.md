@@ -8,7 +8,7 @@ npm run verify
 npm run package
 ```
 
-`npm run verify` executa a verificação estrutural de 238 arquivos, os 141 testes automatizados e o type-check TypeScript das Edge Functions. O empacotamento repete o gate antes de gerar o ZIP e exclui `.git`, `node_modules`, releases anteriores e arquivos ZIP antigos.
+`npm run verify` executa a verificação estrutural de 239 arquivos, os 141 testes automatizados e o type-check TypeScript das Edge Functions. O empacotamento repete o gate antes de gerar o ZIP e exclui `.git`, `node_modules`, releases anteriores e arquivos ZIP antigos.
 
 ## 2. Banco de dados
 
@@ -21,7 +21,7 @@ npm run package
 
 A migration 016 adiciona variações, cozinha, idempotência do checkout, auditoria de estoque e a fundação multiunidade. A migration 018 reconcilia o catálogo publicado com o estado live e restringe as permissões do papel anônimo. A migration 019 elimina políticas redundantes e otimiza chamadas de identidade nas políticas RLS. A migration 020 remove atualizações diretas de estado em pedidos e exige RPCs autenticadas para pagamento presencial e cancelamento não pago. A migration 021 valida a referência do pedido antes de registrar eventos do Mercado Pago e devolve erro controlado para referências inexistentes. A migration 022 impede que pedidos online sem pagamento confirmado avancem para preparo, retirada ou entrega. A migration 023 remove a RPC legada de telemetria de login que não possui consumidores no frontend. A migration 024 restringe privilégios padrão de funções novas e remove `EXECUTE` direto de funções privadas utilizadas exclusivamente como triggers.
 
-A migration `20260819003047_entrega_propria_hibrida_4_4_5.sql` adiciona modalidade de entrega por unidade, vínculos de entregadores próprios, origem das ofertas, fallback híbrido e atribuição direta protegida. Aplique-a somente após confirmar que não há entregador associado a mais de uma corrida ativa; o índice parcial da migration passa a garantir essa regra no banco.
+As migrations `20260819003047_entrega_propria_hibrida_4_4_5.sql` e `20260819011044_index_empresa_entregadores_criado_por_4_4_5.sql` adicionam modalidade de entrega por unidade, vínculos de entregadores próprios, origem das ofertas, fallback híbrido, atribuição direta protegida e o índice de cobertura da chave `criado_por`. Aplique-as somente após confirmar que não há entregador associado a mais de uma corrida ativa; o índice parcial da primeira migration passa a garantir essa regra no banco.
 
 ## 3. Edge Functions
 
@@ -96,7 +96,7 @@ Configure alertas para:
 
 ## 8. Aprovação final
 
-- [ ] migrations 014 a 024 e `20260819003047_entrega_propria_hibrida_4_4_5.sql` confirmadas no projeto hospedado;
+- [ ] migrations 014 a 024 e as migrations de entrega própria 4.4.5 confirmadas no projeto hospedado;
 - [x] 141 testes automatizados aprovados no commit de release;
 - [ ] Edge Functions publicadas e segredos configurados;
 - [ ] webhook validado no sandbox;
