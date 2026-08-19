@@ -57,7 +57,7 @@
     document.body.append(freteDistanciaJs);
 
     const entregaPropriaJs = document.createElement("script");
-    entregaPropriaJs.src = "js/empresa-entrega-propria-4.4.5.js?v=4.4.5";
+    entregaPropriaJs.src = "js/empresa-entrega-propria-4.4.5.js?v=4.4.5.1";
     entregaPropriaJs.async = false;
     document.body.append(entregaPropriaJs);
   }

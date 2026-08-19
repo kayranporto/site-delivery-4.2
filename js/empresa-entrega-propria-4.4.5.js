@@ -316,8 +316,20 @@
         iniciado = true;
         montarCard(secao);
         select.addEventListener("change", () => setTimeout(carregar, 80));
-        const observer = new MutationObserver(() => decorarPedidos());
-        [$("pedidosEmpresa"), $("filaCozinha")].filter(Boolean).forEach((alvo) => observer.observe(alvo, { childList: true, subtree: true }));
+        const alvosPedidos = [$("pedidosEmpresa"), $("filaCozinha")].filter(Boolean);
+        const observarPedidos = () => alvosPedidos.forEach((alvo) => observer.observe(alvo, { childList: true, subtree: true }));
+        const observer = new MutationObserver(() => {
+          // Pausa o observador enquanto os seletores de entregador são
+          // atualizados. Sem isso, as próprias alterações disparavam uma
+          // nova observação continuamente e bloqueavam a interface.
+          observer.disconnect();
+          try {
+            decorarPedidos();
+          } finally {
+            observarPedidos();
+          }
+        });
+        observarPedidos();
         window.addEventListener("focus", () => carregar());
         await carregar();
         return;
