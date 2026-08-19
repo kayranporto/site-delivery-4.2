@@ -1,4 +1,4 @@
-# Multi Delivery 4.2.8
+# Multi Delivery 4.4.5
 
 Aplicação web integrada ao Supabase para marketplace de restaurantes, pedidos, cozinha, entregadores, suporte e pagamentos pelo Mercado Pago.
 
@@ -11,7 +11,7 @@ npm ci
 npm run verify
 ```
 
-`npm run verify` cobre 172 arquivos, sintaxe JavaScript, JSON, referências locais, IDs HTML duplicados, exposição de segredos, migrations críticas, 65 testes automatizados e o type-check TypeScript das Edge Functions.
+`npm run verify` cobre 238 arquivos, sintaxe JavaScript, JSON, referências locais, IDs HTML duplicados, exposição de segredos, migrations críticas, 141 testes automatizados e o type-check TypeScript das Edge Functions.
 
 Para gerar o pacote de publicação depois da verificação:
 
@@ -45,7 +45,7 @@ O diretório testado deve ser exatamente o diretório publicado. Não mantenha c
 - painel do restaurante por telas;
 - exportação e solicitação de exclusão de dados.
 
-## Operação 4.2 e estabilizações 4.2.8
+## Operação 4.2 a 4.4.5
 
 - fila de cozinha com pedidos recebidos, em preparo, prontos e atrasados;
 - tempo estimado, início do preparo e horários reais de conclusão;
@@ -64,7 +64,16 @@ O diretório testado deve ser exatamente o diretório publicado. Não mantenha c
 - RPC legada de tentativas de login removida na migration 023;
 - pagamento online desativado por padrão até a validação do gateway em sandbox;
 - cache, PWA e assets unificados na versão 4.2.8;
-- 65 testes automatizados.
+- gestão multiunidade pública e operacional, com catálogo, horários, regiões e checkout por unidade;
+- planos, assinaturas, limites e perfis internos com autorização fail-closed;
+- frete por distância configurável e distribuição de entregas por proximidade;
+- histórico e ganhos do entregador sem exposição indevida de dados do cliente;
+- web push para ofertas de entrega e onboarding operacional do entregador;
+- entrega própria, pela plataforma ou híbrida configurável por unidade;
+- vínculo da equipe própria, prioridade automática e atribuição direta de pedidos prontos;
+- trava transacional para impedir duas corridas ativas por entregador;
+- cache PWA e gate de release alinhados na versão 4.4.5;
+- 141 testes automatizados.
 
 ## Implantação
 

@@ -39,7 +39,7 @@ test("notificação abre a oferta do entregador", () => {
   assert.match(migration, /entregador\.html\?oferta=/);
   assert.match(notifications, /item\?\.destino/);
   assert.match(notifications, /pushManager\.subscribe/);
-  assert.match(notifications, /sw\.js\?v=4\.4\.3/);
+  assert.match(notifications, /sw\.js\?v=4\.4\.5/);
   assert.match(sw, /addEventListener\("push"/);
   assert.match(sw, /requireInteraction: entrega/);
 });
@@ -48,6 +48,6 @@ test("painel mostra ganho e não confirma corrida perdida", () => {
   assert.match(logistica, /ganho_entregador/);
   assert.match(logistica, /data !== true/);
   assert.match(logistica, /ofertaFoco/);
-  assert.match(html, /entregador-push-4\.4\.3\.css\?v=4\.4\.3/);
+  assert.match(html, /entregador-push-4\.4\.3\.css\?v=4\.4\.5/);
   assert.match(html, /entregador-push-4\.4\.3\.js\?v=4\.4\.3/);
 });

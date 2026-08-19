@@ -103,7 +103,7 @@
             existente.update().catch(() => {});
             return existente;
         }
-        return navigator.serviceWorker.register("./sw.js?v=4.4.3", { updateViaCache: "none" });
+        return navigator.serviceWorker.register("./sw.js?v=4.4.5", { updateViaCache: "none" });
     }
 
     async function registrarSubscription() {

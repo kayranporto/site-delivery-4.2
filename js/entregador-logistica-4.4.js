@@ -106,8 +106,9 @@
       unidade.textContent = item.unidade_nome ? `Coleta em ${item.unidade_nome}` : "Coleta na unidade principal";
       tituloBox.append(titulo, unidade);
       const status = document.createElement("span");
-      status.className = "delivery-status waiting";
-      status.textContent = focada ? "Nova oferta" : "Disponível";
+      const ofertaPropria = item.oferta_origem === "propria";
+      status.className = `delivery-status ${ofertaPropria ? "own-team" : "waiting"}`;
+      status.textContent = ofertaPropria ? "Equipe própria" : focada ? "Nova oferta" : "Disponível";
       topo.append(tituloBox, status);
 
       const meta = document.createElement("div");

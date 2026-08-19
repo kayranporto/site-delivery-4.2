@@ -6,6 +6,11 @@
   document.head.append(mobileCss);
 
   if (/empresa-dashboard\.html$/i.test(location.pathname)) {
+    const entregaPropriaCss = document.createElement("link");
+    entregaPropriaCss.rel = "stylesheet";
+    entregaPropriaCss.href = "css/empresa-entrega-propria-4.4.5.css?v=4.4.5";
+    document.head.append(entregaPropriaCss);
+
     const operacaoCss = document.createElement("link");
     operacaoCss.rel = "stylesheet";
     operacaoCss.href = "css/operacao-restaurante-4.2.7.css?v=4.2.7";
@@ -50,6 +55,11 @@
     freteDistanciaJs.src = "js/frete-distancia-unidade-4.4.js?v=4.4.0";
     freteDistanciaJs.async = false;
     document.body.append(freteDistanciaJs);
+
+    const entregaPropriaJs = document.createElement("script");
+    entregaPropriaJs.src = "js/empresa-entrega-propria-4.4.5.js?v=4.4.5";
+    entregaPropriaJs.async = false;
+    document.body.append(entregaPropriaJs);
   }
 
   if (/admin\.html$/i.test(location.pathname)) {
@@ -274,7 +284,7 @@
 
   if("serviceWorker" in navigator && location.protocol!=="file:") addEventListener("load",async()=>{
     try{
-      const registro=await navigator.serviceWorker.register("./sw.js?v=4.2.8",{updateViaCache:"none"});
+      const registro=await navigator.serviceWorker.register("./sw.js?v=4.4.5",{updateViaCache:"none"});
       if(registro.waiting)mostrarAtualizacao(registro.waiting);
       registro.addEventListener("updatefound",()=>{const worker=registro.installing;if(!worker)return;worker.addEventListener("statechange",()=>{if(worker.state==="installed"&&navigator.serviceWorker.controller)mostrarAtualizacao(worker)})});
       let refreshing=false;
