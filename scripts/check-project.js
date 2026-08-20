@@ -19,7 +19,12 @@ function walk(directory) {
 const files = walk(root);
 for (const file of files.filter((item) => item.endsWith(".js"))) {
     const result = spawnSync(process.execPath, ["--check", file], { encoding: "utf8" });
-    if (result.status !== 0) failures.push(`JavaScript inválido: ${path.relative(root, file)}\n${result.stderr}`);
+    const relative = path.relative(root, file);
+    if (result.error) {
+        failures.push(`Não foi possível validar o JavaScript: ${relative} — ${result.error.message}`);
+    } else if (result.status !== 0) {
+        failures.push(`JavaScript inválido: ${relative}\n${result.stderr || "Falha sem saída de erro."}`);
+    }
 }
 for (const file of files.filter((item) => item.endsWith(".json") || item.endsWith(".webmanifest"))) {
     try { JSON.parse(fs.readFileSync(file, "utf8")); }
