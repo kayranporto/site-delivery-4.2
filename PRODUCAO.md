@@ -96,9 +96,10 @@ Configure alertas para:
 
 ## 8. Aprovação final
 
-- [ ] migrations 014 a 024 e as migrations de entrega própria 4.4.5 confirmadas no projeto hospedado;
+- [x] 46 migrations locais confirmadas no projeto hospedado em 20/08/2026;
 - [x] 142 testes automatizados aprovados no commit de release;
-- [ ] Edge Functions publicadas e segredos configurados;
+- [x] 4 Edge Functions publicadas e ativas (`criar-pagamento`, `mercado-pago-webhook`, `processar-reembolso`, `enviar-push`);
+- [ ] segredos das Edge Functions conferidos no ambiente e registrados no checklist operacional;
 - [ ] webhook validado no sandbox;
 - [ ] fluxo completo da cozinha e entrega testado;
 - [ ] RLS validada com contas de cada papel;
@@ -109,7 +110,7 @@ Configure alertas para:
 - [ ] política de privacidade revisada;
 - [ ] responsáveis operacionais definidos.
 
-## 9. Auditoria técnica — 12/08/2026
+## 9. Auditoria técnica — atualizada em 20/08/2026
 
 Validações executadas no ambiente hospedado e no commit de produção:
 
@@ -117,10 +118,11 @@ Validações executadas no ambiente hospedado e no commit de produção:
 - Security Advisor e Performance Advisor foram executados no projeto Supabase;
 - nenhuma tabela do schema `public` foi encontrada com RLS desativada na auditoria de metadados;
 - `private.criar_pedido_impl(text,text,text,text,text,jsonb)` não é executável diretamente pelos papéis `anon` nem `authenticated`;
-- `criar-pagamento`, `mercado-pago-webhook` e `processar-reembolso` estão publicadas e ativas;
+- as 46 migrations locais estão registradas no histórico do projeto hospedado;
+- `criar-pagamento`, `mercado-pago-webhook`, `processar-reembolso` e `enviar-push` estão publicadas e ativas;
 - o webhook do Mercado Pago valida assinatura HMAC, consulta o pagamento diretamente no provedor e usa chave de deduplicação antes da conciliação;
 - `pagamentoOnlineAtivo` permanece `false` até a conclusão dos testes de sandbox;
-- a migration hospedada `20260812232054_restringe_execucao_funcoes_futuras_4_2_8` foi aplicada com sucesso;
+- as migrations 4.3 e 4.4.5 de equipe, multiunidade, planos, distância, ganhos, distribuição e entrega própria/híbrida foram aplicadas;
 - privilégios padrão de funções novas no schema `public`, quando criadas pelo papel `postgres`, agora exigem concessão explícita para `anon`, `authenticated` e `service_role`;
 - `private.normalizar_autor_mensagem()`, `private.notificar_evento_pedido()` e `private.notificar_mensagem_pedido()` permanecem vinculadas aos respectivos triggers, mas não são mais executáveis diretamente por papéis da API;
 - a organização Supabase está atualmente no plano Free; a proteção HIBP não é disponibilizada nesse plano;
@@ -139,11 +141,13 @@ Revisão das RPCs `SECURITY DEFINER`:
 - as RPCs administrativas inspecionadas validam `private.is_admin()` antes de acessar ou alterar dados privilegiados;
 - as RPCs de cliente, restaurante e entregador inspecionadas vinculam a operação a `auth.uid()` e/ou à propriedade/atribuição do pedido;
 - os avisos do Security Advisor permanecem porque funções `SECURITY DEFINER` intencionalmente expostas continuam sendo reportadas pelo linter; não deve ser feita revogação em massa sem substituir a arquitetura de autorização.
+- o Security Advisor reporta 75 itens (73 warnings), incluindo `pg_net` no schema `public`, HIBP desativado e RPCs expostas intencionalmente;
+- o Performance Advisor reporta 8 foreign keys sem índice de cobertura, 17 grupos de políticas permissivas duplicadas e índices ainda sem uso no volume atual.
 
 Pendências que impedem aprovação final:
 
 - a proteção contra senhas vazadas permanece indisponível enquanto a organização estiver no plano Free;
 - os testes de sandbox de pagamento, reembolso, concorrência e ordem de webhooks ainda precisam de evidências operacionais;
 - a validação de RLS ainda precisa de uma conta de entregador separada de administrador/cliente para o teste positivo isolado;
-- o histórico de migrations do projeto hospedado usa timestamps e nomes de implantação que não correspondem literalmente à numeração 014–023; a equivalência deve ser documentada antes de marcar esse item como concluído;
+- a triagem e documentação da allowlist dos advisors Supabase ainda precisa ser concluída;
 - backup/restauração, CAPTCHA/rate limits, cabeçalhos do domínio, privacidade e responsáveis operacionais continuam pendentes.

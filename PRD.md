@@ -1,28 +1,28 @@
 # PRD — Plataforma de Delivery (Multi Delivery)
 
-**Versão do produto analisada:** 4.2.8
-**Data desta análise:** 13/08/2026
-**Base:** repositório `site-delivery-4.2-main` (frontend estático + Supabase)
+**Versão do produto analisada:** 4.4.5
+**Data desta análise:** 20/08/2026
+**Base:** repositório `site-delivery-4.2` + projeto Supabase hospedado `site delivery`
 
-> Este documento é a fonte de verdade de produto para PM, UX/UI, frontend, backend, QA, DevOps e agentes de IA responsáveis pela implementação. Ele foi escrito **depois** de uma leitura completa do repositório (24 migrations SQL, 41 módulos JS, 22 páginas HTML, 4 Edge Functions, 9 documentos operacionais e 10 arquivos de teste). Nenhuma funcionalidade abaixo é presumida pelo nome de arquivo — cada item foi confirmado no código ou explicitamente marcado como não confirmado.
+> Este documento é a fonte de verdade de produto para PM, UX/UI, frontend, backend, QA, DevOps e agentes de IA responsáveis pela implementação. A revisão de 20/08/2026 cruzou o repositório (46 migrations SQL, 61 módulos JS principais, 25 páginas HTML, 4 Edge Functions e 26 arquivos de teste) com o projeto Supabase hospedado. As 46 migrations estão aplicadas, as 4 Edge Functions estão ativas e as 40 tabelas públicas reportadas pelo ambiente remoto têm RLS habilitada. Funcionalidades sem evidência de código, teste ou implantação são explicitamente marcadas como parciais ou não implementadas.
 
 ---
 
 ## 1. Executive Summary
 
-O Multi Delivery é um **marketplace de delivery multi-restaurante** já em estágio avançado de maturidade técnica (não é um MVP do zero). O sistema roda como site estático (HTML/CSS/JS vanilla, sem bundler/framework) hospedado no GitHub Pages, com **Supabase** como backend completo (Postgres + Auth + RLS + Edge Functions + Realtime/Storage). A versão atual (4.2.8) já cobre: catálogo com variações e adicionais, carrinho, checkout com idempotência, motor de estados de pedido, cozinha operacional com SLA, entregadores, área de entrega por bairro, horários/pausas, cupons, favoritos, avaliações, fidelidade (pontos), suporte ao cliente, painel administrativo completo, auditoria, LGPD (exportação/exclusão) e integração de pagamento com Mercado Pago (pagamento online **desligado por padrão** em produção até validação de sandbox).
+O Multi Delivery é um **marketplace de delivery multi-restaurante** em estágio avançado de maturidade técnica. O sistema roda como site estático (HTML/CSS/JS vanilla, sem bundler/framework) hospedado no GitHub Pages, com **Supabase** como backend completo (Postgres + Auth + RLS + Edge Functions + Realtime/Storage). A versão atual (4.4.5) cobre catálogo configurável, carrinho, checkout idempotente, cozinha com SLA, multiunidade operacional, equipe interna com RBAC, planos/trial/limites, entregadores, frete por bairro ou distância, distribuição de ofertas por proximidade, entrega própria/plataforma/híbrida, ganhos do entregador, cupons, favoritos, avaliações, fidelidade, suporte, auditoria, LGPD e Mercado Pago. O pagamento online permanece **desligado por padrão** até a conclusão do sandbox.
 
-O que falta para uma plataforma SaaS multi-unidade madura (cobrança de assinatura, roteirização geográfica real, WhatsApp, multiunidade completa na UI, app mobile nativo) está documentado e priorizado no roadmap interno do próprio projeto (`ROADMAP-PLATAFORMA.md`) e é incorporado neste PRD nas seções de MVP/P0-P1-P2 e Roadmap.
+O que falta para uma plataforma SaaS madura concentra-se em cobrança recorrente e repasses, comissão, geocodificação e rota viária, geofencing, prova de entrega, WhatsApp/e-mail transacionais, fila assíncrona resiliente, analytics de conversão e requisitos de escala. O roadmap deste PRD e o `ROADMAP-PLATAFORMA.md` estão alinhados ao estado efetivamente entregue até 4.4.5.
 
-Este PRD organiza o que já existe, o que está parcial, o que falta e o que é recomendado, para servir de base às próximas fases (4.3 em diante).
+Este PRD organiza o que já existe, o que está parcial, o que falta e o que é recomendado, para servir de base às próximas fases (4.5 em diante).
 
 ---
 
 ## 2. Contexto
 
-O projeto já nasceu como uma tentativa completa de plataforma de delivery (não um protótipo), com forte ênfase em integridade financeira, segurança e RLS — evidenciada pelos documentos `PRODUCAO.md`, `RUNBOOK-OPERACIONAL.md` e pela auditoria técnica datada de 12/08/2026 registrada no próprio repositório. O time responsável já opera com disciplina de release (`npm run verify`, 65 testes automatizados, gate de CI) e já identificou pendências reais de produção (proteção HIBP indisponível no plano Free do Supabase, testes de sandbox financeiro ainda não realizados, conta de entregador isolada para validação de RLS ainda não criada).
+O projeto já nasceu como uma tentativa completa de plataforma de delivery, com forte ênfase em integridade financeira, segurança e RLS. O gate de release cobre verificação estrutural, **142 testes automatizados** e type-check das Edge Functions. A revisão remota de 20/08/2026 confirmou todas as migrations e funções implantadas, mas manteve pendências operacionais: proteção HIBP indisponível no plano Free, 17 cenários obrigatórios de sandbox sem evidência assinada, conta de entregador isolada para teste positivo de RLS, backup/restauração, CAPTCHA/rate limits, cabeçalhos do domínio e revisão jurídica.
 
-Este PRD assume esse ponto de partida: **não é uma reescrita**, é uma consolidação de produto sobre uma base técnica já sólida, com foco em fechar lacunas de produto (multiunidade na UI, SaaS/planos, WhatsApp, logística real) sem comprometer as garantias de segurança e integridade financeira já construídas.
+Este PRD assume esse ponto de partida: **não é uma reescrita**, é uma consolidação sobre uma base técnica sólida, com foco em concluir monetização SaaS, comunicação transacional e logística avançada sem comprometer as garantias de segurança e integridade financeira já construídas.
 
 ---
 
@@ -34,7 +34,7 @@ Pequenos e médios estabelecimentos (restaurantes, hamburguerias, açaí, mercad
 
 ## 4. Visão do Produto
 
-Plataforma web responsiva/PWA (instalável, com service worker e manifest já implementados) que conecta clientes, estabelecimentos, operadores de loja, entregadores e administradores da plataforma em um único fluxo de pedido, com arquitetura multi-tenant SaaS pronta para evoluir para cobrança por assinatura, multiunidade por rede e expansão geográfica. Apps mobile nativos permanecem fora do MVP atual — a estratégia é PWA-first.
+Plataforma web responsiva/PWA que conecta clientes, estabelecimentos, operadores de loja, entregadores e administradores em um único fluxo. A arquitetura multi-tenant já suporta multiunidade, RBAC interno, planos e limites; a cobrança recorrente e os repasses ainda precisam ser implementados. Apps mobile nativos permanecem fora do escopo — a estratégia é PWA-first.
 
 ---
 
@@ -43,12 +43,12 @@ Plataforma web responsiva/PWA (instalável, com service worker e manifest já im
 - Permitir que qualquer estabelecimento opere seu próprio delivery digital (catálogo, pedidos, entrega) com um checkout confiável e auditável.
 - Garantir integridade financeira: nenhum pedido pago incorretamente, nenhuma race condition de estoque/cupom, idempotência total no checkout e nos webhooks de pagamento.
 - Isolamento multi-tenant real (RLS) validado por papel (cliente, restaurante, entregador, admin).
-- Evoluir de "operação estabilizada" (4.2.8) para "plataforma comercial" (4.3+): planos, assinatura, comissão, multiunidade completa, logística real e comunicação transacional (push, e-mail, WhatsApp).
+- Evoluir da base comercial/logística 4.4.5 para crescimento e escala: cobrança recorrente, comissão/repasses, comunicação transacional, logística avançada, analytics, observabilidade e filas resilientes.
 
 ## 6. Não Objetivos (desta fase / deste PRD)
 
 - Não é objetivo desta fase criar apps mobile nativos (iOS/Android).
-- Não é objetivo implementar roteirização/geofencing real neste ciclo (fica para 4.4, ver Roadmap).
+- Não é objetivo implementar navegação turn-by-turn neste ciclo; geocodificação, rota viária e geofencing permanecem no backlog de logística avançada.
 - Não é objetivo abstrair múltiplos gateways de pagamento simultâneos no curto prazo — a prioridade é validar Mercado Pago em sandbox e produção antes de adicionar novos provedores.
 - Não é objetivo migrar o frontend para um framework componentizado agora (previsto apenas na fase 5.0 do roadmap do próprio projeto).
 
@@ -76,19 +76,19 @@ Cadastro/login (`cadastro.html`, `login.html`), navegação no cardápio (`resta
 
 ### Proprietário do estabelecimento (`empresas.usuario_id`) — **EXISTENTE**
 Um usuário autenticado dono de uma linha em `empresas` (relação 1:1 por `empresas_usuario_id_unique`). Painel em `empresa-dashboard.html` dividido em **dez telas internas** (conforme `RELATORIO-IMPLEMENTACAO.md`): catálogo, pedidos/cozinha, horários/regiões, cupons, relatório financeiro, fidelidade, avaliações, entregadores (visualização), configurações da loja, suporte.
-- **Funcionários/operadores com permissões diferenciadas do dono (gerente, cozinha, atendente, financeiro):** **NÃO IMPLEMENTADO.** Hoje `empresas.usuario_id` é único — não existe tabela de vínculo N:N tipo `empresa_funcionarios` com papéis internos. Isso está corretamente identificado no próprio roadmap do projeto para a fase 4.3 ("perfis de gerente, cozinha, atendente e financeiro"). É uma lacuna real e relevante.
+- O painel foi ampliado com gestão de equipe, unidades, plano/assinatura, frete por distância e modalidade de entrega por unidade.
 
-### Funcionário / Operador — **PARCIAL / NÃO IMPLEMENTADO COMO PERFIL PRÓPRIO**
-Operacionalmente, quem opera a cozinha hoje é o próprio dono logado no painel (`empresa-dashboard.html`, tela de operação, apoiada por `js/operacao-empresa.js` e `operacao-restaurante-4.2.7.js`, com RPC `empresa_atualizar_operacao_pedido`). Não existe login separado de "funcionário" com permissões restritas — apenas o dono da empresa.
+### Funcionário / Operador (`empresa_funcionarios`) — **EXISTENTE**
+Existe vínculo N:N entre empresa e usuário, com papéis `gerente`, `cozinha`, `atendente` e `financeiro`. A autorização é aplicada no banco por `private.papel_empresa_atual`/`private.tem_permissao_empresa`, com leitura e ações redigidas conforme o papel. A gestão ocorre em `empresa-equipe.html`; o trabalho do colaborador ocorre em `empresa-colaborador.html`, sem escrita direta nas tabelas operacionais.
 
 ### Entregador (`entregadores`) — **EXISTENTE, com ressalva de teste isolado**
-Cadastro (`cadastrar_entregador`), status online/offline (`entregador_definir_online`), lista de corridas disponíveis restrita a pedidos com status `pronto` (`listar_entregas_disponiveis`), aceite (`entregador_aceitar_pedido`), atualização de status (`entregador_atualizar_status`), atualização de localização (`entregador_atualizar_localizacao`, tabela `entrega_localizacoes`), aprovação administrativa (`admin_definir_entregador`). Interface em `entregador.html` + `js/entregador.js`.
-- **Ganhos e fechamento financeiro do entregador:** **NÃO IMPLEMENTADO** (roadmap 4.4).
+Cadastro, aprovação, online/offline, GPS, ofertas por proximidade, aceite concorrente protegido, retirada, entrega e localização em tempo real estão implementados. O estado operacional “pronto” não é um valor de `pedidos.status`: ele corresponde a `status='preparando'` com `pronto_em is not null`. Histórico e ganhos usam snapshot de `entregador_valor` no aceite e exibem resumos diário, semanal, mensal e acumulado.
+- **Fechamento, liquidação e repasse financeiro do entregador:** **NÃO IMPLEMENTADO.**
 - A própria auditoria de 12/08/2026 registra que **não há hoje uma conta de entregador isolada de admin/cliente para validar RLS de forma independente** — risco de teste, não de código, mas deve ser corrigido antes de qualquer expansão de volume.
 
 ### Super Admin (`private.is_admin()`, `admin_auditoria`) — **EXISTENTE**
 Painel completo em `admin.html` + `js/admin.js` (883 linhas) + `js/operacao-admin.js`. Cobre: gestão de restaurantes (`admin_definir_restaurante`, `admin_atualizar_restaurante`), bloqueio de usuários (`admin_definir_usuario_bloqueio`), cupons globais (`admin_salvar_cupom`/`admin_excluir_cupom`), consulta de pedido (`admin_obter_pedido`), conciliação de pagamentos (`admin_conciliacao_pagamentos`), preparo/marcação de reembolso (`admin_preparar_reembolso`, `admin_atualizar_reembolso`), saúde operacional (`admin_saude_operacao`), relatórios (`admin_relatorio_operacional`, `admin_relatorio_clientes_produtos`), aprovação de entregadores, resposta a chamados de suporte (`admin_responder_chamado`), trilha de auditoria (`admin_auditoria`).
-- **Planos, assinaturas, feature flags globais:** **NÃO IMPLEMENTADO** — não há tabela `subscriptions`/`planos` no schema atual. Está corretamente planejado para 4.3.
+- **Planos, assinaturas e limites:** **EXISTENTE** via `planos_plataforma`, `empresa_assinaturas` e RPCs `admin_*`; a cobrança recorrente automática ainda não existe.
 
 ---
 
@@ -102,7 +102,7 @@ Entrada na loja (index.html → restaurante.html?id=)
   ↓ carrinho (js/carrinho.js, cart-store.js) — cálculo local + revalidação no servidor
   ↓ identificação (login obrigatório — sem checkout convidado)
   ↓ endereço (enderecos.html, js/enderecos.js)
-  ↓ validação da área de entrega (RPC pública calcular_entrega_empresa — por bairro)
+  ↓ validação da área de entrega (bairro ou distância configurável por unidade)
   ↓ cupom (validação server-side na criação do pedido)
   ↓ forma de entrega — HOJE SOMENTE ENTREGA (retirada no local: ver seção 10)
   ↓ forma de pagamento (PIX / Cartão / Dinheiro — online desativado por padrão)
@@ -157,11 +157,11 @@ Nesta seção, cada bloco relevante traz: o que faz, quem usa, regras, validaç�
 - Pedido mínimo validado por região (`empresa_regioes.pedido_minimo`) ou geral da loja (`empresas.pedido_minimo`).
 - **Frete grátis via cupom:** suportado no modelo de cupons (ver RF-Cupons).
 
-### RF-04 — Endereço e cálculo de taxa de entrega **[EXISTENTE — estratégia por bairro]**
-- Estratégia implementada: **por bairro/cidade/UF** (`empresa_regioes`), com fallback para taxa única da loja (`empresas.taxa_entrega`) quando a loja não tem regiões cadastradas.
-- RPC pública `calcular_entrega_empresa(empresa_id, cidade, uf, bairro)` retorna atendido/aberto/taxa/pedido mínimo/tempo estimado — chamada anônima (cliente não logado pode simular antes de logar), delegando para `private.calcular_entrega_impl` (padrão de segurança correto: RPC pública fina, lógica no schema privado).
-- **Por distância (raio em km) e geofencing por polígono desenhado no mapa:** **NÃO IMPLEMENTADO.** Latitude/longitude só existem hoje para rastreamento de entregador (`entrega_localizacoes`), não para cálculo de frete do cliente.
-- **Recomendação para o MVP atual:** manter **por bairro** como estratégia principal (já robusta, testada, com RLS); tratar **por distância** como P1 e **geofencing** como P2 (roadmap 4.4, "geocodificação e cálculo de rota").
+### RF-04 — Endereço e cálculo de taxa de entrega **[EXISTENTE — bairro ou distância]**
+- Estratégia por bairro/cidade/UF (`empresa_regioes`), com fallback para taxa única, permanece disponível.
+- A unidade pode ativar frete por distância com `frete_taxa_base`, `frete_valor_km` e `frete_raio_max_km`. O cálculo autenticado resolve um `endereco_id` pertencente ao cliente, usa coordenadas persistidas e aplica Haversine; coordenadas arbitrárias não são aceitas no preview.
+- Sem configuração completa ou sem GPS do endereço/unidade, o sistema mantém o fallback por região. Cupom de frete grátis continua prevalecendo sobre a taxa calculada.
+- **Geocodificação automática, distância por rota viária e geofencing por polígono:** **NÃO IMPLEMENTADOS.** A distância atual é em linha reta.
 
 ### RF-05 — Horário de funcionamento, pausas e feriados **[EXISTENTE, parcial em feriados]**
 - `empresa_horarios` (por dia da semana, múltiplos intervalos não — **um único intervalo abre/fecha por dia**, não múltiplos intervalos como "11h-15h e 18h-23h" simultâneos no mesmo dia — **PARCIAL**, ver Lacunas), `empresa_pausas` (fechamento excepcional temporário, com motivo).
@@ -176,18 +176,18 @@ Ver seção 12 (Regras de Negócio) para a máquina de estados completa. Impleme
 - RPC `empresa_atualizar_operacao_pedido` centraliza as transições autenticadas (não é update direto de linha — migration 020 removeu updates diretos de status).
 - **Alertas sonoros/visuais configuráveis:** não confirmado explicitamente no JS revisado — **PARCIAL** (existe destaque visual de atraso; alerta sonoro configurável pelo lojista não foi encontrado).
 
-### RF-08 — Impressão térmica **[NÃO IMPLEMENTADO]**
-Nenhuma referência a impressão térmica, ESC/POS ou geração de recibo para impressora foi encontrada no código. É puramente uma recomendação de roadmap futuro (fora do 4.2–4.5 documentado). **Fora de escopo do MVP atual.**
+### RF-08 — Impressão térmica **[PARCIAL]**
+Existe impressão genérica de recibo pelo navegador via `window.print()`. Não há integração dedicada com impressora térmica, ESC/POS, agente local ou impressão automática sem diálogo. A automação térmica permanece como evolução futura e fora do MVP atual.
 
-### RF-09 — WhatsApp transacional **[NÃO IMPLEMENTADO]**
-Não há nenhuma integração de API do WhatsApp no código (`grep` no repositório só encontra a palavra nos documentos de roadmap). Está corretamente planejado para a fase 4.4 ("push, e-mail transacional e WhatsApp"). Hoje a comunicação transacional existe apenas via **push web (`enviar-push` Edge Function, `push_subscriptions`)** e **notificações internas (`notificacoes`)**.
+### RF-09 — WhatsApp **[PARCIAL — contato manual]**
+Existem atalhos `wa.me` com mensagem pré-preenchida para cliente↔restaurante e entregador↔cliente. Não há WhatsApp Business API, templates aprovados, envio server-side, webhooks ou automação transacional. A comunicação automática continua limitada a push web e notificações internas.
 
 ### RF-10 — Notificações **[PARCIAL]**
 - **Push web:** **EXISTENTE** (Edge Function `enviar-push`, VAPID key em `config.js`, tabela `push_subscriptions`).
 - **Notificações internas (in-app):** **EXISTENTE** (`notificacoes`, disparadas por trigger `private.notificar_evento_pedido()`/`notificar_mensagem_pedido()` em eventos de pedido e mensagens).
 - **E-mail transacional (fora do fluxo padrão de Auth do Supabase):** **NÃO IMPLEMENTADO** — não há integração com provedor de e-mail transacional (Resend/SendGrid/SMTP) no código; o único uso de e-mail é o fluxo nativo do Supabase Auth (confirmação/recuperação de senha).
-- **WhatsApp:** ver RF-09.
-- **Processamento assíncrono via fila dedicada:** **NÃO IMPLEMENTADO** como fila de mensageria própria — hoje o disparo é via trigger de banco síncrono ao evento + chamada à Edge Function. Funciona para o volume atual, mas não é uma fila resiliente a falhas (retry/backoff) — é uma lacuna arquitetural relevante para volume alto (ver seção 16 e 31).
+- **WhatsApp automático:** não implementado; há somente contato manual, ver RF-09.
+- **Processamento assíncrono via fila dedicada:** **NÃO IMPLEMENTADO** como outbox/fila de mensageria resiliente. Hoje triggers gravam notificações internas e o trigger `private.encaminhar_push_notificacao()` agenda uma chamada HTTP assíncrona à Edge Function `enviar-push` por `pg_net`. A falha é capturada para não invalidar a operação principal, porém não há retry/backoff durável nem acompanhamento formal de entrega — lacuna relevante para volume alto (ver seção 16 e 31).
 
 ### RF-11 — Cupons e promoções **[EXISTENTE, sólido]**
 Tabela `cupons` (migration 004) + gestão via `admin_salvar_cupom`. Suporta desconto (percentual/fixo — a definir exatamente pela coluna de tipo), frete grátis, período de validade, uso máximo. Uso validado e registrado (idempotência de aplicação de cupom mencionada nas preocupações de concorrência do runbook).
@@ -200,11 +200,12 @@ O proprietário visualiza pedidos e, por relatório (`admin_relatorio_clientes_p
 `admin_relatorio_operacional`, `empresa_relatorio_financeiro`, `admin_relatorio_clientes_produtos`, `admin_saude_operacao` — cobrem faturamento, pedidos, cancelamentos, reembolsos pendentes, chamados abertos, pagamentos divergentes. Filtro por `p_dias` (parametrizável) já implementado nas funções (`default 30`).
 - **Filtros por período customizado no calendário da UI, ticket médio explícito, taxa de conversão, produtos mais vendidos com ranking visual, horário de pico:** presença parcial — as funções de relatório existem no banco, mas nem todos os KPIs da lista do briefing (taxa de conversão de visitante→pedido, por exemplo) têm dado de origem hoje, pois **não há tracking de visitas/funil** no sistema (não existe tabela de eventos de analytics de navegação). **PARCIAL para financeiro/operacional, NÃO IMPLEMENTADO para funil de conversão.**
 
-### RF-14 — Gestão de entregadores **[EXISTENTE, com lacunas de escala]**
-Cadastro, aprovação admin, online/offline, atribuição por aceite (pull, não push automático), retirada, entrega, localização em tempo real. **Atribuição automática por proximidade/algoritmo:** **NÃO IMPLEMENTADO** (hoje é lista de corridas disponíveis + aceite manual). **Cálculo de ganhos:** **NÃO IMPLEMENTADO.**
+### RF-14 — Gestão de entregadores **[EXISTENTE, com logística 4.4.5]**
+Cadastro, aprovação, online/offline, localização em tempo real, ofertas por proximidade, expansão automática de raio (4/8/15 km), web push, aceite manual concorrente, retirada e entrega estão implementados. Cada unidade pode operar com entregadores próprios, da plataforma ou em modo híbrido; no modo próprio o restaurante pode fazer atribuição direta. Histórico e cálculo de ganhos também existem.
+- **Ainda faltam:** atribuição direta totalmente automática sem aceite, agrupamento de corridas, prova de entrega e liquidação/repasse dos ganhos.
 
-### RF-15 — Multiunidade (fundação) **[PARCIAL]**
-Migration 016 cria `empresa_unidades` com unidade principal automática (`private.criar_unidade_principal_empresa`) e RLS — é uma **fundação de banco**, não uma feature de produto completa. Não há confirmação de UI no painel para o lojista criar/gerenciar múltiplas unidades, cardápio por unidade, estoque por unidade, ou trocar de unidade ativa. Corretamente listado no roadmap do próprio projeto como escopo central da fase 4.3.
+### RF-15 — Multiunidade **[EXISTENTE]**
+`empresa_unidades` possui unidade principal automática, RLS e integridade composta empresa↔unidade. A UI permite criar, editar, selecionar e desativar unidades; catálogo, produtos, estoque, horários, pausas, regiões, checkout e operação são filtrados pela unidade ativa. O catálogo público e o checkout rejeitam produto pertencente a outra unidade. A unidade principal não pode ser desativada pela interface.
 
 ### RF-16 — Fidelidade (pontos/cashback) **[EXISTENTE — pontos, cashback não]**
 `programa_fidelidade_empresa`, `fidelidade_saldos`, `fidelidade_movimentos`, `fidelidade_resgates`, com crédito automático por trigger (`private.creditar_fidelidade_pedido`) e resgate validado (`private.validar_resgate_fidelidade`). É um programa de **pontos por loja**, não uma carteira de cashback financeiro. Cashback/wallet compartilhado entre lojas está no roadmap 4.5, não implementado.
@@ -264,15 +265,16 @@ Existe uma separação clara entre **estado de pagamento do pedido** (`pagamento
 
 | Categoria | Estado | Evidência |
 |---|---|---|
-| RLS multi-tenant | **EXISTENTE**, auditado | Auditoria 12/08/2026: nenhuma tabela pública sem RLS; teste de impersonação por papel documentado |
+| RLS multi-tenant | **EXISTENTE**, auditado | Revisão remota 20/08/2026: 40/40 tabelas públicas com RLS; teste positivo isolado do entregador ainda pendente |
 | Idempotência de checkout | **EXISTENTE** | Índice `pedidos_chave_cliente_idx`, testes `checkout-4.2.3.test.js` |
 | Idempotência de webhook de pagamento | **EXISTENTE** | Chave de deduplicação antes da conciliação (webhook HMAC validado) |
 | Rate limiting / CAPTCHA | **PARCIAL** | CAPTCHA (Turnstile) implementado mas opcional/dependente de configuração de chave; rate limit é responsabilidade do Supabase Auth, ainda pendente de ajuste fino conforme `PRODUCAO.md` checklist |
 | Cabeçalhos HTTP de segurança completos | **PARCIAL** | CSP via `<meta>` funciona no GitHub Pages; `X-Content-Type-Options`, `Permissions-Policy`, anti-framing **dependem de hospedagem com proxy** (Cloudflare/Vercel) — risco residual documentado enquanto só estiver no Pages |
-| Testes automatizados | **EXISTENTE** | 65 testes (`node --test`), 10 arquivos de teste, gate de CI (`npm run verify`) |
+| Testes automatizados | **EXISTENTE** | 142 testes em 26 arquivos, gate de CI (`npm ci` + `npm run verify`) |
 | Observabilidade (logs estruturados/tracing/error tracking) | **PARCIAL** | `app_logs` existe no banco (auditoria básica); não há evidência de tracing distribuído ou error tracking externo (Sentry etc.) |
+| Advisors Supabase | **PARCIAL / REQUER TRIAGEM** | 75 avisos de segurança (73 warnings, em maioria RPCs `SECURITY DEFINER` intencionais) e 47 apontamentos de performance; `pg_net` em `public`, HIBP desativado, 8 FKs sem índice de cobertura e 17 grupos de políticas permissivas duplicadas |
 | Performance (Core Web Vitals, lazy loading) | **NÃO CONFIRMADO** | Nenhuma métrica de performance documentada no repositório; recomenda-se medição real antes de metas |
-| PWA | **EXISTENTE** | `sw.js`, `manifest.webmanifest`, `offline.html`, versão de cache unificada 4.2.8 |
+| PWA | **EXISTENTE** | `sw.js`, `manifest.webmanifest`, `offline.html`, cache e assets alinhados na versão 4.4.5 |
 | Backup/restauração testados | **PENDENTE (documentado como não concluído)** | `PRODUCAO.md` checklist item ainda desmarcado |
 
 ---
@@ -287,13 +289,13 @@ Existe uma separação clara entre **estado de pagamento do pedido** (`pagamento
 
 ## 15. Arquitetura Atual
 
-**Frontend:** HTML estático + CSS + JavaScript vanilla (sem framework, sem bundler, sem build step) — 22 páginas HTML, 41 módulos JS, cada página carrega seus próprios scripts. Versionamento de assets por query string (`?v=4.2.0`). Hospedagem: GitHub Pages (confirmado por `sitemap.xml` e menção explícita em `PRODUCAO.md` às limitações de cabeçalhos do Pages) + configuração alternativa para Vercel (`vercel.json` presente).
+**Frontend:** HTML estático + CSS + JavaScript vanilla (sem framework e sem bundler) — 25 páginas HTML e 61 módulos JS principais. Cada página carrega seus próprios scripts, com assets versionados por query string. Hospedagem ativa via GitHub Pages + configuração alternativa para Vercel (`vercel.json` presente).
 
-**Backend:** Supabase (Postgres + Auth + Realtime + Storage + Edge Functions em Deno/TypeScript). Toda regra de negócio crítica vive em **funções SQL `SECURITY DEFINER` no schema `private`**, expostas ao público apenas via RPCs finas no schema `public`. Este é um padrão de arquitetura consistente e correto (evita lógica de negócio duplicada/divergente entre RPCs).
+**Backend:** Supabase (Postgres + Auth + Realtime + Storage + Edge Functions em Deno/TypeScript). Helpers e implementações críticas ficam prioritariamente no schema `private`; RPCs controladas no schema `public`, muitas também `SECURITY DEFINER`, fazem as verificações de papel, propriedade e `auth.uid()` e possuem grants explícitos. O desenho evita lógica crítica no cliente, mas a superfície pública privilegiada precisa continuar sob revisão e allowlist — exatamente o ponto sinalizado pelos advisors atuais.
 
 **Autenticação:** Supabase Auth nativo, cadastro sem confirmação obrigatória de e-mail (decisão de produto documentada e com controles compensatórios exigidos: CAPTCHA, rate limit, senha forte).
 
-**Pagamentos:** Mercado Pago via 3 Edge Functions (`criar-pagamento`, `mercado-pago-webhook`, `processar-reembolso`), webhook valida assinatura HMAC.
+**Edge Functions:** 4 funções ativas no ambiente hospedado: três de pagamento (`criar-pagamento`, `mercado-pago-webhook`, `processar-reembolso`) e `enviar-push`. O webhook valida assinatura HMAC.
 
 **Estrutura de pastas (canônica, conforme README):**
 ```
@@ -308,7 +310,7 @@ docs/                  este PRD e documentação de produto
 ```
 
 **Dívida técnica arquitetural identificada:**
-1. **Sem framework/componentização** — 41 arquivos JS crescendo por acréscimo (`carrinho.js` E `carrinho-4.2.5.js` coexistindo, por exemplo) torna difícil garantir uma única fonte de verdade de UI à medida que a base cresce. O próprio roadmap do projeto já reconhece isso na fase 5.0 ("frontend componentizado e migrado progressivamente para TypeScript").
+1. **Sem framework/componentização** — 61 módulos JS principais crescendo por acréscimo (`carrinho.js` e `carrinho-4.2.5.js` coexistindo, por exemplo) tornam difícil garantir uma única fonte de verdade de UI à medida que a base cresce. O roadmap reconhece isso na fase 5.0.
 2. **Arquivos JS versionados por número no nome** (`checkout-4.2.3.js`, `operacao-restaurante-4.2.7.js`, `carrinho-4.2.5.js`, `mobile-pwa-4.2.6.css`) em vez de um único arquivo coeso por domínio — aumenta risco de dois arquivos divergentes controlando a mesma tela ao mesmo tempo. Recomenda-se consolidação antes da próxima grande fase de features.
 3. **Sem camada de gateway de pagamento plugável** (ver 12.4).
 4. **Sem fila de mensageria assíncrona real** (ver 16).
@@ -321,9 +323,9 @@ Duas decisões arquiteturais relevantes têm mais de uma solução possível —
 
 ### 16.1 Fila de eventos/notificações assíncronas
 
-**Opção A — Manter triggers de banco + chamada síncrona a Edge Function (atual).**
-- Prós: simples, já funciona, sem infraestrutura nova.
-- Contras: falha de push/e-mail pode acoplar-se ao tempo de resposta da transação; sem retry/backoff nativo; não escala bem com WhatsApp/e-mail somados.
+**Opção A — Manter triggers de banco + chamada HTTP assíncrona via `pg_net` à Edge Function (atual).**
+- Prós: simples, já funciona e a exceção de envio não invalida a operação principal.
+- Contras: não oferece outbox durável, retry/backoff de negócio nem acompanhamento formal de entrega; não escala bem com WhatsApp/e-mail somados.
 
 **Opção B — Introduzir fila real (ex. `pgmq`, tabela de outbox + worker, ou serviço externo tipo Supabase Queues/Trigger.dev).**
 - Prós: falha de notificação nunca invalida o pedido confirmado (requisito explícito do briefing, seção 31); retry/backoff; auditável.
@@ -369,20 +371,23 @@ Modelo conceitual das entidades já implementadas (schema `public`, exceto onde 
 | `grupos_adicionais` | Grupo de opções (ex. adicionais) | empresa_id, minimo, maximo | N:1 empresas | maximo ≥ max(minimo,1) |
 | `adicionais` | Opção dentro de um grupo | grupo_id, preco | N:1 grupos_adicionais | |
 | `produto_grupos` | Associação produto↔grupo | produto_id, grupo_id | N:N | PK composta |
-| `pedidos` | Pedido do cliente | usuario_id, empresa_id, status, pagamento_status, reembolso_status, subtotal, taxa_entrega, desconto, total | N:1 usuarios, N:1 empresas | `usuario_id not null` (sem convidado); `numero` sequencial amigável |
+| `pedidos` | Pedido do cliente | usuario_id, empresa_id, unidade_id, endereco_id, status, pronto_em, distancia_km, entregador_valor, totais financeiros | N:1 usuarios, empresas e unidades | `usuario_id not null` (sem convidado); “pronto” é `preparando + pronto_em` |
 | `pedido_itens` | Item do pedido (snapshot de preço) | pedido_id, produto_id, preco_unitario, quantidade, adicionais(jsonb) | N:1 pedidos | preço congelado no momento da compra |
 | `historico_status_pedido` | Trilha de status | pedido_id, status, timestamp | N:1 pedidos | |
 | `pedido_operacao_eventos` | Trilha de eventos operacionais (cozinha) | pedido_id, evento, timestamp | N:1 pedidos | migration 017 |
 | `pagamento_eventos` | Eventos brutos do gateway | pedido_id, payment_id, tipo | N:1 pedidos | dedupe de webhook |
-| `enderecos` | Endereços salvos do cliente | usuario_id, cep, rua, numero, bairro, cidade, uf | N:1 usuarios | |
+| `enderecos` | Endereços salvos do cliente | usuario_id, cep, rua, numero, bairro, cidade, uf, latitude, longitude | N:1 usuarios | GPS opcional, atualizado por ação explícita |
 | `cupons` | Cupons de desconto | empresa_id (nullable=global?), tipo, validade, limite | N:1 empresas (quando aplicável) | gestão via RPC admin |
 | `avaliacoes` | Avaliação do pedido | pedido_id, nota, comentario, resposta | N:1 pedidos | resposta do estabelecimento |
 | `empresa_horarios` | Horário de funcionamento | empresa_id, dia_semana, abre, fecha | N:1 empresas | 1 intervalo por dia hoje |
 | `empresa_pausas` | Fechamento excepcional | empresa_id, inicio, fim, motivo | N:1 empresas | |
 | `empresa_regioes` | Área de entrega por bairro | empresa_id, bairro, cidade, uf, taxa_entrega, pedido_minimo | N:1 empresas | único por (empresa, bairro, cidade, uf) |
-| `empresa_unidades` | Fundação multiunidade | empresa_id, principal | N:1 empresas | migration 016, sem UI completa |
+| `empresa_unidades` | Unidade operacional | empresa_id, principal, coordenadas, configuração de frete e modalidade de entrega | N:1 empresas | UI e operação completas por unidade |
+| `empresa_funcionarios` | Equipe interna da empresa | empresa_id, usuario_id, papel, ativo | N:1 empresas e usuários | papéis gerente/cozinha/atendente/financeiro |
 | `estoque_movimentos` | Auditoria de estoque | produto_id, tipo, quantidade | N:1 produtos | |
-| `entregadores` | Cadastro de entregador | usuario_id, aprovado, online | 1:1 usuarios | |
+| `entregadores` | Cadastro de entregador | id/usuario, aprovado, online, coordenadas, valor_por_entrega | 1:1 usuários | localização recente participa da distribuição |
+| `empresa_entregadores` | Vínculo de entregador próprio | empresa_id, unidade_id, entregador_id, ativo | N:1 unidades e entregadores | entrega própria/híbrida |
+| `entrega_ofertas` | Oferta individual de corrida | pedido_id, entregador_id, distância, valor, raio, etapa, status | N:1 pedidos e entregadores | distribuição por proximidade e expiração |
 | `entrega_localizacoes` | Posição do entregador | entregador_id, pedido_id, lat, lng | N:1 entregadores | |
 | `pedido_mensagens` | Chat vinculado ao pedido | pedido_id, autor, mensagem | N:1 pedidos | |
 | `notificacoes` | Notificação interna | usuario_id, tipo, lida | N:1 usuarios | |
@@ -393,7 +398,8 @@ Modelo conceitual das entidades já implementadas (schema `public`, exceto onde 
 | `chamados_suporte` | Ticket de suporte | usuario_id, categoria, status | N:1 usuarios | |
 | `admin_auditoria` | Trilha de auditoria administrativa | admin_id, acao, entidade, antes, depois | — | |
 | `app_logs` | Log de aplicação | nível, contexto | — | observabilidade básica |
-| `subscriptions` (planos SaaS) | **NÃO IMPLEMENTADO** | — | — | necessário para fase 4.3 |
+| `planos_plataforma` | Plano SaaS configurável | preço, moeda, trial, limites, recursos | — | plano técnico Legado é o padrão atual |
+| `empresa_assinaturas` | Assinatura e período da empresa | empresa_id, plano_id, status, trial, período, ids do provider | N:1 empresas e planos | sem cobrança recorrente automática |
 
 **Índices relevantes já confirmados:** `pedidos_usuario_id_idx`, `pedidos_empresa_id_idx`, `pedidos_created_at_idx` (desc, útil para listagem recente), `pedido_itens_pedido_id_idx`, `produtos_empresa_id_idx`, `categorias_empresa_nome_unique`, `empresas_usuario_id_unique`, `empresas_cnpj_unique`, `empresa_regioes_local_unique_ci`, `pedidos_chave_cliente_idx` (idempotência).
 
@@ -401,7 +407,7 @@ Modelo conceitual das entidades já implementadas (schema `public`, exceto onde 
 
 ## 19. APIs
 
-Não há uma API REST customizada tradicional — o acesso é via **Supabase client SDK** (PostgREST automático sobre as tabelas com RLS) + **RPCs nomeadas** (funções Postgres expostas como endpoints) + **3 Edge Functions HTTP** para pagamento. Módulos funcionais, por responsabilidade (equivalente aos "módulos de API" pedidos no briefing):
+Não há uma API REST customizada tradicional — o acesso é via **Supabase client SDK** (PostgREST automático sobre as tabelas com RLS) + **RPCs nomeadas** + **4 Edge Functions HTTP**. Módulos funcionais, por responsabilidade:
 
 | Módulo | Mecanismo | Responsabilidade |
 |---|---|---|
@@ -411,6 +417,10 @@ Não há uma API REST customizada tradicional — o acesso é via **Supabase cli
 | Operação do pedido | RPCs `empresa_atualizar_operacao_pedido`, `empresa_marcar_pagamento_offline`, `empresa_cancelar_pedido_nao_pago`, `cliente_solicitar_cancelamento`, `empresa_decidir_cancelamento` | máquina de estados do pedido |
 | Pagamentos | Edge Functions `criar-pagamento`, `mercado-pago-webhook`, `processar-reembolso` + RPC `reconciliar_pagamento_mercado_pago` | criação de cobrança, webhook, reembolso, conciliação |
 | Entrega | RPCs `cadastrar_entregador`, `entregador_definir_online`, `listar_entregas_disponiveis`, `entregador_aceitar_pedido`, `entregador_atualizar_status`, `entregador_atualizar_localizacao` | ciclo de vida do entregador e da corrida |
+| Equipe/RBAC | RPCs `empresa_meu_acesso`, `empresa_listar_funcionarios`, `empresa_salvar_funcionario`, `empresa_operador_pedidos` | gestão de equipe e operação limitada por papel |
+| Multiunidade | RPCs `empresa_unidades_publicas`, `empresa_disponibilidade_unidade`, `criar_pedido_operacional_unidade` + tabelas com `unidade_id` | catálogo, checkout e operação por unidade |
+| Planos | RPCs `empresa_meu_plano`, `admin_planos_listar`, `admin_plano_salvar`, `admin_assinatura_definir` | trial, assinatura técnica e limites de uso |
+| Logística 4.4 | RPCs de frete por endereço, ofertas por proximidade, ganhos e entrega própria | preço por distância, distribuição, modalidades e histórico financeiro |
 | Cupons | RPCs admin (`admin_salvar_cupom`, `admin_excluir_cupom`) + validação embutida em `criar_pedido_impl` | criação/uso de cupom |
 | Admin | RPCs `admin_*` (dezenas, ver seção 8) | governança da plataforma |
 | Analytics/Relatórios | RPCs `admin_relatorio_operacional`, `empresa_relatorio_financeiro`, `admin_relatorio_clientes_produtos`, `admin_saude_operacao` | KPIs |
@@ -428,10 +438,11 @@ Não há uma API REST customizada tradicional — o acesso é via **Supabase cli
 | Supabase Auth (e-mail nativo) | **EXISTENTE** |
 | Web Push (VAPID) | **EXISTENTE** |
 | Cloudflare Turnstile / hCaptcha | **PARCIAL** — suportado no código, depende de chave configurada (`turnstileSiteKey` vazio por padrão) |
-| WhatsApp Business API | **NÃO IMPLEMENTADO** |
+| WhatsApp | **PARCIAL** — links `wa.me` manuais; Business API e automação não implementadas |
 | E-mail transacional dedicado (Resend/SendGrid) | **NÃO IMPLEMENTADO** |
-| Geocodificação / mapas (Google Maps, Mapbox) | **NÃO IMPLEMENTADO** |
-| Impressora térmica | **NÃO IMPLEMENTADO** |
+| GPS/distância | **EXISTENTE** — captura consentida pelo navegador e Haversine; sem geocodificação ou rota viária |
+| Mapas | **PARCIAL** — abertura de endereço no Google Maps; sem SDK/API de rota integrada |
+| Impressão | **PARCIAL** — recibo via `window.print()`; sem ESC/POS/impressora térmica automática |
 | Error tracking externo (Sentry) | **NÃO IMPLEMENTADO** |
 
 ---
@@ -444,6 +455,7 @@ Não há uma API REST customizada tradicional — o acesso é via **Supabase cli
 - Nova mensagem no pedido → `pedido_mensagens` → `notificar_mensagem_pedido`.
 - Pedido criado → reserva de estoque (`reservar_estoque_item`) na mesma transação.
 - Pagamento conciliado → `reconciliar_pagamento_mercado_pago` atualiza `pagamento_status`/`pagamento_reconciliacao_status`.
+- Pedido marcado como pronto → trigger distribui `entrega_ofertas` por proximidade/modalidade; cron amplia/redistribui ofertas pendentes.
 
 **Lacuna:** não há um **event bus de domínio explícito** (`OrderCreated`, `PaymentApproved` como eventos nomeados e publicados) — o que existe são triggers SQL acoplados diretamente às tabelas, o que funciona mas dificulta adicionar novos consumidores (ex. analytics, WhatsApp) sem tocar na função trigger existente. Ver recomendação de outbox na seção 16.1 — isso resolveria também esta lacuna, dando nomes formais aos eventos.
 
@@ -465,6 +477,7 @@ Postura de segurança **acima da média** para o estágio do projeto, com evidê
 - Cabeçalhos HTTP completos (`X-Content-Type-Options`, `Permissions-Policy`, anti-framing) dependem de sair do GitHub Pages puro.
 - CAPTCHA depende de configuração de chave (`turnstileSiteKey` vazio por padrão — hoje efetivamente desativado até alguém preencher).
 - Testes de RLS por impersonação ainda não têm conta de entregador isolada.
+- Advisors de 20/08/2026: `pg_net` está no schema `public`; há 8 foreign keys sem índice de cobertura e 17 grupos de políticas permissivas duplicadas. Os alertas de RPCs `SECURITY DEFINER` incluem endpoints intencionalmente expostos e precisam de triagem/allowlist, não de revogação em massa.
 
 ---
 
@@ -506,7 +519,7 @@ Já documentados e tratados explicitamente pelo próprio projeto em `PRODUCAO.md
 | Checkout duplicado (duplo clique) | Chave idempotente por cliente retorna o pedido já criado |
 | Variação indisponível durante checkout | Não substitui silenciosamente; mantém item indisponível para revisão do cliente |
 | Loja fechando durante o checkout | `private.empresa_aberta_em` é reavaliada no momento da criação, não só na exibição inicial |
-| Gateway/WhatsApp indisponível | Gateway: fluxo de pagamento cai para estado `falhou` controlado. WhatsApp: **não aplicável ainda**, pois não está implementado. |
+| Gateway/WhatsApp indisponível | Gateway: fluxo de pagamento cai para estado controlado. WhatsApp atual abre contato manual e não participa da confirmação do pedido. |
 | Erro de geocodificação / mapas indisponível | **Não aplicável hoje**, pois não há geocodificação implementada — será um requisito real a definir na fase 4.4. |
 
 ---
@@ -525,10 +538,10 @@ Já documentados e tratados explicitamente pelo próprio projeto em `PRODUCAO.md
 - ✅ **Já suportado** pela fila de cozinha com destaque de atraso.
 
 **US-04 — Como dono de restaurante, quero dar acesso limitado a um funcionário da cozinha sem dar acesso financeiro, para delegar a operação com segurança.**
-- ❌ **Não suportado hoje** — requer a tabela de papéis internos da fase 4.3.
+- ✅ **Já suportado** por `empresa_funcionarios` e autorização por papel no banco.
 
 **US-05 — Como entregador, quero ver só as corridas prontas para retirada, para não ir até o restaurante antes da hora.**
-- ✅ **Já suportado** (`listar_entregas_disponiveis` filtra por `status = pronto`).
+- ✅ **Já suportado**; a consulta usa `status='preparando'` com `pronto_em is not null`, pois `pronto` não é valor do enum/check de status.
 
 **US-06 — Como administrador, quero conciliar pagamentos divergentes num só lugar, para agir rápido em incidentes financeiros.**
 - ✅ **Já suportado** (`admin_conciliacao_pagamentos`, `admin_saude_operacao`).
@@ -570,38 +583,38 @@ And o restaurante deve poder aprovar ou recusar, nunca o cliente decidir sozinho
 
 ## 29. MVP
 
-O "MVP" aqui não é hipotético — a versão 4.2.8 **já é, na prática, um MVP operacional completo** (catálogo → checkout → cozinha → entrega → avaliação, com segurança e RLS). O que falta não é para "existir produto funcional", e sim para virar uma **plataforma SaaS comercial escalável**. Por isso a priorização abaixo trata o "MVP" como "o que falta para ir a produção com confiança total" + o roadmap comercial declarado pelo próprio projeto.
+O "MVP" aqui não é hipotético — a versão 4.4.5 é um produto operacional completo (catálogo → checkout → cozinha → distribuição/entrega → avaliação) e já inclui fundações comerciais de plano, equipe e multiunidade. O que falta é concluir monetização, operação financeira, comunicação e escala. A priorização abaixo separa bloqueios de produção do backlog comercial.
 
 ---
 
 ## 30. P0 / P1 / P2
 
 ### P0 — obrigatório antes de qualquer volume real de produção
-1. Concluir os testes de sandbox financeiro do Mercado Pago (12 cenários listados em `PRODUCAO.md`) antes de ativar `pagamentoOnlineAtivo`.
+1. Concluir e registrar evidências dos **17 cenários** de sandbox listados em `PRODUCAO.md` antes de ativar `pagamentoOnlineAtivo`.
 2. Criar conta de entregador isolada e completar a validação positiva de RLS por papel.
 3. Configurar CAPTCHA (`turnstileSiteKey`) e rate limits de Auth em produção.
 4. Sair do GitHub Pages puro (ou colocar atrás de proxy) para garantir os cabeçalhos HTTP de segurança faltantes.
 5. Testar e documentar backup/restauração real.
 6. Decidir formalmente: checkout convidado sim/não (hoje é "não" por design de banco — ver Decisões em Aberto).
 7. Revisão jurídica da política de privacidade.
+8. Triar os advisors do Supabase: mover/justificar `pg_net`, revisar RPCs `SECURITY DEFINER`, indexar FKs críticas e consolidar políticas RLS redundantes.
 
 ### P1 — importante após estabilidade
-1. Perfis de funcionário (gerente/cozinha/atendente/financeiro) — fase 4.3.
-2. UI completa de gestão multiunidade (cardápio, estoque, horário, região por unidade) — fase 4.3.
-3. Planos, trial, assinatura, limites de uso — fase 4.3.
-4. Fila assíncrona real (outbox) para notificações — pré-requisito técnico antes de WhatsApp.
-5. WhatsApp transacional — fase 4.4.
-6. E-mail transacional dedicado (fora do fluxo nativo de Auth).
-7. Cálculo de taxa de entrega por distância (complementar ao por-bairro atual).
+1. Cobrança recorrente dos planos, comissão, extrato, fechamento e repasses.
+2. Fila assíncrona real (outbox) para notificações.
+3. WhatsApp Business transacional e e-mail transacional dedicado.
+4. Geocodificação e cálculo de rota viária, preservando o fallback por bairro/Haversine.
+5. Prova de entrega por código ou foto.
+6. Fechamento e liquidação dos ganhos do entregador.
+7. Tracking de funil, conversão e abandono de carrinho.
 
 ### P2 — evolução / diferenciais competitivos
 1. Geofencing por polígono no mapa.
-2. Atribuição automática de entregas por proximidade/algoritmo.
-3. Ganhos e fechamento financeiro do entregador.
-4. Cashback/carteira de benefícios entre lojas, recomendação de produtos, recuperação de carrinho — fase 4.5.
-5. Impressão térmica automática.
-6. API pública documentada para integrações externas (plano Enterprise).
-7. Frontend componentizado/TypeScript — fase 5.0.
+2. Agrupamento de corridas e atribuição direta totalmente automática.
+3. Cashback/carteira de benefícios entre lojas, recomendação e recuperação de carrinho.
+4. Impressão térmica ESC/POS.
+5. API pública documentada para integrações externas.
+6. Frontend componentizado/TypeScript.
 
 ---
 
@@ -629,7 +642,7 @@ O "MVP" aqui não é hipotético — a versão 4.2.8 **já é, na prática, um M
 
 | Risco | Probabilidade | Impacto | Mitigação |
 |---|---|---|---|
-| Ativar pagamento online sem concluir os 13 testes de sandbox | Média | Alto (financeiro) | Manter `pagamentoOnlineAtivo=false` até checklist 100% assinado |
+| Ativar pagamento online sem concluir os 17 testes de sandbox | Média | Alto (financeiro) | Manter `pagamentoOnlineAtivo=false` até checklist 100% assinado |
 | Ausência de proteção HIBP (plano Free) | Alta (permanece enquanto no Free) | Médio | Aceitar como risco residual documentado ou migrar de plano antes de escalar cadastro |
 | Cabeçalhos HTTP incompletos no GitHub Pages | Alta (enquanto só no Pages) | Médio | Migrar para hospedagem com proxy (Cloudflare/Vercel) antes de tráfego real |
 | Crescimento do frontend sem framework/componentização | Média (aumenta com o tempo) | Médio (velocidade de entrega, bugs de duplicidade tipo `carrinho.js` x `carrinho-4.2.5.js`) | Congelar padrão de nomeação por versão; planejar consolidação antes da fase 5.0 |
@@ -637,6 +650,7 @@ O "MVP" aqui não é hipotético — a versão 4.2.8 **já é, na prática, um M
 | Teste de RLS de entregador incompleto | Certa hoje | Médio | Criar conta de teste isolada antes do próximo release com mudança de RLS |
 | Falta de checkout convidado pode reduzir conversão | Desconhecida (não medida) | Médio | Decisão de produto explícita e deliberada, não acidental (ver seção 34) |
 | LGPD: política de privacidade sem revisão jurídica | Média | Alto (compliance) | Bloquear produção real até revisão jurídica formal |
+| Advisors Supabase sem triagem formal | Média | Médio-Alto | Tratar `pg_net`, índices e políticas duplicadas; documentar allowlist das RPCs públicas intencionais |
 
 ---
 
@@ -655,9 +669,9 @@ O roadmap abaixo é o próprio roadmap declarado pelo projeto em `ROADMAP-PLATAF
 
 | Fase | Foco |
 |---|---|
-| **4.2 (atual, 4.2.8)** | Operação e catálogo — cozinha/SLA, variações, idempotência, auditoria de estoque, fundação multiunidade |
-| **4.3** | Plataforma comercial — unidades completas na UI, planos/trial/assinatura, comissão, extrato/repasses, perfis internos (gerente/cozinha/atendente/financeiro), domínio/tema por loja, aprovação documental |
-| **4.4** | Logística e comunicação — geocodificação/rota, distribuição automática, agrupamento de corridas, rastreamento com consentimento, prova de entrega, ganhos do entregador, push/e-mail/WhatsApp, central de comunicação |
+| **4.2 — entregue** | Operação e catálogo — cozinha/SLA, variações, idempotência, auditoria de estoque, fundação multiunidade |
+| **4.3 — parcial entregue** | Entregues: unidades completas, planos/trial/limites e perfis internos. Pendentes: cobrança recorrente, comissão, extrato/repasses, domínio/tema e aprovação documental estruturada |
+| **4.4 — parcial entregue (atual 4.4.5)** | Entregues: GPS/Haversine, frete por distância, ofertas por proximidade, push, ganhos e entrega própria/híbrida. Pendentes: rota/geocodificação, agrupamento, prova de entrega, fechamento, e-mail e WhatsApp transacionais |
 | **4.5** | Crescimento e fidelidade — combos/ficha técnica, campanhas segmentadas, cashback/carteira, indicação, recuperação de carrinho, recomendação, antifraude de cupons, analytics de conversão/retenção/churn |
 | **5.0** | Escala — frontend componentizado/TypeScript, homologação/previews por PR, E2E e carga contínuos, filas assíncronas para eventos críticos, observabilidade centralizada, retenção/anonimização automatizada |
 
@@ -669,12 +683,12 @@ Cada fase, por definição do próprio projeto, exige migration revisada + teste
 
 1. Proliferação de arquivos JS/CSS versionados por número no nome, coexistindo com versões anteriores (`carrinho.js`/`carrinho-4.2.5.js`, `checkout.js`/`checkout-4.2.3.js`) — risco de lógica divergente entre a versão "base" e a "incremental".
 2. Ausência de camada de gateway de pagamento plugável (acoplamento direto ao Mercado Pago).
-3. Ausência de fila assíncrona real para notificações (hoje é trigger síncrono + Edge Function).
+3. Ausência de outbox/fila resiliente para notificações (hoje é trigger + chamada HTTP assíncrona por `pg_net`, sem retry/backoff durável).
 4. Ausência de tracking de funil/analytics de navegação (impede métricas de conversão citadas como meta de sucesso).
 5. `empresa_horarios` suporta apenas um intervalo por dia — não cobre o exemplo do briefing de "11h-15h e 18h-23h" no mesmo dia.
-6. Sem interface de "papéis internos" (funcionários) apesar do RBAC de banco já estar estruturado o suficiente para suportar essa extensão.
-7. Observabilidade limitada a `app_logs`/auditoria de negócio — sem tracing/error tracking externo.
-8. Dependência total do GitHub Pages para uma parcela dos cabeçalhos de segurança.
+6. Observabilidade limitada a `app_logs`/auditoria de negócio — sem tracing/error tracking externo.
+7. Dependência total do GitHub Pages para uma parcela dos cabeçalhos de segurança.
+8. Advisors apontam FKs sem índice de cobertura, políticas permissivas redundantes e `pg_net` no schema `public`.
 
 ---
 
@@ -682,13 +696,12 @@ Cada fase, por definição do próprio projeto, exige migration revisada + teste
 
 (Resumo consolidado — detalhes completos nas seções 11, 20, 30)
 - Checkout convidado.
-- Perfis internos de funcionário com permissões diferenciadas do dono.
-- Multiunidade com UI completa.
-- Planos/assinatura SaaS.
-- WhatsApp e e-mail transacional dedicado.
-- Geocodificação, cálculo por distância e geofencing.
-- Atribuição automática de entregas e cálculo de ganhos do entregador.
-- Impressão térmica.
+- Cobrança recorrente, comissão, extrato, fechamento e repasses SaaS.
+- WhatsApp Business e e-mail transacional dedicado.
+- Geocodificação, rota viária e geofencing.
+- Agrupamento de corridas, prova de entrega e atribuição direta totalmente automática.
+- Fechamento/liquidação dos ganhos do entregador.
+- Impressão térmica ESC/POS.
 - Tracking de funil de conversão.
 - Retenção/anonimização automatizada de dados (LGPD).
 
@@ -697,10 +710,10 @@ Cada fase, por definição do próprio projeto, exige migration revisada + teste
 ## 39. Decisões em Aberto (precisam de decisão humana)
 
 1. **Checkout como convidado será permitido?** Hoje é arquiteturalmente impossível sem alterar a constraint `pedidos.usuario_id not null`. Isso afeta conversão x complexidade de suporte pós-venda (reembolso/rastreamento de pedido sem conta). Decisão de produto, não técnica.
-2. **Qual estratégia de taxa de entrega é prioridade para o próximo ciclo:** aprofundar "por bairro" (já maduro) ou investir logo em "por distância"? Recomendação deste PRD: aprofundar por bairro primeiro (menor esforço, já robusto), por distância como P1.
+2. **Qual provedor de geocodificação/rota viária será adotado?** O frete por Haversine já existe; a decisão agora afeta custo, precisão e limites de API.
 3. **Quando sair do GitHub Pages?** Decisão de infraestrutura/custo com impacto direto em segurança (cabeçalhos HTTP faltantes).
 4. **Aceitar o risco residual da ausência de proteção HIBP no plano Free, ou migrar de plano do Supabase antes de escalar cadastro?**
-5. **Modelo de comissão da fase 4.3** (percentual fixo, por faixa, por plano?) — não definido em nenhum documento do repositório.
+5. **Modelo de comissão e repasse** (percentual fixo, por faixa, por plano; periodicidade e responsabilidade fiscal?) — não definido.
 6. **Qual gateway de pagamento adicional (se algum) priorizar depois de Mercado Pago validado?** Decide o timing da extração da interface de gateway (seção 16.2).
 7. **Cupom: quais regras antifraude específicas (do roadmap 4.5) são prioridade — limite por CPF, por dispositivo, por IP?**
 
@@ -710,18 +723,18 @@ Cada fase, por definição do próprio projeto, exige migration revisada + teste
 
 ## Top 10 gaps encontrados no sistema atual
 1. Checkout exige conta (sem modo convidado).
-2. Sem perfis internos de funcionário (só dono da loja).
-3. Multiunidade é só fundação de banco, sem UI de gestão.
-4. Sem planos/assinatura SaaS (nenhuma tabela de billing).
-5. Sem WhatsApp transacional.
-6. Sem e-mail transacional dedicado (só Auth nativo).
-7. Sem geocodificação/cálculo de frete por distância ou geofencing.
-8. Sem atribuição automática de entregador nem cálculo de ganhos.
-9. Sem fila assíncrona real para notificações (risco ao crescer canais).
-10. Sem tracking de funil de conversão (visitante→pedido).
+2. Sem cobrança recorrente dos planos, comissão e repasses.
+3. Sem WhatsApp Business transacional.
+4. Sem e-mail transacional dedicado.
+5. Sem geocodificação/rota viária/geofencing.
+6. Sem agrupamento de corridas e prova de entrega.
+7. Sem fechamento/liquidação dos ganhos do entregador.
+8. Sem fila assíncrona real para notificações.
+9. Sem tracking de funil de conversão.
+10. Sem retenção/anonimização automática de dados.
 
 ## Top 10 prioridades técnicas
-1. Concluir os 13 testes de sandbox financeiro antes de ativar pagamento online.
+1. Concluir os 17 testes de sandbox financeiro e operacional antes de ativar pagamento online.
 2. Isolar conta de entregador para validar RLS por papel.
 3. Configurar CAPTCHA e rate limits em produção.
 4. Migrar/proteger hospedagem para garantir cabeçalhos HTTP completos.
@@ -730,19 +743,19 @@ Cada fase, por definição do próprio projeto, exige migration revisada + teste
 7. Consolidar arquivos JS/CSS versionados por número em módulos únicos por domínio.
 8. Adicionar tracking de funil (para métricas de conversão).
 9. Adicionar observabilidade externa (error tracking/tracing).
-10. Formalizar equivalência entre migrations locais (014–024) e o histórico do projeto hospedado (divergência já identificada na auditoria).
+10. Triar advisors Supabase: `pg_net`, índices de FKs, políticas duplicadas e allowlist de RPCs intencionais.
 
 ## Top 10 prioridades de produto
 1. Decidir e implementar (ou descartar deliberadamente) checkout convidado.
-2. Perfis internos de funcionário (gerente/cozinha/atendente/financeiro).
-3. UI completa de multiunidade.
-4. Planos, trial e assinatura (base do modelo SaaS).
-5. Comissão e repasses financeiros por restaurante/unidade.
-6. WhatsApp transacional.
-7. Cálculo de frete por distância como complemento ao por-bairro.
-8. Rastreamento de entregador com consentimento e prova de entrega.
-9. Regras antifraude de cupom.
-10. Ficha de cliente consolidada (CRM básico) na visão do lojista.
+2. Implementar cobrança recorrente dos planos.
+3. Definir comissão, extrato, fechamento e repasses.
+4. WhatsApp Business e e-mail transacionais.
+5. Geocodificação e cálculo de rota viária.
+6. Prova de entrega e agrupamento de corridas.
+7. Fechamento financeiro do entregador.
+8. Regras antifraude de cupom.
+9. Ficha de cliente consolidada (CRM básico).
+10. Analytics de conversão, retenção e churn.
 
 ## Funcionalidades que já existem e devem ser preservadas
 - Máquina de estados de pedido validada no banco (não remover a validação em trigger).
@@ -755,35 +768,38 @@ Cada fase, por definição do próprio projeto, exige migration revisada + teste
 - Fluxo de cancelamento em duas etapas (cliente solicita, loja decide).
 - LGPD self-service (exportação/exclusão).
 - Auditoria administrativa (`admin_auditoria`).
+- RBAC interno por papel e redaction de dados da cozinha.
+- Multiunidade com integridade empresa↔unidade.
+- Frete por bairro/distância com fallback seguro.
+- Distribuição por proximidade, entrega própria/híbrida e snapshot de ganhos.
 
 ## Funcionalidades que devem ser refatoradas
 - Consolidação dos arquivos JS/CSS versionados por número (`*-4.2.x.js/css`) em módulos únicos por domínio.
 - Extração de uma interface de gateway de pagamento (quando o segundo gateway for necessário — não antes).
-- Migração de triggers síncronos de notificação para padrão outbox/fila.
+- Migração do despacho por `pg_net` sem retry durável para padrão outbox/fila.
 - `empresa_horarios`: evoluir de 1 intervalo por dia para múltiplos intervalos no mesmo dia.
 
 ## Funcionalidades que ainda precisam ser implementadas
 - Checkout convidado (se decidido que sim).
-- Perfis internos de funcionário com RBAC próprio.
-- UI de gestão multiunidade completa.
-- Planos/assinatura/billing SaaS.
-- WhatsApp e e-mail transacional dedicado.
-- Geocodificação, cálculo por distância, geofencing.
-- Atribuição automática de entregador e cálculo de ganhos.
-- Impressão térmica.
+- Cobrança recorrente, comissão, extrato, fechamento e repasses.
+- WhatsApp Business e e-mail transacional dedicado.
+- Geocodificação, rota viária e geofencing.
+- Agrupamento de corridas, prova de entrega e atribuição direta automática.
+- Fechamento/liquidação do entregador.
+- Impressão térmica ESC/POS.
 - Tracking de funil de conversão / analytics de navegação.
 - Retenção e anonimização automatizada de dados (LGPD).
 
 ## Perguntas que precisam de decisão humana antes da implementação
 Ver seção 39 (Decisões em Aberto) — consolidada aqui por completude:
 1. Checkout convidado: sim ou não?
-2. Prioridade entre "por distância" e aprofundar "por bairro"?
+2. Provedor de geocodificação e rota viária?
 3. Quando sair do GitHub Pages puro?
 4. Aceitar risco residual de HIBP no plano Free ou migrar de plano?
-5. Modelo de comissão da fase 4.3?
+5. Modelo de comissão, fechamento e repasse?
 6. Segundo gateway de pagamento: qual e quando?
 7. Regras antifraude de cupom: quais critérios exatos?
 
 ---
 
-**Observação final:** nenhuma alteração de código foi feita durante a produção deste documento, conforme instrução do briefing. Este PRD é o ponto de partida para priorização e planejamento da fase 4.3 em diante.
+**Observação final:** revisão documental atualizada em 20/08/2026, sem alteração de código ou schema. Este PRD é o ponto de partida para priorização da fase 4.5 e dos itens remanescentes de comercialização/logística das fases 4.3–4.4.
