@@ -11,6 +11,8 @@ npm ci
 npm run verify
 ```
 
+Os mesmos comandos funcionam em Linux, macOS, Prompt de Comando e PowerShell; a descoberta dos arquivos de teste é feita pelo próprio test runner do Node.js, sem depender de expansão de curingas pelo shell.
+
 `npm run verify` cobre 240 arquivos, sintaxe JavaScript, JSON, referências locais, IDs HTML duplicados, exposição de segredos, migrations críticas, 142 testes automatizados e o type-check TypeScript das Edge Functions.
 
 Para gerar o pacote de publicação depois da verificação:
@@ -24,6 +26,8 @@ npm run package
 ```text
 assets/                 imagens locais
 css/                    estilos
+docs/                   produto, operação, segurança e compliance
+html/                   páginas da aplicação
 js/                     frontend
 supabase/migrations/    banco, RLS, RPCs e triggers
 supabase/functions/     Edge Functions
@@ -79,11 +83,11 @@ O diretório testado deve ser exatamente o diretório publicado. Não mantenha c
 
 Leia, nesta ordem:
 
-1. `PRODUCAO.md`
-2. `AUTENTICACAO.md`
+1. `docs/PRODUCAO.md`
+2. `docs/AUTENTICACAO.md`
 3. `supabase/README-SETUP.md`
 4. `supabase/functions/README.md`
-5. `RUNBOOK-OPERACIONAL.md`
-6. `ROADMAP-PLATAFORMA.md`
+5. `docs/RUNBOOK-OPERACIONAL.md`
+6. `docs/ROADMAP-PLATAFORMA.md`
 
-A aplicação não deve receber pagamentos reais antes da confirmação das migrations 014 a 023 no projeto hospedado, da publicação das Edge Functions, da configuração dos segredos, da conclusão dos testes de sandbox descritos em `PRODUCAO.md` e da ativação explícita de `pagamentoOnlineAtivo` em `js/config.js`.
+A aplicação não deve receber pagamentos reais antes da confirmação das migrations 014 a 023 no projeto hospedado, da publicação das Edge Functions, da configuração dos segredos, da conclusão dos testes de sandbox descritos em `docs/PRODUCAO.md` e da ativação explícita de `pagamentoOnlineAtivo` em `js/config.js`.

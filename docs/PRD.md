@@ -301,6 +301,7 @@ Existe uma separação clara entre **estado de pagamento do pedido** (`pagamento
 ```
 assets/                imagens locais
 css/                   estilos
+html/                  páginas da aplicação
 js/                    frontend
 supabase/migrations/   banco, RLS, RPCs, triggers
 supabase/functions/    Edge Functions
@@ -308,6 +309,8 @@ scripts/               verificação e empacotamento
 tests/                 testes automatizados
 docs/                  este PRD e documentação de produto
 ```
+
+As entradas técnicas `index.html`, `404.html` e `offline.html` permanecem na raiz para preservar o funcionamento da hospedagem estática e do PWA.
 
 **Dívida técnica arquitetural identificada:**
 1. **Sem framework/componentização** — 61 módulos JS principais crescendo por acréscimo (`carrinho.js` e `carrinho-4.2.5.js` coexistindo, por exemplo) tornam difícil garantir uma única fonte de verdade de UI à medida que a base cresce. O roadmap reconhece isso na fase 5.0.
