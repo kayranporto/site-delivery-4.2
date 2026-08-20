@@ -554,7 +554,7 @@ btnFinalizar.addEventListener("click", async () => {
     if (confirmado) finalizarPedido();
 });
 
-if (btnVoltar) btnVoltar.href = App.destinoInterno(localStorage.getItem("ultimaPaginaRestaurante"), "index.html");
+if (btnVoltar) btnVoltar.href = App.destinoInterno(localStorage.getItem("ultimaPaginaRestaurante"), "../index.html");
 renderizarResumo();
 const avisoCarrinho = sessionStorage.getItem("avisoCarrinho");
 if (avisoCarrinho) {

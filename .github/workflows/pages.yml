@@ -44,7 +44,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p _site
-          cp -R assets css js _site/
+          cp -R assets css html js _site/
           cp ./*.html _site/
           cp .nojekyll manifest.webmanifest robots.txt sitemap.xml sw.js _site/
 

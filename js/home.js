@@ -166,7 +166,7 @@ function renderizarEmpresas(lista) {
 
         const link = document.createElement("a");
         link.className = "card-link";
-        link.href = `restaurante.html?id=${encodeURIComponent(empresa.id)}`;
+        link.href = `html/restaurante.html?id=${encodeURIComponent(empresa.id)}`;
         link.setAttribute("aria-label", `Abrir cardápio de ${empresa.nome}`);
 
         link.append(imagemComFallback(empresa.logo, empresa.nome));
@@ -310,7 +310,7 @@ async function carregarDestaques() {
     data.forEach((produto) => {
         const card = document.createElement("a");
         card.className = "produto-destaque";
-        card.href = `restaurante.html?id=${encodeURIComponent(produto.empresa_id)}`;
+        card.href = `html/restaurante.html?id=${encodeURIComponent(produto.empresa_id)}`;
         card.setAttribute("aria-label", `Ver ${produto.nome} no cardápio`);
         card.append(imagemComFallback(produto.imagem, produto.nome, "assets/produto-padrao.svg"));
         const corpo = document.createElement("div");
@@ -343,7 +343,7 @@ async function atualizarMenuUsuario() {
     const { data: ehAdmin, error: erroAdmin } = resAdmin;
     if (!erroAdmin && ehAdmin === true) {
         const admin = document.createElement("a");
-        admin.href = "admin.html";
+        admin.href = "html/admin.html";
         admin.className = "btn-admin";
         admin.setAttribute("aria-label", "Abrir painel administrativo");
 
@@ -361,7 +361,7 @@ async function atualizarMenuUsuario() {
 
     if (!resEntregador.error && resEntregador.data?.aprovado === true) {
         const entregas = document.createElement("a");
-        entregas.href = "entregador.html";
+        entregas.href = "html/entregador.html";
         entregas.className = "btn-driver";
         entregas.setAttribute("aria-label", "Abrir painel do entregador");
         entregas.textContent = "🛵 Entregas";
@@ -369,7 +369,7 @@ async function atualizarMenuUsuario() {
     }
 
     const perfil = document.createElement("a");
-    perfil.href = "perfil.html";
+    perfil.href = "html/perfil.html";
     perfil.className = "btn-primary";
     if (resPerfil.data?.avatar_url) {
         const foto = document.createElement("img"); foto.src = resPerfil.data.avatar_url; foto.alt = "";
@@ -459,7 +459,7 @@ categorias.forEach((categoria) => {
 });
 
 function editarEndereco() {
-    window.location.href = "enderecos.html?redirect=index.html";
+    window.location.href = "html/enderecos.html?redirect=../index.html";
 }
 
 if (locationBox) {
@@ -514,7 +514,7 @@ carts.forEach((cart) => {
             document.getElementById("restaurantes")?.scrollIntoView({ behavior: "smooth" });
             return;
         }
-        window.location.href = "checkout.html";
+        window.location.href = "html/checkout.html";
     };
 
     cart.addEventListener("click", abrir);

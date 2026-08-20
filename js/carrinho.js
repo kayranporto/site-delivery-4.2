@@ -35,7 +35,7 @@ function normalizarCarrinho() {
             const produto = {
                 id: String(item?.id || ""),
                 nome: String(item?.nome || "Produto").slice(0, 150),
-                imagem: String(item?.imagem || "assets/produto-padrao.svg"),
+                imagem: String(item?.imagem || "../assets/produto-padrao.svg"),
                 preco: Number(item?.preco || 0),
                 variante_id: item?.variante_id ? String(item.variante_id) : null,
                 variante_nome: item?.variante_nome ? String(item.variante_nome).slice(0, 100) : null,
@@ -117,7 +117,7 @@ async function adicionarAoCarrinho(produto) {
     const itemNovo = {
         id: String(produto.id || ""),
         nome: String(produto.nome || "Produto").slice(0, 150),
-        imagem: String(produto.imagem || "assets/produto-padrao.svg"),
+        imagem: String(produto.imagem || "../assets/produto-padrao.svg"),
         preco: Number(produto.preco || 0),
         variante_id: produto.variante_id ? String(produto.variante_id) : null,
         variante_nome: produto.variante_nome ? String(produto.variante_nome).slice(0, 100) : null,
@@ -182,10 +182,10 @@ function criarItem(item) {
     container.dataset.chave = item.chave;
 
     const imagem = document.createElement("img");
-    imagem.src = item.imagem || "assets/produto-padrao.svg";
+    imagem.src = item.imagem || "../assets/produto-padrao.svg";
     imagem.alt = item.nome;
     imagem.loading = "lazy";
-    imagem.addEventListener("error", () => { imagem.src = "assets/produto-padrao.svg"; }, { once: true });
+    imagem.addEventListener("error", () => { imagem.src = "../assets/produto-padrao.svg"; }, { once: true });
 
     const info = document.createElement("div");
     info.className = "info-item";

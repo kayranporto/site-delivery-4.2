@@ -91,7 +91,7 @@ Deno.serve(async (request) => {
     }
 
     const notificationUrl = `${supabaseUrl}/functions/v1/mercado-pago-webhook`;
-    const backUrl = `${siteUrl}/acompanhamento.html?id=${encodeURIComponent(pedido.id)}`;
+    const backUrl = `${siteUrl}/html/acompanhamento.html?id=${encodeURIComponent(pedido.id)}`;
     const preferenceResponse = await fetch("https://api.mercadopago.com/checkout/preferences", {
       method: "POST",
       headers: {

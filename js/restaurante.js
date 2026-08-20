@@ -104,10 +104,10 @@ async function carregarEmpresa() {
 
     if (error || !data) throw new Error(error?.message || "Empresa não encontrada.");
 
-    banner.src = data.banner || "assets/banner-padrao.svg";
-    banner.onerror = () => { banner.src = "assets/banner-padrao.svg"; };
-    logo.src = data.logo || "assets/logo-restaurante.svg";
-    logo.onerror = () => { logo.src = "assets/logo-restaurante.svg"; };
+    banner.src = data.banner || "../assets/banner-padrao.svg";
+    banner.onerror = () => { banner.src = "../assets/banner-padrao.svg"; };
+    logo.src = data.logo || "../assets/logo-restaurante.svg";
+    logo.onerror = () => { logo.src = "../assets/logo-restaurante.svg"; };
     nome.textContent = data.nome || "Restaurante";
     descricao.textContent = data.descricao || "Confira nosso cardápio.";
     let aberta = data.status !== false;
@@ -233,7 +233,7 @@ function renderizarProdutos(lista) {
         card.tabIndex = 0;
         card.setAttribute("role", "button");
         card.setAttribute("aria-label", `Personalizar ${produto.nome}`);
-        card.append(criarImagem(produto.imagem, produto.nome, "assets/produto-padrao.svg"));
+        card.append(criarImagem(produto.imagem, produto.nome, "../assets/produto-padrao.svg"));
 
         const info = document.createElement("div");
         info.className = "produto-info";
@@ -294,7 +294,7 @@ listaProdutos.addEventListener("keydown", (event) => {
 (async function iniciar() {
     if (!empresaId) {
         localStorage.removeItem("empresaAtual");
-        window.location.replace("index.html");
+        window.location.replace("../index.html");
         return;
     }
 

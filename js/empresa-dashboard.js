@@ -1499,7 +1499,7 @@ async function ativarPedidosEmTempoReal() {
                 const numero = payload.new.numero || String(payload.new.id).slice(0, 8);
                 window.AppToast?.("Novo pedido recebido", `Pedido #${numero} chegou e precisa ser confirmado.`, "success", 9000);
                 if ("Notification" in window && Notification.permission === "granted") {
-                    new Notification("Novo pedido no Multi Delivery", { body: `Pedido #${numero} recebido.`, icon: "assets/favicon.svg" });
+                    new Notification("Novo pedido no Multi Delivery", { body: `Pedido #${numero} recebido.`, icon: "../assets/favicon.svg" });
                 }
             }
         }).subscribe();

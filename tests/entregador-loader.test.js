@@ -6,7 +6,10 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const root = path.resolve(__dirname, "..");
-const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
+const read = (file) => {
+  const direct = path.join(root, file);
+  return fs.readFileSync(fs.existsSync(direct) ? direct : path.join(root, "html", file), "utf8");
+};
 
 test("painel do entregador esconde estados marcados como hidden", () => {
   const css = read("css/enhancements.css");

@@ -7,7 +7,7 @@ const SHELL = [
   "./",
   "./index.html",
   "./offline.html",
-  "./suporte.html",
+  "./html/suporte.html",
   "./manifest.webmanifest",
   "./assets/favicon.svg",
   "./assets/produto-padrao.svg",
@@ -104,7 +104,7 @@ self.addEventListener("message", (event) => {
 });
 
 self.addEventListener("push", (event) => {
-  let payload = { title: "Multi Delivery", body: "Você tem uma nova atualização.", url: "./perfil.html", tipo: "atualizacao" };
+  let payload = { title: "Multi Delivery", body: "Você tem uma nova atualização.", url: "./html/perfil.html", tipo: "atualizacao" };
   try { payload = { ...payload, ...event.data.json() }; } catch { /* Usa mensagem padrão. */ }
   const tag = payload.tag || undefined;
   const entrega = ["entrega_disponivel", "entrega_atribuida"].includes(payload.tipo);
@@ -122,7 +122,11 @@ self.addEventListener("push", (event) => {
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  const destino = new URL(event.notification.data?.url || "./perfil.html", self.registration.scope).href;
+  const recebido = String(event.notification.data?.url || "./html/perfil.html");
+  const normalizado = /^(?:\.\/)?[\w-]+\.html(?:[?#]|$)/i.test(recebido)
+    ? `./html/${recebido.replace(/^\.\//, "")}`
+    : recebido;
+  const destino = new URL(normalizado, self.registration.scope).href;
   event.waitUntil(clients.matchAll({ type: "window", includeUncontrolled: true }).then(async (janelas) => {
     const exata = janelas.find((janela) => janela.url === destino);
     if (exata) return exata.focus();

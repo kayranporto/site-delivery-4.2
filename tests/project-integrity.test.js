@@ -8,14 +8,24 @@ const vm = require("node:vm");
 
 const root = path.resolve(__dirname, "..");
 
+function htmlFiles() {
+    return [root, path.join(root, "html")].flatMap((directory) =>
+        fs.readdirSync(directory)
+            .filter((name) => name.endsWith(".html"))
+            .map((name) => path.join(directory, name))
+    );
+}
+
 test("referências locais das páginas existem", () => {
     const faltantes = [];
-    for (const arquivo of fs.readdirSync(root).filter((nome) => nome.endsWith(".html"))) {
-        const html = fs.readFileSync(path.join(root, arquivo), "utf8");
+    for (const arquivo of htmlFiles()) {
+        const html = fs.readFileSync(arquivo, "utf8");
         for (const match of html.matchAll(/(?:href|src)=["']([^"'#?]+)(?:\?[^"'#]*)?["']/g)) {
             const referencia = match[1];
             if (/^(?:https?:|mailto:|tel:|data:)/.test(referencia)) continue;
-            if (!fs.existsSync(path.resolve(root, referencia))) faltantes.push(`${arquivo}: ${referencia}`);
+            if (!fs.existsSync(path.resolve(path.dirname(arquivo), referencia))) {
+                faltantes.push(`${path.relative(root, arquivo)}: ${referencia}`);
+            }
         }
     }
     assert.deepEqual(faltantes, []);
@@ -42,7 +52,7 @@ test("administração 3.2 possui funções protegidas e interface completa", () 
     for (const trecho of ["private.is_admin()", "admin_salvar_cupom", "admin_excluir_cupom", "admin_atualizar_restaurante", "admin_obter_pedido", "admin_auditoria"]) {
         assert.ok(sql.includes(trecho), `migração 010 sem ${trecho}`);
     }
-    const html = fs.readFileSync(path.join(root, "admin.html"), "utf8");
+    const html = fs.readFileSync(path.join(root, "html/admin.html"), "utf8");
     const js = fs.readFileSync(path.join(root, "js/admin.js"), "utf8");
     for (const match of js.matchAll(/getElementById\(["']([^"']+)["']\)/g)) {
         const existeEstatico = new RegExp(`id=["']${match[1]}["']`).test(html);
@@ -107,13 +117,13 @@ test("versão 3.4 integra mídia, favoritos, segurança e inteligência", () => 
     for (const trecho of ["create table if not exists public.favoritos", "bucket_id = 'catalogo'", "storage.foldername(name)", "tentativas_login", "registrar_tentativa_login", "admin_relatorio_clientes_produtos", "sincronizar_identidade_social_usuario"]) {
         assert.ok(sql.includes(trecho), `migração 012 sem ${trecho}`);
     }
-    const painel = fs.readFileSync(path.join(root, "empresa-dashboard.html"), "utf8");
+    const painel = fs.readFileSync(path.join(root, "html/empresa-dashboard.html"), "utf8");
     assert.match(painel, /media-uploader\.js/);
     assert.match(painel, /produtoImagemArquivo/);
     assert.match(painel, /lojaBannerArquivo/);
-    const checkout = fs.readFileSync(path.join(root, "checkout.html"), "utf8");
+    const checkout = fs.readFileSync(path.join(root, "html/checkout.html"), "utf8");
     for (const trecho of ["cart-store.js", "dialogs.js", "checkoutResumo", "abrirMapaEndereco"]) assert.ok(checkout.includes(trecho));
-    const admin = fs.readFileSync(path.join(root, "admin.html"), "utf8");
+    const admin = fs.readFileSync(path.join(root, "html/admin.html"), "utf8");
     for (const id of ["topProdutosAdmin", "clientesRecorrentesAdmin", "segurancaLoginAdmin"]) assert.match(admin, new RegExp(`id=["']${id}["']`));
 });
 
@@ -122,14 +132,14 @@ test("versão 3.5 integra operação, estoque, regiões, fidelidade e suporte", 
     for (const trecho of ["empresa_horarios", "empresa_regioes", "reservar_estoque_item", "criar_pedido_operacional", "cliente_solicitar_cancelamento", "programa_fidelidade_empresa", "resgatar_beneficio_fidelidade", "empresa_relatorio_financeiro", "chamados_suporte", "admin_saude_operacao", "admin_atualizar_reembolso", "enable row level security"]) {
         assert.ok(sql.includes(trecho), `migração 013 sem ${trecho}`);
     }
-    const painel = fs.readFileSync(path.join(root, "empresa-dashboard.html"), "utf8");
+    const painel = fs.readFileSync(path.join(root, "html/empresa-dashboard.html"), "utf8");
     for (const id of ["horariosForm", "regiaoForm", "fidelidadeForm", "financeiroResumo", "cancelamentosEmpresa", "produtoControlaEstoque"]) assert.match(painel, new RegExp(`id=["']${id}["']`));
     const checkout = fs.readFileSync(path.join(root, "js/checkout.js"), "utf8");
     assert.match(checkout, /calcular_entrega_empresa/);
     assert.match(checkout, /criar_pedido_operacional/);
-    const suporte = fs.readFileSync(path.join(root, "suporte.html"), "utf8");
+    const suporte = fs.readFileSync(path.join(root, "html/suporte.html"), "utf8");
     assert.match(suporte, /suporteForm/);
-    const admin = fs.readFileSync(path.join(root, "admin.html"), "utf8");
+    const admin = fs.readFileSync(path.join(root, "html/admin.html"), "utf8");
     assert.match(admin, /adminChamados/);
     assert.match(admin, /adminReembolsos/);
 });

@@ -6,7 +6,10 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const root = path.resolve(__dirname, "..");
-const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
+const read = (file) => {
+    const direct = path.join(root, file);
+    return fs.readFileSync(fs.existsSync(direct) ? direct : path.join(root, "html", file), "utf8");
+};
 
 function walk(directory) {
     return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
@@ -30,18 +33,18 @@ test("release possui uma única árvore canônica e o empacotamento exclui metad
     assert.equal(JSON.parse(read("package.json")).version, "4.4.5");
 });
 
-test("GitHub Pages publica todas as páginas HTML da raiz", () => {
+test("GitHub Pages publica as entradas da raiz e as páginas da aplicação", () => {
     const workflow = read(".github/workflows/pages.yml");
     assert.match(workflow, /cp \.\/\*\.html _site\//);
-    assert.match(workflow, /cp -R assets css js _site\//);
+    assert.match(workflow, /cp -R assets css html js _site\//);
     for (const pagina of ["empresa-equipe.html", "empresa-colaborador.html"]) {
-        assert.ok(fs.existsSync(path.join(root, pagina)), `${pagina} não existe no repositório`);
+        assert.ok(fs.existsSync(path.join(root, "html", pagina)), `${pagina} não existe no repositório`);
     }
 });
 
 test("dependências Supabase estão fixadas em versão exata", () => {
-    const html = [...fs.readdirSync(root).filter((name) => name.endsWith(".html"))]
-        .map((name) => read(name)).join("\n");
+    const html = walk(root).filter((file) => file.endsWith(".html"))
+        .map((file) => fs.readFileSync(file, "utf8")).join("\n");
     assert.doesNotMatch(html, /@supabase\/supabase-js@2(?:["'/?<])/);
     assert.match(html, /@supabase\/supabase-js@2\.111\.0/);
 
@@ -151,7 +154,7 @@ test("carrinho sincroniza contadores e a home publica links rastreáveis", () =>
     const sitemap = read("sitemap.xml");
     assert.match(restaurante, /addEventListener\("carrinho-atualizado", atualizarCarrinhoTopo\)/);
     assert.match(restaurante, /addEventListener\("carrinho-sincronizar", atualizarCarrinhoTopo\)/);
-    assert.match(home, /link\.href = `restaurante\.html\?id=/);
+    assert.match(home, /link\.href = `html\/restaurante\.html\?id=/);
     assert.match(home, /document\.createElement\("a"\)/);
     assert.doesNotMatch(home, /setAttribute\("role", "link"\)/);
     assert.match(sitemap, /restaurante\.html\?id=2a15cbed-20ef-4d37-b368-5804aa53cb68/);
@@ -189,8 +192,9 @@ test("frontend não contém segredos de servidor", () => {
 });
 
 test("todas as páginas têm CSP, política de referência e nenhum script executável inline", () => {
-    for (const name of fs.readdirSync(root).filter((file) => file.endsWith(".html"))) {
-        const html = read(name);
+    for (const file of walk(root).filter((item) => item.endsWith(".html"))) {
+        const name = path.relative(root, file);
+        const html = fs.readFileSync(file, "utf8");
         assert.match(html, /http-equiv=["']Content-Security-Policy["']/i, `${name} sem CSP`);
         assert.match(html, /name=["']referrer["']/i, `${name} sem referrer policy`);
         assert.doesNotMatch(html, /\son[a-z]+\s*=/i, `${name} possui event handler inline`);
@@ -204,8 +208,8 @@ test("todas as páginas têm CSP, política de referência e nenhum script execu
 });
 
 test("versão de assets e caches é consistente", () => {
-    const sources = [read("sw.js"), read("js/site-enhancements.js"), ...fs.readdirSync(root)
-        .filter((name) => name.endsWith(".html")).map(read)];
+    const sources = [read("sw.js"), read("js/site-enhancements.js"), ...walk(root)
+        .filter((file) => file.endsWith(".html")).map((file) => fs.readFileSync(file, "utf8"))];
     const joined = sources.join("\n");
     assert.doesNotMatch(joined, /\?v=(?:2\.|3\.)/);
     assert.match(read("sw.js"), /const VERSION = "4\.4\.5"/);

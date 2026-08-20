@@ -4,6 +4,15 @@
     let usuario = null;
     let canal = null;
     let notificacoes = [];
+    const emPastaHtml = /\/html\/[^/]+\.html$/i.test(location.pathname);
+
+    function paginaAplicacao(caminho) {
+        return emPastaHtml ? caminho : `html/${caminho}`;
+    }
+
+    function recursoRaiz(caminho) {
+        return emPastaHtml ? `../${caminho}` : caminho;
+    }
 
     function criar(tag, classe, texto) {
         const item = document.createElement(tag);
@@ -18,12 +27,15 @@
 
     function destinoSeguro(item) {
         const fallback = item?.pedido_id
-            ? `acompanhamento.html?id=${encodeURIComponent(item.pedido_id)}`
+            ? paginaAplicacao(`acompanhamento.html?id=${encodeURIComponent(item.pedido_id)}`)
             : "#";
         const informado = String(item?.destino || "").trim();
         if (!informado) return fallback;
         try {
-            const url = new URL(informado, location.href);
+            const destino = /^(?:\.\/)?[\w-]+\.html(?:[?#]|$)/i.test(informado)
+                ? paginaAplicacao(informado.replace(/^\.\//, ""))
+                : informado;
+            const url = new URL(destino, location.href);
             if (url.origin !== location.origin) return fallback;
             return `${url.pathname}${url.search}${url.hash}`;
         } catch {
@@ -103,7 +115,7 @@
             existente.update().catch(() => {});
             return existente;
         }
-        return navigator.serviceWorker.register("./sw.js?v=4.4.5", { updateViaCache: "none" });
+        return navigator.serviceWorker.register(recursoRaiz("sw.js?v=4.4.5"), { updateViaCache: "none" });
     }
 
     async function registrarSubscription() {
@@ -191,7 +203,7 @@
         const destino = destinoSeguro(item);
         const alerta = new Notification(item.titulo || "Multi Delivery", {
             body: item.mensagem || "Você tem uma nova atualização.",
-            icon: "assets/favicon.svg",
+            icon: recursoRaiz("assets/favicon.svg"),
             tag: item.pedido_id ? `pedido-${item.pedido_id}` : undefined
         });
         alerta.onclick = () => {

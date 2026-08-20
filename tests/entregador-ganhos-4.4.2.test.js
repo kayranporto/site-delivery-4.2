@@ -7,7 +7,7 @@ const path = require("node:path");
 
 const raiz = path.resolve(__dirname, "..");
 const migration = fs.readFileSync(path.join(raiz, "supabase/migrations/20260817224905_entregador_historico_ganhos_4_4_2.sql"), "utf8");
-const entregadorHtml = fs.readFileSync(path.join(raiz, "entregador.html"), "utf8");
+const entregadorHtml = fs.readFileSync(path.join(raiz, "html/entregador.html"), "utf8");
 const entregadorJs = fs.readFileSync(path.join(raiz, "js/entregador-financeiro-4.4.2.js"), "utf8");
 const adminJs = fs.readFileSync(path.join(raiz, "js/admin-entregadores-financeiro-4.4.2.js"), "utf8");
 const enhancements = fs.readFileSync(path.join(raiz, "js/site-enhancements.js"), "utf8");

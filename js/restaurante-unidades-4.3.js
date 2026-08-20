@@ -159,10 +159,10 @@
     card.setAttribute("aria-label", `Personalizar ${produto.nome}`);
 
     const imagem = document.createElement("img");
-    imagem.src = produto.imagem || "assets/produto-padrao.svg";
+    imagem.src = produto.imagem || "../assets/produto-padrao.svg";
     imagem.alt = produto.nome || "Produto";
     imagem.loading = "lazy";
-    imagem.addEventListener("error", () => { imagem.src = "assets/produto-padrao.svg"; }, { once: true });
+    imagem.addEventListener("error", () => { imagem.src = "../assets/produto-padrao.svg"; }, { once: true });
 
     const info = document.createElement("div");
     info.className = "produto-info";

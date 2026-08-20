@@ -1,22 +1,37 @@
 "use strict";
 (() => {
+  const paginaLegada = location.pathname.match(/\/([\w-]+\.html)$/i)?.[1] || "";
+  const entradasTecnicas = new Set(["index.html", "404.html", "offline.html"]);
+  const caminhoJaOrganizado = /\/html\//i.test(location.pathname);
+  if (
+    document.querySelector(".page-main--not-found")
+    && paginaLegada
+    && !entradasTecnicas.has(paginaLegada.toLowerCase())
+    && !caminhoJaOrganizado
+  ) {
+    const raiz = location.pathname.slice(0, -paginaLegada.length);
+    location.replace(`${raiz}html/${paginaLegada}${location.search}${location.hash}`);
+    return;
+  }
+
+  const assetRoot = /\/html\/[^/]+\.html$/i.test(location.pathname) ? "../" : "";
   const mobileCss = document.createElement("link");
   mobileCss.rel = "stylesheet";
-  mobileCss.href = "css/mobile-pwa-4.2.6.css?v=4.2.6";
+  mobileCss.href = `${assetRoot}css/mobile-pwa-4.2.6.css?v=4.2.6`;
   document.head.append(mobileCss);
 
   if (/empresa-dashboard\.html$/i.test(location.pathname)) {
     const entregaPropriaCss = document.createElement("link");
     entregaPropriaCss.rel = "stylesheet";
-    entregaPropriaCss.href = "css/empresa-entrega-propria-4.4.5.css?v=4.4.5";
+    entregaPropriaCss.href = `${assetRoot}css/empresa-entrega-propria-4.4.5.css?v=4.4.5`;
     document.head.append(entregaPropriaCss);
 
     const operacaoCss = document.createElement("link");
     operacaoCss.rel = "stylesheet";
-    operacaoCss.href = "css/operacao-restaurante-4.2.7.css?v=4.2.7";
+    operacaoCss.href = `${assetRoot}css/operacao-restaurante-4.2.7.css?v=4.2.7`;
     document.head.append(operacaoCss);
     const operacaoJs = document.createElement("script");
-    operacaoJs.src = "js/operacao-restaurante-4.2.7.js?v=4.2.7";
+    operacaoJs.src = `${assetRoot}js/operacao-restaurante-4.2.7.js?v=4.2.7`;
     operacaoJs.defer = true;
     document.head.append(operacaoJs);
 
@@ -32,82 +47,82 @@
     }
 
     const unidadesJs = document.createElement("script");
-    unidadesJs.src = "js/empresa-unidades-4.3.js?v=4.3.0";
+    unidadesJs.src = `${assetRoot}js/empresa-unidades-4.3.js?v=4.3.0`;
     unidadesJs.async = false;
     document.body.append(unidadesJs);
 
     const operacaoUnidadesJs = document.createElement("script");
-    operacaoUnidadesJs.src = "js/operacao-unidades-4.3.js?v=4.3.0";
+    operacaoUnidadesJs.src = `${assetRoot}js/operacao-unidades-4.3.js?v=4.3.0`;
     operacaoUnidadesJs.async = false;
     document.body.append(operacaoUnidadesJs);
 
     const planoEmpresaJs = document.createElement("script");
-    planoEmpresaJs.src = "js/empresa-plano-4.3.js?v=4.3.0";
+    planoEmpresaJs.src = `${assetRoot}js/empresa-plano-4.3.js?v=4.3.0`;
     planoEmpresaJs.async = false;
     document.body.append(planoEmpresaJs);
 
     const localizacaoUnidadeJs = document.createElement("script");
-    localizacaoUnidadeJs.src = "js/localizacao-unidade-4.4.js?v=4.4.0";
+    localizacaoUnidadeJs.src = `${assetRoot}js/localizacao-unidade-4.4.js?v=4.4.0`;
     localizacaoUnidadeJs.async = false;
     document.body.append(localizacaoUnidadeJs);
 
     const freteDistanciaJs = document.createElement("script");
-    freteDistanciaJs.src = "js/frete-distancia-unidade-4.4.js?v=4.4.0";
+    freteDistanciaJs.src = `${assetRoot}js/frete-distancia-unidade-4.4.js?v=4.4.0`;
     freteDistanciaJs.async = false;
     document.body.append(freteDistanciaJs);
 
     const entregaPropriaJs = document.createElement("script");
-    entregaPropriaJs.src = "js/empresa-entrega-propria-4.4.5.js?v=4.4.5.1";
+    entregaPropriaJs.src = `${assetRoot}js/empresa-entrega-propria-4.4.5.js?v=4.4.5.1`;
     entregaPropriaJs.async = false;
     document.body.append(entregaPropriaJs);
   }
 
   if (/admin\.html$/i.test(location.pathname)) {
     const adminPlanosJs = document.createElement("script");
-    adminPlanosJs.src = "js/admin-planos-4.3.js?v=4.3.0";
+    adminPlanosJs.src = `${assetRoot}js/admin-planos-4.3.js?v=4.3.0`;
     adminPlanosJs.async = false;
     document.body.append(adminPlanosJs);
 
     const entregadoresFinanceiroCss = document.createElement("link");
     entregadoresFinanceiroCss.rel = "stylesheet";
-    entregadoresFinanceiroCss.href = "css/entregador-financeiro-4.4.2.css?v=4.4.2";
+    entregadoresFinanceiroCss.href = `${assetRoot}css/entregador-financeiro-4.4.2.css?v=4.4.2`;
     document.head.append(entregadoresFinanceiroCss);
 
     const entregadoresFinanceiroJs = document.createElement("script");
-    entregadoresFinanceiroJs.src = "js/admin-entregadores-financeiro-4.4.2.js?v=4.4.2";
+    entregadoresFinanceiroJs.src = `${assetRoot}js/admin-entregadores-financeiro-4.4.2.js?v=4.4.2`;
     entregadoresFinanceiroJs.async = false;
     document.body.append(entregadoresFinanceiroJs);
   }
 
   if (/restaurante\.html$/i.test(location.pathname)) {
     const unidadesPublicasJs = document.createElement("script");
-    unidadesPublicasJs.src = "js/restaurante-unidades-4.3.js?v=4.3.0";
+    unidadesPublicasJs.src = `${assetRoot}js/restaurante-unidades-4.3.js?v=4.3.0`;
     unidadesPublicasJs.async = false;
     document.body.append(unidadesPublicasJs);
 
     const statusUnidadeJs = document.createElement("script");
-    statusUnidadeJs.src = "js/restaurante-status-unidade-4.3.js?v=4.3.0";
+    statusUnidadeJs.src = `${assetRoot}js/restaurante-status-unidade-4.3.js?v=4.3.0`;
     statusUnidadeJs.async = false;
     document.body.append(statusUnidadeJs);
   }
 
   if (/checkout\.html$/i.test(location.pathname)) {
     const checkoutUnidadeJs = document.createElement("script");
-    checkoutUnidadeJs.src = "js/checkout-unidade-4.3.js?v=4.3.0";
+    checkoutUnidadeJs.src = `${assetRoot}js/checkout-unidade-4.3.js?v=4.3.0`;
     checkoutUnidadeJs.async = false;
     document.body.append(checkoutUnidadeJs);
   }
 
   if (/enderecos\.html$/i.test(location.pathname)) {
     const localizacaoEnderecosJs = document.createElement("script");
-    localizacaoEnderecosJs.src = "js/localizacao-enderecos-4.4.js?v=4.4.0";
+    localizacaoEnderecosJs.src = `${assetRoot}js/localizacao-enderecos-4.4.js?v=4.4.0`;
     localizacaoEnderecosJs.async = false;
     document.body.append(localizacaoEnderecosJs);
   }
 
   if (/acompanhamento\.html$/i.test(location.pathname)) {
     const whatsappAcompanhamentoJs = document.createElement("script");
-    whatsappAcompanhamentoJs.src = "js/acompanhamento-whatsapp-4.4.js?v=4.4.0";
+    whatsappAcompanhamentoJs.src = `${assetRoot}js/acompanhamento-whatsapp-4.4.js?v=4.4.0`;
     whatsappAcompanhamentoJs.async = false;
     document.body.append(whatsappAcompanhamentoJs);
   }
@@ -284,7 +299,8 @@
 
   if("serviceWorker" in navigator && location.protocol!=="file:") addEventListener("load",async()=>{
     try{
-      const registro=await navigator.serviceWorker.register("./sw.js?v=4.4.5",{updateViaCache:"none"});
+      const swUrl=/\/html\/[^/]+\.html$/i.test(location.pathname)?"../sw.js?v=4.4.5":"./sw.js?v=4.4.5";
+      const registro=await navigator.serviceWorker.register(swUrl,{updateViaCache:"none"});
       if(registro.waiting)mostrarAtualizacao(registro.waiting);
       registro.addEventListener("updatefound",()=>{const worker=registro.installing;if(!worker)return;worker.addEventListener("statechange",()=>{if(worker.state==="installed"&&navigator.serviceWorker.controller)mostrarAtualizacao(worker)})});
       let refreshing=false;

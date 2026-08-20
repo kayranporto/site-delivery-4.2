@@ -62,7 +62,7 @@ function renderizarPedidoDestaque(pedidos) {
             criar("p", "", "Explore os restaurantes disponíveis e encontre algo gostoso.")
         );
         const link = criar("a", "", "Ver restaurantes");
-        link.href = "index.html";
+        link.href = "../index.html";
         vazio.append(texto, link);
         container.append(vazio);
         return;
@@ -299,7 +299,7 @@ modalLogout.confirmar.addEventListener("click", async () => {
         const { error } = await window.db.auth.signOut();
         if (error) throw error;
         App.limparDadosPrivados();
-        window.location.replace("index.html");
+        window.location.replace("../index.html");
     } catch (erro) {
         modalLogout.dialog.close();
         window.AppToast?.("Não foi possível sair", App.mensagemErro(erro), "error");

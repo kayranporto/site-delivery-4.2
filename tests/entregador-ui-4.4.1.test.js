@@ -6,7 +6,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const raiz = path.resolve(__dirname, "..");
-const html = fs.readFileSync(path.join(raiz, "entregador.html"), "utf8");
+const html = fs.readFileSync(path.join(raiz, "html/entregador.html"), "utf8");
 const js = fs.readFileSync(path.join(raiz, "js/entregador-ui-4.4.1.js"), "utf8");
 const css = fs.readFileSync(path.join(raiz, "css/entregador-4.4.1.css"), "utf8");
 

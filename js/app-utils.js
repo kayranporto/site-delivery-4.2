@@ -118,9 +118,9 @@
         try {
             const url = new URL(destino, window.location.href);
             if (url.origin !== window.location.origin) return padrao;
-            const arquivo = url.pathname.split("/").pop() || "";
-            if (!/^[\w.-]+\.html$/i.test(arquivo)) return padrao;
-            return `${arquivo}${url.search}${url.hash}`;
+            const caminho = destino.split(/[?#]/, 1)[0].replace(/\\/g, "/");
+            if (!/^(?:\.\.\/|html\/)?[\w.-]+\.html$/i.test(caminho)) return padrao;
+            return `${caminho}${url.search}${url.hash}`;
         } catch {
             return padrao;
         }

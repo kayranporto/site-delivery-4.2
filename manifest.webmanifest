@@ -16,8 +16,8 @@
     {"src": "assets/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable"}
   ],
   "shortcuts": [
-    {"name": "Meus pedidos", "short_name": "Pedidos", "url": "./meus-pedidos.html", "icons": [{"src":"assets/favicon.svg","sizes":"any","type":"image/svg+xml"}]},
+    {"name": "Meus pedidos", "short_name": "Pedidos", "url": "./html/meus-pedidos.html", "icons": [{"src":"assets/favicon.svg","sizes":"any","type":"image/svg+xml"}]},
     {"name": "Restaurantes", "short_name": "Restaurantes", "url": "./index.html#restaurantes", "icons": [{"src":"assets/favicon.svg","sizes":"any","type":"image/svg+xml"}]},
-    {"name": "Central de ajuda", "short_name": "Ajuda", "url": "./suporte.html", "icons": [{"src":"assets/favicon.svg","sizes":"any","type":"image/svg+xml"}]}
+    {"name": "Central de ajuda", "short_name": "Ajuda", "url": "./html/suporte.html", "icons": [{"src":"assets/favicon.svg","sizes":"any","type":"image/svg+xml"}]}
   ]
 }

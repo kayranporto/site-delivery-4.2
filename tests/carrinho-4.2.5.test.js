@@ -6,7 +6,10 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const root = path.resolve(__dirname, "..");
-const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
+const read = (file) => {
+    const direct = path.join(root, file);
+    return fs.readFileSync(fs.existsSync(direct) ? direct : path.join(root, "html", file), "utf8");
+};
 
 test("carrinho 4.2.5 injeta edição sem alterar o fluxo base", () => {
     const js = read("js/carrinho-4.2.5.js");

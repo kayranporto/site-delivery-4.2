@@ -11,7 +11,7 @@ const config = fs.readFileSync(path.join(raiz, "js/config.js"), "utf8");
 const notifications = fs.readFileSync(path.join(raiz, "js/notifications.js"), "utf8");
 const logistica = fs.readFileSync(path.join(raiz, "js/entregador-logistica-4.4.js"), "utf8");
 const sw = fs.readFileSync(path.join(raiz, "sw.js"), "utf8");
-const html = fs.readFileSync(path.join(raiz, "entregador.html"), "utf8");
+const html = fs.readFileSync(path.join(raiz, "html/entregador.html"), "utf8");
 
  test("distribuição automática expande 4, 8 e 15 km", () => {
   assert.match(migration, /v_raio\s*:=\s*4/);

@@ -72,7 +72,7 @@ function renderizarVazio() {
     vazio.append(icone, titulo, texto);
     if (filtroAtual === "todos") {
         const link = criar("a", "", "Ver restaurantes");
-        link.href = "index.html";
+        link.href = "../index.html";
         vazio.append(link);
     }
     lista.append(vazio);

@@ -4,7 +4,10 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const raiz = path.resolve(__dirname, "..");
-const ler = (arquivo) => fs.readFileSync(path.join(raiz, arquivo), "utf8");
+const ler = (arquivo) => {
+    const direto = path.join(raiz, arquivo);
+    return fs.readFileSync(fs.existsSync(direto) ? direto : path.join(raiz, "html", arquivo), "utf8");
+};
 
 test("checkout 4.2.3 inclui navegação de etapas e feedbacks", () => {
     const html = ler("checkout.html");

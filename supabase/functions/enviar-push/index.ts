@@ -70,7 +70,7 @@ Deno.serve(async (request) => {
     if (error) throw error;
 
     const destino = notification.destino
-      || (notification.pedido_id ? `./acompanhamento.html?id=${notification.pedido_id}` : "./perfil.html");
+      || (notification.pedido_id ? `./html/acompanhamento.html?id=${notification.pedido_id}` : "./html/perfil.html");
     const payload = JSON.stringify({
       title: notification.titulo || "Multi Delivery",
       body: notification.mensagem || "Você tem uma nova atualização.",

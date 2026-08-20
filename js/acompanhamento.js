@@ -46,7 +46,7 @@ function notificar(status) {
     if ("Notification" in window && Notification.permission === "granted" && document.hidden) {
         new Notification("Atualização do seu pedido", {
             body: mensagens[status] || "O status do pedido mudou.",
-            icon: "assets/favicon.svg"
+            icon: "../assets/favicon.svg"
         });
     }
 }

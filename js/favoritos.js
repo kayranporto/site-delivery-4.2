@@ -13,7 +13,7 @@ function criarEstadoVazio() {
     texto.textContent = "Use o coração de um restaurante para salvá-lo aqui.";
     const link = document.createElement("a");
     link.className = "btn";
-    link.href = "index.html";
+    link.href = "../index.html";
     link.textContent = "Explorar restaurantes";
 
     vazio.append(titulo, texto, link);
@@ -32,11 +32,11 @@ function renderizar(lista) {
         card.className = "item-card restaurant-row";
 
         const imagem = document.createElement("img");
-        imagem.src = empresa.logo || "assets/logo-restaurante.svg";
+        imagem.src = empresa.logo || "../assets/logo-restaurante.svg";
         imagem.alt = empresa.nome || "Restaurante";
         imagem.loading = "lazy";
         imagem.addEventListener("error", () => {
-            imagem.src = "assets/logo-restaurante.svg";
+            imagem.src = "../assets/logo-restaurante.svg";
         }, { once: true });
 
         const info = document.createElement("div");

@@ -209,8 +209,8 @@ async function abrirModalProduto(produto) {
     adicionaisCarregados = false;
     elementoFocoAnterior = document.activeElement;
     observacao.value = "";
-    modalImagem.src = produto.imagem || "assets/produto-padrao.svg";
-    modalImagem.addEventListener("error", () => { modalImagem.src = "assets/produto-padrao.svg"; }, { once: true });
+    modalImagem.src = produto.imagem || "../assets/produto-padrao.svg";
+    modalImagem.addEventListener("error", () => { modalImagem.src = "../assets/produto-padrao.svg"; }, { once: true });
     modalNome.textContent = produto.nome || "Produto";
     modalDescricao.textContent = produto.descricao || "";
     quantidadeSpan.textContent = "1";
@@ -323,7 +323,7 @@ confirmarProduto.addEventListener("click", () => {
     window.adicionarAoCarrinho({
         id: String(produtoAtual.id),
         nome: produtoAtual.nome,
-        imagem: produtoAtual.imagem || "assets/produto-padrao.svg",
+        imagem: produtoAtual.imagem || "../assets/produto-padrao.svg",
         preco: precoBaseAtual(),
         variante_id: varianteSelecionada ? String(varianteSelecionada.id) : null,
         variante_nome: varianteSelecionada?.nome || null,

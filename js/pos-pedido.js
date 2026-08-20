@@ -141,7 +141,7 @@
                 const novoItem = {
                     id: String(produto.id),
                     nome: produto.nome || item.nome_produto || "Produto",
-                    imagem: produto.imagem || "assets/produto-padrao.svg",
+                    imagem: produto.imagem || "../assets/produto-padrao.svg",
                     preco: variante ? precoVariante : (promocao > 0 ? promocao : Number(produto.preco || 0)),
                     variante_id: variante ? String(variante.id) : null,
                     variante_nome: variante?.nome || null,
