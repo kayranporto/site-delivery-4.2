@@ -8,7 +8,7 @@ npm run verify
 npm run package
 ```
 
-`npm run verify` executa a verificação estrutural de 239 arquivos, os 142 testes automatizados e o type-check TypeScript das Edge Functions. O empacotamento repete o gate antes de gerar o ZIP e exclui `.git`, `node_modules`, releases anteriores e arquivos ZIP antigos.
+`npm run verify` executa a verificação estrutural de 241 arquivos, os 143 testes automatizados e o type-check TypeScript das Edge Functions. O empacotamento repete o gate antes de gerar o ZIP e exclui `.git`, `node_modules`, releases anteriores e arquivos ZIP antigos.
 
 ## 2. Banco de dados
 
@@ -64,6 +64,7 @@ Registre evidências e resultados antes de usar credenciais reais.
 - ative proteção contra senhas vazadas quando o projeto estiver em plano Pro ou superior; no plano Free trate a ausência como risco residual documentado;
 - configure Cloudflare Turnstile ou hCaptcha;
 - ajuste rate limits de cadastro, login e recuperação;
+- use `npm run configure:auth:protection` somente depois de publicar a Site Key no frontend; o script confirma o arquivo publicado antes de habilitar o CAPTCHA no Supabase;
 - configure URLs exatas de produção;
 - preserve confirmação segura para troca de e-mail;
 - mantenha recuperação de senha por e-mail operacional.
@@ -97,7 +98,7 @@ Configure alertas para:
 ## 8. Aprovação final
 
 - [x] 46 migrations locais confirmadas no projeto hospedado em 20/08/2026;
-- [x] 142 testes automatizados aprovados no commit de release;
+- [x] 143 testes automatizados aprovados no commit de release;
 - [x] 4 Edge Functions publicadas e ativas (`criar-pagamento`, `mercado-pago-webhook`, `processar-reembolso`, `enviar-push`);
 - [ ] segredos das Edge Functions conferidos no ambiente e registrados no checklist operacional;
 - [ ] webhook validado no sandbox;

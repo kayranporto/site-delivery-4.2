@@ -11,7 +11,8 @@
     "verify": "npm run check && npm test && npm run check:edge",
     "package": "bash scripts/package-release.sh",
     "check:edge": "tsc -p tsconfig.edge.json",
-    "configure:auth:no-confirm": "bash scripts/configurar-auth-sem-confirmacao.sh"
+    "configure:auth:no-confirm": "bash scripts/configurar-auth-sem-confirmacao.sh",
+    "configure:auth:protection": "node scripts/configurar-protecao-auth.js"
   },
   "devDependencies": {
     "typescript": "5.9.3"

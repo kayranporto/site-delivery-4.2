@@ -72,3 +72,17 @@ test("configuração de produção inclui automação sem confirmação", () => 
     assert.match(script, /password_min_length/);
     assert.doesNotMatch(script, /Bearer [A-Za-z0-9_-]{20,}/);
 });
+
+test("protecao do Auth so ativa CAPTCHA depois da publicacao da Site Key", () => {
+    const script = read("scripts/configurar-protecao-auth.js");
+    const packageJson = JSON.parse(read("package.json"));
+    assert.equal(packageJson.scripts["configure:auth:protection"], "node scripts/configurar-protecao-auth.js");
+    assert.match(script, /security_captcha_enabled: true/);
+    assert.match(script, /security_captcha_provider: "turnstile"/);
+    assert.match(script, /PUBLIC_SITE_URL/);
+    assert.match(script, /Site Key informada ainda nao esta publicada/);
+    assert.match(script, /AUTH_RATE_LIMIT_EMAIL_SENT/);
+    assert.match(script, /AUTH_RATE_LIMIT_TOKEN_REFRESH/);
+    assert.doesNotMatch(script, /Bearer [A-Za-z0-9_-]{20,}/);
+    assert.doesNotMatch(script, /TURNSTILE_SECRET_KEY=[A-Za-z0-9_-]{10,}/);
+});

@@ -20,7 +20,7 @@ Este PRD organiza o que já existe, o que está parcial, o que falta e o que é 
 
 ## 2. Contexto
 
-O projeto já nasceu como uma tentativa completa de plataforma de delivery, com forte ênfase em integridade financeira, segurança e RLS. O gate de release cobre verificação estrutural, **142 testes automatizados** e type-check das Edge Functions. A revisão remota de 20/08/2026 confirmou todas as migrations e funções implantadas, mas manteve pendências operacionais: proteção HIBP indisponível no plano Free, 17 cenários obrigatórios de sandbox sem evidência assinada, conta de entregador isolada para teste positivo de RLS, backup/restauração, CAPTCHA/rate limits, cabeçalhos do domínio e revisão jurídica.
+O projeto já nasceu como uma tentativa completa de plataforma de delivery, com forte ênfase em integridade financeira, segurança e RLS. O gate de release cobre verificação estrutural, **143 testes automatizados** e type-check das Edge Functions. A revisão remota de 20/08/2026 confirmou todas as migrations e funções implantadas, mas manteve pendências operacionais: proteção HIBP indisponível no plano Free, 17 cenários obrigatórios de sandbox sem evidência assinada, conta de entregador isolada para teste positivo de RLS, backup/restauração, CAPTCHA/rate limits, cabeçalhos do domínio e revisão jurídica.
 
 Este PRD assume esse ponto de partida: **não é uma reescrita**, é uma consolidação sobre uma base técnica sólida, com foco em concluir monetização SaaS, comunicação transacional e logística avançada sem comprometer as garantias de segurança e integridade financeira já construídas.
 
@@ -270,7 +270,7 @@ Existe uma separação clara entre **estado de pagamento do pedido** (`pagamento
 | Idempotência de webhook de pagamento | **EXISTENTE** | Chave de deduplicação antes da conciliação (webhook HMAC validado) |
 | Rate limiting / CAPTCHA | **PARCIAL** | CAPTCHA (Turnstile) implementado mas opcional/dependente de configuração de chave; rate limit é responsabilidade do Supabase Auth, ainda pendente de ajuste fino conforme `PRODUCAO.md` checklist |
 | Cabeçalhos HTTP de segurança completos | **PARCIAL** | CSP via `<meta>` funciona no GitHub Pages; `X-Content-Type-Options`, `Permissions-Policy`, anti-framing **dependem de hospedagem com proxy** (Cloudflare/Vercel) — risco residual documentado enquanto só estiver no Pages |
-| Testes automatizados | **EXISTENTE** | 142 testes em 26 arquivos, gate de CI (`npm ci` + `npm run verify`) |
+| Testes automatizados | **EXISTENTE** | 143 testes em 26 arquivos, gate de CI (`npm ci` + `npm run verify`) |
 | Observabilidade (logs estruturados/tracing/error tracking) | **PARCIAL** | `app_logs` existe no banco (auditoria básica); não há evidência de tracing distribuído ou error tracking externo (Sentry etc.) |
 | Advisors Supabase | **PARCIAL / REQUER TRIAGEM** | 75 avisos de segurança (73 warnings, em maioria RPCs `SECURITY DEFINER` intencionais) e 47 apontamentos de performance; `pg_net` em `public`, HIBP desativado, 8 FKs sem índice de cobertura e 17 grupos de políticas permissivas duplicadas |
 | Performance (Core Web Vitals, lazy loading) | **NÃO CONFIRMADO** | Nenhuma métrica de performance documentada no repositório; recomenda-se medição real antes de metas |
