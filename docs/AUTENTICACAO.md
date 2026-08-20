@@ -31,7 +31,7 @@ O HIBP é aplicado em uma requisição separada para que a configuração básic
 Desativar confirmação de e-mail aumenta a facilidade de criar contas com endereços inexistentes ou pertencentes a terceiros. Antes da produção:
 
 1. configure Cloudflare Turnstile ou hCaptcha no Supabase Auth;
-2. preencha `turnstileSiteKey` em `js/config.js`;
+2. preencha `turnstileSiteKey` em `js/core/config.js`;
 3. ajuste rate limits de cadastro, login e recuperação;
 4. quando disponível no plano, mantenha a proteção contra senhas vazadas ativa;
 5. mantenha a política local de senha com pelo menos 8 caracteres, letra e número;

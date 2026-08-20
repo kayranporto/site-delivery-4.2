@@ -79,7 +79,7 @@ test("finalização do pedido usa o mesmo helper de endereço e preserva cupom d
 });
 
 test("checkout resolve endereco_id autenticado para o preview e mantém fallback legado", () => {
-  const source = read("js/checkout-unidade-4.3.js");
+  const source = read("js/modules/checkout-unidade-4.3.js");
   assert.match(source, /resolverEnderecoId/);
   assert.match(source, /\.eq\("usuario_id", user\.id\)/);
   assert.match(source, /calcular_entrega_unidade_endereco/);
@@ -88,8 +88,8 @@ test("checkout resolve endereco_id autenticado para o preview e mantém fallback
 });
 
 test("dashboard configura distância pela RPC e o carregador limita o módulo ao painel", () => {
-  const source = read("js/frete-distancia-unidade-4.4.js");
-  const loader = read("js/site-enhancements.js");
+  const source = read("js/modules/frete-distancia-unidade-4.4.js");
+  const loader = read("js/core/site-enhancements.js");
   assert.match(source, /Frete por distância/);
   assert.match(source, /empresa_unidade_configurar_frete_distancia/);
   assert.match(source, /freteTaxaBase44/);

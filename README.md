@@ -25,10 +25,16 @@ npm run package
 
 ```text
 assets/                 imagens locais
-css/                    estilos
+css/
+  core/                 estilos compartilhados e fundação visual
+  pages/                estilos específicos das páginas
+  modules/              estilos de funcionalidades incrementais
 docs/                   produto, operação, segurança e compliance
 html/                   páginas da aplicação
-js/                     frontend
+js/
+  core/                 infraestrutura e utilitários compartilhados
+  pages/                controladores das páginas
+  modules/              funcionalidades e extensões de domínio
 supabase/migrations/    banco, RLS, RPCs e triggers
 supabase/functions/     Edge Functions
 scripts/                verificação e empacotamento
@@ -90,4 +96,4 @@ Leia, nesta ordem:
 5. `docs/RUNBOOK-OPERACIONAL.md`
 6. `docs/ROADMAP-PLATAFORMA.md`
 
-A aplicação não deve receber pagamentos reais antes da confirmação das migrations 014 a 023 no projeto hospedado, da publicação das Edge Functions, da configuração dos segredos, da conclusão dos testes de sandbox descritos em `docs/PRODUCAO.md` e da ativação explícita de `pagamentoOnlineAtivo` em `js/config.js`.
+A aplicação não deve receber pagamentos reais antes da confirmação das migrations 014 a 023 no projeto hospedado, da publicação das Edge Functions, da configuração dos segredos, da conclusão dos testes de sandbox descritos em `docs/PRODUCAO.md` e da ativação explícita de `pagamentoOnlineAtivo` em `js/core/config.js`.

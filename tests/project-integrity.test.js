@@ -42,7 +42,7 @@ test("hotfix 009 recupera a coluna de modalidade de pagamento", () => {
     const sql = fs.readFileSync(path.join(root, "supabase/migrations/20260801000900_hotfix_painel_admin.sql"), "utf8");
     assert.match(sql, /add column if not exists pagamento_modalidade/i);
     assert.match(sql, /notify pgrst, 'reload schema'/i);
-    const admin = fs.readFileSync(path.join(root, "js/admin.js"), "utf8");
+    const admin = fs.readFileSync(path.join(root, "js/pages/admin.js"), "utf8");
     assert.match(admin, /consultarPedidosAdmin/);
     assert.match(admin, /adminMigrationWarning/);
 });
@@ -53,7 +53,7 @@ test("administração 3.2 possui funções protegidas e interface completa", () 
         assert.ok(sql.includes(trecho), `migração 010 sem ${trecho}`);
     }
     const html = fs.readFileSync(path.join(root, "html/admin.html"), "utf8");
-    const js = fs.readFileSync(path.join(root, "js/admin.js"), "utf8");
+    const js = fs.readFileSync(path.join(root, "js/pages/admin.js"), "utf8");
     for (const match of js.matchAll(/getElementById\(["']([^"']+)["']\)/g)) {
         const existeEstatico = new RegExp(`id=["']${match[1]}["']`).test(html);
         const existeDinamico = new RegExp(`\\.id\\s*=\\s*["']${match[1]}["']`).test(js);
@@ -65,10 +65,15 @@ test("administração 3.2 possui funções protegidas e interface completa", () 
 });
 
 test("módulos do restaurante convivem sem colisões globais", () => {
-    const arquivos = ["restaurante.js", "carrinho.js", "modal.js", "site-enhancements.js"];
-    const codigo = arquivos.map((arquivo) => fs.readFileSync(path.join(root, "js", arquivo), "utf8")).join("\n");
+    const arquivos = [
+        "js/pages/restaurante.js",
+        "js/modules/carrinho.js",
+        "js/modules/modal.js",
+        "js/core/site-enhancements.js",
+    ];
+    const codigo = arquivos.map((arquivo) => fs.readFileSync(path.join(root, arquivo), "utf8")).join("\n");
     assert.doesNotThrow(() => new vm.Script(codigo));
-    const carrinho = fs.readFileSync(path.join(root, "js/carrinho.js"), "utf8");
+    const carrinho = fs.readFileSync(path.join(root, "js/modules/carrinho.js"), "utf8");
     assert.match(carrinho, /window\.adicionarAoCarrinho\s*=\s*adicionarAoCarrinho/);
     assert.match(carrinho, /^"use strict";\s*\(\(\) => \{/);
 });
@@ -90,7 +95,7 @@ test("carrinho inicializa e adiciona produto no armazenamento", () => {
         confirm: () => true
     };
     contexto.window = contexto;
-    vm.runInNewContext(fs.readFileSync(path.join(root, "js/carrinho.js"), "utf8"), contexto);
+    vm.runInNewContext(fs.readFileSync(path.join(root, "js/modules/carrinho.js"), "utf8"), contexto);
     assert.equal(typeof contexto.adicionarAoCarrinho, "function");
     contexto.adicionarAoCarrinho({ id: "produto-1", nome: "Produto", preco: 12, quantidade: 2, adicionais: [] });
     assert.equal(armazenamento.carrinho.length, 1);
@@ -103,11 +108,11 @@ test("foto de perfil possui bucket protegido e interface de upload", () => {
     for (const trecho of ["avatar_url", "storage.buckets", "file_size_limit", "allowed_mime_types", "storage.foldername(name)", "auth.uid()::text", "for insert", "for update", "for delete"]) {
         assert.ok(sql.includes(trecho), `migração 011 sem ${trecho}`);
     }
-    const dados = fs.readFileSync(path.join(root, "js/dados.js"), "utf8");
+    const dados = fs.readFileSync(path.join(root, "js/pages/dados.js"), "utf8");
     for (const trecho of ["otimizarFoto", "512", "image/webp", ".storage.from(\"avatars\")", "getPublicUrl", "avatar_url"]) {
         assert.ok(dados.includes(trecho), `upload de avatar sem ${trecho}`);
     }
-    const perfil = fs.readFileSync(path.join(root, "js/perfil.js"), "utf8");
+    const perfil = fs.readFileSync(path.join(root, "js/pages/perfil.js"), "utf8");
     assert.match(perfil, /renderizarAvatar/);
     assert.match(perfil, /avatar_url/);
 });
@@ -134,7 +139,7 @@ test("versão 3.5 integra operação, estoque, regiões, fidelidade e suporte", 
     }
     const painel = fs.readFileSync(path.join(root, "html/empresa-dashboard.html"), "utf8");
     for (const id of ["horariosForm", "regiaoForm", "fidelidadeForm", "financeiroResumo", "cancelamentosEmpresa", "produtoControlaEstoque"]) assert.match(painel, new RegExp(`id=["']${id}["']`));
-    const checkout = fs.readFileSync(path.join(root, "js/checkout.js"), "utf8");
+    const checkout = fs.readFileSync(path.join(root, "js/pages/checkout.js"), "utf8");
     assert.match(checkout, /calcular_entrega_empresa/);
     assert.match(checkout, /criar_pedido_operacional/);
     const suporte = fs.readFileSync(path.join(root, "html/suporte.html"), "utf8");

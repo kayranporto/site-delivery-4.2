@@ -63,7 +63,7 @@ Nunca permita que o frontend altere diretamente `pagamento_status` ou marque um 
 
 ## Push
 
-1. Copie apenas `VAPID_PUBLIC_KEY` para `js/config.js`.
+1. Copie apenas `VAPID_PUBLIC_KEY` para `js/core/config.js`.
 2. Crie webhook de `INSERT` em `public.notificacoes` para `enviar-push`.
 3. Envie `x-delivery-webhook-secret` com o segredo configurado.
 4. Remova inscrições que retornarem 404 ou 410.

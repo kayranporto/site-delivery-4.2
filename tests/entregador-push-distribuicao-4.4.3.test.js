@@ -7,9 +7,9 @@ const path = require("node:path");
 
 const raiz = path.resolve(__dirname, "..");
 const migration = fs.readFileSync(path.join(raiz, "supabase/migrations/20260817232136_entregador_push_distribuicao_proximidade_4_4_3.sql"), "utf8");
-const config = fs.readFileSync(path.join(raiz, "js/config.js"), "utf8");
-const notifications = fs.readFileSync(path.join(raiz, "js/notifications.js"), "utf8");
-const logistica = fs.readFileSync(path.join(raiz, "js/entregador-logistica-4.4.js"), "utf8");
+const config = fs.readFileSync(path.join(raiz, "js/core/config.js"), "utf8");
+const notifications = fs.readFileSync(path.join(raiz, "js/core/notifications.js"), "utf8");
+const logistica = fs.readFileSync(path.join(raiz, "js/modules/entregador-logistica-4.4.js"), "utf8");
 const sw = fs.readFileSync(path.join(raiz, "sw.js"), "utf8");
 const html = fs.readFileSync(path.join(raiz, "html/entregador.html"), "utf8");
 

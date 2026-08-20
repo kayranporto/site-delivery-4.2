@@ -9,7 +9,7 @@ const root = path.resolve(__dirname, "..");
 const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
 const migration = read("supabase/migrations/20260819003047_entrega_propria_hibrida_4_4_5.sql");
 const migrationIndice = read("supabase/migrations/20260819011044_index_empresa_entregadores_criado_por_4_4_5.sql");
-const dashboard = read("js/empresa-entrega-propria-4.4.5.js");
+const dashboard = read("js/modules/empresa-entrega-propria-4.4.5.js");
 
 test("migração 4.4.5 cria modalidades e vínculo por unidade", () => {
   for (const trecho of [
@@ -82,18 +82,18 @@ test("painel configura equipe somente por RPC e permite atribuição em pedidos 
     "empresa_atribuir_entregador_proprio"
   ]) assert.ok(dashboard.includes(rpc), `painel sem RPC ${rpc}`);
   assert.doesNotMatch(dashboard, /from\(["']empresa_entregadores["']\)\.(?:insert|update|delete)/);
-  assert.match(read("js/empresa-dashboard.js"), /dataset\.entregaPronta/);
+  assert.match(read("js/pages/empresa-dashboard.js"), /dataset\.entregaPronta/);
   assert.match(dashboard, /data-entrega-pronta="true"/);
   assert.match(dashboard, /Nenhum próprio disponível/);
 });
 
 test("assets do painel e identificação da oferta própria estão publicados", () => {
-  const loader = read("js/site-enhancements.js");
-  const entregador = read("js/entregador-logistica-4.4.js");
+  const loader = read("js/core/site-enhancements.js");
+  const entregador = read("js/modules/entregador-logistica-4.4.js");
   assert.match(loader, /empresa-entrega-propria-4\.4\.5\.css\?v=4\.4\.5/);
   assert.match(loader, /empresa-entrega-propria-4\.4\.5\.js\?v=4\.4\.5/);
   assert.match(entregador, /item\.oferta_origem === "propria"/);
   assert.match(entregador, /Equipe própria/);
-  assert.match(read("css/entregador-push-4.4.3.css"), /delivery-status\.own-team/);
+  assert.match(read("css/modules/entregador-push-4.4.3.css"), /delivery-status\.own-team/);
   assert.match(read("sw.js"), /"entrega_disponivel", "entrega_atribuida"/);
 });

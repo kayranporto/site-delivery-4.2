@@ -87,7 +87,7 @@ Cadastro, aprovação, online/offline, GPS, ofertas por proximidade, aceite conc
 - A própria auditoria de 12/08/2026 registra que **não há hoje uma conta de entregador isolada de admin/cliente para validar RLS de forma independente** — risco de teste, não de código, mas deve ser corrigido antes de qualquer expansão de volume.
 
 ### Super Admin (`private.is_admin()`, `admin_auditoria`) — **EXISTENTE**
-Painel completo em `admin.html` + `js/admin.js` (883 linhas) + `js/operacao-admin.js`. Cobre: gestão de restaurantes (`admin_definir_restaurante`, `admin_atualizar_restaurante`), bloqueio de usuários (`admin_definir_usuario_bloqueio`), cupons globais (`admin_salvar_cupom`/`admin_excluir_cupom`), consulta de pedido (`admin_obter_pedido`), conciliação de pagamentos (`admin_conciliacao_pagamentos`), preparo/marcação de reembolso (`admin_preparar_reembolso`, `admin_atualizar_reembolso`), saúde operacional (`admin_saude_operacao`), relatórios (`admin_relatorio_operacional`, `admin_relatorio_clientes_produtos`), aprovação de entregadores, resposta a chamados de suporte (`admin_responder_chamado`), trilha de auditoria (`admin_auditoria`).
+Painel completo em `admin.html` + `js/pages/admin.js` (883 linhas) + `js/modules/operacao-admin.js`. Cobre: gestão de restaurantes (`admin_definir_restaurante`, `admin_atualizar_restaurante`), bloqueio de usuários (`admin_definir_usuario_bloqueio`), cupons globais (`admin_salvar_cupom`/`admin_excluir_cupom`), consulta de pedido (`admin_obter_pedido`), conciliação de pagamentos (`admin_conciliacao_pagamentos`), preparo/marcação de reembolso (`admin_preparar_reembolso`, `admin_atualizar_reembolso`), saúde operacional (`admin_saude_operacao`), relatórios (`admin_relatorio_operacional`, `admin_relatorio_clientes_produtos`), aprovação de entregadores, resposta a chamados de suporte (`admin_responder_chamado`), trilha de auditoria (`admin_auditoria`).
 - **Planos, assinaturas e limites:** **EXISTENTE** via `planos_plataforma`, `empresa_assinaturas` e RPCs `admin_*`; a cobrança recorrente automática ainda não existe.
 
 ---
@@ -96,12 +96,12 @@ Painel completo em `admin.html` + `js/admin.js` (883 linhas) + `js/operacao-admi
 
 ```
 Entrada na loja (index.html → restaurante.html?id=)
-  ↓ seleção de categoria/produto (js/restaurante.js)
+  ↓ seleção de categoria/produto (js/pages/restaurante.js)
   ↓ variação (produto_variantes) + adicionais (grupos_adicionais/adicionais)
   ↓ observações do item
-  ↓ carrinho (js/carrinho.js, cart-store.js) — cálculo local + revalidação no servidor
+  ↓ carrinho (js/modules/carrinho.js, cart-store.js) — cálculo local + revalidação no servidor
   ↓ identificação (login obrigatório — sem checkout convidado)
-  ↓ endereço (enderecos.html, js/enderecos.js)
+  ↓ endereço (enderecos.html, js/pages/enderecos.js)
   ↓ validação da área de entrega (bairro ou distância configurável por unidade)
   ↓ cupom (validação server-side na criação do pedido)
   ↓ forma de entrega — HOJE SOMENTE ENTREGA (retirada no local: ver seção 10)
@@ -153,7 +153,7 @@ Nesta seção, cada bloco relevante traz: o que faz, quem usa, regras, validaç�
 - **Lacuna:** "borda de pizza" e combinações inválidas entre grupos (ex. impedir grupo X sem grupo Y) não têm uma camada de regras cruzadas explícita — apenas min/max por grupo isoladamente. **PARCIAL.**
 
 ### RF-03 — Carrinho **[EXISTENTE]**
-- `js/carrinho.js` + `carrinho-4.2.5.js` + `cart-store.js`: cálculo de subtotal + adicionais + taxa de entrega − desconto = total, feito no cliente para UX, mas **sempre recalculado no servidor** na criação do pedido (a tabela `pedidos` tem `check` de valores não negativos e a função `criar_pedido_impl` recalcula).
+- `js/modules/carrinho.js` + `carrinho-4.2.5.js` + `cart-store.js`: cálculo de subtotal + adicionais + taxa de entrega − desconto = total, feito no cliente para UX, mas **sempre recalculado no servidor** na criação do pedido (a tabela `pedidos` tem `check` de valores não negativos e a função `criar_pedido_impl` recalcula).
 - Pedido mínimo validado por região (`empresa_regioes.pedido_minimo`) ou geral da loja (`empresas.pedido_minimo`).
 - **Frete grátis via cupom:** suportado no modelo de cupons (ver RF-Cupons).
 
@@ -172,7 +172,7 @@ Nesta seção, cada bloco relevante traz: o que faz, quem usa, regras, validaç�
 Ver seção 12 (Regras de Negócio) para a máquina de estados completa. Implementada via trigger `private.validar_transicao_pedido()` — a transição é validada **no banco**, não apenas na UI, e reforçada nas migrations 020–022 para impedir pedidos pagos online de avançarem sem confirmação de pagamento.
 
 ### RF-07 — Painel operacional / cozinha (Kanban) **[EXISTENTE]**
-- `js/operacao-empresa.js` + `operacao-restaurante-4.2.7.js` + tabela `pedido_operacao_eventos` (migration 017): fila com pedidos recebidos, em preparo, prontos e atrasados, tempo estimado, início do preparo e horário real de conclusão, com alerta de atraso (SLA).
+- `js/modules/operacao-empresa.js` + `operacao-restaurante-4.2.7.js` + tabela `pedido_operacao_eventos` (migration 017): fila com pedidos recebidos, em preparo, prontos e atrasados, tempo estimado, início do preparo e horário real de conclusão, com alerta de atraso (SLA).
 - RPC `empresa_atualizar_operacao_pedido` centraliza as transições autenticadas (não é update direto de linha — migration 020 removeu updates diretos de status).
 - **Alertas sonoros/visuais configuráveis:** não confirmado explicitamente no JS revisado — **PARCIAL** (existe destaque visual de atraso; alerta sonoro configurável pelo lojista não foi encontrado).
 
@@ -217,10 +217,10 @@ Cadastro, aprovação, online/offline, localização em tempo real, ofertas por 
 `avaliacoes` (migration 004) com resposta do estabelecimento (`empresa_responder_avaliacao`).
 
 ### RF-19 — Favoritos **[EXISTENTE]**
-Tabela `favoritos` + sincronização (`js/favorites-sync.js`, `favoritos.js`), tela dedicada `favoritos.html`.
+Tabela `favoritos` + sincronização (`js/core/favorites-sync.js`, `favoritos.js`), tela dedicada `favoritos.html`.
 
 ### RF-20 — LGPD self-service **[EXISTENTE]**
-`dados.html` + `js/dados.js`: exportação e solicitação de exclusão de dados do titular, conforme citado em `PRIVACIDADE-LGPD.md` e no README ("exportação e solicitação de exclusão de dados").
+`dados.html` + `js/pages/dados.js`: exportação e solicitação de exclusão de dados do titular, conforme citado em `PRIVACIDADE-LGPD.md` e no README ("exportação e solicitação de exclusão de dados").
 
 ---
 
@@ -282,7 +282,7 @@ Existe uma separação clara entre **estado de pagamento do pedido** (`pagamento
 ## 14. UX/UI
 
 - Mobile-first confirmado por CSS dedicado (`mobile-pwa-4.2.6.css`) e por design de fluxo (carrinho, checkout, cozinha todos com CSS versionado por incremento — sinal de iteração orientada a UX real, não só entrega inicial).
-- Acessibilidade: existe `css/accessibility.css` dedicado — **EXISTENTE em alguma medida**, mas o nível de conformidade WCAG não foi auditado neste PRD (recomenda-se auditoria de acessibilidade dedicada, ver Riscos).
+- Acessibilidade: existe `css/core/accessibility.css` dedicado — **EXISTENTE em alguma medida**, mas o nível de conformidade WCAG não foi auditado neste PRD (recomenda-se auditoria de acessibilidade dedicada, ver Riscos).
 - Estados de tela: `offline.html` dedicado (estado offline do PWA) — **EXISTENTE**. Empty states, erros de produto indisponível e loja fechada aparecem tratados na lógica de `calcular_entrega_empresa` (mensagens como "Restaurante fechado neste horário", "Este bairro ainda não faz parte da área de entrega") — **EXISTENTE no backend**, presume-se refletido na UI (não auditado componente a componente).
 
 ---
@@ -300,9 +300,13 @@ Existe uma separação clara entre **estado de pagamento do pedido** (`pagamento
 **Estrutura de pastas (canônica, conforme README):**
 ```
 assets/                imagens locais
-css/                   estilos
+css/core/              estilos compartilhados
+css/pages/             estilos específicos das páginas
+css/modules/           estilos de funcionalidades
 html/                  páginas da aplicação
-js/                    frontend
+js/core/               infraestrutura e utilitários
+js/pages/              controladores das páginas
+js/modules/            funcionalidades de domínio
 supabase/migrations/   banco, RLS, RPCs, triggers
 supabase/functions/    Edge Functions
 scripts/               verificação e empacotamento
@@ -486,7 +490,7 @@ Postura de segurança **acima da média** para o estágio do projeto, com evidê
 
 ## 23. LGPD
 
-- **Exportação e exclusão de dados pelo titular:** **EXISTENTE** (`dados.html`, `js/dados.js`, citado no README e em `PRIVACIDADE-LGPD.md`).
+- **Exportação e exclusão de dados pelo titular:** **EXISTENTE** (`dados.html`, `js/pages/dados.js`, citado no README e em `PRIVACIDADE-LGPD.md`).
 - **Política de privacidade publicada:** **EXISTENTE** (`privacidade.html`, `PRIVACIDADE-LGPD.md`), mas com **revisão jurídica ainda pendente** conforme checklist de `PRODUCAO.md` ("revisão jurídica da política de privacidade" não concluída).
 - **Minimização de dados:** parcialmente evidenciada pela `view public.empresas_catalogo` (que expõe só campos seguros do catálogo, ocultando `usuario_id`, e-mail, CNPJ do público).
 - **Retenção/anonimização automatizada:** **NÃO IMPLEMENTADO** — não há job/rotina automática de expurgo ou anonimização por tempo; é exclusão sob demanda do titular, não uma política de retenção proativa. Roadmap 5.0 já lista "políticas de retenção e anonimização automatizadas" como item futuro.

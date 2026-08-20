@@ -29,7 +29,7 @@ test("4.2.7 aceita pedido com tempo e registra recusa transacional", () => {
 });
 
 test("painel 4.2.7 oferece aceite, recusa, SLA e indicadores do dia", () => {
-  const js = read("js/operacao-restaurante-4.2.7.js");
+  const js = read("js/modules/operacao-restaurante-4.2.7.js");
   for (const trecho of [
     "Aceitar pedido",
     "recusar_pedido",
@@ -41,14 +41,14 @@ test("painel 4.2.7 oferece aceite, recusa, SLA e indicadores do dia", () => {
 });
 
 test("site carrega os assets 4.2.7 somente no painel do restaurante", () => {
-  const loader = read("js/site-enhancements.js");
+  const loader = read("js/core/site-enhancements.js");
   assert.match(loader, /empresa-dashboard\\\.html/);
-  assert.match(loader, /css\/operacao-restaurante-4\.2\.7\.css\?v=4\.2\.7/);
-  assert.match(loader, /js\/operacao-restaurante-4\.2\.7\.js\?v=4\.2\.7/);
+  assert.match(loader, /css\/modules\/operacao-restaurante-4\.2\.7\.css\?v=4\.2\.7/);
+  assert.match(loader, /js\/modules\/operacao-restaurante-4\.2\.7\.js\?v=4\.2\.7/);
 });
 
 test("CSS 4.2.7 contempla painel, SLA e mobile", () => {
-  const css = read("css/operacao-restaurante-4.2.7.css");
+  const css = read("css/modules/operacao-restaurante-4.2.7.css");
   for (const trecho of [
     ".operacao-427-resumo",
     ".op427-aceite",

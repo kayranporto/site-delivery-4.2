@@ -9,7 +9,7 @@ const root = path.resolve(__dirname, "..");
 const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
 
 test("aviso da unidade fica dentro do fluxo e não quebra a grid principal do checkout", () => {
-  const source = read("js/checkout-unidade-4.3.js");
+  const source = read("js/modules/checkout-unidade-4.3.js");
   assert.match(source, /const alvo = document\.querySelector\("\.checkout-flow"\)/);
   assert.match(source, /alvo\.prepend\(aviso\)/);
   assert.doesNotMatch(source, /\.checkout-summary, #listaResumo/);

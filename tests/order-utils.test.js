@@ -2,7 +2,7 @@
 
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const OrderUtils = require("../js/order-utils.js");
+const OrderUtils = require("../js/core/order-utils.js");
 
 test("aceita somente transições válidas do pedido", () => {
     assert.equal(OrderUtils.validarTransicao("recebido", "preparando"), true);

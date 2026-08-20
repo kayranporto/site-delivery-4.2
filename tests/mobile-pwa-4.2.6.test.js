@@ -17,7 +17,7 @@ test("PWA 4.4.5 versiona caches e remove caches antigos", () => {
 });
 
 test("PWA 4.4.5 registra service worker sem cache de atualização", () => {
-  const js = read("js/site-enhancements.js");
+  const js = read("js/core/site-enhancements.js");
   assert.match(js, /sw\.js\?v=4\.4\.5/);
   assert.match(js, /updateViaCache:"none"/);
   assert.match(js, /controllerchange/);
@@ -25,8 +25,8 @@ test("PWA 4.4.5 registra service worker sem cache de atualização", () => {
 });
 
 test("PWA 4.4.5 mantém a camada mobile global 4.2.6", () => {
-  const js = read("js/site-enhancements.js");
-  const css = read("css/mobile-pwa-4.2.6.css");
+  const js = read("js/core/site-enhancements.js");
+  const css = read("css/modules/mobile-pwa-4.2.6.css");
   assert.match(js, /mobile-pwa-4\.2\.6\.css\?v=4\.2\.6/);
   for (const width of ["700px", "430px", "370px"]) assert.ok(css.includes(width), `CSS mobile sem breakpoint ${width}`);
   for (const trecho of ["#carrinho", ".modal-content", ".checkout-container", ".track-main", ".container-header"]) {

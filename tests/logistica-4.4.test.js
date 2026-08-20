@@ -58,8 +58,8 @@ test("fila por proximidade não expõe telefone nem endereço completo antes da 
 });
 
 test("endereço e unidade usam GPS somente por ação explícita do usuário", () => {
-  const enderecos = read("js/localizacao-enderecos-4.4.js");
-  const unidade = read("js/localizacao-unidade-4.4.js");
+  const enderecos = read("js/modules/localizacao-enderecos-4.4.js");
+  const unidade = read("js/modules/localizacao-unidade-4.4.js");
   assert.match(enderecos, /Usar GPS deste local/);
   assert.match(enderecos, /getCurrentPosition/);
   assert.match(enderecos, /endereco_atualizar_localizacao/);
@@ -69,7 +69,7 @@ test("endereço e unidade usam GPS somente por ação explícita do usuário", (
 });
 
 test("entregador online atualiza posição e usa fila de proximidade", () => {
-  const source = read("js/entregador-logistica-4.4.js");
+  const source = read("js/modules/entregador-logistica-4.4.js");
   const html = read("entregador.html");
   assert.match(html, /entregador-logistica-4\.4\.js/);
   assert.match(source, /entregador_atualizar_posicao/);
@@ -79,9 +79,9 @@ test("entregador online atualiza posição e usa fila de proximidade", () => {
 });
 
 test("WhatsApp é apenas contato manual com mensagem pré-preenchida", () => {
-  const entregador = read("js/entregador-logistica-4.4.js");
-  const cliente = read("js/acompanhamento-whatsapp-4.4.js");
-  const loader = read("js/site-enhancements.js");
+  const entregador = read("js/modules/entregador-logistica-4.4.js");
+  const cliente = read("js/modules/acompanhamento-whatsapp-4.4.js");
+  const loader = read("js/core/site-enhancements.js");
   assert.match(entregador, /https:\/\/wa\.me\//);
   assert.match(cliente, /https:\/\/wa\.me\//);
   assert.match(entregador, /target = "_blank"/);
@@ -91,6 +91,6 @@ test("WhatsApp é apenas contato manual com mensagem pré-preenchida", () => {
 });
 
 test("carregador mantém detecção PWA standalone válida", () => {
-  const loader = read("js/site-enhancements.js");
+  const loader = read("js/core/site-enhancements.js");
   assert.match(loader, /matchMedia\("\(display-mode: standalone\)"\)/);
 });

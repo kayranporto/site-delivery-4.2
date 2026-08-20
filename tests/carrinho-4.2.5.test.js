@@ -12,7 +12,7 @@ const read = (file) => {
 };
 
 test("carrinho 4.2.5 injeta edição sem alterar o fluxo base", () => {
-    const js = read("js/carrinho-4.2.5.js");
+    const js = read("js/modules/carrinho-4.2.5.js");
     assert.match(js, /editar-item-425/);
     assert.match(js, /abrirEdicao/);
     assert.match(js, /contextoEdicao/);
@@ -20,7 +20,7 @@ test("carrinho 4.2.5 injeta edição sem alterar o fluxo base", () => {
 });
 
 test("edição reaproveita variante, adicionais, observação e quantidade", () => {
-    const js = read("js/carrinho-4.2.5.js");
+    const js = read("js/modules/carrinho-4.2.5.js");
     for (const trecho of [
         "produto-variante",
         "#listaAdicionais input:checked",
@@ -31,7 +31,7 @@ test("edição reaproveita variante, adicionais, observação e quantidade", () 
 });
 
 test("carrinho sincroniza catálogo e bloqueia checkout com item indisponível", () => {
-    const js = read("js/carrinho-4.2.5.js");
+    const js = read("js/modules/carrinho-4.2.5.js");
     assert.match(js, /sincronizarCatalogo/);
     assert.match(js, /produto_variantes/);
     assert.match(js, /adicionais/);
@@ -41,7 +41,7 @@ test("carrinho sincroniza catálogo e bloqueia checkout com item indisponível",
 
 test("restaurante carrega assets versionados do carrinho 4.2.5 depois do modal base", () => {
     const html = read("restaurante.html");
-    assert.match(html, /css\/carrinho-4\.2\.5\.css\?v=4\.2\.5/);
-    assert.match(html, /js\/carrinho-4\.2\.5\.js\?v=4\.2\.5/);
-    assert.ok(html.indexOf("js/modal.js?v=4.2.0") < html.indexOf("js/carrinho-4.2.5.js?v=4.2.5"));
+    assert.match(html, /css\/modules\/carrinho-4\.2\.5\.css\?v=4\.2\.5/);
+    assert.match(html, /js\/modules\/carrinho-4\.2\.5\.js\?v=4\.2\.5/);
+    assert.ok(html.indexOf("js/modules/modal.js?v=4.2.0") < html.indexOf("js/modules/carrinho-4.2.5.js?v=4.2.5"));
 });

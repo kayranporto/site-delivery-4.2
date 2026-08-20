@@ -33,7 +33,7 @@ Funções obrigatórias para pagamento online:
 
 `enviar-push` é opcional. Configure segredos somente no ambiente de funções; nunca no frontend.
 
-Enquanto o sandbox não estiver completamente aprovado, mantenha `pagamentoOnlineAtivo: false` em `js/config.js`. Ative a opção somente depois de confirmar os segredos, a compatibilidade do token com o ambiente e os fluxos de pagamento, webhook e reembolso.
+Enquanto o sandbox não estiver completamente aprovado, mantenha `pagamentoOnlineAtivo: false` em `js/core/config.js`. Ative a opção somente depois de confirmar os segredos, a compatibilidade do token com o ambiente e os fluxos de pagamento, webhook e reembolso.
 
 ## 4. Testes obrigatórios de sandbox
 

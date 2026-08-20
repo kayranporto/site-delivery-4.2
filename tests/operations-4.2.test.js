@@ -30,17 +30,17 @@ test("catálogo 4.2 suporta variações com snapshot no pedido", () => {
         "variante_id", "variante_nome", "v_preco_unitario",
         "for share", "v_itens_normalizados"
     ]) assert.ok(sql.includes(trecho), `variações sem ${trecho}`);
-    const modal = read("js/modal.js");
+    const modal = read("js/modules/modal.js");
     assert.match(modal, /produto_variantes/);
     assert.match(modal, /varianteSelecionada/);
     assert.match(modal, /variante_id/);
-    const checkout = read("js/checkout.js");
+    const checkout = read("js/pages/checkout.js");
     assert.match(checkout, /variante_id/);
     assert.match(checkout, /produto_variantes/);
 });
 
 test("checkout usa chave idempotente persistida durante a tentativa", () => {
-    const checkout = read("js/checkout.js");
+    const checkout = read("js/pages/checkout.js");
     assert.match(checkout, /crypto\.randomUUID/);
     assert.match(checkout, /sessionStorage/);
     assert.match(checkout, /p_chave_cliente/);
@@ -52,7 +52,7 @@ test("checkout usa chave idempotente persistida durante a tentativa", () => {
 
 test("cozinha possui fila, SLA e ações transacionais", () => {
     const html = read("empresa-dashboard.html");
-    const js = read("js/empresa-dashboard.js");
+    const js = read("js/pages/empresa-dashboard.js");
     const sql = read("supabase/migrations/20260801001600_operacao_catalogo_e_escala.sql");
     assert.match(html, /id="cozinha"/);
     assert.match(html, /id="filaCozinha"/);
@@ -78,5 +78,5 @@ test("release 4.4.5 está versionado de forma consistente", () => {
     assert.equal(JSON.parse(read("package.json")).version, "4.4.5");
     assert.equal(JSON.parse(read("package-lock.json")).version, "4.4.5");
     assert.match(read("sw.js"), /const VERSION = "4\.4\.5"/);
-    assert.match(read("js/site-enhancements.js"), /sw\.js\?v=4\.4\.5/);
+    assert.match(read("js/core/site-enhancements.js"), /sw\.js\?v=4\.4\.5/);
 });

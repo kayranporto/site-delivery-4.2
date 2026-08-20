@@ -96,7 +96,7 @@ test("migração 020 obriga mudanças de pedido a passar por RPCs protegidas", (
     assert.match(sql, /^begin;[\s\S]*commit;\s*$/im);
     assert.equal((sql.match(/\$\$/g) || []).length % 2, 0);
 
-    const restaurante = read("js/empresa-dashboard.js");
+    const restaurante = read("js/pages/empresa-dashboard.js");
     assert.match(restaurante, /rpc\("empresa_marcar_pagamento_offline"/);
     assert.match(restaurante, /rpc\("empresa_cancelar_pedido_nao_pago"/);
     assert.doesNotMatch(restaurante, /from\(["']pedidos["']\)\.update/);
@@ -137,20 +137,20 @@ test("migração 023 remove a RPC de login legada e não utilizada", () => {
 });
 
 test("checkout falha com segurança enquanto o gateway online está indisponível", () => {
-    const config = read("js/config.js");
+    const config = read("js/core/config.js");
     const html = read("checkout.html");
-    const checkout = read("js/checkout.js");
-    const acompanhamento = read("js/acompanhamento.js");
+    const checkout = read("js/pages/checkout.js");
+    const acompanhamento = read("js/pages/acompanhamento.js");
     assert.match(config, /pagamentoOnlineAtivo:\s*false/);
     assert.match(html, /<input disabled name="pagamento" type="radio" value="Online"/);
-    assert.match(html, /js\/config\.js\?v=4\.2\.8/);
+    assert.match(html, /js\/core\/config\.js\?v=4\.2\.8/);
     assert.match(checkout, /pagamentoOnlineAtivo !== true/);
     assert.match(acompanhamento, /pagamentoOnlineAtivo !== true/);
 });
 
 test("carrinho sincroniza contadores e a home publica links rastreáveis", () => {
-    const restaurante = read("js/restaurante.js");
-    const home = read("js/home.js");
+    const restaurante = read("js/pages/restaurante.js");
+    const home = read("js/pages/home.js");
     const sitemap = read("sitemap.xml");
     assert.match(restaurante, /addEventListener\("carrinho-atualizado", atualizarCarrinhoTopo\)/);
     assert.match(restaurante, /addEventListener\("carrinho-sincronizar", atualizarCarrinhoTopo\)/);
@@ -178,7 +178,7 @@ test("reembolso usa endpoint do provedor e chave de idempotência", () => {
     assert.match(edge, /servico_marcar_falha_reembolso/);
     assert.match(edge, /reconciliar_pagamento_mercado_pago/);
 
-    const admin = read("js/operacao-admin.js");
+    const admin = read("js/modules/operacao-admin.js");
     assert.match(admin, /functions\.invoke\("processar-reembolso"/);
     assert.doesNotMatch(admin, /admin_atualizar_reembolso/);
 });
@@ -208,12 +208,12 @@ test("todas as páginas têm CSP, política de referência e nenhum script execu
 });
 
 test("versão de assets e caches é consistente", () => {
-    const sources = [read("sw.js"), read("js/site-enhancements.js"), ...walk(root)
+    const sources = [read("sw.js"), read("js/core/site-enhancements.js"), ...walk(root)
         .filter((file) => file.endsWith(".html")).map((file) => fs.readFileSync(file, "utf8"))];
     const joined = sources.join("\n");
     assert.doesNotMatch(joined, /\?v=(?:2\.|3\.)/);
     assert.match(read("sw.js"), /const VERSION = "4\.4\.5"/);
-    assert.match(read("js/site-enhancements.js"), /sw\.js\?v=4\.4\.5/);
+    assert.match(read("js/core/site-enhancements.js"), /sw\.js\?v=4\.4\.5/);
     assert.match(read("sw.js"), /mobile-pwa-4\.2\.6\.css\?v=4\.2\.6/);
     assert.match(read("sw.js"), /operacao-restaurante-4\.2\.7\.js\?v=4\.2\.7/);
 });
@@ -238,9 +238,9 @@ test("painel oferece conciliação financeira e monitoramento correlacionado", (
     const admin = read("admin.html");
     assert.match(admin, /id=["']adminConciliacao["']/);
     assert.match(admin, /id=["']opsPagamentos["']/);
-    const operation = read("js/operacao-admin.js");
+    const operation = read("js/modules/operacao-admin.js");
     assert.match(operation, /admin_conciliacao_pagamentos/);
-    const monitoring = read("js/monitoring.js");
+    const monitoring = read("js/core/monitoring.js");
     assert.match(monitoring, /correlation_id/);
     assert.match(monitoring, /app_version/);
 });

@@ -78,8 +78,8 @@ test("admin lista assinaturas por RPC protegida", () => {
 });
 
 test("dashboard mostra Meu plano sem escrita direta nas tabelas de assinatura", () => {
-  const source = read("js/empresa-plano-4.3.js");
-  const loader = read("js/site-enhancements.js");
+  const source = read("js/modules/empresa-plano-4.3.js");
+  const loader = read("js/core/site-enhancements.js");
   assert.match(loader, /empresa-plano-4\.3\.js/);
   assert.match(source, /rpc\("empresa_meu_plano"\)/);
   assert.doesNotMatch(source, /from\("(?:planos_plataforma|empresa_assinaturas)"\)/);
@@ -89,8 +89,8 @@ test("dashboard mostra Meu plano sem escrita direta nas tabelas de assinatura", 
 });
 
 test("admin de planos usa apenas RPCs protegidas para plano e assinatura", () => {
-  const source = read("js/admin-planos-4.3.js");
-  const loader = read("js/site-enhancements.js");
+  const source = read("js/modules/admin-planos-4.3.js");
+  const loader = read("js/core/site-enhancements.js");
   assert.match(loader, /admin-planos-4\.3\.js/);
   for (const rpc of ["admin_planos_listar", "admin_assinaturas_listar", "admin_plano_salvar", "admin_assinatura_definir"]) {
     assert.ok(source.includes(`"${rpc}"`), `Admin 4.3 sem ${rpc}`);

@@ -32,15 +32,15 @@ test("ações críticas verificam permissão antes da escrita", () => {
 });
 
 test("login separa proprietário e colaborador", () => {
-  const login = read("js/empresa-login.js");
+  const login = read("js/pages/empresa-login.js");
   assert.match(login, /rpc\("empresa_meu_acesso"\)/);
   assert.match(login, /empresa-dashboard\.html/);
   assert.match(login, /empresa-colaborador\.html/);
 });
 
 test("interfaces usam RPCs e colaborador não escreve tabelas diretamente", () => {
-  const equipe = read("js/empresa-equipe.js");
-  const colaborador = read("js/empresa-colaborador.js");
+  const equipe = read("js/pages/empresa-equipe.js");
+  const colaborador = read("js/pages/empresa-colaborador.js");
   assert.match(equipe, /empresa_listar_funcionarios/);
   assert.match(equipe, /empresa_salvar_funcionario/);
   assert.match(equipe, /empresa_remover_funcionario/);

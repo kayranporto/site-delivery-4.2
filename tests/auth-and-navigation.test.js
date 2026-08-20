@@ -13,8 +13,8 @@ const read = (file) => {
 
 test("painel do restaurante exibe apenas a seção escolhida", () => {
     const html = read("empresa-dashboard.html");
-    const js = read("js/empresa-dashboard.js");
-    const css = read("css/empresa-dashboard.css");
+    const js = read("js/pages/empresa-dashboard.js");
+    const css = read("css/pages/empresa-dashboard.css");
     assert.equal((html.match(/data-dashboard-view/g) || []).length, 10);
     assert.match(html, /id="visaoGeral"[^>]*data-dashboard-view/);
     assert.match(html, /id="pedidos"[^>]*data-dashboard-view[^>]*hidden/);
@@ -25,8 +25,8 @@ test("painel do restaurante exibe apenas a seção escolhida", () => {
 });
 
 test("cadastros exigem sessão imediata e não instruem confirmação de e-mail", () => {
-    const client = read("js/cadastro.js");
-    const company = read("js/empresa-cadastro.js");
+    const client = read("js/pages/cadastro.js");
+    const company = read("js/pages/empresa-cadastro.js");
     for (const code of [client, company]) {
         assert.match(code, /if \(!data\.session\)/);
         assert.match(code, /confirmação de e-mail ainda está habilitada/);
@@ -38,25 +38,25 @@ test("cadastros exigem sessão imediata e não instruem confirmação de e-mail"
 });
 
 test("autenticação usa publishable key, senha forte e CAPTCHA opcional", () => {
-    const supabase = read("js/supabase.js");
+    const supabase = read("js/core/supabase.js");
     assert.match(supabase, /SUPABASE_PUBLISHABLE_KEY/);
     assert.match(supabase, /sb_publishable_/);
     assert.doesNotMatch(supabase, /SUPABASE_ANON_KEY/);
-    const ui = read("js/auth-ui.js");
+    const ui = read("js/core/auth-ui.js");
     assert.match(ui, /minLength: 8/);
     assert.match(ui, /letra/);
     assert.match(ui, /numero/);
-    const captcha = read("js/captcha.js");
+    const captcha = read("js/core/captcha.js");
     assert.match(captcha, /challenges\.cloudflare\.com\/turnstile/);
     assert.match(captcha, /DeliveryCaptcha/);
     for (const name of ["cadastro.html", "empresa-cadastro.html", "login.html", "empresa-login.html", "recuperar-senha.html"]) {
         assert.match(read(name), /data-turnstile/, `${name} sem Turnstile`);
-        assert.match(read(name), /js\/captcha\.js\?v=4\.2\.0/, `${name} sem captcha.js`);
+        assert.match(read(name), /js\/core\/captcha\.js\?v=4\.2\.0/, `${name} sem captcha.js`);
     }
 });
 
 test("login não chama telemetria controlada pelo cliente", () => {
-    for (const name of ["js/login.js", "js/empresa-login.js"]) {
+    for (const name of ["js/pages/login.js", "js/pages/empresa-login.js"]) {
         assert.doesNotMatch(read(name), /registrar_tentativa_login/);
         assert.match(read(name), /pausa local/);
     }

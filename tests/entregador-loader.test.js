@@ -12,7 +12,7 @@ const read = (file) => {
 };
 
 test("painel do entregador esconde estados marcados como hidden", () => {
-  const css = read("css/enhancements.css");
+  const css = read("css/core/enhancements.css");
   for (const seletor of [
     ".driver-loading[hidden]",
     ".pending-card[hidden]",
@@ -23,7 +23,7 @@ test("painel do entregador esconde estados marcados como hidden", () => {
 });
 
 test("fluxo do entregador encerra o loading antes de decidir o estado da conta", () => {
-  const js = read("js/entregador.js");
+  const js = read("js/pages/entregador.js");
   const esconder = js.indexOf("loading.hidden = true");
   const erro = js.indexOf("if (error)", esconder);
   const semCadastro = js.indexOf("if (!data)", esconder);
@@ -34,5 +34,5 @@ test("fluxo do entregador encerra o loading antes de decidir o estado da conta",
 
 test("entregador força a versão corrigida do enhancements", () => {
   const html = read("entregador.html");
-  assert.match(html, /css\/enhancements\.css\?v=4\.2\.7\.1/);
+  assert.match(html, /css\/core\/enhancements\.css\?v=4\.2\.7\.1/);
 });

@@ -8,9 +8,9 @@ const path = require("node:path");
 const raiz = path.resolve(__dirname, "..");
 const migration = fs.readFileSync(path.join(raiz, "supabase/migrations/20260817224905_entregador_historico_ganhos_4_4_2.sql"), "utf8");
 const entregadorHtml = fs.readFileSync(path.join(raiz, "html/entregador.html"), "utf8");
-const entregadorJs = fs.readFileSync(path.join(raiz, "js/entregador-financeiro-4.4.2.js"), "utf8");
-const adminJs = fs.readFileSync(path.join(raiz, "js/admin-entregadores-financeiro-4.4.2.js"), "utf8");
-const enhancements = fs.readFileSync(path.join(raiz, "js/site-enhancements.js"), "utf8");
+const entregadorJs = fs.readFileSync(path.join(raiz, "js/modules/entregador-financeiro-4.4.2.js"), "utf8");
+const adminJs = fs.readFileSync(path.join(raiz, "js/modules/admin-entregadores-financeiro-4.4.2.js"), "utf8");
+const enhancements = fs.readFileSync(path.join(raiz, "js/core/site-enhancements.js"), "utf8");
 
  test("ganho do entregador tem tarifa própria e snapshot no aceite", () => {
   assert.match(migration, /valor_por_entrega numeric\(10,2\) not null default 0/i);
@@ -41,8 +41,8 @@ test("tarifa é configurada por RPC administrativo auditado", () => {
 });
 
 test("interfaces 4.4.2 estão conectadas", () => {
-  assert.match(entregadorHtml, /css\/entregador-financeiro-4\.4\.2\.css\?v=4\.4\.2/);
-  assert.match(entregadorHtml, /js\/entregador-financeiro-4\.4\.2\.js\?v=4\.4\.2/);
-  assert.match(enhancements, /js\/admin-entregadores-financeiro-4\.4\.2\.js\?v=4\.4\.2/);
-  assert.match(enhancements, /css\/entregador-financeiro-4\.4\.2\.css\?v=4\.4\.2/);
+  assert.match(entregadorHtml, /css\/modules\/entregador-financeiro-4\.4\.2\.css\?v=4\.4\.2/);
+  assert.match(entregadorHtml, /js\/modules\/entregador-financeiro-4\.4\.2\.js\?v=4\.4\.2/);
+  assert.match(enhancements, /js\/modules\/admin-entregadores-financeiro-4\.4\.2\.js\?v=4\.4\.2/);
+  assert.match(enhancements, /css\/modules\/entregador-financeiro-4\.4\.2\.css\?v=4\.4\.2/);
 });
