@@ -20,7 +20,7 @@ Este PRD organiza o que já existe, o que está parcial, o que falta e o que é 
 
 ## 2. Contexto
 
-O projeto já nasceu como uma tentativa completa de plataforma de delivery, com forte ênfase em integridade financeira, segurança e RLS. O gate de release cobre verificação estrutural, **143 testes automatizados** e type-check das Edge Functions. A revisão remota de 20/08/2026 confirmou todas as migrations e funções implantadas, mas manteve pendências operacionais: proteção HIBP indisponível no plano Free, 17 cenários obrigatórios de sandbox sem evidência assinada, conta de entregador isolada para teste positivo de RLS, backup/restauração, CAPTCHA/rate limits, cabeçalhos do domínio e revisão jurídica.
+O projeto já nasceu como uma tentativa completa de plataforma de delivery, com forte ênfase em integridade financeira, segurança e RLS. O gate de release cobre verificação estrutural, **143 testes automatizados** e type-check das Edge Functions. A revisão remota de 20/08/2026 confirmou todas as migrations e funções implantadas, mas manteve pendências operacionais: proteção HIBP indisponível no plano Free, 17 cenários obrigatórios de sandbox sem evidência assinada, conta de entregador isolada para teste positivo de RLS, backup/restauração, rate limits, cabeçalhos do domínio e revisão jurídica.
 
 Este PRD assume esse ponto de partida: **não é uma reescrita**, é uma consolidação sobre uma base técnica sólida, com foco em concluir monetização SaaS, comunicação transacional e logística avançada sem comprometer as garantias de segurança e integridade financeira já construídas.
 
@@ -268,7 +268,7 @@ Existe uma separação clara entre **estado de pagamento do pedido** (`pagamento
 | RLS multi-tenant | **EXISTENTE**, auditado | Revisão remota 20/08/2026: 40/40 tabelas públicas com RLS; teste positivo isolado do entregador ainda pendente |
 | Idempotência de checkout | **EXISTENTE** | Índice `pedidos_chave_cliente_idx`, testes `checkout-4.2.3.test.js` |
 | Idempotência de webhook de pagamento | **EXISTENTE** | Chave de deduplicação antes da conciliação (webhook HMAC validado) |
-| Rate limiting / CAPTCHA | **PARCIAL** | CAPTCHA (Turnstile) implementado mas opcional/dependente de configuração de chave; rate limit é responsabilidade do Supabase Auth, ainda pendente de ajuste fino conforme `PRODUCAO.md` checklist |
+| Rate limiting | **PARCIAL** | Rate limits do Supabase Auth ainda dependem de ajuste fino conforme `PRODUCAO.md`; CAPTCHA opcional permanece fora da implantação atual por decisão de produto |
 | Cabeçalhos HTTP de segurança completos | **PARCIAL** | CSP via `<meta>` funciona no GitHub Pages; `X-Content-Type-Options`, `Permissions-Policy`, anti-framing **dependem de hospedagem com proxy** (Cloudflare/Vercel) — risco residual documentado enquanto só estiver no Pages |
 | Testes automatizados | **EXISTENTE** | 143 testes em 26 arquivos, gate de CI (`npm ci` + `npm run verify`) |
 | Observabilidade (logs estruturados/tracing/error tracking) | **PARCIAL** | `app_logs` existe no banco (auditoria básica); não há evidência de tracing distribuído ou error tracking externo (Sentry etc.) |
@@ -293,7 +293,7 @@ Existe uma separação clara entre **estado de pagamento do pedido** (`pagamento
 
 **Backend:** Supabase (Postgres + Auth + Realtime + Storage + Edge Functions em Deno/TypeScript). Helpers e implementações críticas ficam prioritariamente no schema `private`; RPCs controladas no schema `public`, muitas também `SECURITY DEFINER`, fazem as verificações de papel, propriedade e `auth.uid()` e possuem grants explícitos. O desenho evita lógica crítica no cliente, mas a superfície pública privilegiada precisa continuar sob revisão e allowlist — exatamente o ponto sinalizado pelos advisors atuais.
 
-**Autenticação:** Supabase Auth nativo, cadastro sem confirmação obrigatória de e-mail (decisão de produto documentada e com controles compensatórios exigidos: CAPTCHA, rate limit, senha forte).
+**Autenticação:** Supabase Auth nativo, cadastro sem confirmação obrigatória de e-mail (decisão de produto documentada e com controles compensatórios exigidos: rate limits, senha forte e monitoramento de abuso).
 
 **Edge Functions:** 4 funções ativas no ambiente hospedado: três de pagamento (`criar-pagamento`, `mercado-pago-webhook`, `processar-reembolso`) e `enviar-push`. O webhook valida assinatura HMAC.
 
@@ -444,7 +444,7 @@ Não há uma API REST customizada tradicional — o acesso é via **Supabase cli
 | Mercado Pago (pagamento + webhook + reembolso) | **EXISTENTE**, mas com pagamento online **desativado por padrão** até validação de sandbox |
 | Supabase Auth (e-mail nativo) | **EXISTENTE** |
 | Web Push (VAPID) | **EXISTENTE** |
-| Cloudflare Turnstile / hCaptcha | **PARCIAL** — suportado no código, depende de chave configurada (`turnstileSiteKey` vazio por padrão) |
+| Cloudflare Turnstile / hCaptcha | **FORA DO ESCOPO ATUAL** — suporte opcional permanece inativo, com `turnstileSiteKey` vazio por decisão de produto |
 | WhatsApp | **PARCIAL** — links `wa.me` manuais; Business API e automação não implementadas |
 | E-mail transacional dedicado (Resend/SendGrid) | **NÃO IMPLEMENTADO** |
 | GPS/distância | **EXISTENTE** — captura consentida pelo navegador e Haversine; sem geocodificação ou rota viária |
@@ -482,7 +482,7 @@ Postura de segurança **acima da média** para o estágio do projeto, com evidê
 **Gaps reais e documentados pelo próprio projeto (não inventados aqui):**
 - Proteção HIBP (senha vazada) indisponível no plano Free do Supabase — risco residual aceito, não corrigido.
 - Cabeçalhos HTTP completos (`X-Content-Type-Options`, `Permissions-Policy`, anti-framing) dependem de sair do GitHub Pages puro.
-- CAPTCHA depende de configuração de chave (`turnstileSiteKey` vazio por padrão — hoje efetivamente desativado até alguém preencher).
+- CAPTCHA está desativado e fora da implantação atual por decisão de produto; o suporte opcional permanece inerte com `turnstileSiteKey` vazio.
 - Testes de RLS por impersonação ainda não têm conta de entregador isolada.
 - Advisors de 20/08/2026: `pg_net` está no schema `public`; há 8 foreign keys sem índice de cobertura e 17 grupos de políticas permissivas duplicadas. Os alertas de RPCs `SECURITY DEFINER` incluem endpoints intencionalmente expostos e precisam de triagem/allowlist, não de revogação em massa.
 
@@ -599,7 +599,7 @@ O "MVP" aqui não é hipotético — a versão 4.4.5 é um produto operacional c
 ### P0 — obrigatório antes de qualquer volume real de produção
 1. Concluir e registrar evidências dos **17 cenários** de sandbox listados em `PRODUCAO.md` antes de ativar `pagamentoOnlineAtivo`.
 2. Criar conta de entregador isolada e completar a validação positiva de RLS por papel.
-3. Configurar CAPTCHA (`turnstileSiteKey`) e rate limits de Auth em produção.
+3. Configurar e monitorar os rate limits do Auth em produção.
 4. Sair do GitHub Pages puro (ou colocar atrás de proxy) para garantir os cabeçalhos HTTP de segurança faltantes.
 5. Testar e documentar backup/restauração real.
 6. Decidir formalmente: checkout convidado sim/não (hoje é "não" por design de banco — ver Decisões em Aberto).
@@ -638,7 +638,7 @@ O "MVP" aqui não é hipotético — a versão 4.4.5 é um produto operacional c
 
 - **Supabase** (Postgres, Auth, Realtime, Storage, Edge Functions/Deno) — dependência central, inclusive limitações de plano (Free hoje, sem HIBP).
 - **Mercado Pago** — gateway de pagamento único hoje.
-- **Cloudflare Turnstile / hCaptcha** — anti-bot, opcional/configurável.
+- **Cloudflare Turnstile / hCaptcha** — suporte opcional mantido inativo e fora do escopo atual.
 - **GitHub Pages ou Vercel** — hospedagem estática (ambos configurados no repositório).
 - **GitHub Actions** — CI (`.github/workflows`), executa `npm run verify` no deploy da `main`.
 - Dependências futuras a contratar: provedor de WhatsApp Business API, provedor de e-mail transacional, provedor de geocodificação/mapas.
@@ -743,7 +743,7 @@ Cada fase, por definição do próprio projeto, exige migration revisada + teste
 ## Top 10 prioridades técnicas
 1. Concluir os 17 testes de sandbox financeiro e operacional antes de ativar pagamento online.
 2. Isolar conta de entregador para validar RLS por papel.
-3. Configurar CAPTCHA e rate limits em produção.
+3. Configurar e monitorar os rate limits em produção.
 4. Migrar/proteger hospedagem para garantir cabeçalhos HTTP completos.
 5. Testar backup/restauração de fato.
 6. Implementar padrão outbox para notificações antes de somar canais.

@@ -30,48 +30,33 @@ O HIBP é aplicado em uma requisição separada para que a configuração básic
 
 Desativar confirmação de e-mail aumenta a facilidade de criar contas com endereços inexistentes ou pertencentes a terceiros. Antes da produção:
 
-1. configure Cloudflare Turnstile ou hCaptcha no Supabase Auth;
-2. preencha `turnstileSiteKey` em `js/core/config.js`;
-3. ajuste rate limits de cadastro, login e recuperação;
-4. quando disponível no plano, mantenha a proteção contra senhas vazadas ativa;
-5. mantenha a política local de senha com pelo menos 8 caracteres, letra e número;
-6. monitore cadastros, tentativas e abuso por IP no provedor de borda.
+1. ajuste os rate limits de cadastro, recuperação e demais endpoints de autenticação;
+2. quando disponível no plano, mantenha a proteção contra senhas vazadas ativa;
+3. mantenha a política local de senha com pelo menos 8 caracteres, letra e número;
+4. monitore cadastros, tentativas e abuso por IP no provedor de borda.
 
 O e-mail continua necessário para recuperação de senha e comunicações operacionais. Alterar o e-mail da conta continua sendo uma operação confirmada.
 
-## Ativação segura do Turnstile e rate limits
+## Configuração dos rate limits
 
-O frontend já envia `captchaToken` no login, cadastro e recuperação de senha. A ativação deve respeitar esta ordem para não bloquear a autenticação:
+O CAPTCHA permanecerá desativado por decisão de produto. O suporte opcional existente no frontend não exige remoção e não envia token enquanto `turnstileSiteKey` estiver vazio.
 
-1. crie um widget Turnstile para `kayranporto.github.io` no Cloudflare;
-2. grave apenas a **Site Key pública** em `turnstileSiteKey`, no arquivo `js/core/config.js`;
-3. publique o frontend e confirme que o widget aparece nas cinco telas de autenticação;
-4. obtenha um token pessoal em `https://supabase.com/dashboard/account/tokens`;
-5. execute a automação abaixo com a **Secret Key somente no ambiente local**.
+Obtenha um token pessoal em `https://supabase.com/dashboard/account/tokens` e consulte os limites atuais sem alterá-los:
 
-```bash
-export SUPABASE_ACCESS_TOKEN="seu-token-pessoal"
-export TURNSTILE_SITE_KEY="sua-site-key-publica"
-export TURNSTILE_SECRET_KEY="sua-secret-key"
-npm run configure:auth:protection
+```powershell
+$env:SUPABASE_ACCESS_TOKEN="seu-token-pessoal"
+npm run configure:auth:rate-limits -- --check
 ```
 
-O script consulta o `config.js` publicado antes de habilitar o CAPTCHA no Supabase. A Secret Key e o token pessoal nunca são escritos no repositório nem exibidos na saída.
+O Supabase já aplica limites padrão aos endpoints de Auth. No provedor SMTP embutido, cadastro e recuperação compartilham o limite de 2 e-mails por hora e esse valor somente pode ser personalizado depois da configuração de SMTP próprio. Outros limites suportados pela Management API podem ser enviados explicitamente:
 
-Para consultar o estado atual sem alterá-lo:
-
-```bash
-export SUPABASE_ACCESS_TOKEN="seu-token-pessoal"
-npm run configure:auth:protection -- --check
+```powershell
+$env:AUTH_RATE_LIMIT_OTP="30"
+$env:AUTH_RATE_LIMIT_VERIFY="360"
+$env:AUTH_RATE_LIMIT_TOKEN_REFRESH="1800"
+npm run configure:auth:rate-limits -- --apply
 ```
 
-O Supabase já aplica limites padrão aos endpoints de Auth. No provedor SMTP embutido, cadastro e recuperação compartilham o limite de 2 e-mails por hora e esse valor somente pode ser personalizado depois da configuração de SMTP próprio. Outros limites suportados pela Management API podem ser enviados explicitamente, por exemplo:
+O modo padrão é somente consulta; `--apply` exige pelo menos uma variável `AUTH_RATE_LIMIT_*`. O token pessoal nunca é escrito no repositório nem exibido na saída.
 
-```bash
-export AUTH_RATE_LIMIT_OTP=30
-export AUTH_RATE_LIMIT_VERIFY=360
-export AUTH_RATE_LIMIT_TOKEN_REFRESH=1800
-npm run configure:auth:protection
-```
-
-Não reduza ou aumente limites sem observar tráfego real e respostas HTTP 429. O login por senha não possui um ajuste isolado documentado; sua proteção principal neste projeto é o Turnstile, somado aos limites nativos por IP do Supabase.
+Não reduza ou aumente limites sem observar tráfego real e respostas HTTP 429. O login por senha não possui um ajuste isolado documentado; mantenha também monitoramento por IP e a política forte de senha.
