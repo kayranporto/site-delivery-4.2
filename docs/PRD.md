@@ -20,7 +20,7 @@ Este PRD organiza o que já existe, o que está parcial, o que falta e o que é 
 
 ## 2. Contexto
 
-O projeto já nasceu como uma tentativa completa de plataforma de delivery, com forte ênfase em integridade financeira, segurança e RLS. O gate de release cobre verificação estrutural, **148 testes automatizados** e type-check das Edge Functions. A revisão remota de 21/08/2026 confirmou todas as migrations e funções implantadas, validou o isolamento RLS do entregador e os cabeçalhos do domínio Vercel, mas manteve pendências operacionais: proteção HIBP indisponível no plano Free, 17 cenários obrigatórios de sandbox sem evidência assinada, backup/restauração, aplicação/monitoramento dos rate limits e revisão jurídica.
+O projeto já nasceu como uma tentativa completa de plataforma de delivery, com forte ênfase em integridade financeira, segurança e RLS. O gate de release cobre verificação estrutural, **149 testes automatizados** e type-check das Edge Functions. A revisão remota de 21/08/2026 confirmou todas as migrations e funções implantadas, validou o isolamento RLS do entregador e os cabeçalhos do domínio Vercel, mas manteve pendências operacionais: proteção HIBP indisponível no plano Free, 17 cenários obrigatórios de sandbox sem evidência assinada, backup/restauração, aplicação/monitoramento dos rate limits e revisão jurídica.
 
 Este PRD assume esse ponto de partida: **não é uma reescrita**, é uma consolidação sobre uma base técnica sólida, com foco em concluir monetização SaaS, comunicação transacional e logística avançada sem comprometer as garantias de segurança e integridade financeira já construídas.
 
@@ -270,7 +270,7 @@ Existe uma separação clara entre **estado de pagamento do pedido** (`pagamento
 | Idempotência de webhook de pagamento | **EXISTENTE** | Chave de deduplicação antes da conciliação (webhook HMAC validado) |
 | Rate limiting | **PARCIAL** | Rate limits do Supabase Auth ainda dependem de ajuste fino conforme `PRODUCAO.md`; CAPTCHA opcional permanece fora da implantação atual por decisão de produto |
 | Cabeçalhos HTTP de segurança completos | **EXISTENTE** | Vercel validado por HTTP real com CSP, HSTS, `nosniff`, anti-framing, política de referência, permissões e isolamento cross-origin |
-| Testes automatizados | **EXISTENTE** | 148 testes em 26 arquivos, gate de CI (`npm ci` + `npm run verify`) |
+| Testes automatizados | **EXISTENTE** | 149 testes em 26 arquivos, gate de CI (`npm ci` + `npm run verify`) |
 | Observabilidade (logs estruturados/tracing/error tracking) | **PARCIAL** | `app_logs` existe no banco (auditoria básica); não há evidência de tracing distribuído ou error tracking externo (Sentry etc.) |
 | Advisors Supabase | **PARCIAL / REQUER TRIAGEM** | 75 itens de segurança (73 warnings, em maioria RPCs `SECURITY DEFINER` intencionais) e 46 apontamentos de performance; `pg_net` em `public`, HIBP desativado, 8 FKs sem índice de cobertura e 16 grupos de políticas permissivas duplicadas |
 | Performance (Core Web Vitals, lazy loading) | **NÃO CONFIRMADO** | Nenhuma métrica de performance documentada no repositório; recomenda-se medição real antes de metas |

@@ -74,6 +74,17 @@ test("Auth de produção possui URLs exatas e rate limits declarativos", () => {
     assert.doesNotMatch(config, /captcha_enabled\s*=\s*true/);
 });
 
+test("restauração de MFA altera somente os três campos autorizados", () => {
+    const script = read("scripts/restaurar-auth-mfa.js");
+    assert.match(script, /mfa_totp_enroll_enabled:\s*true/);
+    assert.match(script, /mfa_totp_verify_enabled:\s*true/);
+    assert.match(script, /mailer_otp_length:\s*8/);
+    assert.match(script, /method:\s*"PATCH"|request\("PATCH", expected\)/);
+    assert.match(script, /request\("GET"\)/);
+    assert.doesNotMatch(script, /config push/);
+    assert.doesNotMatch(script, /console\.log\([^\n]*accessToken/);
+});
+
 test("backup lógico exige segredo no ambiente e grava somente em pasta ignorada", () => {
     const script = read("scripts/backup-supabase.ps1");
     const gitignore = read(".gitignore");
