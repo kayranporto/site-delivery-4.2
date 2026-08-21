@@ -42,6 +42,52 @@ test("GitHub Pages publica as entradas da raiz e as páginas da aplicação", ()
     }
 });
 
+test("produção Vercel possui verificação reproduzível de rotas e cabeçalhos", () => {
+    const script = read("scripts/verificar-producao.js");
+    const packageJson = JSON.parse(read("package.json"));
+    assert.equal(packageJson.scripts["verify:production"], "node scripts/verificar-producao.js");
+    for (const trecho of [
+        "site-delivery-42.vercel.app",
+        "content-security-policy",
+        "strict-transport-security",
+        "x-content-type-options",
+        "x-frame-options",
+        "permissions-policy"
+    ]) assert.ok(script.includes(trecho), `verificação de produção sem ${trecho}`);
+});
+
+test("Auth de produção possui URLs exatas e rate limits declarativos", () => {
+    const config = read("supabase/config.toml");
+    assert.match(config, /site_url = "https:\/\/site-delivery-42\.vercel\.app"/);
+    assert.match(config, /additional_redirect_urls = \["https:\/\/site-delivery-42\.vercel\.app\/html\/nova-senha\.html"\]/);
+    for (const trecho of [
+        "[auth.rate_limit]",
+        "email_sent = 2",
+        "token_refresh = 150",
+        "sign_in_sign_ups = 30",
+        "token_verifications = 30",
+        "[auth.mfa.totp]",
+        "enroll_enabled = true",
+        "verify_enabled = true",
+        "otp_length = 8"
+    ]) assert.ok(config.includes(trecho), `configuração Auth sem ${trecho}`);
+    assert.doesNotMatch(config, /captcha_enabled\s*=\s*true/);
+});
+
+test("backup lógico exige segredo no ambiente e grava somente em pasta ignorada", () => {
+    const script = read("scripts/backup-supabase.ps1");
+    const gitignore = read(".gitignore");
+    const packageJson = JSON.parse(read("package.json"));
+    assert.match(script, /SUPABASE_DB_PASSWORD/);
+    assert.match(script, /supabase@2\.115\.0/);
+    assert.match(script, /--role-only/);
+    assert.match(script, /--data-only/);
+    assert.match(script, /--use-copy/);
+    assert.match(script, /StartsWith\(\$repositoryRoot/);
+    assert.match(gitignore, /^backups\/$/m);
+    assert.equal(packageJson.scripts["backup:supabase"], "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/backup-supabase.ps1");
+});
+
 test("dependências Supabase estão fixadas em versão exata", () => {
     const html = walk(root).filter((file) => file.endsWith(".html"))
         .map((file) => fs.readFileSync(file, "utf8")).join("\n");
@@ -134,6 +180,23 @@ test("migração 023 remove a RPC de login legada e não utilizada", () => {
     assert.match(sql, /revoke all on function public\.registrar_tentativa_login\(text, boolean\)/);
     assert.match(sql, /drop function if exists public\.registrar_tentativa_login\(text, boolean\)/);
     assert.match(sql, /^begin;[\s\S]*commit;\s*$/im);
+});
+
+test("histórico de status não permanece exposto publicamente", () => {
+    const sql = read("supabase/migrations/20260821213807_remove_historico_public_policy.sql");
+    assert.match(sql, /drop policy if exists "historico_public"/);
+    assert.match(sql, /revoke all on table public\.historico_status_pedido from anon, authenticated/);
+    assert.match(sql, /grant select on table public\.historico_status_pedido to authenticated/);
+    assert.match(sql, /^begin;[\s\S]*commit;\s*$/im);
+});
+
+test("RLS do entregador possui teste isolado, transacional e reversível", () => {
+    const sql = read("supabase/tests/production/rls_entregador_isolado.sql");
+    assert.match(sql, /^begin;[\s\S]*rollback;\s*$/im);
+    assert.match(sql, /set local role authenticated/);
+    assert.match(sql, /nao_ve_perfis_clientes/);
+    assert.match(sql, /nao_ve_historico_de_outros_pedidos/);
+    assert.doesNotMatch(sql, /commit;/i);
 });
 
 test("checkout falha com segurança enquanto o gateway online está indisponível", () => {

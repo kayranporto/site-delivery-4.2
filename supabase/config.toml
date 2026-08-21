@@ -14,6 +14,20 @@ verify_jwt = false
 
 [auth]
 enable_signup = true
+site_url = "https://site-delivery-42.vercel.app"
+additional_redirect_urls = ["https://site-delivery-42.vercel.app/html/nova-senha.html"]
+
+[auth.rate_limit]
+email_sent = 2
+sms_sent = 30
+anonymous_users = 30
+token_refresh = 150
+sign_in_sign_ups = 30
+token_verifications = 30
+
+[auth.mfa.totp]
+enroll_enabled = true
+verify_enabled = true
 
 [auth.email]
 enable_signup = true
@@ -21,3 +35,4 @@ enable_confirmations = false
 double_confirm_changes = true
 secure_password_change = true
 max_frequency = "1m"
+otp_length = 8
