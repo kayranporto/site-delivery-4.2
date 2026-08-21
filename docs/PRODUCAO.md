@@ -8,7 +8,7 @@ npm run verify
 npm run package
 ```
 
-`npm run verify` executa a verificação estrutural de 241 arquivos, os 143 testes automatizados e o type-check TypeScript das Edge Functions. O empacotamento repete o gate antes de gerar o ZIP e exclui `.git`, `node_modules`, releases anteriores e arquivos ZIP antigos.
+`npm run verify` executa a verificação estrutural de 251 arquivos, os 148 testes automatizados e o type-check TypeScript das Edge Functions. O empacotamento repete o gate antes de gerar o ZIP e exclui `.git`, `node_modules`, releases anteriores e arquivos ZIP antigos.
 
 ## 2. Banco de dados
 
@@ -22,6 +22,14 @@ npm run package
 A migration 016 adiciona variações, cozinha, idempotência do checkout, auditoria de estoque e a fundação multiunidade. A migration 018 reconcilia o catálogo publicado com o estado live e restringe as permissões do papel anônimo. A migration 019 elimina políticas redundantes e otimiza chamadas de identidade nas políticas RLS. A migration 020 remove atualizações diretas de estado em pedidos e exige RPCs autenticadas para pagamento presencial e cancelamento não pago. A migration 021 valida a referência do pedido antes de registrar eventos do Mercado Pago e devolve erro controlado para referências inexistentes. A migration 022 impede que pedidos online sem pagamento confirmado avancem para preparo, retirada ou entrega. A migration 023 remove a RPC legada de telemetria de login que não possui consumidores no frontend. A migration 024 restringe privilégios padrão de funções novas e remove `EXECUTE` direto de funções privadas utilizadas exclusivamente como triggers.
 
 As migrations `20260819003047_entrega_propria_hibrida_4_4_5.sql` e `20260819011044_index_empresa_entregadores_criado_por_4_4_5.sql` adicionam modalidade de entrega por unidade, vínculos de entregadores próprios, origem das ofertas, fallback híbrido, atribuição direta protegida e o índice de cobertura da chave `criado_por`. Aplique-as somente após confirmar que não há entregador associado a mais de uma corrida ativa; o índice parcial da primeira migration passa a garantir essa regra no banco.
+
+A migration `20260821213807_remove_historico_public_policy.sql` remove a leitura pública irrestrita de `historico_status_pedido`, revoga privilégios do papel `anon` e preserva somente a leitura autenticada submetida às políticas RLS. Ela foi aplicada e validada no projeto hospedado em 21/08/2026.
+
+### Backup e restauração
+
+O plano Free não apresentou backups físicos disponíveis e está com PITR desativado na consulta de 21/08/2026. Use `npm run backup:supabase` com `SUPABASE_DB_PASSWORD` definido somente no ambiente para gerar `roles.sql`, `schema.sql` e `data.sql` em `backups/`, diretório ignorado pelo Git.
+
+Teste a restauração exclusivamente em um projeto Supabase temporário e vazio, na ordem `roles.sql` → `schema.sql` → `data.sql`. Registre contagens e smoke tests antes de excluir o projeto temporário. Nunca use o banco de produção como destino do ensaio.
 
 ## 3. Edge Functions
 
@@ -70,7 +78,7 @@ Registre evidências e resultados antes de usar credenciais reais.
 
 ## 6. Hospedagem
 
-O GitHub Pages não permite configurar cabeçalhos HTTP personalizados. A CSP em meta e a política de referência continuam ativas, mas `X-Content-Type-Options`, `Permissions-Policy` e proteção contra framing exigem um domínio servido por proxy ou hospedagem que permita configurar cabeçalhos (por exemplo, Cloudflare ou Vercel). Esse é um risco residual enquanto o site permanecer somente no Pages.
+A produção está publicada no Vercel em `https://site-delivery-42.vercel.app`. O deploy `dpl_vnqtihqw8DQrSgF4c5SejAy8MnvM` foi validado em 21/08/2026. O GitHub Pages pode permanecer como canal secundário, mas o domínio Vercel é a referência operacional por suportar os cabeçalhos HTTP configurados em `vercel.json`.
 
 Confirme por inspeção HTTP real:
 
@@ -96,21 +104,21 @@ Configure alertas para:
 
 ## 8. Aprovação final
 
-- [x] 46 migrations locais confirmadas no projeto hospedado em 20/08/2026;
-- [x] 143 testes automatizados aprovados no commit de release;
+- [x] 47 migrations locais confirmadas no projeto hospedado em 21/08/2026;
+- [x] 148 testes automatizados aprovados em 21/08/2026;
 - [x] 4 Edge Functions publicadas e ativas (`criar-pagamento`, `mercado-pago-webhook`, `processar-reembolso`, `enviar-push`);
-- [ ] segredos das Edge Functions conferidos no ambiente e registrados no checklist operacional;
+- [ ] segredos Mercado Pago ausentes no ambiente em 21/08/2026; configurar credenciais sandbox antes dos testes;
 - [ ] webhook validado no sandbox;
 - [ ] fluxo completo da cozinha e entrega testado;
-- [ ] RLS validada com contas de cada papel;
+- [x] RLS validada por papel, incluindo entregador sintético isolado em transação reversível;
 - [ ] backup e restauração testados;
 - [ ] proteção contra senhas vazadas ativada (Pro+) ou risco formalmente aceito enquanto permanecer no Free;
-- [ ] rate limits configurados e monitorados;
-- [ ] cabeçalhos confirmados no domínio;
+- [ ] rate limits preparados no `config.toml`; falta autorização/aplicação remota e monitoramento de HTTP 429;
+- [x] cabeçalhos confirmados no domínio Vercel com `npm run verify:production`;
 - [ ] política de privacidade revisada;
 - [ ] responsáveis operacionais definidos.
 
-## 9. Auditoria técnica — atualizada em 20/08/2026
+## 9. Auditoria técnica — atualizada em 21/08/2026
 
 Validações executadas no ambiente hospedado e no commit de produção:
 
@@ -118,7 +126,7 @@ Validações executadas no ambiente hospedado e no commit de produção:
 - Security Advisor e Performance Advisor foram executados no projeto Supabase;
 - nenhuma tabela do schema `public` foi encontrada com RLS desativada na auditoria de metadados;
 - `private.criar_pedido_impl(text,text,text,text,text,jsonb)` não é executável diretamente pelos papéis `anon` nem `authenticated`;
-- as 46 migrations locais estão registradas no histórico do projeto hospedado;
+- as 47 migrations locais estão registradas no histórico do projeto hospedado;
 - `criar-pagamento`, `mercado-pago-webhook`, `processar-reembolso` e `enviar-push` estão publicadas e ativas;
 - o webhook do Mercado Pago valida assinatura HMAC, consulta o pagamento diretamente no provedor e usa chave de deduplicação antes da conciliação;
 - `pagamentoOnlineAtivo` permanece `false` até a conclusão dos testes de sandbox;
@@ -133,7 +141,7 @@ Validação de RLS por impersonação do papel `authenticated` com JWT controlad
 - cliente: vê apenas o próprio perfil e zero pedidos de terceiros;
 - restaurante: vê 8 pedidos, todos vinculados à própria empresa, e zero pedidos de outra empresa;
 - administrador: `private.is_admin()` retorna verdadeiro e a conta vê o conjunto administrativo esperado;
-- entregador: ainda não há uma identidade isolada para teste positivo. O único registro de entregador atual utiliza a mesma identidade que também possui papel administrativo e é proprietária dos pedidos de teste, portanto esse cenário não comprova isolamento de entregador.
+- entregador: um usuário sintético sem perfil de cliente/admin foi criado dentro de transação, associado somente como entregador e testado com JWT controlado. As 8 asserções de identidade, perfil, pedido atribuído, itens, oferta, histórico e bloqueio anônimo passaram; a transação terminou em `ROLLBACK`, sem persistir dados artificiais. O teste reproduzível está em `supabase/tests/production/rls_entregador_isolado.sql`.
 
 Revisão das RPCs `SECURITY DEFINER`:
 
@@ -142,12 +150,12 @@ Revisão das RPCs `SECURITY DEFINER`:
 - as RPCs de cliente, restaurante e entregador inspecionadas vinculam a operação a `auth.uid()` e/ou à propriedade/atribuição do pedido;
 - os avisos do Security Advisor permanecem porque funções `SECURITY DEFINER` intencionalmente expostas continuam sendo reportadas pelo linter; não deve ser feita revogação em massa sem substituir a arquitetura de autorização.
 - o Security Advisor reporta 75 itens (73 warnings), incluindo `pg_net` no schema `public`, HIBP desativado e RPCs expostas intencionalmente;
-- o Performance Advisor reporta 8 foreign keys sem índice de cobertura, 17 grupos de políticas permissivas duplicadas e índices ainda sem uso no volume atual.
+- o Performance Advisor reporta 46 itens: 8 foreign keys sem índice de cobertura, 16 grupos de políticas permissivas duplicadas e 22 índices ainda sem uso no volume atual. A remoção de `historico_public` reduziu os grupos duplicados de 17 para 16.
 
 Pendências que impedem aprovação final:
 
 - a proteção contra senhas vazadas permanece indisponível enquanto a organização estiver no plano Free;
 - os testes de sandbox de pagamento, reembolso, concorrência e ordem de webhooks ainda precisam de evidências operacionais;
-- a validação de RLS ainda precisa de uma conta de entregador separada de administrador/cliente para o teste positivo isolado;
 - a triagem e documentação da allowlist dos advisors Supabase ainda precisa ser concluída;
-- backup/restauração, rate limits, cabeçalhos do domínio, privacidade e responsáveis operacionais continuam pendentes.
+- backup/restauração, aplicação/monitoramento dos rate limits, privacidade e responsáveis operacionais continuam pendentes;
+- os cabeçalhos e as rotas críticas do domínio Vercel foram validados automaticamente em 21/08/2026.

@@ -41,7 +41,22 @@ O e-mail continua necessário para recuperação de senha e comunicações opera
 
 O CAPTCHA permanecerá desativado por decisão de produto. O suporte opcional existente no frontend não exige remoção e não envia token enquanto `turnstileSiteKey` estiver vazio.
 
-Obtenha um token pessoal em `https://supabase.com/dashboard/account/tokens` e consulte os limites atuais sem alterá-los:
+As URLs e os limites recomendados estão versionados em `supabase/config.toml`:
+
+- URL principal: `https://site-delivery-42.vercel.app`;
+- redirect exato de recuperação: `https://site-delivery-42.vercel.app/html/nova-senha.html`;
+- login/cadastro: 30 requisições por 5 minutos por IP;
+- renovação de token: 150 requisições por 5 minutos por IP;
+- verificação de token/OTP: 30 requisições por 5 minutos por IP;
+- e-mail do provedor embutido: 2 mensagens por hora.
+
+Depois de revisar o diff, aplique a configuração declarativa autenticada pelo CLI:
+
+```powershell
+npx --yes supabase@2.115.0 config push --project-ref wzxsjxdbxonrmlmzufpv
+```
+
+Como alternativa para auditoria pela Management API, obtenha um token pessoal em `https://supabase.com/dashboard/account/tokens` e consulte os limites atuais sem alterá-los:
 
 ```powershell
 $env:SUPABASE_ACCESS_TOKEN="seu-token-pessoal"
@@ -52,8 +67,8 @@ O Supabase já aplica limites padrão aos endpoints de Auth. No provedor SMTP em
 
 ```powershell
 $env:AUTH_RATE_LIMIT_OTP="30"
-$env:AUTH_RATE_LIMIT_VERIFY="360"
-$env:AUTH_RATE_LIMIT_TOKEN_REFRESH="1800"
+$env:AUTH_RATE_LIMIT_VERIFY="30"
+$env:AUTH_RATE_LIMIT_TOKEN_REFRESH="150"
 npm run configure:auth:rate-limits -- --apply
 ```
 

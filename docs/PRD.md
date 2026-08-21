@@ -1,16 +1,16 @@
 # PRD — Plataforma de Delivery (Multi Delivery)
 
 **Versão do produto analisada:** 4.4.5
-**Data desta análise:** 20/08/2026
+**Data desta análise:** 21/08/2026
 **Base:** repositório `site-delivery-4.2` + projeto Supabase hospedado `site delivery`
 
-> Este documento é a fonte de verdade de produto para PM, UX/UI, frontend, backend, QA, DevOps e agentes de IA responsáveis pela implementação. A revisão de 20/08/2026 cruzou o repositório (46 migrations SQL, 61 módulos JS principais, 25 páginas HTML, 4 Edge Functions e 26 arquivos de teste) com o projeto Supabase hospedado. As 46 migrations estão aplicadas, as 4 Edge Functions estão ativas e as 40 tabelas públicas reportadas pelo ambiente remoto têm RLS habilitada. Funcionalidades sem evidência de código, teste ou implantação são explicitamente marcadas como parciais ou não implementadas.
+> Este documento é a fonte de verdade de produto para PM, UX/UI, frontend, backend, QA, DevOps e agentes de IA responsáveis pela implementação. A revisão de 21/08/2026 cruzou o repositório (47 migrations SQL, 61 módulos JS principais, 25 páginas HTML, 4 Edge Functions e 26 arquivos de teste) com o projeto Supabase hospedado. As 47 migrations estão aplicadas, as 4 Edge Functions estão ativas e as 40 tabelas públicas reportadas pelo ambiente remoto têm RLS habilitada. Funcionalidades sem evidência de código, teste ou implantação são explicitamente marcadas como parciais ou não implementadas.
 
 ---
 
 ## 1. Executive Summary
 
-O Multi Delivery é um **marketplace de delivery multi-restaurante** em estágio avançado de maturidade técnica. O sistema roda como site estático (HTML/CSS/JS vanilla, sem bundler/framework) hospedado no GitHub Pages, com **Supabase** como backend completo (Postgres + Auth + RLS + Edge Functions + Realtime/Storage). A versão atual (4.4.5) cobre catálogo configurável, carrinho, checkout idempotente, cozinha com SLA, multiunidade operacional, equipe interna com RBAC, planos/trial/limites, entregadores, frete por bairro ou distância, distribuição de ofertas por proximidade, entrega própria/plataforma/híbrida, ganhos do entregador, cupons, favoritos, avaliações, fidelidade, suporte, auditoria, LGPD e Mercado Pago. O pagamento online permanece **desligado por padrão** até a conclusão do sandbox.
+O Multi Delivery é um **marketplace de delivery multi-restaurante** em estágio avançado de maturidade técnica. O sistema roda como site estático (HTML/CSS/JS vanilla, sem bundler/framework) publicado no Vercel, com **Supabase** como backend completo (Postgres + Auth + RLS + Edge Functions + Realtime/Storage). A versão atual (4.4.5) cobre catálogo configurável, carrinho, checkout idempotente, cozinha com SLA, multiunidade operacional, equipe interna com RBAC, planos/trial/limites, entregadores, frete por bairro ou distância, distribuição de ofertas por proximidade, entrega própria/plataforma/híbrida, ganhos do entregador, cupons, favoritos, avaliações, fidelidade, suporte, auditoria, LGPD e Mercado Pago. O pagamento online permanece **desligado por padrão** até a conclusão do sandbox.
 
 O que falta para uma plataforma SaaS madura concentra-se em cobrança recorrente e repasses, comissão, geocodificação e rota viária, geofencing, prova de entrega, WhatsApp/e-mail transacionais, fila assíncrona resiliente, analytics de conversão e requisitos de escala. O roadmap deste PRD e o `ROADMAP-PLATAFORMA.md` estão alinhados ao estado efetivamente entregue até 4.4.5.
 
@@ -20,7 +20,7 @@ Este PRD organiza o que já existe, o que está parcial, o que falta e o que é 
 
 ## 2. Contexto
 
-O projeto já nasceu como uma tentativa completa de plataforma de delivery, com forte ênfase em integridade financeira, segurança e RLS. O gate de release cobre verificação estrutural, **143 testes automatizados** e type-check das Edge Functions. A revisão remota de 20/08/2026 confirmou todas as migrations e funções implantadas, mas manteve pendências operacionais: proteção HIBP indisponível no plano Free, 17 cenários obrigatórios de sandbox sem evidência assinada, conta de entregador isolada para teste positivo de RLS, backup/restauração, rate limits, cabeçalhos do domínio e revisão jurídica.
+O projeto já nasceu como uma tentativa completa de plataforma de delivery, com forte ênfase em integridade financeira, segurança e RLS. O gate de release cobre verificação estrutural, **148 testes automatizados** e type-check das Edge Functions. A revisão remota de 21/08/2026 confirmou todas as migrations e funções implantadas, validou o isolamento RLS do entregador e os cabeçalhos do domínio Vercel, mas manteve pendências operacionais: proteção HIBP indisponível no plano Free, 17 cenários obrigatórios de sandbox sem evidência assinada, backup/restauração, aplicação/monitoramento dos rate limits e revisão jurídica.
 
 Este PRD assume esse ponto de partida: **não é uma reescrita**, é uma consolidação sobre uma base técnica sólida, com foco em concluir monetização SaaS, comunicação transacional e logística avançada sem comprometer as garantias de segurança e integridade financeira já construídas.
 
@@ -84,7 +84,7 @@ Existe vínculo N:N entre empresa e usuário, com papéis `gerente`, `cozinha`, 
 ### Entregador (`entregadores`) — **EXISTENTE, com ressalva de teste isolado**
 Cadastro, aprovação, online/offline, GPS, ofertas por proximidade, aceite concorrente protegido, retirada, entrega e localização em tempo real estão implementados. O estado operacional “pronto” não é um valor de `pedidos.status`: ele corresponde a `status='preparando'` com `pronto_em is not null`. Histórico e ganhos usam snapshot de `entregador_valor` no aceite e exibem resumos diário, semanal, mensal e acumulado.
 - **Fechamento, liquidação e repasse financeiro do entregador:** **NÃO IMPLEMENTADO.**
-- A própria auditoria de 12/08/2026 registra que **não há hoje uma conta de entregador isolada de admin/cliente para validar RLS de forma independente** — risco de teste, não de código, mas deve ser corrigido antes de qualquer expansão de volume.
+- O isolamento do entregador foi validado em 21/08/2026 com identidade sintética exclusiva, JWT controlado e 8 asserções dentro de transação encerrada por `ROLLBACK`; o roteiro reproduzível está em `supabase/tests/production/rls_entregador_isolado.sql`.
 
 ### Super Admin (`private.is_admin()`, `admin_auditoria`) — **EXISTENTE**
 Painel completo em `admin.html` + `js/pages/admin.js` (883 linhas) + `js/modules/operacao-admin.js`. Cobre: gestão de restaurantes (`admin_definir_restaurante`, `admin_atualizar_restaurante`), bloqueio de usuários (`admin_definir_usuario_bloqueio`), cupons globais (`admin_salvar_cupom`/`admin_excluir_cupom`), consulta de pedido (`admin_obter_pedido`), conciliação de pagamentos (`admin_conciliacao_pagamentos`), preparo/marcação de reembolso (`admin_preparar_reembolso`, `admin_atualizar_reembolso`), saúde operacional (`admin_saude_operacao`), relatórios (`admin_relatorio_operacional`, `admin_relatorio_clientes_produtos`), aprovação de entregadores, resposta a chamados de suporte (`admin_responder_chamado`), trilha de auditoria (`admin_auditoria`).
@@ -269,10 +269,10 @@ Existe uma separação clara entre **estado de pagamento do pedido** (`pagamento
 | Idempotência de checkout | **EXISTENTE** | Índice `pedidos_chave_cliente_idx`, testes `checkout-4.2.3.test.js` |
 | Idempotência de webhook de pagamento | **EXISTENTE** | Chave de deduplicação antes da conciliação (webhook HMAC validado) |
 | Rate limiting | **PARCIAL** | Rate limits do Supabase Auth ainda dependem de ajuste fino conforme `PRODUCAO.md`; CAPTCHA opcional permanece fora da implantação atual por decisão de produto |
-| Cabeçalhos HTTP de segurança completos | **PARCIAL** | CSP via `<meta>` funciona no GitHub Pages; `X-Content-Type-Options`, `Permissions-Policy`, anti-framing **dependem de hospedagem com proxy** (Cloudflare/Vercel) — risco residual documentado enquanto só estiver no Pages |
-| Testes automatizados | **EXISTENTE** | 143 testes em 26 arquivos, gate de CI (`npm ci` + `npm run verify`) |
+| Cabeçalhos HTTP de segurança completos | **EXISTENTE** | Vercel validado por HTTP real com CSP, HSTS, `nosniff`, anti-framing, política de referência, permissões e isolamento cross-origin |
+| Testes automatizados | **EXISTENTE** | 148 testes em 26 arquivos, gate de CI (`npm ci` + `npm run verify`) |
 | Observabilidade (logs estruturados/tracing/error tracking) | **PARCIAL** | `app_logs` existe no banco (auditoria básica); não há evidência de tracing distribuído ou error tracking externo (Sentry etc.) |
-| Advisors Supabase | **PARCIAL / REQUER TRIAGEM** | 75 avisos de segurança (73 warnings, em maioria RPCs `SECURITY DEFINER` intencionais) e 47 apontamentos de performance; `pg_net` em `public`, HIBP desativado, 8 FKs sem índice de cobertura e 17 grupos de políticas permissivas duplicadas |
+| Advisors Supabase | **PARCIAL / REQUER TRIAGEM** | 75 itens de segurança (73 warnings, em maioria RPCs `SECURITY DEFINER` intencionais) e 46 apontamentos de performance; `pg_net` em `public`, HIBP desativado, 8 FKs sem índice de cobertura e 16 grupos de políticas permissivas duplicadas |
 | Performance (Core Web Vitals, lazy loading) | **NÃO CONFIRMADO** | Nenhuma métrica de performance documentada no repositório; recomenda-se medição real antes de metas |
 | PWA | **EXISTENTE** | `sw.js`, `manifest.webmanifest`, `offline.html`, cache e assets alinhados na versão 4.4.5 |
 | Backup/restauração testados | **PENDENTE (documentado como não concluído)** | `PRODUCAO.md` checklist item ainda desmarcado |
@@ -289,7 +289,7 @@ Existe uma separação clara entre **estado de pagamento do pedido** (`pagamento
 
 ## 15. Arquitetura Atual
 
-**Frontend:** HTML estático + CSS + JavaScript vanilla (sem framework e sem bundler) — 25 páginas HTML e 61 módulos JS principais. Cada página carrega seus próprios scripts, com assets versionados por query string. Hospedagem ativa via GitHub Pages + configuração alternativa para Vercel (`vercel.json` presente).
+**Frontend:** HTML estático + CSS + JavaScript vanilla (sem framework e sem bundler) — 25 páginas HTML e 61 módulos JS principais. Cada página carrega seus próprios scripts, com assets versionados por query string. Hospedagem de produção ativa no Vercel em `https://site-delivery-42.vercel.app`, com GitHub Pages mantido como canal secundário.
 
 **Backend:** Supabase (Postgres + Auth + Realtime + Storage + Edge Functions em Deno/TypeScript). Helpers e implementações críticas ficam prioritariamente no schema `private`; RPCs controladas no schema `public`, muitas também `SECURITY DEFINER`, fazem as verificações de papel, propriedade e `auth.uid()` e possuem grants explícitos. O desenho evita lógica crítica no cliente, mas a superfície pública privilegiada precisa continuar sob revisão e allowlist — exatamente o ponto sinalizado pelos advisors atuais.
 
@@ -359,8 +359,8 @@ Duas decisões arquiteturais relevantes têm mais de uma solução possível —
 - **Estratégia:** isolamento lógico por `empresa_id` (texto, compatível com UUID e bigint legado) em praticamente todas as tabelas operacionais, com RLS aplicando `exists (select 1 from empresas e where e.id::text = tabela.empresa_id and e.usuario_id = auth.uid())` como padrão de política para o proprietário.
 - **Camadas de defesa:** (1) RLS por tabela, (2) RPCs `SECURITY DEFINER` que verificam propriedade/participação (`private.participa_pedido`, `private.is_admin`) antes de qualquer leitura/escrita sensível, (3) `search_path = ''` fixo nas funções privadas (proteção contra sequestro de search_path, boa prática de segurança confirmada em várias funções).
 - **Row Level Security:** aplicada de forma consistente; a migration 019 especificamente "otimiza chamadas de identidade nas políticas RLS" (indica que houve trabalho de performance sobre RLS, não só correção).
-- **Risco de vazamento cross-tenant:** mitigado, mas a própria auditoria de 12/08/2026 identifica uma lacuna de **teste** (não de política): falta uma conta de entregador isolada de admin/cliente para provar isolamento positivo nesse papel especificamente.
-- **Testes necessários (recomendado, não confirmado como concluído):** criar contas de teste dedicadas para cada papel (cliente A, cliente B, restaurante A, restaurante B, entregador isolado, admin) e rodar testes de impersonação cruzada como parte do CI antes de cada release com mudança de RLS.
+- **Risco de vazamento cross-tenant:** mitigado e validado para cliente, restaurante, entregador e administrador. A auditoria de 21/08/2026 também removeu a política pública legada de `historico_status_pedido`.
+- **Teste do entregador:** concluído com identidade sintética isolada, JWT controlado e transação reversível; o roteiro deve continuar sendo executado antes de releases com mudanças em RLS.
 
 ---
 
@@ -481,10 +481,10 @@ Postura de segurança **acima da média** para o estágio do projeto, com evidê
 
 **Gaps reais e documentados pelo próprio projeto (não inventados aqui):**
 - Proteção HIBP (senha vazada) indisponível no plano Free do Supabase — risco residual aceito, não corrigido.
-- Cabeçalhos HTTP completos (`X-Content-Type-Options`, `Permissions-Policy`, anti-framing) dependem de sair do GitHub Pages puro.
+- Cabeçalhos HTTP completos estão ativos e foram verificados no domínio Vercel; o GitHub Pages não é mais o endpoint primário de produção.
 - CAPTCHA está desativado e fora da implantação atual por decisão de produto; o suporte opcional permanece inerte com `turnstileSiteKey` vazio.
-- Testes de RLS por impersonação ainda não têm conta de entregador isolada.
-- Advisors de 20/08/2026: `pg_net` está no schema `public`; há 8 foreign keys sem índice de cobertura e 17 grupos de políticas permissivas duplicadas. Os alertas de RPCs `SECURITY DEFINER` incluem endpoints intencionalmente expostos e precisam de triagem/allowlist, não de revogação em massa.
+- Testes de RLS por impersonação incluem entregador isolado e reversível.
+- Advisors de 21/08/2026: `pg_net` está no schema `public`; há 8 foreign keys sem índice de cobertura e 16 grupos de políticas permissivas duplicadas. Os alertas de RPCs `SECURITY DEFINER` incluem endpoints intencionalmente expostos e precisam de triagem/allowlist, não de revogação em massa.
 
 ---
 
@@ -598,13 +598,11 @@ O "MVP" aqui não é hipotético — a versão 4.4.5 é um produto operacional c
 
 ### P0 — obrigatório antes de qualquer volume real de produção
 1. Concluir e registrar evidências dos **17 cenários** de sandbox listados em `PRODUCAO.md` antes de ativar `pagamentoOnlineAtivo`.
-2. Criar conta de entregador isolada e completar a validação positiva de RLS por papel.
-3. Configurar e monitorar os rate limits do Auth em produção.
-4. Sair do GitHub Pages puro (ou colocar atrás de proxy) para garantir os cabeçalhos HTTP de segurança faltantes.
-5. Testar e documentar backup/restauração real.
-6. Decidir formalmente: checkout convidado sim/não (hoje é "não" por design de banco — ver Decisões em Aberto).
-7. Revisão jurídica da política de privacidade.
-8. Triar os advisors do Supabase: mover/justificar `pg_net`, revisar RPCs `SECURITY DEFINER`, indexar FKs críticas e consolidar políticas RLS redundantes.
+2. Aplicar e monitorar os rate limits do Auth preparados em `supabase/config.toml`.
+3. Testar e documentar backup/restauração real em projeto temporário.
+4. Decidir formalmente: checkout convidado sim/não (hoje é "não" por design de banco — ver Decisões em Aberto).
+5. Revisão jurídica da política de privacidade.
+6. Triar os advisors do Supabase: mover/justificar `pg_net`, revisar RPCs `SECURITY DEFINER`, indexar FKs críticas e consolidar políticas RLS redundantes.
 
 ### P1 — importante após estabilidade
 1. Cobrança recorrente dos planos, comissão, extrato, fechamento e repasses.
@@ -639,7 +637,7 @@ O "MVP" aqui não é hipotético — a versão 4.4.5 é um produto operacional c
 - **Supabase** (Postgres, Auth, Realtime, Storage, Edge Functions/Deno) — dependência central, inclusive limitações de plano (Free hoje, sem HIBP).
 - **Mercado Pago** — gateway de pagamento único hoje.
 - **Cloudflare Turnstile / hCaptcha** — suporte opcional mantido inativo e fora do escopo atual.
-- **GitHub Pages ou Vercel** — hospedagem estática (ambos configurados no repositório).
+- **Vercel** — hospedagem estática primária; GitHub Pages permanece como canal secundário.
 - **GitHub Actions** — CI (`.github/workflows`), executa `npm run verify` no deploy da `main`.
 - Dependências futuras a contratar: provedor de WhatsApp Business API, provedor de e-mail transacional, provedor de geocodificação/mapas.
 
@@ -651,10 +649,10 @@ O "MVP" aqui não é hipotético — a versão 4.4.5 é um produto operacional c
 |---|---|---|---|
 | Ativar pagamento online sem concluir os 17 testes de sandbox | Média | Alto (financeiro) | Manter `pagamentoOnlineAtivo=false` até checklist 100% assinado |
 | Ausência de proteção HIBP (plano Free) | Alta (permanece enquanto no Free) | Médio | Aceitar como risco residual documentado ou migrar de plano antes de escalar cadastro |
-| Cabeçalhos HTTP incompletos no GitHub Pages | Alta (enquanto só no Pages) | Médio | Migrar para hospedagem com proxy (Cloudflare/Vercel) antes de tráfego real |
+| Regressão de cabeçalhos HTTP no deploy | Baixa | Médio | Executar `npm run verify:production` após cada publicação no Vercel |
 | Crescimento do frontend sem framework/componentização | Média (aumenta com o tempo) | Médio (velocidade de entrega, bugs de duplicidade tipo `carrinho.js` x `carrinho-4.2.5.js`) | Congelar padrão de nomeação por versão; planejar consolidação antes da fase 5.0 |
 | Falta de fila assíncrona ao ligar WhatsApp/e-mail em volume | Média | Médio-Alto (mensagens perdidas, acoplamento de falha) | Implementar padrão outbox antes de ativar novos canais (seção 16.1) |
-| Teste de RLS de entregador incompleto | Certa hoje | Médio | Criar conta de teste isolada antes do próximo release com mudança de RLS |
+| Regressão de RLS do entregador | Baixa | Alto | Executar o teste transacional isolado antes do próximo release com mudança de RLS |
 | Falta de checkout convidado pode reduzir conversão | Desconhecida (não medida) | Médio | Decisão de produto explícita e deliberada, não acidental (ver seção 34) |
 | LGPD: política de privacidade sem revisão jurídica | Média | Alto (compliance) | Bloquear produção real até revisão jurídica formal |
 | Advisors Supabase sem triagem formal | Média | Médio-Alto | Tratar `pg_net`, índices e políticas duplicadas; documentar allowlist das RPCs públicas intencionais |
@@ -694,7 +692,7 @@ Cada fase, por definição do próprio projeto, exige migration revisada + teste
 4. Ausência de tracking de funil/analytics de navegação (impede métricas de conversão citadas como meta de sucesso).
 5. `empresa_horarios` suporta apenas um intervalo por dia — não cobre o exemplo do briefing de "11h-15h e 18h-23h" no mesmo dia.
 6. Observabilidade limitada a `app_logs`/auditoria de negócio — sem tracing/error tracking externo.
-7. Dependência total do GitHub Pages para uma parcela dos cabeçalhos de segurança.
+7. Dependência operacional do Vercel para aplicação dos cabeçalhos HTTP de segurança.
 8. Advisors apontam FKs sem índice de cobertura, políticas permissivas redundantes e `pg_net` no schema `public`.
 
 ---
@@ -718,7 +716,7 @@ Cada fase, por definição do próprio projeto, exige migration revisada + teste
 
 1. **Checkout como convidado será permitido?** Hoje é arquiteturalmente impossível sem alterar a constraint `pedidos.usuario_id not null`. Isso afeta conversão x complexidade de suporte pós-venda (reembolso/rastreamento de pedido sem conta). Decisão de produto, não técnica.
 2. **Qual provedor de geocodificação/rota viária será adotado?** O frete por Haversine já existe; a decisão agora afeta custo, precisão e limites de API.
-3. **Quando sair do GitHub Pages?** Decisão de infraestrutura/custo com impacto direto em segurança (cabeçalhos HTTP faltantes).
+3. **Qual domínio próprio será conectado ao Vercel?** O endpoint técnico já está seguro, mas o endereço final de marca ainda precisa de decisão.
 4. **Aceitar o risco residual da ausência de proteção HIBP no plano Free, ou migrar de plano do Supabase antes de escalar cadastro?**
 5. **Modelo de comissão e repasse** (percentual fixo, por faixa, por plano; periodicidade e responsabilidade fiscal?) — não definido.
 6. **Qual gateway de pagamento adicional (se algum) priorizar depois de Mercado Pago validado?** Decide o timing da extração da interface de gateway (seção 16.2).
@@ -742,10 +740,10 @@ Cada fase, por definição do próprio projeto, exige migration revisada + teste
 
 ## Top 10 prioridades técnicas
 1. Concluir os 17 testes de sandbox financeiro e operacional antes de ativar pagamento online.
-2. Isolar conta de entregador para validar RLS por papel.
-3. Configurar e monitorar os rate limits em produção.
-4. Migrar/proteger hospedagem para garantir cabeçalhos HTTP completos.
-5. Testar backup/restauração de fato.
+2. Aplicar e monitorar os rate limits em produção.
+3. Testar backup/restauração de fato em ambiente temporário.
+4. Triar os advisors Supabase e documentar a allowlist.
+5. Concluir revisão jurídica e responsáveis operacionais.
 6. Implementar padrão outbox para notificações antes de somar canais.
 7. Consolidar arquivos JS/CSS versionados por número em módulos únicos por domínio.
 8. Adicionar tracking de funil (para métricas de conversão).
@@ -801,7 +799,7 @@ Cada fase, por definição do próprio projeto, exige migration revisada + teste
 Ver seção 39 (Decisões em Aberto) — consolidada aqui por completude:
 1. Checkout convidado: sim ou não?
 2. Provedor de geocodificação e rota viária?
-3. Quando sair do GitHub Pages puro?
+3. Qual domínio próprio será conectado ao Vercel?
 4. Aceitar risco residual de HIBP no plano Free ou migrar de plano?
 5. Modelo de comissão, fechamento e repasse?
 6. Segundo gateway de pagamento: qual e quando?
@@ -809,4 +807,4 @@ Ver seção 39 (Decisões em Aberto) — consolidada aqui por completude:
 
 ---
 
-**Observação final:** revisão documental atualizada em 20/08/2026, sem alteração de código ou schema. Este PRD é o ponto de partida para priorização da fase 4.5 e dos itens remanescentes de comercialização/logística das fases 4.3–4.4.
+**Observação final:** revisão documental atualizada em 21/08/2026 após deploy Vercel, hardening de RLS e ampliação do gate automatizado. Este PRD é o ponto de partida para priorização da fase 4.5 e dos itens remanescentes de comercialização/logística das fases 4.3–4.4.
