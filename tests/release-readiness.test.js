@@ -318,3 +318,17 @@ test("painel oferece conciliação financeira e monitoramento correlacionado", (
     assert.match(monitoring, /correlation_id/);
     assert.match(monitoring, /app_version/);
 });
+
+test("Speed Insights is loaded on Vercel without Next.js", () => {
+    const loader = read("js/core/site-enhancements.js");
+    assert.match(loader, /hostname\.toLowerCase\(\)/);
+    assert.match(loader, /\.endsWith\("\.vercel\.app"\)/);
+    assert.match(loader, /\/_vercel\/speed-insights\/script\.js/);
+    assert.match(loader, /window\.siq/);
+
+    for (const file of walk(root).filter((item) => item.endsWith(".html"))) {
+        const html = fs.readFileSync(file, "utf8");
+        assert.match(html, /site-enhancements\.js/, `${path.basename(file)} missing Speed Insights`);
+        assert.doesNotMatch(html, /@vercel\/speed-insights\/next/);
+    }
+});
