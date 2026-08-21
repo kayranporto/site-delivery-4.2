@@ -23,6 +23,8 @@ test("referências locais das páginas existem", () => {
         for (const match of html.matchAll(/(?:href|src)=["']([^"'#?]+)(?:\?[^"'#]*)?["']/g)) {
             const referencia = match[1];
             if (/^(?:https?:|mailto:|tel:|data:)/.test(referencia)) continue;
+            // Skip Vercel-provided scripts that only exist in production
+            if (referencia.startsWith("/_vercel/")) continue;
             if (!fs.existsSync(path.resolve(path.dirname(arquivo), referencia))) {
                 faltantes.push(`${path.relative(root, arquivo)}: ${referencia}`);
             }

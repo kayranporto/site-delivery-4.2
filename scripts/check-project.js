@@ -44,6 +44,8 @@ for (const file of files.filter((item) => item.endsWith(".html"))) {
     for (const match of html.matchAll(/(?:href|src)=["']([^"'#?]+)(?:\?[^"'#]*)?["']/g)) {
         const reference = match[1];
         if (/^(?:https?:|mailto:|tel:|data:)/.test(reference)) continue;
+        // Skip Vercel-provided scripts that only exist in production
+        if (reference.startsWith("/_vercel/")) continue;
         if (!fs.existsSync(path.resolve(path.dirname(file), reference))) {
             failures.push(`Referência ausente: ${path.relative(root, file)} → ${reference}`);
         }
