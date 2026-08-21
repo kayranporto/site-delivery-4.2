@@ -57,6 +57,15 @@ Depois de revisar o diff, aplique a configuração declarativa autenticada pelo 
 npx --yes supabase@2.115.0 config push --project-ref wzxsjxdbxonrmlmzufpv
 ```
 
+Para restaurar exclusivamente MFA TOTP e OTP de 8 dígitos, sem enviar o restante do `config.toml`, use:
+
+```powershell
+$env:SUPABASE_ACCESS_TOKEN="seu-token-pessoal"
+node scripts/restaurar-auth-mfa.js
+```
+
+O script consulta o estado, envia um PATCH contendo somente os três campos autorizados e confirma o resultado com uma nova consulta. O token nunca é persistido nem exibido.
+
 Como alternativa para auditoria pela Management API, obtenha um token pessoal em `https://supabase.com/dashboard/account/tokens` e consulte os limites atuais sem alterá-los:
 
 ```powershell
