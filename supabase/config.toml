@@ -25,9 +25,14 @@ token_refresh = 150
 sign_in_sign_ups = 30
 token_verifications = 30
 
+[auth.mfa.totp]
+enroll_enabled = true
+verify_enabled = true
+
 [auth.email]
 enable_signup = true
 enable_confirmations = false
 double_confirm_changes = true
 secure_password_change = true
 max_frequency = "1m"
+otp_length = 8

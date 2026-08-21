@@ -12,7 +12,7 @@
 | Histórico de pedido | Corrigido | Política `historico_public` removida; `anon` sem `SELECT`; migration aplicada no remoto |
 | RLS do entregador | Concluído | 8/8 asserções com identidade sintética isolada e `ROLLBACK`; roteiro em `supabase/tests/production/rls_entregador_isolado.sql` |
 | Advisors Supabase | Executado | Segurança: 75 itens, sendo 73 warnings. Performance: 46 itens, sendo 16 políticas permissivas duplicadas |
-| URLs e rate limits Auth | Preparado | Valores declarados em `supabase/config.toml`; aplicação remota aguarda autorização explícita |
+| URLs e rate limits Auth | Aplicado parcialmente | URL Vercel e redirect aplicados; limites já estavam atualizados. A restauração de MFA TOTP e OTP de 8 dígitos aguarda confirmação após efeito colateral identificado no CLI |
 | Backup físico/PITR | Indisponível | Plano Free sem backup físico listado e com PITR desativado |
 | Backup lógico | Preparado | `npm run backup:supabase` exige `SUPABASE_DB_PASSWORD` e grava somente em `backups/`, ignorado pelo Git |
 | Mercado Pago sandbox | Bloqueado | Segredos Mercado Pago ausentes no projeto e nenhuma execução de Edge Function nas últimas 24 horas |

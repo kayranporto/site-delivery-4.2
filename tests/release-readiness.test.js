@@ -65,7 +65,11 @@ test("Auth de produção possui URLs exatas e rate limits declarativos", () => {
         "email_sent = 2",
         "token_refresh = 150",
         "sign_in_sign_ups = 30",
-        "token_verifications = 30"
+        "token_verifications = 30",
+        "[auth.mfa.totp]",
+        "enroll_enabled = true",
+        "verify_enabled = true",
+        "otp_length = 8"
     ]) assert.ok(config.includes(trecho), `configuração Auth sem ${trecho}`);
     assert.doesNotMatch(config, /captcha_enabled\s*=\s*true/);
 });

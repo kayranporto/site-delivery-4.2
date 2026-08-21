@@ -113,7 +113,7 @@ Configure alertas para:
 - [x] RLS validada por papel, incluindo entregador sintético isolado em transação reversível;
 - [ ] backup e restauração testados;
 - [ ] proteção contra senhas vazadas ativada (Pro+) ou risco formalmente aceito enquanto permanecer no Free;
-- [ ] rate limits preparados no `config.toml`; falta autorização/aplicação remota e monitoramento de HTTP 429;
+- [ ] URLs Auth aplicadas e rate limits confirmados; falta restaurar MFA TOTP/OTP de 8 dígitos e monitorar HTTP 429;
 - [x] cabeçalhos confirmados no domínio Vercel com `npm run verify:production`;
 - [ ] política de privacidade revisada;
 - [ ] responsáveis operacionais definidos.

@@ -49,6 +49,7 @@ As URLs e os limites recomendados estão versionados em `supabase/config.toml`:
 - renovação de token: 150 requisições por 5 minutos por IP;
 - verificação de token/OTP: 30 requisições por 5 minutos por IP;
 - e-mail do provedor embutido: 2 mensagens por hora.
+- MFA TOTP habilitado e códigos OTP com 8 dígitos, preservando a configuração remota anterior.
 
 Depois de revisar o diff, aplique a configuração declarativa autenticada pelo CLI:
 
