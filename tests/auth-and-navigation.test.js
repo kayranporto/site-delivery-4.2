@@ -72,3 +72,15 @@ test("configuração de produção inclui automação sem confirmação", () => 
     assert.match(script, /password_min_length/);
     assert.doesNotMatch(script, /Bearer [A-Za-z0-9_-]{20,}/);
 });
+
+test("rate limits do Auth são configuráveis sem ativar CAPTCHA", () => {
+    const script = read("scripts/configurar-rate-limits-auth.js");
+    const packageJson = JSON.parse(read("package.json"));
+    assert.equal(packageJson.scripts["configure:auth:rate-limits"], "node scripts/configurar-rate-limits-auth.js");
+    assert.match(script, /AUTH_RATE_LIMIT_EMAIL_SENT/);
+    assert.match(script, /AUTH_RATE_LIMIT_TOKEN_REFRESH/);
+    assert.match(script, /pelo menos um AUTH_RATE_LIMIT_/);
+    assert.doesNotMatch(script, /security_captcha_/);
+    assert.doesNotMatch(script, /TURNSTILE_/);
+    assert.doesNotMatch(script, /Bearer [A-Za-z0-9_-]{20,}/);
+});

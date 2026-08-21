@@ -84,7 +84,7 @@ Antes de ativar pagamentos reais ou ampliar volume:
 
 - concluir os 17 cenários de sandbox de `PRODUCAO.md`;
 - validar RLS com identidades isoladas de todos os papéis;
-- configurar CAPTCHA e rate limits;
+- configurar e monitorar rate limits; CAPTCHA permanece fora do escopo atual;
 - testar backup/restauração;
 - confirmar cabeçalhos no domínio final;
 - revisar a política de privacidade;

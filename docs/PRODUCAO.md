@@ -8,7 +8,7 @@ npm run verify
 npm run package
 ```
 
-`npm run verify` executa a verificação estrutural de 239 arquivos, os 142 testes automatizados e o type-check TypeScript das Edge Functions. O empacotamento repete o gate antes de gerar o ZIP e exclui `.git`, `node_modules`, releases anteriores e arquivos ZIP antigos.
+`npm run verify` executa a verificação estrutural de 241 arquivos, os 143 testes automatizados e o type-check TypeScript das Edge Functions. O empacotamento repete o gate antes de gerar o ZIP e exclui `.git`, `node_modules`, releases anteriores e arquivos ZIP antigos.
 
 ## 2. Banco de dados
 
@@ -62,8 +62,8 @@ Registre evidências e resultados antes de usar credenciais reais.
 - mantenha **Confirm email** desativado somente enquanto o cadastro imediato for a decisão vigente;
 - mantenha senha mínima de 8 caracteres no backend e a política local de letra + número no frontend;
 - ative proteção contra senhas vazadas quando o projeto estiver em plano Pro ou superior; no plano Free trate a ausência como risco residual documentado;
-- configure Cloudflare Turnstile ou hCaptcha;
-- ajuste rate limits de cadastro, login e recuperação;
+- ajuste os rate limits dos endpoints de Auth suportados e monitore respostas HTTP 429;
+- use `npm run configure:auth:rate-limits -- --check` para consultar e `--apply` somente com valores revisados; o CAPTCHA permanece desativado por decisão de produto;
 - configure URLs exatas de produção;
 - preserve confirmação segura para troca de e-mail;
 - mantenha recuperação de senha por e-mail operacional.
@@ -97,7 +97,7 @@ Configure alertas para:
 ## 8. Aprovação final
 
 - [x] 46 migrations locais confirmadas no projeto hospedado em 20/08/2026;
-- [x] 142 testes automatizados aprovados no commit de release;
+- [x] 143 testes automatizados aprovados no commit de release;
 - [x] 4 Edge Functions publicadas e ativas (`criar-pagamento`, `mercado-pago-webhook`, `processar-reembolso`, `enviar-push`);
 - [ ] segredos das Edge Functions conferidos no ambiente e registrados no checklist operacional;
 - [ ] webhook validado no sandbox;
@@ -105,7 +105,7 @@ Configure alertas para:
 - [ ] RLS validada com contas de cada papel;
 - [ ] backup e restauração testados;
 - [ ] proteção contra senhas vazadas ativada (Pro+) ou risco formalmente aceito enquanto permanecer no Free;
-- [ ] CAPTCHA e rate limits configurados;
+- [ ] rate limits configurados e monitorados;
 - [ ] cabeçalhos confirmados no domínio;
 - [ ] política de privacidade revisada;
 - [ ] responsáveis operacionais definidos.
@@ -150,4 +150,4 @@ Pendências que impedem aprovação final:
 - os testes de sandbox de pagamento, reembolso, concorrência e ordem de webhooks ainda precisam de evidências operacionais;
 - a validação de RLS ainda precisa de uma conta de entregador separada de administrador/cliente para o teste positivo isolado;
 - a triagem e documentação da allowlist dos advisors Supabase ainda precisa ser concluída;
-- backup/restauração, CAPTCHA/rate limits, cabeçalhos do domínio, privacidade e responsáveis operacionais continuam pendentes.
+- backup/restauração, rate limits, cabeçalhos do domínio, privacidade e responsáveis operacionais continuam pendentes.

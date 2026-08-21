@@ -11,7 +11,7 @@ Data: 10 de agosto de 2026
 - pagamento tardio após cancelamento tratado com fila de reembolso;
 - snapshot transacional de preços, variações e adicionais;
 - CSP, cabeçalhos, dependências fixadas, lockfile e CI;
-- cadastro imediato, senha forte, publishable key e CAPTCHA opcional.
+- cadastro imediato, senha forte, publishable key e suporte opcional a CAPTCHA mantido desativado.
 
 ### Operação e estabilização
 
@@ -51,7 +51,7 @@ Ainda exigem confirmação ou execução no projeto hospedado:
 - confirmação da proteção contra senhas vazadas no Security Advisor;
 - publicação ou conferência das Edge Functions;
 - configuração dos segredos;
-- CAPTCHA e rate limits do Auth;
+- rate limits do Auth; CAPTCHA fora do escopo atual por decisão de produto;
 - testes financeiros no sandbox;
 - testes de concorrência no banco real;
 - validação dos cabeçalhos no domínio;
