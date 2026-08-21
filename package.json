@@ -18,5 +18,8 @@
   },
   "devDependencies": {
     "typescript": "5.9.3"
+  },
+  "dependencies": {
+    "@vercel/speed-insights": "2.0.0"
   }
 }

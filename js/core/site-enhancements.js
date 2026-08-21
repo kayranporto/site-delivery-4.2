@@ -1,5 +1,21 @@
 "use strict";
 (() => {
+  const speedInsightsHost = location.hostname.toLowerCase();
+  if (
+    speedInsightsHost.endsWith(".vercel.app")
+    && !document.querySelector('script[data-vercel-speed-insights]')
+  ) {
+    window.si = window.si || function (...args) {
+      window.siq = window.siq || [];
+      window.siq.push(args);
+    };
+    const speedInsightsScript = document.createElement("script");
+    speedInsightsScript.src = "/_vercel/speed-insights/script.js";
+    speedInsightsScript.defer = true;
+    speedInsightsScript.dataset.vercelSpeedInsights = "true";
+    document.head.append(speedInsightsScript);
+  }
+
   const paginaLegada = location.pathname.match(/\/([\w-]+\.html)$/i)?.[1] || "";
   const entradasTecnicas = new Set(["index.html", "404.html", "offline.html"]);
   const caminhoJaOrganizado = /\/html\//i.test(location.pathname);

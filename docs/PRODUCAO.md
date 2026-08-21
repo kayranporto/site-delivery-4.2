@@ -8,7 +8,7 @@ npm run verify
 npm run package
 ```
 
-`npm run verify` executa a verificação estrutural de 252 arquivos versionados, os 149 testes automatizados e o type-check TypeScript das Edge Functions. O empacotamento repete o gate antes de gerar o ZIP e exclui `.git`, `node_modules`, releases anteriores e arquivos ZIP antigos.
+`npm run verify` executa a verificação estrutural de 252 arquivos versionados, os 150 testes automatizados e o type-check TypeScript das Edge Functions. O empacotamento repete o gate antes de gerar o ZIP e exclui `.git`, `node_modules`, releases anteriores e arquivos ZIP antigos.
 
 ## 2. Banco de dados
 
@@ -105,7 +105,7 @@ Configure alertas para:
 ## 8. Aprovação final
 
 - [x] 47 migrations locais confirmadas no projeto hospedado em 21/08/2026;
-- [x] 149 testes automatizados aprovados em 21/08/2026;
+- [x] 150 testes automatizados aprovados em 21/08/2026;
 - [x] 4 Edge Functions publicadas e ativas (`criar-pagamento`, `mercado-pago-webhook`, `processar-reembolso`, `enviar-push`);
 - [ ] segredos Mercado Pago ausentes no ambiente em 21/08/2026; configurar credenciais sandbox antes dos testes;
 - [ ] webhook validado no sandbox;
@@ -113,7 +113,7 @@ Configure alertas para:
 - [x] RLS validada por papel, incluindo entregador sintético isolado em transação reversível;
 - [ ] backup e restauração testados;
 - [ ] proteção contra senhas vazadas ativada (Pro+) ou risco formalmente aceito enquanto permanecer no Free;
-- [ ] URLs Auth aplicadas e rate limits confirmados; falta restaurar MFA TOTP/OTP de 8 dígitos e monitorar HTTP 429;
+- [ ] URLs Auth aplicadas e MFA TOTP/OTP de 8 dígitos restaurados; falta confirmar os rate limits e monitorar HTTP 429;
 - [x] cabeçalhos confirmados no domínio Vercel com `npm run verify:production`;
 - [ ] política de privacidade revisada;
 - [ ] responsáveis operacionais definidos.
