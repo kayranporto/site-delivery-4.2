@@ -16,6 +16,22 @@
     document.head.append(speedInsightsScript);
   }
 
+  // Vercel Web Analytics
+  const analyticsHost = location.hostname.toLowerCase();
+  if (
+    analyticsHost.endsWith(".vercel.app")
+    && !document.querySelector('script[data-vercel-web-analytics]')
+  ) {
+    window.va = window.va || function () {
+      (window.vaq = window.vaq || []).push(arguments);
+    };
+    const analyticsScript = document.createElement("script");
+    analyticsScript.src = "/_vercel/insights/script.js";
+    analyticsScript.defer = true;
+    analyticsScript.dataset.vercelWebAnalytics = "true";
+    document.head.append(analyticsScript);
+  }
+
   const paginaLegada = location.pathname.match(/\/([\w-]+\.html)$/i)?.[1] || "";
   const entradasTecnicas = new Set(["index.html", "404.html", "offline.html"]);
   const caminhoJaOrganizado = /\/html\//i.test(location.pathname);
