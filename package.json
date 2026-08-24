@@ -14,7 +14,8 @@
     "configure:auth:no-confirm": "bash scripts/configurar-auth-sem-confirmacao.sh",
     "configure:auth:rate-limits": "node scripts/configurar-rate-limits-auth.js",
     "verify:production": "node scripts/verificar-producao.js",
-    "backup:supabase": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/backup-supabase.ps1"
+    "backup:supabase": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/backup-supabase.ps1",
+    "restore:supabase": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/restore-supabase.ps1"
   },
   "devDependencies": {
     "typescript": "5.9.3"

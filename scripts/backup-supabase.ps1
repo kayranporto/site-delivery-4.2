@@ -31,7 +31,13 @@ function Invoke-SupabaseDump {
 
 Invoke-SupabaseDump -Arguments @("--role-only", "--file", (Join-Path $destination "roles.sql"))
 Invoke-SupabaseDump -Arguments @("--file", (Join-Path $destination "schema.sql"))
-Invoke-SupabaseDump -Arguments @("--data-only", "--use-copy", "--file", (Join-Path $destination "data.sql"))
+Invoke-SupabaseDump -Arguments @(
+    "--data-only",
+    "--use-copy",
+    "--exclude", "storage.buckets_vectors",
+    "--exclude", "storage.vector_indexes",
+    "--file", (Join-Path $destination "data.sql")
+)
 
 $files = Get-ChildItem -LiteralPath $destination -File
 if ($files.Count -ne 3 -or ($files | Where-Object Length -eq 0)) {

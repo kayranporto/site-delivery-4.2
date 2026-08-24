@@ -94,9 +94,26 @@ test("backup lógico exige segredo no ambiente e grava somente em pasta ignorada
     assert.match(script, /--role-only/);
     assert.match(script, /--data-only/);
     assert.match(script, /--use-copy/);
+    assert.match(script, /storage\.buckets_vectors/);
+    assert.match(script, /storage\.vector_indexes/);
     assert.match(script, /StartsWith\(\$repositoryRoot/);
     assert.match(gitignore, /^backups\/$/m);
     assert.equal(packageJson.scripts["backup:supabase"], "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/backup-supabase.ps1");
+});
+
+test("restauração exige projeto temporário, confirmação explícita e transação atômica", () => {
+    const script = read("scripts/restore-supabase.ps1");
+    const packageJson = JSON.parse(read("package.json"));
+    assert.match(script, /TargetProjectRef/);
+    assert.match(script, /TargetProjectRef -eq \$SourceProjectRef/);
+    assert.match(script, /SUPABASE_RESTORE_DB_PASSWORD/);
+    assert.match(script, /SUPABASE_RESTORE_CONFIRM/);
+    assert.match(script, /RESTORE:\$TargetProjectRef/);
+    assert.match(script, /--single-transaction/);
+    assert.match(script, /ON_ERROR_STOP=1/);
+    assert.match(script, /session_replication_role = replica/);
+    assert.match(script, /supabase_migrations\.schema_migrations/);
+    assert.equal(packageJson.scripts["restore:supabase"], "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/restore-supabase.ps1");
 });
 
 test("dependências Supabase estão fixadas em versão exata", () => {

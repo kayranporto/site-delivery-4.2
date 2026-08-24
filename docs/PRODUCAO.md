@@ -27,9 +27,9 @@ A migration `20260821213807_remove_historico_public_policy.sql` remove a leitura
 
 ### Backup e restauração
 
-O plano Free não apresentou backups físicos disponíveis e está com PITR desativado na consulta de 21/08/2026. Use `npm run backup:supabase` com `SUPABASE_DB_PASSWORD` definido somente no ambiente para gerar `roles.sql`, `schema.sql` e `data.sql` em `backups/`, diretório ignorado pelo Git.
+O plano Free não apresentou backups físicos disponíveis e está com PITR desativado na consulta de 21/08/2026. Use `npm run backup:supabase` com `SUPABASE_DB_PASSWORD` definido somente no ambiente para gerar `roles.sql`, `schema.sql` e `data.sql` em `backups/`, diretório ignorado pelo Git. O dump de dados exclui `storage.buckets_vectors` e `storage.vector_indexes`, conforme o procedimento atual do Supabase para tabelas vetoriais gerenciadas.
 
-Teste a restauração exclusivamente em um projeto Supabase temporário e vazio, na ordem `roles.sql` → `schema.sql` → `data.sql`. Registre contagens e smoke tests antes de excluir o projeto temporário. Nunca use o banco de produção como destino do ensaio.
+Teste a restauração exclusivamente em um projeto Supabase temporário e vazio. Instale o cliente PostgreSQL atual (`psql`), obtenha no painel o host do Session Pooler e defina `SUPABASE_RESTORE_DB_HOST`, `SUPABASE_RESTORE_DB_PASSWORD` e `SUPABASE_RESTORE_CONFIRM=RESTORE:<PROJECT_REF_TEMPORARIO>` somente no ambiente. Execute `npm run restore:supabase -- -BackupDirectory backups/<timestamp> -TargetProjectRef <PROJECT_REF_TEMPORARIO>`. O script restaura `roles.sql` → `schema.sql` → `data.sql` em transação única, executa smoke tests e recusa explicitamente o project ref de produção. Registre as contagens antes de excluir o projeto temporário.
 
 ## 3. Edge Functions
 
