@@ -65,6 +65,14 @@ test("cozinha possui fila, SLA e ações transacionais", () => {
     assert.match(sql, /O entregador atribuído deve confirmar/);
 });
 
+test("painel mantém pedidos ativos visíveis fora do período selecionado", () => {
+    const html = read("empresa-dashboard.html");
+    const js = read("js/pages/empresa-dashboard.js");
+    assert.match(js, /const ativo = !\["entregue", "cancelado"\]\.includes\(pedido\.status\)/);
+    assert.match(js, /const noPeriodo = ativo \|\| filtroPeriodo === "todos"/);
+    assert.match(html, /empresa-dashboard\.js\?v=4\.4\.5\.2/);
+});
+
 test("estoque mantém trilha de auditoria protegida", () => {
     const sql = read("supabase/migrations/20260801001600_operacao_catalogo_e_escala.sql");
     assert.match(sql, /create table if not exists public\.estoque_movimentos/);

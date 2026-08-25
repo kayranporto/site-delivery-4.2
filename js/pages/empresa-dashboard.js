@@ -226,7 +226,8 @@ function pedidosVisiveis() {
     const termo = buscaPedido.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
     return pedidos.filter((pedido) => {
         const data = new Date(pedido.created_at).getTime();
-        const noPeriodo = filtroPeriodo === "todos" || (Number.isFinite(data) && data >= inicio);
+        const ativo = !["entregue", "cancelado"].includes(pedido.status);
+        const noPeriodo = ativo || filtroPeriodo === "todos" || (Number.isFinite(data) && data >= inicio);
         const statusOk = filtroStatusPedido === "todos"
             || (filtroStatusPedido === "pronto" && pedido.status === "preparando" && Boolean(pedido.pronto_em))
             || (filtroStatusPedido === "preparando" && pedido.status === "preparando" && !pedido.pronto_em)
