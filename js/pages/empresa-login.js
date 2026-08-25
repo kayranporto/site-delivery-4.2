@@ -96,7 +96,7 @@ if (!form || !email || !senha || !submitButton) {
             window.location.replace(resolvido.destino);
         } catch (erro) {
             console.error("Erro no login da empresa:", erro);
-            if (autenticado && /não possui acesso|incompletos|Restaurante não encontrado/i.test(String(erro?.message || ""))) {
+            if (autenticado && /não possui acesso|incompletos|Restaurante não encontrado|restaurante.*excluído/i.test(String(erro?.message || ""))) {
                 mensagemLogin(App.mensagemErro(erro), true);
                 return;
             }

@@ -89,13 +89,16 @@ function registrarCompatibilidade(recurso) {
 
 async function consultarEmpresasAdmin() {
     const seletores = [
+        "id,nome,email,telefone,cnpj,descricao,categoria,taxa_entrega,pedido_minimo,tempo_estimado_min,tempo_estimado_max,publicado,status,created_at,excluida_em",
         "id,nome,email,telefone,cnpj,descricao,categoria,taxa_entrega,pedido_minimo,tempo_estimado_min,tempo_estimado_max,publicado,status,created_at",
         "id,nome,email,telefone,cnpj,descricao,categoria,taxa_entrega,pedido_minimo,publicado,status,created_at",
         "id,nome,email,telefone,cnpj,publicado,status,created_at"
     ];
     let resposta;
     for (const colunas of seletores) {
-        resposta = await db.from("empresas").select(colunas).order("created_at", { ascending: false });
+        let consulta = db.from("empresas").select(colunas).order("created_at", { ascending: false });
+        if (colunas.includes("excluida_em")) consulta = consulta.is("excluida_em", null);
+        resposta = await consulta;
         if (!resposta.error) return resposta;
         if (!recursoNaoMigrado(resposta.error)) return resposta;
         registrarCompatibilidade("cadastro completo de restaurantes");
@@ -229,6 +232,36 @@ function confirmarAcao(titulo, mensagem, textoConfirmar = "Confirmar", perigoso 
         const confirmar = botao(textoConfirmar, perigoso ? "admin-primary-button danger" : "admin-primary-button");
         confirmar.addEventListener("click", () => fecharModal(true));
         abrirModal({ titulo, kicker: perigoso ? "ATENÇÃO" : "CONFIRMAÇÃO", corpo, acoes: [cancelar, confirmar] });
+    });
+}
+
+function confirmarExclusaoRestaurante(empresa) {
+    return new Promise((resolve) => {
+        resolverModal = resolve;
+        const corpo = elemento("div", "confirm-delete-content");
+        corpo.append(
+            elemento("p", "confirm-delete-warning", "A loja sairá do catálogo, perderá os acessos de proprietário e equipe e terá a assinatura cancelada. Pedidos e auditoria serão preservados. A exclusão só é permitida sem pedidos em andamento.")
+        );
+        const campo = elemento("label", "admin-form-field");
+        const entrada = document.createElement("input");
+        entrada.type = "text";
+        entrada.autocomplete = "off";
+        entrada.placeholder = empresa.nome;
+        campo.append(
+            elemento("span", "", `Digite “${empresa.nome}” para confirmar`),
+            entrada
+        );
+        corpo.append(campo);
+
+        const cancelar = botao("Cancelar");
+        cancelar.addEventListener("click", () => fecharModal(false));
+        const confirmar = botao("Apagar loja", "admin-primary-button danger");
+        confirmar.disabled = true;
+        entrada.addEventListener("input", () => {
+            confirmar.disabled = entrada.value.trim().toLocaleLowerCase("pt-BR") !== empresa.nome.trim().toLocaleLowerCase("pt-BR");
+        });
+        confirmar.addEventListener("click", () => fecharModal(entrada.value.trim()));
+        abrirModal({ titulo: `Apagar ${empresa.nome}`, kicker: "AÇÃO IRREVERSÍVEL", corpo, acoes: [cancelar, confirmar] });
     });
 }
 
@@ -639,7 +672,32 @@ function renderizarEmpresas() {
             if (!await confirmarAcao(`${publicar ? "Aprovar" : "Suspender"} restaurante`, `${empresa.nome} ${publicar ? "será exibido no catálogo" : "deixará de aparecer para os clientes"}.`, publicar ? "Aprovar" : "Suspender", !publicar)) return;
             definirRestaurante(empresa, publicar, publicar ? true : false, moderar);
         });
-        grupo.append(editar, moderar); acoes.append(grupo);
+        const excluir = botao("Apagar", "admin-action danger-strong");
+        excluir.addEventListener("click", async () => {
+            const nomeConfirmacao = await confirmarExclusaoRestaurante(empresa);
+            if (!nomeConfirmacao) return;
+            excluir.disabled = true;
+            const textoOriginal = excluir.textContent;
+            excluir.textContent = "Apagando...";
+            const { data, error } = await db.rpc("admin_excluir_restaurante", {
+                p_empresa_id: empresa.id,
+                p_nome_confirmacao: nomeConfirmacao
+            });
+            excluir.disabled = false;
+            excluir.textContent = textoOriginal;
+            if (error || data !== true) {
+                const titulo = recursoNaoMigrado(error, "admin_excluir_restaurante")
+                    ? "Execute a migration de exclusão de restaurantes"
+                    : "Não foi possível apagar a loja";
+                return mostrarErro(titulo, error || new Error("Restaurante não encontrado."));
+            }
+            adminEmpresas = adminEmpresas.filter((item) => String(item.id) !== String(empresa.id));
+            renderizarEmpresas();
+            atualizarMetricasAdmin();
+            anunciar(`${empresa.nome} foi apagado da plataforma.`);
+            window.AppToast?.("Loja apagada", "A loja foi desativada e seu histórico foi preservado.", "success");
+        });
+        grupo.append(editar, moderar, excluir); acoes.append(grupo);
         tr.append(nome, contato, elemento("td", "", dataCurta(empresa.created_at)), publicacao, operacao, acoes); tbody.append(tr);
     });
 }

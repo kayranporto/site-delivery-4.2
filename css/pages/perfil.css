@@ -230,11 +230,13 @@ body {
 .menu-item { display: flex; min-width: 0; align-items: center; gap: 13px; padding: 16px; border: 1px solid var(--perfil-border); border-radius: 16px; background: #fff; color: var(--perfil-ink); text-decoration: none; transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease; }
 .menu-item[hidden] { display: none; }
 .menu-item:hover { transform: translateY(-2px); border-color: #f3b7bc; box-shadow: 0 12px 25px rgba(23, 23, 28, .07); }
+.restaurante-menu-item { grid-column: 1 / -1; }
 .menu-icone { width: 42px; height: 42px; border-radius: 13px; font-size: 19px; }
 .menu-icone.favoritos { font-size: 22px; }
 .menu-icone.enderecos { background: #eef6ff; color: #1469aa; font-weight: 800; }
 .menu-icone.dados { background: #f2f0ff; color: #6350a7; }
 .menu-icone.admin { background: rgba(255, 255, 255, .12); color: #ff7b86; }
+.menu-icone.restaurante { background: #fff0e6; color: #b45309; }
 .menu-icone.entregas { background:#e8fbf2; color:#118052; }
 .menu-icone.suporte { background:#fff4df; color:#a6620b; font-weight:800; }
 .menu-texto { display: grid; min-width: 0; flex: 1; gap: 2px; }
