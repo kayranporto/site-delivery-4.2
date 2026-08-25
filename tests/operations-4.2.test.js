@@ -73,6 +73,16 @@ test("painel mantém pedidos ativos visíveis fora do período selecionado", () 
     assert.match(html, /empresa-dashboard\.js\?v=4\.4\.5\.2/);
 });
 
+test("aviso de aprovação respeita o estado publicado da loja", () => {
+    const html = read("empresa-dashboard.html");
+    const css = read("css/pages/empresa-dashboard.css");
+    const js = read("js/pages/empresa-dashboard.js");
+    assert.match(html, /id="publicacaoAviso" hidden/);
+    assert.match(js, /publicacaoAviso"\)\.hidden = empresa\.publicado === true/);
+    assert.match(css, /\.approval-alert\[hidden\]\{display:none!important\}/);
+    assert.match(html, /empresa-dashboard\.css\?v=4\.4\.5\.3/);
+});
+
 test("estoque mantém trilha de auditoria protegida", () => {
     const sql = read("supabase/migrations/20260801001600_operacao_catalogo_e_escala.sql");
     assert.match(sql, /create table if not exists public\.estoque_movimentos/);
