@@ -89,10 +89,10 @@ function registrarCompatibilidade(recurso) {
 
 async function consultarEmpresasAdmin() {
     const seletores = [
-        "id,nome,email,telefone,cnpj,descricao,categoria,taxa_entrega,pedido_minimo,tempo_estimado_min,tempo_estimado_max,publicado,status,created_at,excluida_em",
-        "id,nome,email,telefone,cnpj,descricao,categoria,taxa_entrega,pedido_minimo,tempo_estimado_min,tempo_estimado_max,publicado,status,created_at",
-        "id,nome,email,telefone,cnpj,descricao,categoria,taxa_entrega,pedido_minimo,publicado,status,created_at",
-        "id,nome,email,telefone,cnpj,publicado,status,created_at"
+        "id,usuario_id,nome,email,telefone,cnpj,descricao,categoria,taxa_entrega,pedido_minimo,tempo_estimado_min,tempo_estimado_max,publicado,status,created_at,excluida_em",
+        "id,usuario_id,nome,email,telefone,cnpj,descricao,categoria,taxa_entrega,pedido_minimo,tempo_estimado_min,tempo_estimado_max,publicado,status,created_at",
+        "id,usuario_id,nome,email,telefone,cnpj,descricao,categoria,taxa_entrega,pedido_minimo,publicado,status,created_at",
+        "id,usuario_id,nome,email,telefone,cnpj,publicado,status,created_at"
     ];
     let resposta;
     for (const colunas of seletores) {
@@ -240,7 +240,7 @@ function confirmarExclusaoRestaurante(empresa) {
         resolverModal = resolve;
         const corpo = elemento("div", "confirm-delete-content");
         corpo.append(
-            elemento("p", "confirm-delete-warning", "A loja sairá do catálogo, perderá os acessos de proprietário e equipe e terá a assinatura cancelada. Pedidos e auditoria serão preservados. A exclusão só é permitida sem pedidos em andamento.")
+            elemento("p", "confirm-delete-warning", "Esta ação é irreversível. A loja e todos os seus pedidos, pagamentos, mensagens, avaliações, catálogo, imagens, equipe, unidades, assinatura, fidelidade e auditorias serão apagados permanentemente.")
         );
         const campo = elemento("label", "admin-form-field");
         const entrada = document.createElement("input");
@@ -263,6 +263,42 @@ function confirmarExclusaoRestaurante(empresa) {
         confirmar.addEventListener("click", () => fecharModal(entrada.value.trim()));
         abrirModal({ titulo: `Apagar ${empresa.nome}`, kicker: "AÇÃO IRREVERSÍVEL", corpo, acoes: [cancelar, confirmar] });
     });
+}
+
+async function listarArquivosCatalogo(pastaRaiz) {
+    const arquivos = [];
+    const pastas = [pastaRaiz];
+    while (pastas.length) {
+        const pasta = pastas.shift();
+        let offset = 0;
+        while (true) {
+            const { data, error } = await db.storage.from("catalogo").list(pasta, {
+                limit: 1000,
+                offset,
+                sortBy: { column: "name", order: "asc" }
+            });
+            if (error) throw error;
+            const itens = data || [];
+            itens.forEach((item) => {
+                const caminho = `${pasta}/${item.name}`;
+                if (item.id) arquivos.push(caminho);
+                else if (item.name && item.name !== ".emptyFolderPlaceholder") pastas.push(caminho);
+            });
+            if (itens.length < 1000) break;
+            offset += itens.length;
+        }
+    }
+    return arquivos;
+}
+
+async function apagarMidiasRestaurante(empresa) {
+    const pasta = String(empresa.usuario_id || "").trim();
+    if (!pasta) return;
+    const arquivos = await listarArquivosCatalogo(pasta);
+    for (let inicio = 0; inicio < arquivos.length; inicio += 1000) {
+        const { error } = await db.storage.from("catalogo").remove(arquivos.slice(inicio, inicio + 1000));
+        if (error) throw error;
+    }
 }
 
 function campoFormulario(rotulo, id, tipo = "text", valor = "", opcoes = {}) {
@@ -679,6 +715,13 @@ function renderizarEmpresas() {
             excluir.disabled = true;
             const textoOriginal = excluir.textContent;
             excluir.textContent = "Apagando...";
+            try {
+                await apagarMidiasRestaurante(empresa);
+            } catch (error) {
+                excluir.disabled = false;
+                excluir.textContent = textoOriginal;
+                return mostrarErro("Não foi possível apagar as imagens da loja", error);
+            }
             const { data, error } = await db.rpc("admin_excluir_restaurante", {
                 p_empresa_id: empresa.id,
                 p_nome_confirmacao: nomeConfirmacao
@@ -695,7 +738,7 @@ function renderizarEmpresas() {
             renderizarEmpresas();
             atualizarMetricasAdmin();
             anunciar(`${empresa.nome} foi apagado da plataforma.`);
-            window.AppToast?.("Loja apagada", "A loja foi desativada e seu histórico foi preservado.", "success");
+            window.AppToast?.("Loja apagada", "Todos os dados e arquivos da loja foram removidos permanentemente.", "success");
         });
         grupo.append(editar, moderar, excluir); acoes.append(grupo);
         tr.append(nome, contato, elemento("td", "", dataCurta(empresa.created_at)), publicacao, operacao, acoes); tbody.append(tr);
