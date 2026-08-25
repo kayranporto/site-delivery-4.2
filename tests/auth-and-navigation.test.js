@@ -11,6 +11,11 @@ const read = (file) => {
     return fs.readFileSync(fs.existsSync(direct) ? direct : path.join(root, "html", file), "utf8");
 };
 
+test("atalho de restaurante no perfil abre diretamente o painel", () => {
+    const perfil = read("perfil.html");
+    assert.match(perfil, /class="menu-item restaurante-menu-item" href="empresa-dashboard\.html"/);
+});
+
 test("painel do restaurante exibe apenas a seção escolhida", () => {
     const html = read("empresa-dashboard.html");
     const js = read("js/pages/empresa-dashboard.js");
