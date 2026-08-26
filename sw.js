@@ -15,25 +15,25 @@ const SHELL = [
   "./assets/banner-padrao.svg",
   "./assets/banner1.svg",
   "./css/core/style.css?v=4.2.0",
-  "./css/pages/home-4.2.1.css?v=4.2.1",
+  "./css/pages/home-4.2.1.css?v=4.2.1.2",
   "./css/core/paginas.css?v=4.2.0",
   "./css/core/accessibility.css?v=4.2.0",
   "./css/core/enhancements.css?v=4.2.8",
   "./css/modules/mobile-pwa-4.2.6.css?v=4.2.6",
   "./css/pages/suporte.css?v=4.2.0",
-  "./css/modules/restaurante-4.2.2.css",
-  "./css/modules/carrinho-4.2.5.css?v=4.2.5",
-  "./css/modules/checkout-4.2.3.css?v=4.2.3",
+  "./css/modules/restaurante-4.2.2.css?v=4.2.2",
+  "./css/modules/carrinho-4.2.5.css?v=4.2.6",
+  "./css/modules/checkout-4.2.3.css?v=4.2.4",
   "./css/modules/operacao-restaurante-4.2.7.css?v=4.2.7",
   "./js/core/app-utils.js?v=4.2.0",
   "./js/core/config.js?v=4.4.3",
   "./js/core/monitoring.js?v=4.2.0",
   "./js/core/notifications.js?v=4.4.3",
-  "./js/core/favorites-sync.js?v=4.2.0",
-  "./js/pages/home.js?v=4.2.0",
+  "./js/core/favorites-sync.js?v=4.2.1",
+  "./js/pages/home.js?v=4.2.1",
   "./js/core/cart-store.js?v=4.2.0",
-  "./js/modules/carrinho-4.2.5.js?v=4.2.5",
-  "./js/modules/checkout-4.2.3.js?v=4.2.3",
+  "./js/modules/carrinho-4.2.5.js?v=4.2.6",
+  "./js/modules/checkout-4.2.3.js?v=4.2.4",
   "./js/modules/operacao-restaurante-4.2.7.js?v=4.2.7",
   "./js/pages/suporte.js?v=4.2.0",
   "./js/core/site-enhancements.js?v=4.4.5"
@@ -91,7 +91,7 @@ self.addEventListener("fetch", (event) => {
   }
   const destination = event.request.destination;
   if (destination === "style" || destination === "script" || destination === "manifest") {
-    event.respondWith(redePrimeiro(event.request, DYNAMIC_CACHE));
+    event.respondWith(cachePrimeiro(event.request));
     return;
   }
   if (destination === "image" || destination === "font" || event.request.url.endsWith(".svg")) {

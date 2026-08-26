@@ -4,6 +4,7 @@ let desconto = 0;
 let cupomAplicado = "";
 let cupomDados = null;
 let enderecoSelecionado = null;
+let checkoutInicializado = false;
 let carrinho = window.CartStore?.ler() || App.lerJSON("carrinho", []);
 let carrinhoMeta = window.CartStore?.meta() || App.lerJSON("carrinhoMeta", null);
 carrinho = Array.isArray(carrinho) ? carrinho : [];
@@ -221,7 +222,7 @@ function renderizarResumo() {
         listaResumo.append(vazio);
         btnFinalizar.disabled = true;
     } else {
-        btnFinalizar.disabled = false;
+        btnFinalizar.disabled = !checkoutInicializado;
         carrinho.forEach((item) => listaResumo.append(criarResumo(item)));
     }
     atualizarTotais();
@@ -548,10 +549,21 @@ observacoes.addEventListener("input", () => {
     if (observacoesContador) observacoesContador.textContent = `${observacoes.value.length}/500`;
 });
 btnFinalizar.addEventListener("click", async () => {
-    const confirmado = window.AppConfirm
-        ? await window.AppConfirm({ titulo: "Confirmar pedido", mensagem: `Enviar o pedido no valor de ${App.dinheiro(calcularTotal())} para ${carrinhoMeta?.empresa_nome || "o restaurante"}?`, confirmar: "Confirmar e enviar" })
-        : confirm("Deseja confirmar e enviar este pedido?");
-    if (confirmado) finalizarPedido();
+    if (!checkoutInicializado) return;
+    if (!enderecoSelecionado) {
+        const user = await verificarUsuario();
+        if (user) window.location.href = "enderecos.html?redirect=checkout.html";
+        return;
+    }
+    if (!validarAreaEntrega()) {
+        window.location.href = "enderecos.html?redirect=checkout.html";
+        return;
+    }
+    try {
+        await finalizarPedido();
+    } finally {
+        window.dispatchEvent(new CustomEvent("checkout-envio-finalizado"));
+    }
 });
 
 if (btnVoltar) btnVoltar.href = App.destinoInterno(localStorage.getItem("ultimaPaginaRestaurante"), "../index.html");
@@ -573,4 +585,8 @@ if (avisoCarrinho) {
     } catch (erro) {
         App.mostrarErroPagina(`Não foi possível carregar o endereço: ${App.mensagemErro(erro)}`);
     }
+    checkoutInicializado = true;
+    document.body.dataset.checkoutInicializado = "true";
+    renderizarResumo();
+    window.dispatchEvent(new CustomEvent("checkout-inicializado"));
 })();

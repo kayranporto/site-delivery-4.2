@@ -17,11 +17,13 @@
   <link rel="preload" href="assets/banner1.svg" as="image" />
   <link href="https://fonts.googleapis.com" rel="preconnect"/>
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link crossorigin="" href="https://cdn.jsdelivr.net" rel="preconnect"/>
+  <link crossorigin="" href="https://wzxsjxdbxonrmlmzufpv.supabase.co" rel="preconnect"/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
   <link href="css/core/style.css?v=4.2.0" rel="stylesheet"/>
   <link href="css/core/accessibility.css?v=4.2.0" rel="stylesheet"/>
   <link href="css/core/enhancements.css?v=4.2.0" rel="stylesheet"/>
-  <link href="css/pages/home-4.2.1.css?v=4.2.1" rel="stylesheet"/>
+  <link href="css/pages/home-4.2.1.css?v=4.2.1.2" rel="stylesheet"/>
   <link href="assets/favicon.svg" rel="icon" type="image/svg+xml"/>
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#ea1d2c">
@@ -61,7 +63,7 @@
           <div class="hero-trust" aria-label="Benefícios do delivery"><span><strong>📍</strong> Restaurantes disponíveis</span><span><strong>📦</strong> Pedido acompanhado</span><span><strong>💳</strong> Pagamento flexível</span></div>
         </div>
         <div class="hero-visual" aria-label="Destaque de um pedido">
-          <div class="hero-glow" aria-hidden="true"></div><div class="hero-sparkles" aria-hidden="true"><span>✦</span><span>✦</span><span>✦</span></div><img alt="Ilustração de hambúrguer para destacar uma oferta de delivery" src="assets/banner1.svg"/>
+          <div class="hero-glow" aria-hidden="true"></div><div class="hero-sparkles" aria-hidden="true"><span>✦</span><span>✦</span><span>✦</span></div><img alt="Ilustração de hambúrguer para destacar uma oferta de delivery" decoding="async" fetchpriority="high" height="500" src="assets/banner1.svg" width="700"/>
           <div class="hero-deal-card"><span class="deal-pill">🍽️ ESCOLHA SEU FAVORITO</span><strong>Cardápios em um só lugar</strong><span class="deal-meta"><span>Busque</span><span>•</span><span>escolha</span><span>•</span><span>peça</span></span></div>
           <div class="hero-rating-card" aria-label="Acompanhamento do pedido"><span class="rating-star" aria-hidden="true">✓</span><div><strong>Status</strong><small>acompanhe seu pedido</small></div></div>
           <div class="hero-time-card" aria-label="Ofertas conforme disponibilidade"><span aria-hidden="true">%</span><div><strong>Ofertas disponíveis</strong><small>conforme cada restaurante</small></div></div>
@@ -72,7 +74,7 @@
       </div>
     </section>
     <section class="cupom" aria-labelledby="cupomTitulo">
-      <div class="cupom-box"><div class="cupom-copy"><span class="cupom-badge">OFERTAS</span><div><h2 id="cupomTitulo">Cupons e promoções quando disponíveis</h2><p>Cada restaurante pode oferecer benefícios próprios. Confira as condições antes de finalizar o pedido.</p></div><a class="cupom-action" href="#destaques">Explorar ofertas <span aria-hidden="true">��</span></a></div><img alt="Ilustração de cupom promocional" src="assets/promo.svg"/></div>
+      <div class="cupom-box"><div class="cupom-copy"><span class="cupom-badge">OFERTAS</span><div><h2 id="cupomTitulo">Cupons e promoções quando disponíveis</h2><p>Cada restaurante pode oferecer benefícios próprios. Confira as condições antes de finalizar o pedido.</p></div><a class="cupom-action" href="#destaques">Explorar ofertas <span aria-hidden="true">→</span></a></div><img alt="Ilustração de cupom promocional" decoding="async" height="300" loading="lazy" src="assets/promo.svg" width="520"/></div>
     </section>
     <section class="categorias" aria-labelledby="categoriasTitulo">
       <div class="section-title category-heading"><div><span class="eyebrow">Escolha pelo que está com vontade</span><h2 id="categoriasTitulo">Encontre seu sabor</h2></div></div>
@@ -92,6 +94,6 @@
   </main>
   <footer><div class="footer-container"><div><h2>🍔 Multi Delivery</h2><p>Comida boa na sua porta.</p></div><div><h3>Cliente</h3><p><a href="html/perfil.html">Minha conta</a></p><p><a href="html/meus-pedidos.html">Meus pedidos</a></p><p><a href="html/suporte.html">Ajuda</a></p><p><a href="html/privacidade.html">Privacidade</a></p></div><div><h3>Restaurante</h3><p><a href="html/empresa-cadastro.html">Cadastrar restaurante</a></p><p><a href="html/empresa-login.html">Área do parceiro</a></p></div><div><h3>Entregador</h3><p><a href="html/entregador.html">Quero fazer entregas</a></p><p><a href="html/entregador.html">Painel do entregador</a></p></div></div><div class="copyright">© 2026 Multi Delivery</div></footer>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.111.0" defer></script>
-  <script src="js/core/app-utils.js?v=4.2.0" defer></script><script src="js/core/supabase.js?v=4.2.0" defer></script><script src="js/core/config.js?v=4.2.0" defer></script><script src="js/core/monitoring.js?v=4.2.0" defer></script><script src="js/core/notifications.js?v=4.2.0" defer></script><script src="js/core/favorites-sync.js?v=4.2.0" defer></script><script src="js/pages/home.js?v=4.2.0" defer></script><script src="js/core/site-enhancements.js?v=4.4.5" defer></script>
+  <script src="js/core/app-utils.js?v=4.2.0" defer></script><script src="js/core/supabase.js?v=4.2.0" defer></script><script src="js/core/config.js?v=4.2.0" defer></script><script src="js/core/monitoring.js?v=4.2.0" defer></script><script src="js/core/notifications.js?v=4.2.0" defer></script><script src="js/core/favorites-sync.js?v=4.2.1" defer></script><script src="js/pages/home.js?v=4.2.1" defer></script><script src="js/core/site-enhancements.js?v=4.4.5" defer></script>
 </body>
 </html>

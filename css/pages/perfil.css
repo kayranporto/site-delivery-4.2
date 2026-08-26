@@ -307,3 +307,132 @@ body {
     .menu-item,
     .progresso-trilha span { transition: none; }
 }
+
+/* Refinamento visual e de usabilidade da conta do cliente. */
+.explorar-link,
+.pedido-vazio a,
+.pedido-acao {
+    box-shadow: 0 9px 20px rgba(234, 29, 44, .16);
+    transition: background .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+
+.explorar-link:hover,
+.pedido-vazio a:hover,
+.pedido-acao:hover {
+    background: var(--perfil-primary-dark);
+    box-shadow: 0 12px 25px rgba(234, 29, 44, .22);
+    transform: translateY(-1px);
+}
+
+.editar-perfil,
+.acao-secundaria,
+.sair {
+    transition: border-color .18s ease, background .18s ease, color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+
+.editar-perfil:hover,
+.acao-secundaria:hover {
+    border-color: #f0aeb4;
+    background: #fff5f6;
+    color: var(--perfil-primary);
+    box-shadow: 0 8px 20px rgba(234, 29, 44, .08);
+    transform: translateY(-1px);
+}
+
+.restaurante-menu-item {
+    border-color: #f2d1bd;
+    background: linear-gradient(135deg, #fffaf6, #fff);
+}
+
+.restaurante-menu-item:hover {
+    border-color: #e9a77e;
+    box-shadow: 0 14px 30px rgba(180, 83, 9, .1);
+}
+
+.menu-item:focus-visible,
+.avatar-link:focus-visible,
+.voltar:focus-visible,
+.editar-perfil:focus-visible,
+.acao-secundaria:focus-visible,
+.pedido-acao:focus-visible {
+    outline: 3px solid rgba(234, 29, 44, .27);
+    outline-offset: 3px;
+}
+
+.resumo-card {
+    transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+
+.resumo-card:hover {
+    border-color: #dedee5;
+    box-shadow: 0 18px 42px rgba(23, 23, 28, .09);
+    transform: translateY(-2px);
+}
+
+.loyalty-row {
+    transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+
+.loyalty-row:hover {
+    border-color: #dfd2ad;
+    box-shadow: 0 9px 22px rgba(109, 77, 0, .07);
+    transform: translateY(-1px);
+}
+
+.loyalty-redeem {
+    min-height: 34px;
+    padding: 8px 11px;
+    font-size: 9px;
+    transition: background .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+
+.loyalty-redeem:hover {
+    background: #765100;
+    box-shadow: 0 7px 16px rgba(118, 81, 0, .18);
+    transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+    body { padding-bottom: env(safe-area-inset-bottom); }
+    .perfil-header { position: sticky; }
+    .perfil-header-inner { min-height: 64px; }
+    .usuario-card {
+        display: grid;
+        grid-template-columns: 58px minmax(0, 1fr);
+    }
+    .avatar-link { grid-column: 1; grid-row: 1; }
+    .usuario-info { grid-column: 2; grid-row: 1; }
+    .usuario-info > p { font-size: 12px; }
+    .editar-perfil {
+        display: inline-flex;
+        grid-column: 1 / -1;
+        width: 100%;
+        min-height: 44px;
+    }
+    .resumo-conta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .menu-item { min-height: 68px; }
+    .menu-texto strong { font-size: 13px; }
+    .menu-texto small {
+        overflow: visible;
+        font-size: 10px;
+        white-space: normal;
+    }
+    .loyalty-row { align-items: flex-start; }
+    .loyalty-row small { font-size: 10px; line-height: 1.45; }
+    .loyalty-redeem { min-height: 40px; }
+    .sair { min-height: 50px; }
+    .resumo-card:hover,
+    .loyalty-row:hover { transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .explorar-link,
+    .pedido-vazio a,
+    .pedido-acao,
+    .editar-perfil,
+    .acao-secundaria,
+    .sair,
+    .resumo-card,
+    .loyalty-row,
+    .loyalty-redeem { transition: none; }
+}

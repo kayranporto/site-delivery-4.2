@@ -35,6 +35,7 @@ function criarImagem(src, alt, fallback) {
     imagem.src = src || fallback;
     imagem.alt = alt || "Imagem";
     imagem.loading = "lazy";
+    imagem.decoding = "async";
     imagem.addEventListener("error", () => { imagem.src = fallback; }, { once: true });
     return imagem;
 }
@@ -87,7 +88,7 @@ async function carregarAvaliacoesPublicas() {
     data.forEach((avaliacao) => {
         const card = document.createElement("article"); card.className = "avaliacao-publica";
         const autor = document.createElement("div"); autor.className = "avaliacao-autor";
-        if (avaliacao.autor_avatar_url) { const foto = document.createElement("img"); foto.src = avaliacao.autor_avatar_url; foto.alt = ""; autor.append(foto); }
+        if (avaliacao.autor_avatar_url) { const foto = document.createElement("img"); foto.src = avaliacao.autor_avatar_url; foto.alt = ""; foto.loading = "lazy"; foto.decoding = "async"; autor.append(foto); }
         else { const iniciais = document.createElement("span"); iniciais.textContent = (avaliacao.autor_nome || "Cliente").trim().charAt(0).toUpperCase(); autor.append(iniciais); }
         const nomeAutor = document.createElement("strong"); nomeAutor.textContent = avaliacao.autor_nome || "Cliente verificado"; autor.append(nomeAutor);
         const estrelas = document.createElement("span"); estrelas.className = "estrelas"; estrelas.textContent = "★".repeat(avaliacao.nota) + "☆".repeat(5 - avaliacao.nota);

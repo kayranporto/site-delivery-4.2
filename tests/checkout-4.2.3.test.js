@@ -35,3 +35,19 @@ test("checkout 4.2.3 preserva as regras do fluxo existente", () => {
     assert.match(core, /pedido_definir_pagamento_online/);
     assert.match(core, /functions\.invoke\("criar-pagamento"/);
 });
+
+test("checkout rápido recolhe opcionais e reaproveita preferências", () => {
+    const html = ler("checkout.html");
+    const core = ler("js/pages/checkout.js");
+    const ux = ler("js/modules/checkout-4.2.3.js");
+    for (const id of ["checkoutFastLane", "checkoutFastStatus", "observacoesDetalhes", "cupomDetalhes", "finalizarPedidoTexto"]) {
+        assert.match(html, new RegExp(`id=["']${id}["']`), `checkout sem ${id}`);
+    }
+    assert.match(html, /<details class="checkout-card checkout-optional"/);
+    assert.match(ux, /checkoutPreferencias/);
+    assert.match(ux, /restaurarPagamentoPreferido/);
+    assert.match(core, /await finalizarPedido\(\)/);
+    assert.match(core, /checkout-envio-finalizado/);
+    assert.match(core, /checkoutInicializado/);
+    assert.match(core, /checkout-inicializado/);
+});

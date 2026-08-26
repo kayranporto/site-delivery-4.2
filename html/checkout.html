@@ -12,10 +12,12 @@
   <link rel="manifest" href="../manifest.webmanifest"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin/>
+  <link rel="preconnect" href="https://wzxsjxdbxonrmlmzufpv.supabase.co" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="../css/core/style.css?v=4.2.0"/>
-  <link rel="stylesheet" href="../css/pages/checkout.css?v=4.2.0"/>
-  <link rel="stylesheet" href="../css/modules/checkout-4.2.3.css?v=4.2.3"/>
+  <link rel="stylesheet" href="../css/pages/checkout.css?v=4.2.4"/>
+  <link rel="stylesheet" href="../css/modules/checkout-4.2.3.css?v=4.2.4"/>
   <link rel="stylesheet" href="../css/core/accessibility.css?v=4.2.0"/>
   <link rel="stylesheet" href="../css/core/enhancements.css?v=4.2.0"/>
 </head>
@@ -48,6 +50,11 @@
 
   <main class="checkout-container">
     <div class="checkout-flow">
+      <div class="checkout-fast-lane" id="checkoutFastLane" role="status">
+        <span class="checkout-fast-icon" aria-hidden="true">⚡</span>
+        <div><strong>Checkout rápido</strong><small id="checkoutFastStatus">Carregando seus dados salvos...</small></div>
+        <span class="checkout-fast-badge" id="checkoutFastBadge">Preparando</span>
+      </div>
       <section class="checkout-card checkout-card--address" aria-labelledby="tituloEndereco">
         <div class="card-heading">
           <span class="card-icon" aria-hidden="true">📍</span>
@@ -112,26 +119,32 @@
         </div>
       </section>
 
-      <section class="checkout-card" aria-labelledby="tituloObservacoes">
-        <div class="card-heading">
+      <details class="checkout-card checkout-optional" id="observacoesDetalhes">
+        <summary class="card-heading">
           <span class="card-icon" aria-hidden="true">📝</span>
           <div><small>OPCIONAL</small><h2 id="tituloObservacoes">Observações</h2></div>
+          <span class="checkout-optional-action" id="observacoesStatus">Adicionar</span>
+        </summary>
+        <div class="checkout-optional-body">
+          <textarea aria-label="Observações do pedido" id="observacoesPedido" maxlength="500" placeholder="Ex.: sem cebola, molho à parte ou outra preferência..."></textarea>
+          <div class="field-helper"><span>O restaurante receberá esta mensagem com o pedido.</span><span id="observacoesContador">0/500</span></div>
         </div>
-        <textarea aria-label="Observações do pedido" id="observacoesPedido" maxlength="500" placeholder="Ex.: sem cebola, molho à parte ou outra preferência..."></textarea>
-        <div class="field-helper"><span>O restaurante receberá esta mensagem com o pedido.</span><span id="observacoesContador">0/500</span></div>
-      </section>
+      </details>
 
-      <section class="checkout-card" aria-labelledby="tituloCupom">
-        <div class="card-heading">
+      <details class="checkout-card checkout-optional" id="cupomDetalhes">
+        <summary class="card-heading">
           <span class="card-icon" aria-hidden="true">🎟️</span>
           <div><small>ECONOMIZE</small><h2 id="tituloCupom">Cupom de desconto</h2></div>
+          <span class="checkout-optional-action" id="cupomStatus">Adicionar</span>
+        </summary>
+        <div class="checkout-optional-body">
+          <div class="cupom-box">
+            <input aria-label="Cupom de desconto" autocomplete="off" id="cupom" maxlength="40" placeholder="Digite seu cupom" type="text"/>
+            <button id="btnCupom" type="button">Aplicar cupom</button>
+          </div>
+          <p class="checkout-inline-status" id="cupomFeedback" data-tipo="info" role="status">Cupom é opcional e será validado novamente ao enviar o pedido.</p>
         </div>
-        <div class="cupom-box">
-          <input aria-label="Cupom de desconto" autocomplete="off" id="cupom" maxlength="40" placeholder="Digite seu cupom" type="text"/>
-          <button id="btnCupom" type="button">Aplicar cupom</button>
-        </div>
-        <p class="checkout-inline-status" id="cupomFeedback" data-tipo="info" role="status">Cupom é opcional e será validado novamente ao enviar o pedido.</p>
-      </section>
+      </details>
     </div>
 
     <aside class="checkout-card checkout-summary" id="checkoutResumo" aria-labelledby="tituloResumo">
@@ -156,21 +169,21 @@
       <div class="footer-total"><span>Total do pedido</span><strong id="footerTotal">R$ 0,00</strong></div>
       <div class="checkout-submit-copy">
         <p id="checkoutSubmitStatus" role="status">Revise o total e confirme quando estiver pronto.</p>
-        <small>Um clique é suficiente. O pedido possui proteção contra envio duplicado.</small>
+        <small>Envio em um toque, com proteção contra pedido duplicado.</small>
       </div>
-      <button id="finalizarPedido" type="button"><span>Confirmar e finalizar</span><span aria-hidden="true">→</span></button>
+      <button id="finalizarPedido" type="button"><span id="finalizarPedidoTexto">Preparando checkout...</span><span aria-hidden="true">→</span></button>
     </div>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.111.0"></script>
-  <script src="../js/core/app-utils.js?v=4.2.0"></script>
-  <script src="../js/core/config.js?v=4.2.8"></script>
-  <script src="../js/core/supabase.js?v=4.2.0"></script>
-  <script src="../js/core/dialogs.js?v=4.2.0"></script>
-  <script src="../js/core/cart-store.js?v=4.2.0"></script>
-  <script src="../js/core/monitoring.js?v=4.2.0"></script>
-  <script src="../js/pages/checkout.js?v=4.2.0"></script>
-  <script src="../js/modules/checkout-4.2.3.js?v=4.2.3"></script>
-  <script src="../js/core/site-enhancements.js?v=4.4.5"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.111.0"></script>
+  <script defer src="../js/core/app-utils.js?v=4.2.0"></script>
+  <script defer src="../js/core/config.js?v=4.2.8"></script>
+  <script defer src="../js/core/supabase.js?v=4.2.0"></script>
+  <script defer src="../js/core/dialogs.js?v=4.2.0"></script>
+  <script defer src="../js/core/cart-store.js?v=4.2.0"></script>
+  <script defer src="../js/core/monitoring.js?v=4.2.0"></script>
+  <script defer src="../js/pages/checkout.js?v=4.2.4"></script>
+  <script defer src="../js/modules/checkout-4.2.3.js?v=4.2.4"></script>
+  <script defer src="../js/core/site-enhancements.js?v=4.4.5"></script>
 </body>
 </html>

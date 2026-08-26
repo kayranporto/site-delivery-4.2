@@ -277,3 +277,17 @@ button, a { font: inherit; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+/* Historico de pedidos com leitura e acoes mais claras. */
+.order-card{transition:border-color .2s ease,box-shadow .2s ease,transform .2s ease}
+.order-card:hover,.order-card:focus-within{border-color:rgba(234,29,44,.18);box-shadow:0 17px 38px rgba(23,26,36,.09);transform:translateY(-2px)}
+.order-actions>a,.orders-empty a{min-height:42px;display:inline-flex;align-items:center;justify-content:center}
+.order-actions>a:focus-visible,.orders-empty a:focus-visible{outline:3px solid rgba(234,29,44,.27);outline-offset:3px}
+@media(max-width:720px){
+  .orders-header{position:sticky;top:0;z-index:30}
+  .order-filters{overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none}
+  .order-filters::-webkit-scrollbar{display:none}
+  .order-filters button{min-width:max-content;min-height:44px}
+  .order-actions>*{min-height:46px}
+  .order-card:hover{transform:none}
+}

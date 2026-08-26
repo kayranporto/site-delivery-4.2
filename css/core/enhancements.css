@@ -42,4 +42,21 @@
 .admin-loading[hidden],.admin-app[hidden],.admin-modal[hidden],.ops-dialog[hidden],
 .driver-loading[hidden],.pending-card[hidden],#entregadorApp[hidden],#cadastroEntregador[hidden]{display:none!important}
 
+/* Camada compartilhada de acabamento visual e usabilidade. */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+::selection{background:rgba(234,29,44,.18);color:#17171c}
+:where(button,a,input,select,textarea){transition:border-color .18s ease,background-color .18s ease,color .18s ease,box-shadow .18s ease,transform .18s ease}
+:where(input,select,textarea)::placeholder{color:#8a8f9b;opacity:1}
+:where(input,select,textarea):hover:not(:disabled){border-color:#c9cdd6}
+:where(input,select,textarea):focus-visible{outline:0;border-color:var(--app-primary);box-shadow:0 0 0 4px rgba(234,29,44,.12)}
+:where(button,a,[role="button"]):active:not(:disabled){transform:translateY(1px)}
+:where(main section[id]){scroll-margin-top:96px}
+.loading,.perfil-loading,.panel-loading,.chart-loading,.orders-loading{position:relative;overflow:hidden}
+.loading:after,.perfil-loading:after,.panel-loading:after,.chart-loading:after{position:absolute;inset:0;background:linear-gradient(100deg,transparent 25%,rgba(255,255,255,.72) 48%,transparent 72%);content:"";transform:translateX(-100%);animation:appLoadingSweep 1.7s ease-in-out infinite}
+@keyframes appLoadingSweep{to{transform:translateX(100%)}}
+@media(pointer:coarse){:where(button,[role="button"],input,select){min-height:44px}:where(a.button,.menu-item,.order-action,.btn,.btn-mini,.icon-action,.btn-outline){min-height:44px}}
+@media(max-width:640px){.app-toast-region{inset:auto 12px calc(12px + env(safe-area-inset-bottom));max-width:none}.app-toast{padding:13px 14px;border-radius:14px}.network-banner{bottom:calc(12px + env(safe-area-inset-bottom));max-width:calc(100vw - 24px);text-align:center}.notification-panel{max-height:min(520px,calc(100vh - 130px))}}
+@media(prefers-reduced-motion:reduce){.loading:after,.perfil-loading:after,.panel-loading:after,.chart-loading:after{display:none;animation:none}}
+
 /* Republicação solicitada após indisponibilidade temporária do artefato do Pages. */

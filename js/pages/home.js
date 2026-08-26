@@ -105,6 +105,7 @@ function imagemComFallback(src, alt, fallback = "assets/logo-restaurante.svg") {
     img.src = src || fallback;
     img.alt = alt || "Restaurante";
     img.loading = "lazy";
+    img.decoding = "async";
     img.addEventListener("error", () => {
         if (!img.src.endsWith(fallback)) img.src = fallback;
     }, { once: true });
@@ -268,10 +269,14 @@ function aplicarFiltros() {
 async function carregarEmpresas() {
     cards.innerHTML = '<div class="loading">Carregando restaurantes...</div>';
 
-    const { data, error } = await window.db
-        .from("empresas_catalogo")
-        .select("id,nome,descricao,categoria,tipo,logo,banner,taxa_entrega,pedido_minimo,status,cidade_atendimento,uf_atendimento,tempo_estimado_min,tempo_estimado_max")
-        .order("nome");
+    const [empresasResposta, resumoAvaliacoes] = await Promise.all([
+        window.db
+            .from("empresas_catalogo")
+            .select("id,nome,descricao,categoria,tipo,logo,banner,taxa_entrega,pedido_minimo,status,cidade_atendimento,uf_atendimento,tempo_estimado_min,tempo_estimado_max")
+            .order("nome"),
+        carregarResumoAvaliacoes()
+    ]);
+    const { data, error } = empresasResposta;
 
     if (error) {
         console.error("Erro ao carregar empresas:", error);
@@ -279,7 +284,6 @@ async function carregarEmpresas() {
         return;
     }
 
-    const resumoAvaliacoes = await carregarResumoAvaliacoes();
     empresas = (Array.isArray(data) ? data : [])
         .filter((empresa) => empresa?.id && empresa?.nome)
         .map((empresa) => ({
@@ -324,10 +328,8 @@ async function carregarDestaques() {
     });
 }
 
-async function atualizarMenuUsuario() {
+async function atualizarMenuUsuario(user) {
     if (!menuUsuario) return;
-
-    const { data: { user } } = await window.db.auth.getUser();
     if (!user) return;
 
     menuUsuario.replaceChildren();
@@ -380,9 +382,8 @@ async function atualizarMenuUsuario() {
     menuUsuario.append(perfil);
 }
 
-async function atualizarEndereco() {
+async function atualizarEndereco(user) {
     if (!locationText) return;
-    const { data: { user } } = await window.db.auth.getUser();
     if (!user) {
         locationText.textContent = "Selecionar endereço";
         return;
@@ -521,18 +522,26 @@ carts.forEach((cart) => {
 });
 
 (async function iniciarHome() {
-    const salvos = window.FavoritesSync
-        ? await window.FavoritesSync.ready()
-        : (App.lerJSON("favoritos", []) || []);
-    favoritos.clear();
-    salvos.forEach((id) => favoritos.add(String(id)));
-    atualizarEndereco();
     atualizarContadoresCarrinho();
     iniciarAnimacoes();
     iniciarHeroInterativo();
-    atualizarMenuUsuario();
-    carregarEmpresas();
-    carregarDestaques();
+    const conteudo = Promise.allSettled([carregarEmpresas(), carregarDestaques()]);
+    const usuario = window.db.auth.getUser()
+        .then(({ data }) => data?.user || null)
+        .catch(() => null);
+    const user = await usuario;
+    const favoritosSalvos = window.FavoritesSync
+        ? window.FavoritesSync.ready(user)
+        : Promise.resolve(App.lerJSON("favoritos", []) || []);
+    const [salvos] = await Promise.all([
+        favoritosSalvos,
+        atualizarEndereco(user),
+        atualizarMenuUsuario(user)
+    ]);
+    favoritos.clear();
+    salvos.forEach((id) => favoritos.add(String(id)));
+    await conteudo;
+    if (empresas.length) aplicarFiltros();
 })();
 
 // Atalhos de busca e teclado da página inicial.

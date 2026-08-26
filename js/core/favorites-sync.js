@@ -5,11 +5,14 @@
     let ids = new Set();
     let pronto = null;
 
-    async function iniciar() {
+    async function iniciar(usuarioInicial = undefined) {
         const local = window.App?.lerJSON("favoritos", []) || [];
         ids = new Set((Array.isArray(local) ? local : []).map(String).filter(Boolean));
-        const { data } = await window.db.auth.getUser();
-        usuario = data?.user || null;
+        if (usuarioInicial !== undefined) usuario = usuarioInicial;
+        else {
+            const { data } = await window.db.auth.getUser();
+            usuario = data?.user || null;
+        }
         if (!usuario) return [...ids];
         const { data: salvos, error } = await window.db.from("favoritos").select("empresa_id").eq("usuario_id", usuario.id);
         if (error) {
@@ -26,7 +29,7 @@
         return [...ids];
     }
 
-    async function garantir() { if (!pronto) pronto = iniciar(); await pronto; return ids; }
+    async function garantir(usuarioInicial = undefined) { if (!pronto) pronto = iniciar(usuarioInicial); await pronto; return ids; }
 
     async function toggle(empresaId) {
         await garantir();
@@ -46,7 +49,7 @@
     }
 
     window.FavoritesSync = {
-        ready: async () => [...await garantir()],
+        ready: async (usuarioInicial = undefined) => [...await garantir(usuarioInicial)],
         has: (id) => ids.has(String(id)),
         toggle
     };

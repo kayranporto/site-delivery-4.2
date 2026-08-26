@@ -304,3 +304,21 @@ body > header .logo {
     }
 
 }
+
+/* Cardapio mais claro, responsivo e confortavel para toque. */
+.pesquisa-produtos:focus-within{border-color:rgba(234,29,44,.45);box-shadow:0 0 0 4px rgba(234,29,44,.1),0 12px 28px rgba(20,25,36,.07)}
+.categorias button:focus-visible,.btn-add:focus-visible,.restaurant-actions button:focus-visible{outline:3px solid rgba(234,29,44,.28);outline-offset:3px}
+.produto,.avaliacao-publica{transition:border-color .2s ease,box-shadow .2s ease,transform .2s ease}
+.produto:hover,.produto:focus-within,.avaliacao-publica:hover{border-color:rgba(234,29,44,.2);box-shadow:0 18px 38px rgba(20,25,36,.1);transform:translateY(-3px)}
+.btn-add{min-height:42px;box-shadow:0 8px 18px rgba(234,29,44,.15)}
+.btn-add:hover{box-shadow:0 11px 22px rgba(234,29,44,.22);transform:translateY(-1px)}
+@media(max-width:768px){
+    .pesquisa-produtos{position:sticky;top:10px;z-index:10;border-radius:15px;box-shadow:0 9px 25px rgba(20,25,36,.09)}
+    .categorias{display:flex;overflow-x:auto;padding-bottom:9px;scroll-snap-type:x proximity;scrollbar-width:none}
+    .categorias::-webkit-scrollbar{display:none}
+    .categorias button{min-width:max-content;min-height:44px;scroll-snap-align:start}
+    .produto-info{padding:18px}
+    .btn-add{min-width:48px;min-height:46px}
+    .produto:hover,.avaliacao-publica:hover{transform:none}
+}
+@media(prefers-reduced-motion:reduce){.produto,.avaliacao-publica,.btn-add{transition:none}}

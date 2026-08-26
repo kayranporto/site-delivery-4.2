@@ -32,6 +32,7 @@ function renderizarAvatar(url, nome) {
     const imagem = document.createElement("img");
     imagem.src = url;
     imagem.alt = `Foto de perfil de ${nome}`;
+    imagem.decoding = "async";
     imagem.referrerPolicy = "no-referrer";
     imagem.addEventListener("error", fallback, { once: true });
     avatar.replaceChildren(imagem);

@@ -41,7 +41,18 @@ test("carrinho sincroniza catálogo e bloqueia checkout com item indisponível",
 
 test("restaurante carrega assets versionados do carrinho 4.2.5 depois do modal base", () => {
     const html = read("restaurante.html");
-    assert.match(html, /css\/modules\/carrinho-4\.2\.5\.css\?v=4\.2\.5/);
-    assert.match(html, /js\/modules\/carrinho-4\.2\.5\.js\?v=4\.2\.5/);
-    assert.ok(html.indexOf("js/modules/modal.js?v=4.2.0") < html.indexOf("js/modules/carrinho-4.2.5.js?v=4.2.5"));
+    assert.match(html, /css\/modules\/carrinho-4\.2\.5\.css\?v=4\.2\.6/);
+    assert.match(html, /js\/modules\/carrinho-4\.2\.5\.js\?v=4\.2\.6/);
+    assert.ok(html.indexOf("js/modules/modal.js?v=4.2.0") < html.indexOf("js/modules/carrinho-4.2.5.js?v=4.2.6"));
+});
+
+test("carrinho apresenta resumo, pedido mínimo e ações claras", () => {
+    const html = read("restaurante.html");
+    const js = read("js/modules/carrinho.js");
+    for (const trecho of ["carrinhoQuantidadeResumo", "carrinhoMinimo", "btnCheckoutTotal", "continuarComprando", "limparCarrinhoBtn"]) {
+        assert.ok(html.includes(trecho), `restaurante sem ${trecho}`);
+    }
+    for (const trecho of ["Falta para o pedido mínimo", "Pedido mínimo atingido", "Explorar cardápio", "por unidade", "aria-valuenow"]) {
+        assert.ok(js.includes(trecho), `carrinho sem ${trecho}`);
+    }
 });

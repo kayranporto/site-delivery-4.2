@@ -175,3 +175,15 @@ button, a, textarea { font: inherit; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+/* Acompanhamento mais legivel e pratico durante a entrega. */
+.track-card,.progress-card,.live-map-card,.chat-card{transition:border-color .2s ease,box-shadow .2s ease}
+.track-card:hover,.progress-card:hover,.live-map-card:hover,.chat-card:focus-within{border-color:rgba(234,29,44,.17);box-shadow:0 17px 40px rgba(23,26,36,.09)}
+.icon-action:focus-visible,.btn-outline:focus-visible,.btn-payment:focus-visible,.stars button:focus-visible{outline:3px solid rgba(234,29,44,.28);outline-offset:3px}
+.chat-form:focus-within{border-color:rgba(234,29,44,.42);box-shadow:0 0 0 4px rgba(234,29,44,.09)}
+@media(max-width:720px){
+  .track-header{position:sticky;top:0;z-index:30}
+  .post-order-actions button,.help>a,.chat-form button{min-height:46px}
+  .stars button{min-width:46px;min-height:46px}
+  .track-main{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+}

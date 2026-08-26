@@ -15,6 +15,16 @@ const totalElemento = document.getElementById("total");
 const contadorTopo = document.querySelector(".cart span");
 const cartButton = document.querySelector(".cart");
 const btnCheckout = document.getElementById("btnCheckout");
+const quantidadeResumo = document.getElementById("carrinhoQuantidadeResumo");
+const restauranteResumo = document.getElementById("carrinhoRestaurante");
+const minimoBloco = document.getElementById("carrinhoMinimo");
+const minimoTexto = document.getElementById("carrinhoMinimoTexto");
+const minimoValor = document.getElementById("carrinhoMinimoValor");
+const minimoBarra = minimoBloco?.querySelector(".carrinho-minimo-barra");
+const checkoutTexto = document.getElementById("btnCheckoutTexto");
+const checkoutTotal = document.getElementById("btnCheckoutTotal");
+const continuarComprando = document.getElementById("continuarComprando");
+const limparCarrinhoBtn = document.getElementById("limparCarrinhoBtn");
 let focoAnteriorCarrinho = null;
 
 function focaveisCarrinho() {
@@ -189,21 +199,27 @@ function criarItem(item) {
 
     const info = document.createElement("div");
     info.className = "info-item";
+    const tituloLinha = document.createElement("div");
+    tituloLinha.className = "item-carrinho-titulo";
     const titulo = document.createElement("h4");
     titulo.textContent = item.nome;
-    info.append(titulo);
+    const valor = document.createElement("strong");
+    valor.className = "item-carrinho-total";
+    valor.textContent = App.dinheiro(valorUnitario(item) * item.quantidade);
+    tituloLinha.append(titulo, valor);
+    info.append(tituloLinha);
 
     if (item.variante_nome) {
         const variante = document.createElement("small");
         variante.className = "adicionais";
-        variante.textContent = item.variante_nome;
+        variante.textContent = `Opção: ${item.variante_nome}`;
         info.append(variante);
     }
 
     if (item.adicionais.length) {
         const adicionais = document.createElement("small");
         adicionais.className = "adicionais";
-        adicionais.textContent = item.adicionais.map((adicional) => adicional.nome).filter(Boolean).join(", ");
+        adicionais.textContent = `Adicionais: ${item.adicionais.map((adicional) => adicional.nome).filter(Boolean).join(", ")}`;
         info.append(adicionais);
     }
 
@@ -214,9 +230,10 @@ function criarItem(item) {
         info.append(observacao);
     }
 
-    const valor = document.createElement("strong");
-    valor.textContent = App.dinheiro(valorUnitario(item) * item.quantidade);
-    info.append(valor);
+    const unitario = document.createElement("small");
+    unitario.className = "item-carrinho-unitario";
+    unitario.textContent = `${App.dinheiro(valorUnitario(item))} por unidade`;
+    info.append(unitario);
 
     const quantidade = document.createElement("div");
     quantidade.className = "quantidade";
@@ -224,10 +241,17 @@ function criarItem(item) {
     menos.type = "button";
     menos.dataset.action = "menos";
     menos.textContent = "−";
+    menos.disabled = item.quantidade <= 1;
     menos.setAttribute("aria-label", `Diminuir ${item.nome}`);
     const numero = document.createElement("span");
+    numero.className = "quantidade-valor";
     numero.textContent = String(item.quantidade);
     numero.setAttribute("aria-live", "polite");
+    numero.setAttribute("role", "spinbutton");
+    numero.setAttribute("aria-label", `Quantidade de ${item.nome}`);
+    numero.setAttribute("aria-valuemin", "1");
+    numero.setAttribute("aria-valuemax", "99");
+    numero.setAttribute("aria-valuenow", String(item.quantidade));
     const mais = document.createElement("button");
     mais.type = "button";
     mais.dataset.action = "mais";
@@ -238,7 +262,7 @@ function criarItem(item) {
     excluir.type = "button";
     excluir.className = "remover-item";
     excluir.dataset.action = "remover";
-    excluir.textContent = "🗑";
+    excluir.textContent = "Remover";
     excluir.setAttribute("aria-label", `Remover ${item.nome}`);
     quantidade.append(menos, numero, mais, excluir);
 
@@ -257,8 +281,12 @@ function atualizarCarrinho() {
         const titulo = document.createElement("h3");
         titulo.textContent = "Seu carrinho está vazio.";
         const texto = document.createElement("p");
-        texto.textContent = "Adicione alguns produtos.";
-        vazio.append(titulo, texto);
+        texto.textContent = "Escolha seus favoritos no cardápio para começar o pedido.";
+        const explorar = document.createElement("button");
+        explorar.type = "button";
+        explorar.dataset.action = "continuar";
+        explorar.textContent = "Explorar cardápio";
+        vazio.append(titulo, texto, explorar);
         listaItens.append(vazio);
     } else {
         carrinho.forEach((item) => listaItens.append(criarItem(item)));
@@ -266,16 +294,44 @@ function atualizarCarrinho() {
 
     const subtotal = calcularSubtotal();
     const taxa = carrinho.length ? Number(carrinhoMeta?.taxa_entrega || 0) : 0;
+    const total = subtotal + taxa;
+    const quantidadeTotal = carrinho.reduce((soma, item) => soma + item.quantidade, 0);
+    const minimo = Number(carrinhoMeta?.pedido_minimo || 0);
     if (subtotalElemento) subtotalElemento.textContent = App.dinheiro(subtotal);
-    if (taxaElemento) taxaElemento.textContent = App.dinheiro(taxa);
-    if (totalElemento) totalElemento.textContent = App.dinheiro(subtotal + taxa);
-    if (contadorTopo) contadorTopo.textContent = String(carrinho.reduce((soma, item) => soma + item.quantidade, 0));
+    if (taxaElemento) taxaElemento.textContent = carrinho.length && taxa === 0 ? "Grátis" : App.dinheiro(taxa);
+    if (totalElemento) totalElemento.textContent = App.dinheiro(total);
+    if (contadorTopo) contadorTopo.textContent = String(quantidadeTotal);
+    if (quantidadeResumo) quantidadeResumo.textContent = `${quantidadeTotal} ${quantidadeTotal === 1 ? "item" : "itens"}`;
+    if (restauranteResumo) restauranteResumo.textContent = carrinhoMeta?.empresa_nome || "Revise os itens antes de continuar";
+    if (checkoutTexto) checkoutTexto.textContent = "Ir para o checkout";
+    if (checkoutTotal) checkoutTotal.textContent = App.dinheiro(total);
+    if (cartButton) cartButton.setAttribute("aria-label", quantidadeTotal ? `Abrir carrinho, ${quantidadeTotal} ${quantidadeTotal === 1 ? "item" : "itens"}` : "Abrir carrinho vazio");
+    drawer?.classList.toggle("carrinho-sem-itens", !carrinho.length);
+    if (limparCarrinhoBtn) limparCarrinhoBtn.hidden = !carrinho.length;
+    if (minimoBloco) {
+        minimoBloco.hidden = !carrinho.length || minimo <= 0;
+        if (carrinho.length && minimo > 0) {
+            const falta = Math.max(0, minimo - subtotal);
+            const progresso = Math.min(100, Math.round((subtotal / minimo) * 100));
+            minimoTexto.textContent = falta > 0 ? "Falta para o pedido mínimo" : "Pedido mínimo atingido";
+            minimoValor.textContent = falta > 0 ? App.dinheiro(falta) : "Tudo certo";
+            minimoBarra?.setAttribute("aria-valuenow", String(progresso));
+            minimoBarra?.classList.toggle("concluido", falta === 0);
+            minimoBarra?.querySelector("span")?.style.setProperty("width", `${progresso}%`);
+        }
+    }
     if (btnCheckout) btnCheckout.disabled = !carrinho.length;
 }
 
 listaItens?.addEventListener("click", (event) => {
+    const acaoGeral = event.target.closest("button")?.dataset.action;
+    if (acaoGeral === "continuar") {
+        fecharCarrinho();
+        document.getElementById("pesquisaProduto")?.focus();
+        return;
+    }
     const item = event.target.closest(".item-carrinho");
-    const acao = event.target.closest("button")?.dataset.action;
+    const acao = acaoGeral;
     if (!item || !acao) return;
     if (acao === "mais") alterarQuantidade(item.dataset.chave, 1);
     if (acao === "menos") alterarQuantidade(item.dataset.chave, -1);
@@ -286,6 +342,16 @@ cartButton?.addEventListener("click", abrirCarrinho);
 cartButton?.setAttribute("aria-label", "Abrir carrinho");
 fecharBtn?.addEventListener("click", fecharCarrinho);
 overlay?.addEventListener("click", fecharCarrinho);
+continuarComprando?.addEventListener("click", () => {
+    fecharCarrinho();
+    document.getElementById("pesquisaProduto")?.focus();
+});
+limparCarrinhoBtn?.addEventListener("click", async () => {
+    const confirmar = window.AppConfirm
+        ? await window.AppConfirm({ titulo: "Limpar carrinho?", mensagem: "Todos os itens deste pedido serão removidos.", confirmar: "Limpar carrinho", cancelar: "Manter itens", perigoso: true })
+        : confirm("Deseja remover todos os itens do carrinho?");
+    if (confirmar) limparCarrinho();
+});
 document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && drawer?.classList.contains("aberto")) fecharCarrinho();
     if (event.key === "Tab" && drawer?.classList.contains("aberto")) {
