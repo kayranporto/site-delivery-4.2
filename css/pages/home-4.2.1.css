@@ -132,6 +132,9 @@
 }
 .home-page .resultado-info{font-size:.78rem;line-height:1.45}
 
+/* Na home, a descrição dos produtos fica oculta; ela aparece ao abrir a loja. */
+.home-page .produto-destaque p{display:none}
+
 /* Exibe a logo inteira, maior e centralizada nos cards de restaurantes. */
 .home-page .card-link > img{
   width:100%;
