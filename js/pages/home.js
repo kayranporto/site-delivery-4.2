@@ -188,7 +188,6 @@ function renderizarEmpresas(lista) {
         favorite.setAttribute("aria-label", favoritado ? `Remover ${empresa.nome} dos favoritos` : `Adicionar ${empresa.nome} aos favoritos`);
         favorite.setAttribute("aria-pressed", String(favoritado));
         body.append(header);
-        body.append(criarTexto("p", "descricao", empresa.descricao || "Confira o cardápio deste restaurante."));
 
         const info = document.createElement("div");
         info.className = "info";
