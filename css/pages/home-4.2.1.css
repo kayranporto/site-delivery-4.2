@@ -132,9 +132,6 @@
 }
 .home-page .resultado-info{font-size:.78rem;line-height:1.45}
 
-/* Na home, a descrição dos produtos fica oculta; ela aparece ao abrir a loja. */
-.home-page .produto-destaque p{display:none}
-
 /* Exibe a logo inteira, maior e centralizada nos cards de restaurantes. */
 .home-page .card-link > img{
   width:100%;
@@ -145,8 +142,18 @@
   background:var(--surface);
 }
 
+/* Mantém a descrição e exibe a foto inteira, centralizada, nos produtos em destaque. */
+.home-page .produto-destaque > img{
+  width:100%;
+  height:260px;
+  object-fit:contain;
+  object-position:center;
+  background:var(--surface);
+}
+
 @media(max-width:640px){
   .home-page .card-link > img{height:230px;padding:4px}
+  .home-page .produto-destaque > img{height:220px}
   .home-page .search{min-height:50px;border-radius:16px}
   .home-page .search kbd{display:none}
   .home-page .categoria-lista{
