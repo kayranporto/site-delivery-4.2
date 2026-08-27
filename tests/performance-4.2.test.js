@@ -42,7 +42,7 @@ test("assets versionados usam cache rápido e o service worker sempre atualiza",
     const sw = read("sw.js");
     const vercel = JSON.parse(read("vercel.json"));
     assert.match(sw, /destination === "style" \|\| destination === "script"[\s\S]*cachePrimeiro\(event\.request\)/);
-    assert.match(sw, /restaurante-4\.2\.2\.css\?v=4\.2\.3/);
+  assert.match(sw, /restaurante-4\.2\.2\.css\?v=4\.2\.4/);
     const headers = new Map(vercel.headers.map((entry) => [entry.source, entry.headers]));
     assert.match(headers.get("/css/(.*)")?.[0]?.value || "", /immutable/);
     assert.match(headers.get("/js/(.*)")?.[0]?.value || "", /immutable/);
