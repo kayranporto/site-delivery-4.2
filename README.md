@@ -29,7 +29,7 @@ css/
   core/                 estilos compartilhados e fundação visual
   pages/                estilos específicos das páginas
   modules/              estilos de funcionalidades incrementais
-docs/                   produto, operação, segurança e compliance
+docs/                   documentação indexada por produto, operação, segurança e releases
 html/                   páginas da aplicação
 js/
   core/                 infraestrutura e utilitários compartilhados
@@ -87,13 +87,13 @@ O diretório testado deve ser exatamente o diretório publicado. Não mantenha c
 
 ## Implantação
 
-Leia, nesta ordem:
+Comece pelo índice em `docs/README.md`. Para implantar, leia nesta ordem:
 
-1. `docs/PRODUCAO.md`
-2. `docs/AUTENTICACAO.md`
+1. `docs/operations/PRODUCAO.md`
+2. `docs/security/AUTENTICACAO.md`
 3. `supabase/README-SETUP.md`
 4. `supabase/functions/README.md`
-5. `docs/RUNBOOK-OPERACIONAL.md`
-6. `docs/ROADMAP-PLATAFORMA.md`
+5. `docs/operations/RUNBOOK-OPERACIONAL.md`
+6. `docs/product/ROADMAP-PLATAFORMA.md`
 
-A aplicação não deve receber pagamentos reais antes da confirmação das migrations 014 a 023 no projeto hospedado, da publicação das Edge Functions, da configuração dos segredos, da conclusão dos testes de sandbox descritos em `docs/PRODUCAO.md` e da ativação explícita de `pagamentoOnlineAtivo` em `js/core/config.js`.
+A aplicação não deve receber pagamentos reais antes da confirmação das migrations 014 a 023 no projeto hospedado, da publicação das Edge Functions, da configuração dos segredos, da conclusão dos testes de sandbox descritos em `docs/operations/PRODUCAO.md` e da ativação explícita de `pagamentoOnlineAtivo` em `js/core/config.js`.

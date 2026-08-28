@@ -43,7 +43,7 @@ Não volte a criar migrations com prefixos sequenciais curtos. Para novas altera
 5. Revise Security Advisor e Performance Advisor.
 6. Confirme RLS nas tabelas públicas que armazenam dados privados ou multi-tenant.
 7. Configure Storage, webhooks e Edge Functions.
-8. Execute os testes funcionais de `../docs/PRODUCAO.md`.
+8. Execute os testes funcionais de `../docs/operations/PRODUCAO.md`.
 
 Não aplique `SETUP-COMPLETO.sql` e todas as migrations cegamente no mesmo banco sem verificar a versão de origem. Em bancos existentes, use somente migrations ainda não aplicadas.
 

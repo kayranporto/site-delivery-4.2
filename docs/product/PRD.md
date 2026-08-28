@@ -127,7 +127,7 @@ Todas as etapas acima foram confirmadas em código, não apenas em nome de arqui
 - **Pedido agendado:** existe validação `private.validar_inicio_agendado()` na migration 008 — **PARCIAL**, há suporte de banco a um horário de início, mas não há confirmação de UI dedicada de "agendar para depois" no checkout revisado.
 
 ### 10.2 Checkout idempotente — **EXISTENTE**
-Chave de idempotência por tentativa de checkout (índice `pedidos_chave_cliente_idx`, citado em `RUNBOOK-OPERACIONAL.md`), garantindo que duplo clique não gere dois pedidos. Preço de produto/variação/adicional é **revalidado no servidor** dentro da função `private.criar_pedido_impl` (não confia no valor enviado pelo frontend).
+Chave de idempotência por tentativa de checkout (índice `pedidos_chave_cliente_idx`, citado em `../operations/RUNBOOK-OPERACIONAL.md`), garantindo que duplo clique não gere dois pedidos. Preço de produto/variação/adicional é **revalidado no servidor** dentro da função `private.criar_pedido_impl` (não confia no valor enviado pelo frontend).
 
 ---
 
@@ -220,7 +220,7 @@ Cadastro, aprovação, online/offline, localização em tempo real, ofertas por 
 Tabela `favoritos` + sincronização (`js/core/favorites-sync.js`, `favoritos.js`), tela dedicada `favoritos.html`.
 
 ### RF-20 — LGPD self-service **[EXISTENTE]**
-`dados.html` + `js/pages/dados.js`: exportação e solicitação de exclusão de dados do titular, conforme citado em `PRIVACIDADE-LGPD.md` e no README ("exportação e solicitação de exclusão de dados").
+`dados.html` + `js/pages/dados.js`: exportação e solicitação de exclusão de dados do titular, conforme citado em `../security/PRIVACIDADE-LGPD.md` e no README ("exportação e solicitação de exclusão de dados").
 
 ---
 
@@ -268,14 +268,14 @@ Existe uma separação clara entre **estado de pagamento do pedido** (`pagamento
 | RLS multi-tenant | **EXISTENTE**, auditado | Revisão remota 20/08/2026: 40/40 tabelas públicas com RLS; teste positivo isolado do entregador ainda pendente |
 | Idempotência de checkout | **EXISTENTE** | Índice `pedidos_chave_cliente_idx`, testes `checkout-4.2.3.test.js` |
 | Idempotência de webhook de pagamento | **EXISTENTE** | Chave de deduplicação antes da conciliação (webhook HMAC validado) |
-| Rate limiting | **PARCIAL** | Rate limits do Supabase Auth ainda dependem de ajuste fino conforme `PRODUCAO.md`; CAPTCHA opcional permanece fora da implantação atual por decisão de produto |
+| Rate limiting | **PARCIAL** | Rate limits do Supabase Auth ainda dependem de ajuste fino conforme `../operations/PRODUCAO.md`; CAPTCHA opcional permanece fora da implantação atual por decisão de produto |
 | Cabeçalhos HTTP de segurança completos | **EXISTENTE** | Vercel validado por HTTP real com CSP, HSTS, `nosniff`, anti-framing, política de referência, permissões e isolamento cross-origin |
 | Testes automatizados | **EXISTENTE** | 150 testes em 26 arquivos, gate de CI (`npm ci` + `npm run verify`) |
 | Observabilidade (logs estruturados/tracing/error tracking) | **PARCIAL** | `app_logs` existe no banco (auditoria básica); não há evidência de tracing distribuído ou error tracking externo (Sentry etc.) |
 | Advisors Supabase | **PARCIAL / REQUER TRIAGEM** | 75 itens de segurança (73 warnings, em maioria RPCs `SECURITY DEFINER` intencionais) e 46 apontamentos de performance; `pg_net` em `public`, HIBP desativado, 8 FKs sem índice de cobertura e 16 grupos de políticas permissivas duplicadas |
 | Performance (Core Web Vitals, lazy loading) | **NÃO CONFIRMADO** | Nenhuma métrica de performance documentada no repositório; recomenda-se medição real antes de metas |
 | PWA | **EXISTENTE** | `sw.js`, `manifest.webmanifest`, `offline.html`, cache e assets alinhados na versão 4.4.5 |
-| Backup/restauração testados | **PENDENTE (documentado como não concluído)** | `PRODUCAO.md` checklist item ainda desmarcado |
+| Backup/restauração testados | **PENDENTE (documentado como não concluído)** | `../operations/PRODUCAO.md` checklist item ainda desmarcado |
 
 ---
 
@@ -350,7 +350,7 @@ Duas decisões arquiteturais relevantes têm mais de uma solução possível —
 - Prós: plataforma pronta para múltiplos gateways por região/plano; testável isoladamente.
 - Contras: esforço de refatoração em código já auditado e estabilizado financeiramente — risco de regressão em uma área crítica.
 
-**Recomendação:** **Não refatorar agora.** Mercado Pago sequer está validado em sandbox/produção ainda (`pagamentoOnlineAtivo: false`). Priorizar concluir a validação de sandbox (seção do `PRODUCAO.md`) primeiro; só then extrair a interface de gateway, quando um segundo provedor for de fato necessário (evita generalização prematura sobre uma base financeira sensível).
+**Recomendação:** **Não refatorar agora.** Mercado Pago sequer está validado em sandbox/produção ainda (`pagamentoOnlineAtivo: false`). Priorizar concluir a validação de sandbox (seção do `../operations/PRODUCAO.md`) primeiro; só then extrair a interface de gateway, quando um segundo provedor for de fato necessário (evita generalização prematura sobre uma base financeira sensível).
 
 ---
 
@@ -490,8 +490,8 @@ Postura de segurança **acima da média** para o estágio do projeto, com evidê
 
 ## 23. LGPD
 
-- **Exportação e exclusão de dados pelo titular:** **EXISTENTE** (`dados.html`, `js/pages/dados.js`, citado no README e em `PRIVACIDADE-LGPD.md`).
-- **Política de privacidade publicada:** **EXISTENTE** (`privacidade.html`, `PRIVACIDADE-LGPD.md`), mas com **revisão jurídica ainda pendente** conforme checklist de `PRODUCAO.md` ("revisão jurídica da política de privacidade" não concluída).
+- **Exportação e exclusão de dados pelo titular:** **EXISTENTE** (`dados.html`, `js/pages/dados.js`, citado no README e em `../security/PRIVACIDADE-LGPD.md`).
+- **Política de privacidade publicada:** **EXISTENTE** (`privacidade.html`, `../security/PRIVACIDADE-LGPD.md`), mas com **revisão jurídica ainda pendente** conforme checklist de `../operations/PRODUCAO.md` ("revisão jurídica da política de privacidade" não concluída).
 - **Minimização de dados:** parcialmente evidenciada pela `view public.empresas_catalogo` (que expõe só campos seguros do catálogo, ocultando `usuario_id`, e-mail, CNPJ do público).
 - **Retenção/anonimização automatizada:** **NÃO IMPLEMENTADO** — não há job/rotina automática de expurgo ou anonimização por tempo; é exclusão sob demanda do titular, não uma política de retenção proativa. Roadmap 5.0 já lista "políticas de retenção e anonimização automatizadas" como item futuro.
 - **Dados sensíveis (CPF):** armazenado com índice único condicional (só quando preenchido) — tratamento razoável, mas não há confirmação de criptografia em nível de coluna (Postgres/Supabase criptografa em repouso na infraestrutura, o que cobre o requisito básico).
@@ -509,13 +509,13 @@ Não há dados de performance real medidos disponíveis no repositório (sem rel
 - `app_logs` (tabela) — **EXISTENTE**, nível básico.
 - `admin_auditoria` — **EXISTENTE**, auditoria de ações administrativas.
 - `admin_saude_operacao` — **EXISTENTE**, uma função de "health check" de negócio (reembolsos pendentes, chamados abertos, pagamentos divergentes) — é observabilidade de **negócio**, não de infraestrutura.
-- Tracing distribuído, error tracking (Sentry/Rollbar), alertas automatizados externos — **NÃO IMPLEMENTADO**. O `PRODUCAO.md` lista "Configure alertas para: erros das Edge Functions; pagamentos divergentes; ..." como uma instrução operacional, não como algo já automatizado no código.
+- Tracing distribuído, error tracking (Sentry/Rollbar), alertas automatizados externos — **NÃO IMPLEMENTADO**. O `../operations/PRODUCAO.md` lista "Configure alertas para: erros das Edge Functions; pagamentos divergentes; ..." como uma instrução operacional, não como algo já automatizado no código.
 
 ---
 
 ## 26. Casos de Falha
 
-Já documentados e tratados explicitamente pelo próprio projeto em `PRODUCAO.md`/`RUNBOOK-OPERACIONAL.md` (não inventados neste PRD, apenas consolidados):
+Já documentados e tratados explicitamente pelo próprio projeto em `../operations/PRODUCAO.md`/`../operations/RUNBOOK-OPERACIONAL.md` (não inventados neste PRD, apenas consolidados):
 
 | Cenário | Comportamento definido |
 |---|---|
@@ -597,7 +597,7 @@ O "MVP" aqui não é hipotético — a versão 4.4.5 é um produto operacional c
 ## 30. P0 / P1 / P2
 
 ### P0 — obrigatório antes de qualquer volume real de produção
-1. Concluir e registrar evidências dos **17 cenários** de sandbox listados em `PRODUCAO.md` antes de ativar `pagamentoOnlineAtivo`.
+1. Concluir e registrar evidências dos **17 cenários** de sandbox listados em `../operations/PRODUCAO.md` antes de ativar `pagamentoOnlineAtivo`.
 2. Aplicar e monitorar os rate limits do Auth preparados em `supabase/config.toml`.
 3. Testar e documentar backup/restauração real em projeto temporário.
 4. Decidir formalmente: checkout convidado sim/não (hoje é "não" por design de banco — ver Decisões em Aberto).

@@ -20,7 +20,7 @@
 ## Pendências externas
 
 1. Autorizar e aplicar as URLs e os rate limits do Auth no Supabase de produção.
-2. Fornecer/configurar credenciais de teste do Mercado Pago e executar os 17 cenários de `docs/PRODUCAO.md`.
+2. Fornecer/configurar credenciais de teste do Mercado Pago e executar os 17 cenários de `PRODUCAO.md`.
 3. Fornecer a senha do banco por variável de ambiente e criar um projeto Supabase temporário para ensaio de restauração.
 4. Revisar juridicamente a política de privacidade e nomear responsáveis operacionais.
 

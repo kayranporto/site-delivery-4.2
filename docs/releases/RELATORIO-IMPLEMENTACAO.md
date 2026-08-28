@@ -60,4 +60,4 @@ Ainda exigem confirmação ou execução no projeto hospedado:
 
 ## Escopo das próximas releases
 
-A versão 4.2.8 estabiliza a fundação operacional. Planos, assinaturas, repasses entre plataforma e restaurantes, roteirização geográfica, rastreamento contínuo, WhatsApp e campanhas avançadas permanecem organizados em `ROADMAP-PLATAFORMA.md` e não fazem parte deste gate de release.
+A versão 4.2.8 estabiliza a fundação operacional. Planos, assinaturas, repasses entre plataforma e restaurantes, roteirização geográfica, rastreamento contínuo, WhatsApp e campanhas avançadas permanecem organizados em `../product/ROADMAP-PLATAFORMA.md` e não fazem parte deste gate de release.

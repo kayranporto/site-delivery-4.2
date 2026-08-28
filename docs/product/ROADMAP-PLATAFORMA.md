@@ -82,7 +82,7 @@ Cada etapa deve passar por migration revisada, testes automatizados, sandbox e a
 
 Antes de ativar pagamentos reais ou ampliar volume:
 
-- concluir os 17 cenários de sandbox de `PRODUCAO.md`;
+- concluir os 17 cenários de sandbox de `../operations/PRODUCAO.md`;
 - validar RLS com identidades isoladas de todos os papéis;
 - configurar e monitorar rate limits; CAPTCHA permanece fora do escopo atual;
 - testar backup/restauração;
