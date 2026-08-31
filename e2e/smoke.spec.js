@@ -4,8 +4,12 @@ const { test, expect } = require("@playwright/test");
 
 function observarErrosFatais(page) {
     const erros = [];
-    page.on("pageerror", (erro) => erros.push(erro.message));
-    return () => expect(erros, "A página não deve gerar exceções JavaScript não tratadas").toEqual([]);
+    const aoFalhar = (erro) => erros.push(erro.message);
+    page.on("pageerror", aoFalhar);
+    return () => {
+        page.off("pageerror", aoFalhar);
+        expect(erros, "A página não deve gerar exceções JavaScript não tratadas").toEqual([]);
+    };
 }
 
 async function abrir(page, rota) {
