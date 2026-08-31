@@ -10,3 +10,5 @@ supabase/.temp/
 backups/
 *.dump
 *.backup
+playwright-report/
+test-results/
