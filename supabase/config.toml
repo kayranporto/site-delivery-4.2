@@ -6,6 +6,9 @@ verify_jwt = true
 [functions.processar-reembolso]
 verify_jwt = true
 
+[functions.geocodificar-endereco]
+verify_jwt = true
+
 [functions.mercado-pago-webhook]
 verify_jwt = false
 
