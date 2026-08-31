@@ -23,6 +23,13 @@ supabase secrets set VAPID_SUBJECT="mailto:privacidade@seu-dominio.example"
 supabase secrets set PUSH_WEBHOOK_SECRET="..."
 ```
 
+Geocodificação opcionalmente aceita um endpoint Nominatim compatível e um identificador HTTP próprios. Sem esses segredos, a função usa o serviço público do OpenStreetMap com identificação do Multi Delivery:
+
+```bash
+supabase secrets set GEOCODING_BASE_URL="https://nominatim.openstreetmap.org/search"
+supabase secrets set GEOCODING_USER_AGENT="MultiDelivery/4.4.5 (https://seu-dominio.example)"
+```
+
 `SUPABASE_URL`, `SUPABASE_ANON_KEY` e `SUPABASE_SERVICE_ROLE_KEY` são disponibilizados pelo ambiente das Edge Functions. A chave de serviço nunca deve sair do backend.
 
 ## Publicação
@@ -32,9 +39,20 @@ supabase functions deploy criar-pagamento
 supabase functions deploy mercado-pago-webhook --no-verify-jwt
 supabase functions deploy processar-reembolso
 supabase functions deploy enviar-push --no-verify-jwt
+supabase functions deploy geocodificar-endereco
 ```
 
 A configuração JWT também está declarada em `supabase/config.toml`.
+
+## Geocodificação de endereços
+
+`geocodificar-endereco` é autenticada e recebe somente os componentes textuais do endereço. Ela consulta um endpoint Nominatim compatível, restringe a busca ao Brasil e retorna latitude/longitude para o fluxo de endereços.
+
+O navegador não chama o OpenStreetMap diretamente e nenhuma chave privada de provedor é exposta no frontend. A integração não usa autocomplete em cada tecla: a consulta acontece somente no salvamento do endereço, com limitação adicional por instância para respeitar o uso leve do Nominatim público.
+
+Se o geocoding falhar ou não encontrar o endereço, o cadastro continua sem coordenadas. O usuário pode depois usar o GPS já existente para obter uma posição mais precisa.
+
+Para tráfego maior, configure `GEOCODING_BASE_URL` para uma instância própria ou provedor Nominatim compatível com SLA adequado, em vez de depender do endpoint público.
 
 ## Webhook do Mercado Pago
 
