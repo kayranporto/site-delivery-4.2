@@ -234,7 +234,7 @@ test("checkout falha com segurança enquanto o gateway online está indisponíve
     const acompanhamento = read("js/pages/acompanhamento.js");
     assert.match(config, /pagamentoOnlineAtivo:\s*false/);
     assert.match(html, /<input disabled name="pagamento" type="radio" value="Online"/);
-    assert.match(html, /js\/core\/config\.js\?v=4\.2\.8/);
+    assert.match(html, /js\/core\/config\.js\?v=4\.4\.5/);
     assert.match(checkout, /pagamentoOnlineAtivo !== true/);
     assert.match(acompanhamento, /pagamentoOnlineAtivo !== true/);
 });
