@@ -92,7 +92,7 @@ test("Página protegida de perfil exige autenticação", async ({ page }) => {
 });
 
 test("Páginas principais não criam overflow horizontal no viewport", async ({ page }) => {
-    for (const rota of ["/", "/html/login.html", "/html/cadastro.html", "/html/suporte.html"]) {
+    for (const rota of ["/", "/html/login.html", "/html/cadastro.html", "/html/privacidade.html"]) {
         await abrir(page, rota);
         const largura = await page.evaluate(() => ({
             viewport: document.documentElement.clientWidth,
