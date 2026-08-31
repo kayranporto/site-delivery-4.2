@@ -6,5 +6,19 @@ Disallow: /dados.html
 Disallow: /entregador.html
 Disallow: /empresa-dashboard.html
 Disallow: /perfil.html
+Disallow: /html/admin.html
+Disallow: /html/checkout.html
+Disallow: /html/dados.html
+Disallow: /html/entregador.html
+Disallow: /html/empresa-dashboard.html
+Disallow: /html/empresa-colaborador.html
+Disallow: /html/empresa-equipe.html
+Disallow: /html/enderecos.html
+Disallow: /html/favoritos.html
+Disallow: /html/meus-pedidos.html
+Disallow: /html/perfil.html
+Disallow: /html/acompanhamento.html
+Disallow: /html/pedido-sucesso.html
+Disallow: /html/nova-senha.html
 
 Sitemap: https://kayranporto.github.io/site-delivery-4.2/sitemap.xml

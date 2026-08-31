@@ -149,6 +149,27 @@ async function carregarResumoAvaliacoes() {
     }]));
 }
 
+async function carregarDisponibilidadeEmpresas(lista) {
+    const momento = new Date().toISOString();
+    return Promise.all(lista.map(async (empresa) => {
+        if (empresa.status === false) return { ...empresa, abertaAgora: false };
+        try {
+            const { data, error } = await window.db.rpc("empresa_disponibilidade", {
+                p_empresa_id: String(empresa.id),
+                p_quando: momento
+            });
+            if (error) {
+                console.warn(`Disponibilidade de ${empresa.nome || empresa.id}:`, error);
+                return { ...empresa, abertaAgora: true };
+            }
+            return { ...empresa, abertaAgora: data?.aberto === true };
+        } catch (erro) {
+            console.warn(`Disponibilidade de ${empresa.nome || empresa.id}:`, erro);
+            return { ...empresa, abertaAgora: true };
+        }
+    }));
+}
+
 function renderizarEmpresas(lista) {
     cards.replaceChildren();
 
@@ -206,7 +227,7 @@ function renderizarEmpresas(lista) {
         }
         body.append(info);
 
-        const aberta = empresa.status !== false;
+        const aberta = empresa.abertaAgora ?? (empresa.status !== false);
         const status = criarTexto("span", `status ${aberta ? "aberto" : "fechado"}`, aberta ? "Aberto" : "Fechado");
         body.append(status);
         link.append(body);
@@ -255,7 +276,7 @@ function aplicarFiltros() {
 
         return (!texto || conteudo.includes(texto)) &&
             (!categoria || conteudo.includes(categoria)) &&
-            (!filtros.abertoAgora || empresa.status !== false);
+            (!filtros.abertoAgora || empresa.abertaAgora === true);
     });
 
     if (filtros.ordenarPorTaxa) {
@@ -283,13 +304,14 @@ async function carregarEmpresas() {
         return;
     }
 
-    empresas = (Array.isArray(data) ? data : [])
-        .filter((empresa) => empresa?.id && empresa?.nome)
-        .map((empresa) => ({
-            ...empresa,
-            nota_media: resumoAvaliacoes.get(String(empresa.id))?.media || 0,
-            quantidade_avaliacoes: resumoAvaliacoes.get(String(empresa.id))?.quantidade || 0
-        }));
+    const catalogo = (Array.isArray(data) ? data : [])
+    .filter((empresa) => empresa?.id && empresa?.nome)
+    .map((empresa) => ({
+        ...empresa,
+        nota_media: resumoAvaliacoes.get(String(empresa.id))?.media || 0,
+        quantidade_avaliacoes: resumoAvaliacoes.get(String(empresa.id))?.quantidade || 0
+    }));
+    empresas = await carregarDisponibilidadeEmpresas(catalogo);
     aplicarFiltros();
 }
 
