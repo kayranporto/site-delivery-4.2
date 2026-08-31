@@ -30,6 +30,27 @@ function textoEndereco(endereco) {
     return endereco.referencia ? `${base} — Ref.: ${endereco.referencia}` : base;
 }
 
+async function geocodificarEndereco(payload) {
+    const { data, error } = await window.db.functions.invoke("geocodificar-endereco", {
+        body: {
+            endereco: {
+                cep: payload.cep,
+                logradouro: payload.logradouro,
+                numero: payload.numero,
+                bairro: payload.bairro,
+                cidade: payload.cidade,
+                uf: payload.uf
+            }
+        }
+    });
+    if (error || !data?.ok) return null;
+
+    const latitude = Number(data.latitude);
+    const longitude = Number(data.longitude);
+    if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return null;
+    return { latitude, longitude };
+}
+
 async function tornarPrincipal(id) {
     if (!usuarioAtual) return;
     const { error: erroLimpar } = await window.db.from("enderecos")
@@ -175,6 +196,18 @@ form.addEventListener("submit", async (event) => {
 
     App.definirCarregando(botao, true, "Salvando...");
     try {
+        let localizacaoAutomatica = false;
+        try {
+            const coordenadas = await geocodificarEndereco(payload);
+            if (coordenadas) {
+                payload.latitude = coordenadas.latitude;
+                payload.longitude = coordenadas.longitude;
+                localizacaoAutomatica = true;
+            }
+        } catch (erroLocalizacao) {
+            console.warn("Geocodificação automática indisponível", erroLocalizacao instanceof Error ? erroLocalizacao.name : "erro");
+        }
+
         if (payload.principal && enderecos.some((endereco) => endereco.principal)) {
             const { error } = await window.db.from("enderecos")
                 .update({ principal: false })
@@ -189,7 +222,13 @@ form.addEventListener("submit", async (event) => {
         document.getElementById("apelido").value = "Casa";
         document.getElementById("principal").checked = true;
         await carregar();
-        avisarEndereco("Endereço salvo", "O endereço já pode ser usado no checkout.", "success");
+        avisarEndereco(
+            "Endereço salvo",
+            localizacaoAutomatica
+                ? "A localização aproximada foi encontrada automaticamente. Use o GPS no cartão se quiser maior precisão."
+                : "O endereço foi salvo. Se a localização automática não foi encontrada, você ainda pode usar o GPS no cartão.",
+            "success"
+        );
     } catch (erro) {
         avisarEndereco("Não foi possível salvar o endereço", App.mensagemErro(erro), "error");
     } finally {
