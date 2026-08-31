@@ -54,25 +54,20 @@ jobs:
                   raise SystemExit('Ponto de inserção de disponibilidade não encontrado.')
               home = home.replace(marker, helper + marker, 1)
 
-          home = home.replace(
-              'const aberta = empresa.status !== false;',
-              'const aberta = empresa.abertaAgora ?? (empresa.status !== false);',
-              1
-          )
-          home = home.replace(
-              '(!filtros.abertoAgora || empresa.status !== false);',
-              '(!filtros.abertoAgora || empresa.abertaAgora === true);',
-              1
-          )
+          old_status = 'const aberta = empresa.status !== false;'
+          old_filter = '(!filtros.abertoAgora || empresa.status !== false);'
+          if old_status not in home or old_filter not in home:
+              raise SystemExit('Regras antigas de disponibilidade da Home não foram encontradas.')
+          home = home.replace(old_status, 'const aberta = empresa.abertaAgora ?? (empresa.status !== false);', 1)
+          home = home.replace(old_filter, '(!filtros.abertoAgora || empresa.abertaAgora === true);', 1)
 
-          old_catalog = '''    empresas = (Array.isArray(data) ? data : [])
-              .filter((empresa) => empresa?.id && empresa?.nome)
-              .map((empresa) => ({
-                  ...empresa,
-                  nota_media: resumoAvaliacoes.get(String(empresa.id))?.media || 0,
-                  quantidade_avaliacoes: resumoAvaliacoes.get(String(empresa.id))?.quantidade || 0
-              }));
-              aplicarFiltros();'''
+          start_token = '    empresas = (Array.isArray(data) ? data : [])'
+          end_token = '    aplicarFiltros();'
+          start = home.find(start_token)
+          end = home.find(end_token, start if start >= 0 else 0)
+          if start < 0 or end < 0:
+              raise SystemExit('Bloco de catálogo da Home não encontrado por marcadores.')
+          end += len(end_token)
           new_catalog = '''    const catalogo = (Array.isArray(data) ? data : [])
               .filter((empresa) => empresa?.id && empresa?.nome)
               .map((empresa) => ({
@@ -82,9 +77,7 @@ jobs:
               }));
               empresas = await carregarDisponibilidadeEmpresas(catalogo);
               aplicarFiltros();'''
-          if old_catalog not in home:
-              raise SystemExit('Bloco de catálogo da Home não encontrado.')
-          home = home.replace(old_catalog, new_catalog, 1)
+          home = home[:start] + new_catalog + home[end:]
           home_path.write_text(home, encoding='utf-8')
 
           index_path = Path('index.html')
