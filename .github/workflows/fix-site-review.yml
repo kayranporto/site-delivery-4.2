@@ -165,7 +165,7 @@ jobs:
                   assert.match(robots, new RegExp(`^Disallow: ${rota.replaceAll(".", "\\.")}$`, "m"), `${rota} deve ficar fora de indexação`);
               }
           });
-          '''.replace(/^          /gm, ''), encoding='utf-8')
+          '''.replace('          ', ''), encoding='utf-8')
           PY
       - name: Publicar correções
         run: |
