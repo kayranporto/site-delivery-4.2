@@ -58,6 +58,32 @@ for (const file of publicFiles) {
     }
 }
 
+const packageJson = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
+const configContent = fs.readFileSync(path.join(root, "js/core/config.js"), "utf8");
+const serviceWorkerContent = fs.readFileSync(path.join(root, "sw.js"), "utf8");
+const configVersion = configContent.match(/\bappVersion:\s*["']([^"']+)["']/)?.[1];
+const serviceWorkerVersion = serviceWorkerContent.match(/\bconst\s+VERSION\s*=\s*["']([^"']+)["']/)?.[1];
+
+if (!configVersion) failures.push("Não foi possível identificar appVersion em js/core/config.js.");
+if (!serviceWorkerVersion) failures.push("Não foi possível identificar VERSION em sw.js.");
+if (configVersion && packageJson.version !== configVersion) {
+    failures.push(`Versão divergente: package.json=${packageJson.version} e js/core/config.js=${configVersion}.`);
+}
+if (serviceWorkerVersion && packageJson.version !== serviceWorkerVersion) {
+    failures.push(`Versão divergente: package.json=${packageJson.version} e sw.js=${serviceWorkerVersion}.`);
+}
+if (configVersion) {
+    for (const file of publicFiles) {
+        const relative = path.relative(root, file);
+        const content = fs.readFileSync(file, "utf8");
+        for (const match of content.matchAll(/(?:\.\.\/|\.\/)?js\/core\/config\.js\?v=([\w.-]+)/g)) {
+            if (match[1] !== configVersion) {
+                failures.push(`Cache-busting divergente de config.js em ${relative}: v=${match[1]}, esperado ${configVersion}.`);
+            }
+        }
+    }
+}
+
 const migration = fs.readFileSync(path.join(root, "supabase/migrations/20260801001400_producao_financeira.sql"), "utf8");
 if ((migration.match(/\$\$/g) || []).length % 2 !== 0) failures.push("Migração 014 possui delimitadores $$ desbalanceados.");
 if (!/^begin;[\s\S]*commit;\s*$/im.test(migration)) failures.push("Migração 014 não está delimitada por BEGIN/COMMIT.");
