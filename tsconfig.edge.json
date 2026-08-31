@@ -15,6 +15,7 @@
     "supabase/functions/criar-pagamento/index.ts",
     "supabase/functions/mercado-pago-webhook/index.ts",
     "supabase/functions/processar-reembolso/index.ts",
-    "supabase/functions/enviar-push/index.ts"
+    "supabase/functions/enviar-push/index.ts",
+    "supabase/functions/geocodificar-endereco/index.ts"
   ]
 }
