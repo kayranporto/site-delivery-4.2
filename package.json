@@ -7,6 +7,8 @@
   },
   "scripts": {
     "test": "node --test",
+    "test:e2e": "playwright test",
+    "test:e2e:report": "playwright show-report",
     "check": "node scripts/check-project.js",
     "verify": "npm run check && npm test && npm run check:edge",
     "package": "bash scripts/package-release.sh",
@@ -18,6 +20,7 @@
     "restore:supabase": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/restore-supabase.ps1"
   },
   "devDependencies": {
+    "@playwright/test": "1.62.1",
     "typescript": "5.9.3"
   },
   "dependencies": {
