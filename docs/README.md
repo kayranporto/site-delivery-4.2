@@ -10,6 +10,7 @@ Use este índice para localizar a fonte de verdade de cada área do projeto.
 ## Operação e produção
 
 - [`operations/PRODUCAO.md`](operations/PRODUCAO.md) — preparação e validação de produção.
+- [`operations/STATUS-PRODUCAO-2026-08-31.md`](operations/STATUS-PRODUCAO-2026-08-31.md) — estado verificado mais recente, itens concluídos e bloqueios externos.
 - [`operations/RUNBOOK-OPERACIONAL.md`](operations/RUNBOOK-OPERACIONAL.md) — procedimentos operacionais.
 - [`operations/EVIDENCIAS-PRODUCAO.md`](operations/EVIDENCIAS-PRODUCAO.md) — registro das validações realizadas.
 
@@ -17,6 +18,7 @@ Use este índice para localizar a fonte de verdade de cada área do projeto.
 
 - [`security/AUTENTICACAO.md`](security/AUTENTICACAO.md) — configuração e proteção da autenticação.
 - [`security/PRIVACIDADE-LGPD.md`](security/PRIVACIDADE-LGPD.md) — privacidade e LGPD.
+- [`security/ADVISORS-SUPABASE.md`](security/ADVISORS-SUPABASE.md) — triagem formal, allowlist e critérios de tratamento dos Advisors Supabase.
 
 ## Histórico de implementação
 
