@@ -22,9 +22,5 @@
   "devDependencies": {
     "@playwright/test": "1.62.1",
     "typescript": "5.9.3"
-  },
-  "dependencies": {
-    "@vercel/analytics": "1.4.1",
-    "@vercel/speed-insights": "2.0.0"
   }
 }
