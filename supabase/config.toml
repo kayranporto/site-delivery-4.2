@@ -12,6 +12,9 @@ verify_jwt = false
 [functions.enviar-push]
 verify_jwt = false
 
+[functions.api-publica]
+verify_jwt = true
+
 [auth]
 enable_signup = true
 site_url = "https://site-delivery-42.vercel.app"

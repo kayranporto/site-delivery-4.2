@@ -32,9 +32,16 @@ supabase functions deploy criar-pagamento
 supabase functions deploy mercado-pago-webhook --no-verify-jwt
 supabase functions deploy processar-reembolso
 supabase functions deploy enviar-push --no-verify-jwt
+supabase functions deploy api-publica
 ```
 
 A configuração JWT também está declarada em `supabase/config.toml`.
+
+## API pública
+
+`api-publica` oferece uma API v1 somente de leitura para status, restaurantes publicados e cardápios públicos. O gateway exige a chave publicável no cabeçalho `apikey`; internamente, a função permanece limitada pelas RLS de `anon` e não usa `service_role`.
+
+A especificação OpenAPI é servida em `/functions/v1/api-publica/openapi.json`; exemplos e o smoke remoto estão documentados em [`../../docs/api/README.md`](../../docs/api/README.md). Após a publicação, valide com `API_PUBLICA_URL` definido e execute `npm run test:e2e -- e2e/api.spec.js`.
 
 ## Webhook do Mercado Pago
 

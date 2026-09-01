@@ -20,6 +20,11 @@ Use este índice para localizar a fonte de verdade de cada área do projeto.
 - [`security/PRIVACIDADE-LGPD.md`](security/PRIVACIDADE-LGPD.md) — privacidade e LGPD.
 - [`security/ADVISORS-SUPABASE.md`](security/ADVISORS-SUPABASE.md) — triagem formal, allowlist e critérios de tratamento dos Advisors Supabase.
 
+## API pública
+
+- [`api/README.md`](api/README.md) — endpoints, segurança, publicação e testes.
+- [`../supabase/functions/api-publica/openapi.json`](../supabase/functions/api-publica/openapi.json) — contrato OpenAPI 3.1 da API v1, também servido pela própria API.
+
 ## Histórico de implementação
 
 - [`releases/EQUIPE-4.3.md`](releases/EQUIPE-4.3.md) — entrega da gestão de equipe 4.3.

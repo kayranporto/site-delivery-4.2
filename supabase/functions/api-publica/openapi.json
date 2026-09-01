@@ -1,0 +1,326 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Multi Delivery API Pública",
+    "version": "1.0.0",
+    "description": "API HTTP somente de leitura para integrações de catálogo. Não expõe clientes, pedidos, pagamentos nem dados administrativos."
+  },
+  "servers": [
+    {
+      "url": "https://wzxsjxdbxonrmlmzufpv.supabase.co/functions/v1/api-publica",
+      "description": "Produção"
+    }
+  ],
+  "security": [
+    { "SupabasePublishableKey": [] }
+  ],
+  "tags": [
+    { "name": "Sistema" },
+    { "name": "Catálogo" }
+  ],
+  "paths": {
+    "/openapi.json": {
+      "get": {
+        "tags": ["Sistema"],
+        "summary": "Obtém o contrato OpenAPI desta API",
+        "operationId": "obterOpenApi",
+        "responses": {
+          "200": {
+            "description": "Documento OpenAPI 3.1 em JSON",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/v1/status": {
+      "get": {
+        "tags": ["Sistema"],
+        "summary": "Verifica a disponibilidade da API",
+        "operationId": "obterStatus",
+        "responses": {
+          "200": {
+            "description": "API disponível",
+            "headers": {
+              "X-API-Version": { "schema": { "type": "string" } },
+              "X-Request-Id": { "schema": { "type": "string" } }
+            },
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatusResponse" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      },
+      "head": {
+        "tags": ["Sistema"],
+        "summary": "Verifica a disponibilidade sem corpo de resposta",
+        "operationId": "verificarStatus",
+        "responses": {
+          "200": { "description": "API disponível" }
+        }
+      }
+    },
+    "/v1/restaurantes": {
+      "get": {
+        "tags": ["Catálogo"],
+        "summary": "Lista restaurantes publicados e ativos",
+        "operationId": "listarRestaurantes",
+        "parameters": [
+          {
+            "name": "limite",
+            "in": "query",
+            "description": "Quantidade de resultados por página.",
+            "schema": { "type": "integer", "minimum": 1, "maximum": 50, "default": 20 }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Posição inicial da página.",
+            "schema": { "type": "integer", "minimum": 0, "maximum": 10000, "default": 0 }
+          },
+          {
+            "name": "categoria",
+            "in": "query",
+            "description": "Categoria exata do restaurante.",
+            "schema": { "type": "string", "maxLength": 80 }
+          },
+          {
+            "name": "cidade",
+            "in": "query",
+            "description": "Cidade de atendimento exata.",
+            "schema": { "type": "string", "maxLength": 120 }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Página de restaurantes",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/RestaurantListResponse" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "502": { "$ref": "#/components/responses/BadGateway" },
+          "503": { "$ref": "#/components/responses/Unavailable" }
+        }
+      }
+    },
+    "/v1/restaurantes/{restauranteId}/cardapio": {
+      "get": {
+        "tags": ["Catálogo"],
+        "summary": "Obtém o cardápio público de um restaurante",
+        "operationId": "obterCardapio",
+        "parameters": [
+          {
+            "name": "restauranteId",
+            "in": "path",
+            "required": true,
+            "description": "UUID do restaurante.",
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Restaurante, categorias, produtos, variações e adicionais públicos",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MenuResponse" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "502": { "$ref": "#/components/responses/BadGateway" },
+          "503": { "$ref": "#/components/responses/Unavailable" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "SupabasePublishableKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "apikey",
+        "description": "Chave publicável do projeto Supabase. Não é uma chave secreta nem substitui autenticação de usuário."
+      }
+    },
+    "responses": {
+      "Unauthorized": {
+        "description": "Cabeçalho apikey ausente ou inválido; resposta produzida pelo gateway Supabase"
+      },
+      "BadRequest": {
+        "description": "Parâmetro inválido",
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+      },
+      "NotFound": {
+        "description": "Recurso não encontrado",
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+      },
+      "BadGateway": {
+        "description": "Falha ao consultar o catálogo",
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+      },
+      "Unavailable": {
+        "description": "API ainda não configurada",
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+      }
+    },
+    "schemas": {
+      "StatusResponse": {
+        "type": "object",
+        "required": ["data", "request_id"],
+        "properties": {
+          "data": {
+            "type": "object",
+            "required": ["status", "servico", "versao", "documentacao"],
+            "properties": {
+              "status": { "type": "string", "const": "ok" },
+              "servico": { "type": "string", "const": "multi-delivery-api" },
+              "versao": { "type": "string", "example": "1.0.0" },
+              "documentacao": { "type": "string", "format": "uri", "example": "https://wzxsjxdbxonrmlmzufpv.supabase.co/functions/v1/api-publica/openapi.json" }
+            }
+          },
+          "request_id": { "type": "string" }
+        }
+      },
+      "Restaurant": {
+        "type": "object",
+        "required": ["id", "nome", "status"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "nome": { "type": "string" },
+          "descricao": { "type": ["string", "null"] },
+          "categoria": { "type": ["string", "null"] },
+          "tipo": { "type": ["string", "null"] },
+          "logo": { "type": ["string", "null"], "format": "uri" },
+          "banner": { "type": ["string", "null"], "format": "uri" },
+          "taxa_entrega": { "type": ["number", "string"] },
+          "pedido_minimo": { "type": ["number", "string"] },
+          "status": { "type": "boolean" },
+          "cidade_atendimento": { "type": ["string", "null"] },
+          "uf_atendimento": { "type": ["string", "null"] },
+          "bairros_atendidos": { "type": ["array", "null"], "items": { "type": "string" } },
+          "tempo_estimado_min": { "type": ["integer", "null"] },
+          "tempo_estimado_max": { "type": ["integer", "null"] }
+        }
+      },
+      "Category": {
+        "type": "object",
+        "required": ["id", "nome", "ordem"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "nome": { "type": "string" },
+          "ordem": { "type": "integer" }
+        }
+      },
+      "Variant": {
+        "type": "object",
+        "required": ["id", "produto_id", "nome", "preco", "ordem"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "produto_id": { "type": "string", "format": "uuid" },
+          "nome": { "type": "string" },
+          "preco": { "type": ["number", "string"] },
+          "promocao": { "type": ["number", "string", "null"] },
+          "ordem": { "type": "integer" }
+        }
+      },
+      "Product": {
+        "type": "object",
+        "required": ["id", "nome", "preco", "variantes", "grupos_adicionais"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "categoria_id": { "type": ["string", "null"] },
+          "nome": { "type": "string" },
+          "descricao": { "type": ["string", "null"] },
+          "imagem": { "type": ["string", "null"], "format": "uri" },
+          "preco": { "type": ["number", "string"] },
+          "promocao": { "type": ["number", "string", "null"] },
+          "variantes": { "type": "array", "items": { "$ref": "#/components/schemas/Variant" } },
+          "grupos_adicionais": { "type": "array", "items": { "type": "string", "format": "uuid" } }
+        }
+      },
+      "Addition": {
+        "type": "object",
+        "required": ["id", "grupo_id", "nome", "preco"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "grupo_id": { "type": "string", "format": "uuid" },
+          "nome": { "type": "string" },
+          "preco": { "type": ["number", "string"] }
+        }
+      },
+      "AdditionGroup": {
+        "type": "object",
+        "required": ["id", "nome", "minimo", "maximo", "adicionais"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "nome": { "type": "string" },
+          "minimo": { "type": "integer" },
+          "maximo": { "type": "integer" },
+          "adicionais": { "type": "array", "items": { "$ref": "#/components/schemas/Addition" } }
+        }
+      },
+      "RestaurantListResponse": {
+        "type": "object",
+        "required": ["data", "meta", "request_id"],
+        "properties": {
+          "data": { "type": "array", "items": { "$ref": "#/components/schemas/Restaurant" } },
+          "meta": {
+            "type": "object",
+            "required": ["limite", "offset", "total"],
+            "properties": {
+              "limite": { "type": "integer" },
+              "offset": { "type": "integer" },
+              "total": { "type": "integer" }
+            }
+          },
+          "request_id": { "type": "string" }
+        }
+      },
+      "MenuResponse": {
+        "type": "object",
+        "required": ["data", "request_id"],
+        "properties": {
+          "data": {
+            "type": "object",
+            "required": ["restaurante", "categorias", "produtos", "grupos_adicionais"],
+            "properties": {
+              "restaurante": { "$ref": "#/components/schemas/Restaurant" },
+              "categorias": { "type": "array", "items": { "$ref": "#/components/schemas/Category" } },
+              "produtos": { "type": "array", "items": { "$ref": "#/components/schemas/Product" } },
+              "grupos_adicionais": { "type": "array", "items": { "$ref": "#/components/schemas/AdditionGroup" } }
+            }
+          },
+          "request_id": { "type": "string" }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": ["error", "request_id"],
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": ["code", "message"],
+            "properties": {
+              "code": { "type": "string" },
+              "message": { "type": "string" }
+            }
+          },
+          "request_id": { "type": "string" }
+        }
+      }
+    }
+  }
+}

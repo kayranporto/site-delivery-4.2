@@ -414,7 +414,7 @@ Modelo conceitual das entidades já implementadas (schema `public`, exceto onde 
 
 ## 19. APIs
 
-Não há uma API REST customizada tradicional — o acesso é via **Supabase client SDK** (PostgREST automático sobre as tabelas com RLS) + **RPCs nomeadas** + **4 Edge Functions HTTP**. Módulos funcionais, por responsabilidade:
+O acesso principal continua via **Supabase client SDK** (PostgREST automático sobre as tabelas com RLS) + **RPCs nomeadas** + Edge Functions HTTP. A primeira API REST customizada de integrações, somente de leitura, está publicada como `api-publica` e documentada em OpenAPI 3.1. Módulos funcionais, por responsabilidade:
 
 | Módulo | Mecanismo | Responsabilidade |
 |---|---|---|
@@ -432,8 +432,9 @@ Não há uma API REST customizada tradicional — o acesso é via **Supabase cli
 | Admin | RPCs `admin_*` (dezenas, ver seção 8) | governança da plataforma |
 | Analytics/Relatórios | RPCs `admin_relatorio_operacional`, `empresa_relatorio_financeiro`, `admin_relatorio_clientes_produtos`, `admin_saude_operacao` | KPIs |
 | Notificações | Edge Function `enviar-push` + triggers `notificar_*` | push e notificação interna |
+| Integrações externas | Edge Function `api-publica` + OpenAPI 3.1 em `supabase/functions/api-publica/openapi.json` | status, documentação, listagem paginada de restaurantes e cardápio público; v1 publicada e validada em 01/09/2026 |
 
-**Lacuna:** não há uma API pública documentada (OpenAPI/Swagger) para integrações externas — mencionada no roadmap 4.3 apenas como "API" no plano Enterprise, ainda **NÃO IMPLEMENTADO**.
+**Estado da lacuna:** a base v1 da API pública documentada foi **IMPLEMENTADA E PUBLICADA** com OpenAPI, chave publicável exigida pelo gateway, acesso ao banco limitado por RLS `anon`, paginação e testes locais/remotos. Antes de expor operações privadas, ainda serão necessárias credenciais individuais por parceiro, autorização por escopo, revogação e rate limit persistente.
 
 ---
 

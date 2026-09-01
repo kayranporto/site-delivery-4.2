@@ -5,12 +5,13 @@ function allowedOrigins() {
     .filter(Boolean);
 }
 
-export function corsHeaders(request: Request) {
+export function corsHeaders(request: Request, methods: readonly string[] = ["POST", "OPTIONS"]) {
   const origin = request.headers.get("origin")?.replace(/\/$/, "") || "";
   const configured = allowedOrigins();
+  const allowedMethods = [...new Set([...methods, "OPTIONS"].map((method) => method.toUpperCase()))];
   const headers: Record<string, string> = {
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Methods": allowedMethods.join(", "),
     "Vary": "Origin",
   };
 
@@ -27,6 +28,7 @@ export function json(request: Request, data: unknown, status = 200) {
       ...corsHeaders(request),
       "Content-Type": "application/json; charset=utf-8",
       "Cache-Control": "no-store",
+      "X-Content-Type-Options": "nosniff",
     },
   });
 }
