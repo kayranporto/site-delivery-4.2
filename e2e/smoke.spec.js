@@ -4,8 +4,12 @@ const { test, expect } = require("@playwright/test");
 
 function observarErrosFatais(page) {
     const erros = [];
-    page.on("pageerror", (erro) => erros.push(erro.message));
-    return () => expect(erros, "A página não deve gerar exceções JavaScript não tratadas").toEqual([]);
+    const aoFalhar = (erro) => erros.push(erro.message);
+    page.on("pageerror", aoFalhar);
+    return () => {
+        page.off("pageerror", aoFalhar);
+        expect(erros, "A página não deve gerar exceções JavaScript não tratadas").toEqual([]);
+    };
 }
 
 async function abrir(page, rota) {
@@ -27,7 +31,7 @@ test("Home carrega, oferece busca e filtros acessíveis", async ({ page }) => {
     await page.keyboard.press("Control+K");
     await expect(busca).toBeFocused();
 
-    const pizza = page.getByRole("button", { name: "Pizza" });
+    const pizza = page.locator('.categoria[data-categoria="Pizza"]');
     await pizza.click();
     await expect(pizza).toHaveAttribute("aria-pressed", "true");
 
@@ -45,7 +49,6 @@ test("Rotas públicas essenciais entregam uma página utilizável", async ({ pag
         "/html/cadastro.html",
         "/html/empresa-login.html",
         "/html/empresa-cadastro.html",
-        "/html/suporte.html",
         "/html/privacidade.html"
     ];
 
@@ -59,7 +62,7 @@ test("Rotas públicas essenciais entregam uma página utilizável", async ({ pag
     }
 });
 
-test("Navegação principal leva ao login e à central de ajuda", async ({ page }) => {
+test("Navegação principal leva ao login e protege a central de ajuda", async ({ page }) => {
     await abrir(page, "/");
 
     await page.getByRole("link", { name: "Entrar" }).click();
@@ -68,14 +71,14 @@ test("Navegação principal leva ao login e à central de ajuda", async ({ page 
 
     await abrir(page, "/");
     await page.getByRole("link", { name: "Ajuda" }).click();
-    await expect(page).toHaveURL(/\/html\/suporte\.html$/);
-    await expect(page.locator("h1").first()).toBeVisible();
+    await expect(page).toHaveURL(/\/html\/login\.html$/, { timeout: 12000 });
+    await expect.poll(() => page.evaluate(() => localStorage.getItem("redirect"))).toBe("suporte.html");
 });
 
 test("Página de restaurante sem id volta para a Home", async ({ page }) => {
     const semErroFatal = observarErrosFatais(page);
     await abrir(page, "/html/restaurante.html");
-    await expect(page).toHaveURL(/\/$/, { timeout: 12000 });
+    await expect(page).toHaveURL(/\/(?:index\.html)?$/, { timeout: 12000 });
     await expect(page.getByRole("heading", { level: 1, name: /Sua comida/i })).toBeVisible();
     semErroFatal();
 });
@@ -89,7 +92,7 @@ test("Página protegida de perfil exige autenticação", async ({ page }) => {
 });
 
 test("Páginas principais não criam overflow horizontal no viewport", async ({ page }) => {
-    for (const rota of ["/", "/html/login.html", "/html/cadastro.html", "/html/suporte.html"]) {
+    for (const rota of ["/", "/html/login.html", "/html/cadastro.html", "/html/privacidade.html"]) {
         await abrir(page, rota);
         const largura = await page.evaluate(() => ({
             viewport: document.documentElement.clientWidth,
