@@ -166,6 +166,81 @@ html[data-theme="dark"] .kitchen-metrics article{background:#202631;color:#f4f6f
 html[data-theme="dark"] .kitchen-metrics article.danger{background:#3a2026;color:#ffadb5;border-color:#6f3039}
 html[data-theme="dark"] :is(.kitchen-column>header span,.kanban-column-header span){background:#303846;color:#f4f6fa}
 html[data-theme="dark"] :is(.alert-button,.refresh-button,.admin-header-actions a){background:#252c38;color:#f4f6fa;border-color:#3a4352}
+/* Componentes com cores próprias precisam preservar a especificidade do seletor.
+   IDs e seletores compostos dentro de :where() perdiam para o tema claro. */
+html[data-theme="dark"] .auth-field label,
+html[data-theme="dark"] .auth-check,
+html[data-theme="dark"] .auth-check a{color:#c3cad6}
+html[data-theme="dark"] .auth-role-switch a.active{background:#30232a;color:#ffadb5;box-shadow:none}
+html[data-theme="dark"] .auth-instant-note{background:#183329;color:#9de0bb;border-color:#285e45}
+
+html[data-theme="dark"] #infoEntrega,
+html[data-theme="dark"] .produto-card .produto-info strong,
+html[data-theme="dark"] .item-carrinho-titulo h4,
+html[data-theme="dark"] .info-item>strong,
+html[data-theme="dark"] .carrinho-footer .linha strong,
+html[data-theme="dark"] .carrinho-footer .linha.total,
+html[data-theme="dark"] .carrinho-footer .linha.total strong{color:#f4f6fa}
+html[data-theme="dark"] .produto-card .produto-info p,
+html[data-theme="dark"] .produto-card .produto-info small,
+html[data-theme="dark"] #carrinhoRestaurante,
+html[data-theme="dark"] .item-carrinho .adicionais,
+html[data-theme="dark"] .item-carrinho .observacao,
+html[data-theme="dark"] .carrinho-footer .linha,
+html[data-theme="dark"] .carrinho-vazio p,
+html[data-theme="dark"] #produtoModal .modal-body>p,
+html[data-theme="dark"] .sucesso p{color:#aab2c0}
+html[data-theme="dark"] #carrinho{background:#191e27;color:#f4f6fa;border-color:#303846}
+html[data-theme="dark"] body>header .cart,
+html[data-theme="dark"] .voltar,
+html[data-theme="dark"] #fecharCarrinho,
+html[data-theme="dark"] .carrinho-vazio button,
+html[data-theme="dark"] .carrinho-acoes-secundarias button,
+html[data-theme="dark"] .quantidade button,
+html[data-theme="dark"] .quantidade-modal button{background:#252c38;color:#f4f6fa;border-color:#3a4352}
+html[data-theme="dark"] #fecharCarrinho:hover,
+html[data-theme="dark"] .carrinho-vazio button:hover,
+html[data-theme="dark"] .carrinho-acoes-secundarias button:hover,
+html[data-theme="dark"] .quantidade button:hover:not(:disabled){background:#30232a;color:#ffadb5;border-color:#6a3841}
+html[data-theme="dark"] .quantidade button:disabled,
+html[data-theme="dark"] .quantidade-modal button:disabled{background:#202631;color:#858f9f;border-color:#303846}
+html[data-theme="dark"] #limparCarrinhoBtn,
+html[data-theme="dark"] #carrinhoQuantidadeResumo,
+html[data-theme="dark"] .carrinho-vazio:before{background:#3a2026;color:#ffadb5;border-color:#6f3039}
+html[data-theme="dark"] .carrinho-minimo>div:first-child{color:#f4d38a}
+html[data-theme="dark"] .carrinho-minimo-barra.concluido{background:#285e45}
+html[data-theme="dark"] .item-carrinho .observacao,
+html[data-theme="dark"] .quantidade,
+html[data-theme="dark"] .carrinho-footer .linha.total{border-color:#3a4352}
+
+html[data-theme="dark"] .endereco,
+html[data-theme="dark"] .pagamento-note,
+html[data-theme="dark"] .checkout-footer{background:#202631;color:#f4f6fa;border-color:#303846}
+html[data-theme="dark"] .checkout-footer{box-shadow:0 -16px 40px rgba(0,0,0,.24)}
+html[data-theme="dark"] .endereco p,
+html[data-theme="dark"] .item-info h4,
+html[data-theme="dark"] .checkout-security strong{color:#f4f6fa}
+html[data-theme="dark"] .pagamento-note,
+html[data-theme="dark"] .checkout-footer small,
+html[data-theme="dark"] .checkout-footer .footer-total span{color:#aab2c0}
+html[data-theme="dark"] .checkout-inline-status{background:#202c3b;color:#b8c9e2;border-color:#374d69}
+html[data-theme="dark"] .checkout-inline-status--ok,
+html[data-theme="dark"] .checkout-inline-status[data-tipo="success"],
+html[data-theme="dark"] .checkout-fast-badge,
+html[data-theme="dark"] .summary-trust>span,
+html[data-theme="dark"] .online-payment-option .payment-icon{background:#183329;color:#9de0bb;border-color:#285e45}
+html[data-theme="dark"] .checkout-inline-status[data-tipo="warning"]{background:#352f20;color:#f4d38a;border-color:#66552c}
+html[data-theme="dark"] .checkout-inline-status[data-tipo="error"]{background:#3a2026;color:#ffadb5;border-color:#6f3039}
+html[data-theme="dark"] .checkout-step[data-estado="ok"] strong,
+html[data-theme="dark"] .linha.discount strong,
+html[data-theme="dark"] .summary-trust strong,
+html[data-theme="dark"] .summary-trust small{color:#9de0bb}
+html[data-theme="dark"] .card-icon,
+html[data-theme="dark"] .payment-icon,
+html[data-theme="dark"] .summary-badge{background:#3a2026;color:#ffadb5}
+html[data-theme="dark"] .card-heading .card-icon{background:#3a2026;color:#ffadb5}
+html[data-theme="dark"] .home-page .eyebrow{color:#ff9aa4}
+
 html[data-theme="dark"] .theme-toggle{background:rgba(24,29,38,.94);color:#f4f6fa;border-color:#3a4352;box-shadow:0 14px 36px rgba(0,0,0,.34)}
 html[data-theme="dark"] .theme-toggle-icon{background:#3b311c;color:#ffd166}
 html[data-theme="dark"] ::selection{background:rgba(239,36,53,.34);color:#fff}
