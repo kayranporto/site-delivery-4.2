@@ -90,7 +90,7 @@ function pedirRespostaChat(pedido, historico) {
 
         const historicoBox = elemento("div", "");
         historicoBox.textContent = historico;
-        historicoBox.style.cssText = "width:100%;max-height:190px;overflow:auto;margin-top:16px;padding:13px 14px;border-radius:14px;background:#f7f7f9;color:#55555d;text-align:left;white-space:pre-wrap;font:500 11px/1.55 Poppins,system-ui,sans-serif";
+        historicoBox.style.cssText = "width:100%;max-height:190px;overflow:auto;margin-top:16px;padding:13px 14px;border-radius:14px;background:var(--surface-soft,#f7f7f9);color:var(--muted,#55555d);text-align:left;white-space:pre-wrap;font:500 11px/1.55 Poppins,system-ui,sans-serif";
 
         const campo = document.createElement("textarea");
         campo.maxLength = 1000;

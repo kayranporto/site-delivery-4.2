@@ -93,6 +93,47 @@
 .entrega-atribuir445 select { min-width: 0; min-height: 34px; padding: 7px 8px; font-size: 9px; }
 .entrega-atribuir445 button { flex: 0 0 auto; }
 
+html[data-theme="dark"] .entrega-propria-card445 {
+  background: #191e27;
+  color: #f4f6fa;
+  border-color: #303846;
+  box-shadow: 0 14px 38px rgba(0, 0, 0, .2);
+}
+html[data-theme="dark"] #entregaModalidadeForm445,
+html[data-theme="dark"] .entrega-equipe-item445,
+html[data-theme="dark"] .entrega-equipe-item445.inativo {
+  background: #202631;
+  color: #e9edf4;
+  border-color: #303846;
+}
+html[data-theme="dark"] #entregaModalidadeForm445 label,
+html[data-theme="dark"] .entrega-fallback445,
+html[data-theme="dark"] .entrega-modalidade-ajuda445,
+html[data-theme="dark"] .entrega-equipe445 > small,
+html[data-theme="dark"] .entrega-equipe-head445 span,
+html[data-theme="dark"] .entrega-equipe-item445 small {
+  color: #aab2c0;
+}
+html[data-theme="dark"] #entregaModalidadeForm445 select,
+html[data-theme="dark"] #entregaModalidadeForm445 input,
+html[data-theme="dark"] #entregaAdicionarForm445 input,
+html[data-theme="dark"] .entrega-atribuir445 select {
+  background: #171c24;
+  color: #f4f6fa;
+  border-color: #3a4352;
+}
+html[data-theme="dark"] .entrega-equipe-item445 strong { color: #f4f6fa; }
+html[data-theme="dark"] .entrega-atribuir445 {
+  background: #3a2026;
+  color: #ffadb5;
+  border-color: #6f3039;
+}
+html[data-theme="dark"] .entrega-unidade445,
+html[data-theme="dark"] .entrega-equipe-estados445 .off {
+  background: #2a3240;
+  color: #dce2eb;
+}
+
 @media (max-width: 820px) {
   .entrega-config-grid445 { grid-template-columns: 1fr; }
   .entrega-propria-head445 { align-items: flex-start; }

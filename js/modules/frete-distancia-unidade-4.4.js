@@ -119,11 +119,11 @@
     const card = criar("section");
     card.id = "freteDistanciaCard44";
     card.className = "management-card";
-    card.style.cssText = "margin-top:18px;padding:18px;border:1px solid #e7e8eb;border-radius:16px;background:#fff";
+    card.style.cssText = "margin-top:18px;padding:18px;border:1px solid var(--line,#e7e8eb);border-radius:16px;background:var(--surface,#fff);color:var(--ink,#171a24)";
 
     const titulo = criar("h3", "Frete por distância");
     const descricao = criar("p", "Opcional por unidade. Quando desligado, nada muda: continuam valendo as taxas por bairro/região. Se o endereço não tiver GPS, o cálculo também usa essa regra atual como fallback.");
-    descricao.style.cssText = "margin:6px 0 16px;color:#6b7280;font-size:11px;line-height:1.6";
+    descricao.style.cssText = "margin:6px 0 16px;color:var(--muted,#6b7280);font-size:11px;line-height:1.6";
 
     const form = criar("form");
     form.id = "freteDistanciaForm44";
@@ -143,7 +143,7 @@
     ];
     campos.forEach(([id, texto, passo]) => {
       const label = criar("label", texto);
-      label.style.cssText = "display:grid;gap:6px;color:#4b5563;font-size:10px;font-weight:700";
+      label.style.cssText = "display:grid;gap:6px;color:var(--muted,#4b5563);font-size:10px;font-weight:700";
       const input = criar("input");
       input.id = id;
       input.type = "number";
@@ -158,7 +158,7 @@
     const status = criar("p");
     status.id = "freteDistanciaStatus44";
     status.setAttribute("role", "status");
-    status.style.cssText = "margin:12px 0;color:#6b7280;font-size:10px;line-height:1.5";
+    status.style.cssText = "margin:12px 0;color:var(--muted,#6b7280);font-size:10px;line-height:1.5";
 
     const salvarBotao = criar("button", "Salvar configuração de frete");
     salvarBotao.id = "salvarFreteDistancia44";

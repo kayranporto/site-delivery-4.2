@@ -78,8 +78,8 @@ html[data-theme="dark"]{
 }
 
 html[data-theme="dark"] body{background:#10131a;color:#f4f6fa}
-html[data-theme="dark"] :where(.auth-panel,.page-card,.item-card,.card,.empty,.support-card,.support-side article,.track-card,.eta,.admin-metrics article,.admin-card,.admin-section,.admin-modal-panel,.ops-dialog-panel,.metric-card,.dashboard-card,.orders-section,.management-section,.order-card,.kitchen-ticket,.driver-metrics article,.delivery-card,.cancel-dialog-panel,.menu-item,.produto,.produto-card,.payment-option,.sucesso,.notification-panel,.app-toast,.app-confirm-panel,.pwa-update,.driver-onboarding,.driver-push-card,.driver-history-item,.finance-card,.operator-order,.entrega-propria-card445,.operacao-427-resumo article,.operacao-427-historico,.modal-content,#carrinho,table){background-color:#191e27;color:#f4f6fa;border-color:#303846;box-shadow:0 14px 38px rgba(0,0,0,.2)}
-html[data-theme="dark"] :where(.auth-role-switch,.search,.search-field,.kanban-column,.order-customer,.order-note,.ticket,.checkout-fast-lane,.checkout-optional-action,.entrega-unidade445,.driver-earnings-note,.driver-onboarding-step,.order-items li,.chat-messages,.pedido-info,.perfil-loading,.pedido-vazio,.loyalty-row,.loyalty-empty,.app-confirm-note,.app-confirm-actions,.notification-item,.notification-permission,.carrinho-header,.carrinho-footer,.item-carrinho,.summary-context){background-color:#202631;color:#e9edf4;border-color:#303846}
+html[data-theme="dark"] :where(.auth-panel,.page-card,.item-card,.card,.empty,.support-card,.support-side article,.track-card,.eta,.admin-metrics article,.admin-card,.admin-section,.admin-modal-panel,.ops-dialog-panel,.metric-card,.dashboard-card,.orders-section,.management-section,.order-card,.kitchen-ticket,.driver-metrics article,.delivery-card,.cancel-dialog-panel,.menu-item,.produto,.produto-card,.payment-option,.sucesso,.notification-panel,.app-toast,.app-confirm-panel,.pwa-update,.driver-onboarding,.driver-push-card,.driver-history-item,.finance-card,.operator-order,.entrega-propria-card445,.operacao-427-resumo article,.operacao-427-historico,.modal-content,#carrinho,table){background:#191e27;color:#f4f6fa;border-color:#303846;box-shadow:0 14px 38px rgba(0,0,0,.2)}
+html[data-theme="dark"] :where(.auth-role-switch,.search,.search-field,.kanban-column,.order-customer,.order-note,.ticket,.checkout-fast-lane,.checkout-optional-action,.entrega-unidade445,.driver-earnings-note,.driver-onboarding-step,.order-items li,.chat-messages,.pedido-info,.perfil-loading,.pedido-vazio,.loyalty-row,.loyalty-empty,.app-confirm-note,.app-confirm-actions,.notification-item,.notification-permission,.carrinho-header,.carrinho-footer,.item-carrinho,.summary-context){background:#202631;color:#e9edf4;border-color:#303846}
 html[data-theme="dark"] :where(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),select,textarea,.auth-role-switch a.active,.btn.secundario,.action-secondary,.team-button.secondary,.team-link-button,.driver-livebar-refresh,.driver-history-more,.driver-earnings-refresh,.operacao-427-historico-head button,.report-actions button,.admin-pagination button,.app-confirm-actions .secondary){background:#171c24;color:#f4f6fa;border-color:#3a4352}
 html[data-theme="dark"] :where(input,select,textarea)::placeholder{color:#858f9f}
 html[data-theme="dark"] :where(.support-header,.dashboard-header,.track-header,body>header){background-color:rgba(20,24,32,.94);color:#f4f6fa;border-color:#303846}
@@ -103,10 +103,15 @@ html[data-theme="dark"] :where(.hero-deal-card,.hero-rating-card,.hero-time-card
 html[data-theme="dark"] :where(.hero-deal-card span,.hero-rating-card small,.hero-time-card small){color:#b9c1cf}
 html[data-theme="dark"] .hero-deal-card .deal-pill{background:rgba(234,29,44,.2);color:#ff8f99}
 html[data-theme="dark"] .hero-time-card>span{background:#3b311c;color:#ffd166}
-html[data-theme="dark"] :where(.checkout-card,.usuario-card,.painel-card,.ajuda-card,.resumo-card,.team-card,.operator-nav,.role-item,.member-card,.driver-card,.driver-section,.avaliacao-publica,.sem-produtos,.promo-card,.review-admin-card,.kitchen-column,.variant-form,.admin-report-detail>div,.ops-admin-grid>article,.report-grid article,.ops-health-grid article,.finance-grid article,.kitchen-metrics article){background-color:#191e27;color:#f4f6fa;border-color:#303846;box-shadow:0 14px 38px rgba(0,0,0,.2)}
-html[data-theme="dark"] :where(.order-filters,.admin-filters,.font-size-control,.admin-search,.admin-modal-actions,.admin-form-check,.order-summary-grid article,.personalization-grid form,.link-form,.media-upload,.hours-row,.operation-item,.region-item,.stock-movement,.kitchen-ticket .ticket-items,.product-bar,.checkout-progress,.driver-livebar,.driver-onboarding-progress){background-color:#202631;color:#e9edf4;border-color:#303846}
+html[data-theme="dark"] :where(.checkout-card,.usuario-card,.painel-card,.ajuda-card,.resumo-card,.team-card,.operator-nav,.role-item,.member-card,.driver-card,.driver-section,.avaliacao-publica,.sem-produtos,.promo-card,.review-admin-card,.kitchen-column,.variant-form,.admin-report-detail>div,.ops-admin-grid>article,.report-grid article,.ops-health-grid article,.finance-grid article,.kitchen-metrics article){background:#191e27;color:#f4f6fa;border-color:#303846;box-shadow:0 14px 38px rgba(0,0,0,.2)}
+html[data-theme="dark"] :where(.order-filters,.admin-filters,.font-size-control,.admin-search,.admin-modal-actions,.admin-form-check,.order-summary-grid article,.personalization-grid form,.link-form,.media-upload,.hours-row,.operation-item,.region-item,.stock-movement,.kitchen-ticket .ticket-items,.product-bar,.checkout-progress,.driver-livebar,.driver-onboarding-progress){background:#202631;color:#e9edf4;border-color:#303846}
 html[data-theme="dark"] :where(.voltar,.back-button,.explore-link,.orders-link,.driver-actions a,.driver-section-title button,.categorias button,.meta-chip,.btn-outline,.icon-action,.editar-perfil,.acao-secundaria,.support-header>a:first-child,.admin-modal-close,.menu-toggle,#fecharCarrinho,.quantidade button,.order-actions button){background:#252c38;color:#f4f6fa;border-color:#3a4352}
 html[data-theme="dark"] :where(.admin-filters input,.admin-filters select,.admin-form-field input,.admin-form-field select,.admin-form-field textarea,.field input,.field select,.field textarea,.team-field input,.team-field select,.driver-grid input,.driver-grid select,.pesquisa-produtos input,.chat-form input,.review-card textarea,.troco-field input,.cupom-box input){background:#171c24;color:#f4f6fa;border-color:#3a4352}
+html[data-theme="dark"] input[type="file"]{background:#171c24;color:#aab2c0;border-color:#3a4352}
+html[data-theme="dark"] input[type="file"]::file-selector-button{margin-right:10px;padding:7px 10px;color:#f4f6fa;background:#303846;border:0;border-radius:8px;cursor:pointer}
+html[data-theme="dark"] input[type="file"]::-webkit-file-upload-button{margin-right:10px;padding:7px 10px;color:#f4f6fa;background:#303846;border:0;border-radius:8px;cursor:pointer}
+html[data-theme="dark"] .chip-admin{background:#252c38;color:#f4f6fa;border-color:#3a4352}
+html[data-theme="dark"] .chip-admin button{background:#3a2026;color:#ffadb5}
 html[data-theme="dark"] :where(.timeline strong,.item-track small,.track-card dt,.driver-grid label,.delivery-address,.support-card label>span,.order-info,.order-info strong,.field label,.checkbox-admin,.avaliacoes-titulo>span,.produto-card .produto-descricao,.usuario-meta){color:#c3cad6}
 html[data-theme="dark"] :where(.order-filters button,.operator-nav button){color:#c3cad6}
 html[data-theme="dark"] :where(.order-filters button:hover,.recent-order:hover,.quantidade button:hover:not(:disabled)){background:#2a3240;color:#fff}
@@ -132,6 +137,35 @@ html[data-theme="dark"] .chart-grid{stroke:#303846}
 html[data-theme="dark"] .chart-point{fill:#191e27}
 html[data-theme="dark"] .order-filters button.active{background:#f4f6fa;color:#171c24}
 html[data-theme="dark"] .order-filters button.active span{background:#303846;color:#f4f6fa}
+html[data-theme="dark"] .restaurante-menu-item{background:linear-gradient(135deg,#28231f,#191e27);border-color:#594235}
+html[data-theme="dark"] :is(.editar-perfil:hover,.acao-secundaria:hover){background:#30232a;color:#ff9aa4;border-color:#6a3841}
+html[data-theme="dark"] :is(.sair,.sair:hover){background:#3a2026;color:#ffadb5;border-color:#6f3039}
+
+html[data-theme="dark"] #planos .plans-card,
+html[data-theme="dark"] :is(.plan43-hero,.plan43-usage,.plan43-card,.units-hero,.units-card,.public-unit-picker){background:#191e27;color:#f4f6fa;border-color:#303846;box-shadow:0 14px 38px rgba(0,0,0,.2)}
+html[data-theme="dark"] :is(.plan-admin-item,.plan43-meta span,.units-summary span,.unit-item,.unit-switcher){background:#202631;color:#e9edf4;border-color:#303846}
+html[data-theme="dark"] :is(.plans-field input,.plans-field textarea,.plans-field select,.units-field input,.unit-switcher select,.public-unit-picker select){background:#171c24;color:#f4f6fa;border-color:#3a4352}
+html[data-theme="dark"] :is(.plans-field label,.plans-checks label,.plan-admin-item p,.plans-empty,.plan43-hero p,.plan43-price,.plan43-usage small,.plan43-usage p,.plan43-card p,.units-hero p,.units-summary small,.units-field label,.unit-item p,.unit-empty,.unit-switcher small,.public-unit-picker small,.public-unit-picker em){color:#aab2c0}
+html[data-theme="dark"] :is(.plan-admin-tags span,.unit-badge,.plans-actions .secondary,.units-actions .secondary,.unit-item button){background:#2a3240;color:#dce2eb}
+html[data-theme="dark"] :is(.plans-note,.plan43-status span.warn){background:#352f20;color:#f4d38a;border-color:#66552c}
+html[data-theme="dark"] :is(.plan43-status span.danger,.unit-item .danger){background:#3a2026;color:#ffadb5;border-color:#6f3039}
+html[data-theme="dark"] :is(.plan43-status span,.plan-admin-tags .active,.unit-badge.active){background:#183329;color:#9de0bb;border-color:#285e45}
+html[data-theme="dark"] :is(.plan43-bar){background:#303846}
+html[data-theme="dark"] :is(.plans-table th,.plans-table td){border-color:#303846}
+html[data-theme="dark"] :is(.driver-earning-card,.admin-driver-rate-card,.delivery-preview,.foto-editor,.chat-message:not(.mine),.driver-onboarding.is-complete){background:#202631;color:#e9edf4;border-color:#303846}
+html[data-theme="dark"] :is(.driver-earning-card small,.driver-earning-card span,.driver-history-heading p,.driver-history-main span,.driver-history-main small,.driver-history-meta,.driver-history-value small,.admin-driver-rate-copy small,.admin-driver-rate-field,.admin-driver-rate-current){color:#aab2c0}
+html[data-theme="dark"] :is(.admin-driver-rate-field input,.admin-driver-rate-field select){background:#171c24;color:#f4f6fa;border-color:#3a4352}
+html[data-theme="dark"] :is(.payment-option:has(input:checked),.delivery-preview>span){background:#30232a;color:#f4f6fa;border-color:#6a3841}
+html[data-theme="dark"] .online-payment-option:has(input:checked){background:#183329;color:#9de0bb;border-color:#285e45}
+html[data-theme="dark"] :is(.unit-item.is-selected,.driver-onboarding-step.is-done){background:#183329;color:#e9edf4;border-color:#285e45}
+html[data-theme="dark"] :is(.operator-nav button.active,.home-page .categoria[aria-pressed="true"],.home-page .filter-pill[aria-pressed="true"]){background:#3a2026;color:#ffadb5;border-color:#6f3039}
+html[data-theme="dark"] :is(.home-page .search:focus-within,.home-page .location:hover,.home-page .cart:hover){background:#202631;color:#f4f6fa;border-color:#3a4352}
+html[data-theme="dark"] :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):focus,select:focus,textarea:focus){background:#171c24;color:#f4f6fa}
+html[data-theme="dark"] :is(.quantidade .remover-item,.quantidade .remover-item:hover){background:#3a2026!important;color:#ffadb5!important;border-color:#6f3039!important}
+html[data-theme="dark"] .kitchen-metrics article{background:#202631;color:#f4f6fa;border-color:#303846}
+html[data-theme="dark"] .kitchen-metrics article.danger{background:#3a2026;color:#ffadb5;border-color:#6f3039}
+html[data-theme="dark"] :is(.kitchen-column>header span,.kanban-column-header span){background:#303846;color:#f4f6fa}
+html[data-theme="dark"] :is(.alert-button,.refresh-button,.admin-header-actions a){background:#252c38;color:#f4f6fa;border-color:#3a4352}
 html[data-theme="dark"] .theme-toggle{background:rgba(24,29,38,.94);color:#f4f6fa;border-color:#3a4352;box-shadow:0 14px 36px rgba(0,0,0,.34)}
 html[data-theme="dark"] .theme-toggle-icon{background:#3b311c;color:#ffd166}
 html[data-theme="dark"] ::selection{background:rgba(239,36,53,.34);color:#fff}

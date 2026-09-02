@@ -79,7 +79,7 @@
     const aviso = document.createElement("div");
     aviso.id = "checkoutUnidade43";
     aviso.setAttribute("role", "status");
-    aviso.style.cssText = "display:flex;align-items:center;gap:10px;margin:0 0 14px;padding:11px 13px;border:1px solid #e6e8ec;border-radius:12px;background:#f8f9fb;color:#454b56;font:600 11px Poppins,system-ui,sans-serif";
+    aviso.style.cssText = "display:flex;align-items:center;gap:10px;margin:0 0 14px;padding:11px 13px;border:1px solid var(--checkout-line,var(--line,#e6e8ec));border-radius:12px;background:var(--surface-soft,#f8f9fb);color:var(--checkout-ink,var(--ink,#454b56));font:600 11px Poppins,system-ui,sans-serif";
     const icone = document.createElement("span");
     icone.setAttribute("aria-hidden", "true");
     icone.textContent = "⌂";

@@ -100,12 +100,12 @@
   if (/empresa-dashboard\.html$/i.test(location.pathname)) {
     const entregaPropriaCss = document.createElement("link");
     entregaPropriaCss.rel = "stylesheet";
-    entregaPropriaCss.href = `${assetRoot}css/modules/empresa-entrega-propria-4.4.5.css?v=4.4.5`;
+    entregaPropriaCss.href = `${assetRoot}css/modules/empresa-entrega-propria-4.4.5.css?v=4.4.5.1`;
     document.head.append(entregaPropriaCss);
 
     const operacaoCss = document.createElement("link");
     operacaoCss.rel = "stylesheet";
-    operacaoCss.href = `${assetRoot}css/modules/operacao-restaurante-4.2.7.css?v=4.2.7`;
+    operacaoCss.href = `${assetRoot}css/modules/operacao-restaurante-4.2.7.css?v=4.2.7.1`;
     document.head.append(operacaoCss);
     const operacaoJs = document.createElement("script");
     operacaoJs.src = `${assetRoot}js/modules/operacao-restaurante-4.2.7.js?v=4.2.7`;
@@ -129,7 +129,7 @@
     document.body.append(unidadesJs);
 
     const operacaoUnidadesJs = document.createElement("script");
-    operacaoUnidadesJs.src = `${assetRoot}js/modules/operacao-unidades-4.3.js?v=4.3.0`;
+    operacaoUnidadesJs.src = `${assetRoot}js/modules/operacao-unidades-4.3.js?v=4.3.0.1`;
     operacaoUnidadesJs.async = false;
     document.body.append(operacaoUnidadesJs);
 
@@ -144,7 +144,7 @@
     document.body.append(localizacaoUnidadeJs);
 
     const freteDistanciaJs = document.createElement("script");
-    freteDistanciaJs.src = `${assetRoot}js/modules/frete-distancia-unidade-4.4.js?v=4.4.0`;
+    freteDistanciaJs.src = `${assetRoot}js/modules/frete-distancia-unidade-4.4.js?v=4.4.0.1`;
     freteDistanciaJs.async = false;
     document.body.append(freteDistanciaJs);
 
@@ -185,7 +185,7 @@
 
   if (/checkout\.html$/i.test(location.pathname)) {
     const checkoutUnidadeJs = document.createElement("script");
-    checkoutUnidadeJs.src = `${assetRoot}js/modules/checkout-unidade-4.3.js?v=4.3.0`;
+    checkoutUnidadeJs.src = `${assetRoot}js/modules/checkout-unidade-4.3.js?v=4.3.0.1`;
     checkoutUnidadeJs.async = false;
     document.body.append(checkoutUnidadeJs);
   }

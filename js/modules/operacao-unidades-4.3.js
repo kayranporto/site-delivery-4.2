@@ -41,7 +41,7 @@
     const badge = criar("div", "operation-unit-badge");
     badge.id = "operacaoUnidade43";
     badge.setAttribute("role", "status");
-    badge.style.cssText = "display:inline-flex;align-items:center;gap:8px;margin:0 0 16px;padding:9px 12px;border:1px solid #e5e7eb;border-radius:12px;background:#f8f9fb;color:#4c535e;font:700 10px Poppins,system-ui,sans-serif";
+    badge.style.cssText = "display:inline-flex;align-items:center;gap:8px;margin:0 0 16px;padding:9px 12px;border:1px solid var(--line,#e5e7eb);border-radius:12px;background:var(--surface-soft,#f8f9fb);color:var(--ink,#4c535e);font:700 10px Poppins,system-ui,sans-serif";
     const icone = criar("span", "", "⌂");
     icone.setAttribute("aria-hidden", "true");
     icone.style.cssText = "display:grid;width:25px;height:25px;place-items:center;border-radius:8px;background:#fff0f1;color:#d71928";
