@@ -34,5 +34,5 @@ test("fluxo do entregador encerra o loading antes de decidir o estado da conta",
 
 test("entregador força a versão corrigida do enhancements", () => {
   const html = read("entregador.html");
-  assert.match(html, /css\/core\/enhancements\.css\?v=4\.4\.5\.7/);
+  assert.match(html, /css\/core\/enhancements\.css\?v=4\.4\.5\.8/);
 });
