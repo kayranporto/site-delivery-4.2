@@ -1,5 +1,50 @@
 "use strict";
 (() => {
+  const THEME_STORAGE_KEY = "multi-delivery-theme";
+  const darkThemeMedia = window.matchMedia?.("(prefers-color-scheme: dark)");
+  let storedTheme = null;
+  try {
+    const value = localStorage.getItem(THEME_STORAGE_KEY);
+    if (value === "light" || value === "dark") storedTheme = value;
+  } catch (error) {
+    console.warn("Tema: preferência local indisponível", error);
+  }
+
+  function updateThemeButton(theme) {
+    const button = document.querySelector(".theme-toggle");
+    if (!button) return;
+    const dark = theme === "dark";
+    const action = dark ? "Ativar modo claro" : "Ativar modo escuro";
+    button.setAttribute("aria-label", action);
+    button.setAttribute("aria-pressed", String(dark));
+    button.title = action;
+    button.querySelector(".theme-toggle-icon").textContent = dark ? "☀" : "☾";
+    button.querySelector(".theme-toggle-label").textContent = dark ? "Modo claro" : "Modo escuro";
+  }
+
+  function applyTheme(theme, persist = false) {
+    const normalizedTheme = theme === "dark" ? "dark" : "light";
+    document.documentElement.dataset.theme = normalizedTheme;
+    document.documentElement.style.colorScheme = normalizedTheme;
+    document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => {
+      meta.content = normalizedTheme === "dark" ? "#11141b" : "#ea1d2c";
+    });
+    updateThemeButton(normalizedTheme);
+    if (persist) {
+      storedTheme = normalizedTheme;
+      try {
+        localStorage.setItem(THEME_STORAGE_KEY, normalizedTheme);
+      } catch (error) {
+        console.warn("Tema: não foi possível salvar a preferência", error);
+      }
+    }
+  }
+
+  applyTheme(storedTheme || (darkThemeMedia?.matches ? "dark" : "light"));
+  darkThemeMedia?.addEventListener?.("change", (event) => {
+    if (!storedTheme) applyTheme(event.matches ? "dark" : "light");
+  });
+
   const speedInsightsHost = location.hostname.toLowerCase();
   if (
     speedInsightsHost.endsWith(".vercel.app")
@@ -319,6 +364,22 @@
     });
   }
   window.AppConfirm=confirmar;
+
+  const themeToggle = document.createElement("button");
+  themeToggle.type = "button";
+  themeToggle.className = "theme-toggle";
+  const themeIcon = document.createElement("span");
+  themeIcon.className = "theme-toggle-icon";
+  themeIcon.setAttribute("aria-hidden", "true");
+  const themeLabel = document.createElement("span");
+  themeLabel.className = "theme-toggle-label";
+  themeToggle.append(themeIcon, themeLabel);
+  themeToggle.addEventListener("click", () => {
+    const nextTheme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+    applyTheme(nextTheme, true);
+  });
+  document.body.append(themeToggle);
+  updateThemeButton(document.documentElement.dataset.theme);
 
   const net=document.createElement("div");net.className="network-banner";net.setAttribute("role","status");document.body.append(net);
   function status(online,initial=false){net.textContent=online?"Conexão restabelecida":"Você está offline. Alguns dados podem estar desatualizados.";net.className=`network-banner show${online?" online":""}`;if(online&&!initial)setTimeout(()=>net.classList.remove("show"),2600);}

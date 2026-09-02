@@ -12,6 +12,26 @@ const filtroAberto = document.getElementById("toggleAberto");
 const ordenarTaxa = document.getElementById("ordenarTaxa");
 const resumoResultado = document.getElementById("resultadoResumo");
 const carts = document.querySelectorAll("#abrirCarrinho, #floatingCart");
+const topbar = document.querySelector(".topbar");
+const topbarClose = document.getElementById("fecharTopbar");
+const TOPBAR_STORAGE_KEY = "multi-delivery-topbar-hidden";
+
+if (topbar) {
+    try {
+        if (localStorage.getItem(TOPBAR_STORAGE_KEY) === "1") topbar.hidden = true;
+    } catch (error) {
+        console.warn("Aviso: preferência local indisponível", error);
+    }
+}
+
+topbarClose?.addEventListener("click", () => {
+    topbar.hidden = true;
+    try {
+        localStorage.setItem(TOPBAR_STORAGE_KEY, "1");
+    } catch (error) {
+        console.warn("Aviso: não foi possível salvar a preferência", error);
+    }
+});
 
 const filtros = {
     abertoAgora: false,

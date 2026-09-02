@@ -60,3 +60,81 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 @media(prefers-reduced-motion:reduce){.loading:after,.perfil-loading:after,.panel-loading:after,.chart-loading:after{display:none;animation:none}}
 
 /* Republicação solicitada após indisponibilidade temporária do artefato do Pages. */
+
+/* Tema claro/escuro global. A preferência é aplicada por site-enhancements.js. */
+.theme-toggle{position:fixed;left:22px;bottom:22px;z-index:11000;display:flex;min-height:46px;align-items:center;gap:9px;padding:9px 14px;border:1px solid rgba(23,25,35,.14);border-radius:999px;background:rgba(255,255,255,.94);color:#171923;box-shadow:0 14px 36px rgba(17,21,34,.18);backdrop-filter:blur(16px);cursor:pointer;font:700 11px/1.1 Poppins,system-ui,sans-serif}
+.theme-toggle:hover{border-color:rgba(234,29,44,.35);box-shadow:0 16px 42px rgba(17,21,34,.24);transform:translateY(-1px)}
+.theme-toggle:focus-visible{outline:3px solid rgba(234,29,44,.24);outline-offset:3px}
+.theme-toggle-icon{display:grid;width:27px;height:27px;place-items:center;border-radius:50%;background:#fff0f1;color:#c81725;font-size:17px}
+
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#10131a;--surface:#191e27;--surface-soft:#202631;--surface-muted:#282f3c;--border:rgba(226,232,240,.14);--text:#f4f6fa;--muted:#aab2c0;--shadow:0 28px 80px rgba(0,0,0,.32);
+  --page-text:#f4f6fa;--page-muted:#aab2c0;--page-bg:#10131a;--page-surface:#191e27;--page-border:#303846;--page-shadow:0 18px 50px rgba(0,0,0,.3);
+  --auth-primary-soft:#3a2026;--auth-accent-soft:#3b311c;--auth-ink:#f6f7fb;--auth-muted:#aeb6c5;--auth-line:#303846;--auth-surface:#191e27;--auth-page:#10131a;--auth-shadow:0 28px 80px rgba(0,0,0,.42);
+  --perfil-ink:#f4f6fa;--perfil-muted:#aab2c0;--perfil-border:#303846;--perfil-surface:#191e27;--perfil-bg:#10131a;--perfil-shadow:0 18px 50px rgba(0,0,0,.3);
+  --checkout-ink:#f4f6fa;--checkout-muted:#aab2c0;--checkout-line:#303846;--checkout-surface:#191e27;--checkout-bg:#10131a;--checkout-shadow:0 18px 50px rgba(0,0,0,.3);
+  --ink:#f4f6fa;--ink-2:#dce1e9;--muted:#aab2c0;--line:#303846;--page:#10131a;--surface:#191e27;--card:#191e27;--text:#f4f6fa;--driver-soft:#202631;
+}
+
+html[data-theme="dark"] body{background:#10131a;color:#f4f6fa}
+html[data-theme="dark"] :where(.auth-panel,.page-card,.item-card,.card,.empty,.support-card,.support-side article,.track-card,.eta,.admin-metrics article,.admin-card,.admin-section,.admin-modal-panel,.ops-dialog-panel,.metric-card,.dashboard-card,.orders-section,.management-section,.order-card,.kitchen-ticket,.driver-metrics article,.delivery-card,.cancel-dialog-panel,.menu-item,.produto,.produto-card,.payment-option,.sucesso,.notification-panel,.app-toast,.app-confirm-panel,.pwa-update,.driver-onboarding,.driver-push-card,.driver-history-item,.finance-card,.operator-order,.entrega-propria-card445,.operacao-427-resumo article,.operacao-427-historico,.modal-content,#carrinho,table){background-color:#191e27;color:#f4f6fa;border-color:#303846;box-shadow:0 14px 38px rgba(0,0,0,.2)}
+html[data-theme="dark"] :where(.auth-role-switch,.search,.search-field,.kanban-column,.order-customer,.order-note,.ticket,.checkout-fast-lane,.checkout-optional-action,.entrega-unidade445,.driver-earnings-note,.driver-onboarding-step,.order-items li,.chat-messages,.pedido-info,.perfil-loading,.pedido-vazio,.loyalty-row,.loyalty-empty,.app-confirm-note,.app-confirm-actions,.notification-item,.notification-permission,.carrinho-header,.carrinho-footer,.item-carrinho,.summary-context){background-color:#202631;color:#e9edf4;border-color:#303846}
+html[data-theme="dark"] :where(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),select,textarea,.auth-role-switch a.active,.btn.secundario,.action-secondary,.team-button.secondary,.team-link-button,.driver-livebar-refresh,.driver-history-more,.driver-earnings-refresh,.operacao-427-historico-head button,.report-actions button,.admin-pagination button,.app-confirm-actions .secondary){background:#171c24;color:#f4f6fa;border-color:#3a4352}
+html[data-theme="dark"] :where(input,select,textarea)::placeholder{color:#858f9f}
+html[data-theme="dark"] :where(.support-header,.dashboard-header,.track-header,body>header){background-color:rgba(20,24,32,.94);color:#f4f6fa;border-color:#303846}
+html[data-theme="dark"] :where(th,.admin-table-wrap th,.table-wrap th){background:#202631;color:#dfe4ec}
+html[data-theme="dark"] :where(td,tr,.recent-order,.operation-item,.region-item,.hours-row,.stock-movement){border-color:#303846}
+html[data-theme="dark"] :where(.muted,small,.section-heading p,.ticket p,.ticket small,.order-item small,.header-copy p){color:#aab2c0}
+html[data-theme="dark"] .auth-customer .auth-showcase{background:linear-gradient(145deg,#171a22,#342229)}
+html[data-theme="dark"] .auth-shell{border-color:#2d3440;box-shadow:0 32px 90px rgba(0,0,0,.46)}
+html[data-theme="dark"] .auth-panel{background:#191e27}
+html[data-theme="dark"] .auth-field input:focus{background:#1c222c}
+html[data-theme="dark"] .checkout-step>b{background:#202631;color:#dfe4ec;border-color:#3a4352}
+html[data-theme="dark"] .app-confirm-actions{border-color:#303846}
+html[data-theme="dark"] .app-confirm-panel h2{color:#f4f6fa}
+html[data-theme="dark"] .app-confirm-copy{color:#aab2c0}
+html[data-theme="dark"] .notification-item.read{background:#191e27}
+html[data-theme="dark"] .cupom-box{background:linear-gradient(135deg,#191e27,#24202a);border:1px solid #303846;box-shadow:0 24px 60px rgba(0,0,0,.28)}
+html[data-theme="dark"] .cupom-copy h2{color:#f4f6fa}
+html[data-theme="dark"] .cupom-copy p{color:#aeb6c5}
+html[data-theme="dark"] .cupom-action{background:linear-gradient(135deg,#f02536,#d81827);color:#fff;box-shadow:0 10px 28px rgba(234,29,44,.22)}
+html[data-theme="dark"] :where(.hero-deal-card,.hero-rating-card,.hero-time-card){background:rgba(25,30,39,.92);color:#f4f6fa;border-color:rgba(255,255,255,.16);box-shadow:0 22px 55px rgba(0,0,0,.34)}
+html[data-theme="dark"] :where(.hero-deal-card span,.hero-rating-card small,.hero-time-card small){color:#b9c1cf}
+html[data-theme="dark"] .hero-deal-card .deal-pill{background:rgba(234,29,44,.2);color:#ff8f99}
+html[data-theme="dark"] .hero-time-card>span{background:#3b311c;color:#ffd166}
+html[data-theme="dark"] :where(.checkout-card,.usuario-card,.painel-card,.ajuda-card,.resumo-card,.team-card,.operator-nav,.role-item,.member-card,.driver-card,.driver-section,.avaliacao-publica,.sem-produtos,.promo-card,.review-admin-card,.kitchen-column,.variant-form,.admin-report-detail>div,.ops-admin-grid>article,.report-grid article,.ops-health-grid article,.finance-grid article,.kitchen-metrics article){background-color:#191e27;color:#f4f6fa;border-color:#303846;box-shadow:0 14px 38px rgba(0,0,0,.2)}
+html[data-theme="dark"] :where(.order-filters,.admin-filters,.font-size-control,.admin-search,.admin-modal-actions,.admin-form-check,.order-summary-grid article,.personalization-grid form,.link-form,.media-upload,.hours-row,.operation-item,.region-item,.stock-movement,.kitchen-ticket .ticket-items,.product-bar,.checkout-progress,.driver-livebar,.driver-onboarding-progress){background-color:#202631;color:#e9edf4;border-color:#303846}
+html[data-theme="dark"] :where(.voltar,.back-button,.explore-link,.orders-link,.driver-actions a,.driver-section-title button,.categorias button,.meta-chip,.btn-outline,.icon-action,.editar-perfil,.acao-secundaria,.support-header>a:first-child,.admin-modal-close,.menu-toggle,#fecharCarrinho,.quantidade button,.order-actions button){background:#252c38;color:#f4f6fa;border-color:#3a4352}
+html[data-theme="dark"] :where(.admin-filters input,.admin-filters select,.admin-form-field input,.admin-form-field select,.admin-form-field textarea,.field input,.field select,.field textarea,.team-field input,.team-field select,.driver-grid input,.driver-grid select,.pesquisa-produtos input,.chat-form input,.review-card textarea,.troco-field input,.cupom-box input){background:#171c24;color:#f4f6fa;border-color:#3a4352}
+html[data-theme="dark"] :where(.timeline strong,.item-track small,.track-card dt,.driver-grid label,.delivery-address,.support-card label>span,.order-info,.order-info strong,.field label,.checkbox-admin,.avaliacoes-titulo>span,.produto-card .produto-descricao,.usuario-meta){color:#c3cad6}
+html[data-theme="dark"] :where(.order-filters button,.operator-nav button){color:#c3cad6}
+html[data-theme="dark"] :where(.order-filters button:hover,.recent-order:hover,.quantidade button:hover:not(:disabled)){background:#2a3240;color:#fff}
+html[data-theme="dark"] :where(.pending-card,.approval-alert,.admin-migration-warning,.order-review,.order-note,.driver-earnings-note[data-tipo="warning"],.team-status){background:#352f20;color:#f4d38a;border-color:#66552c}
+html[data-theme="dark"] :where(.cancelado,.admin-error,.confirm-delete-warning,.team-status.error,.driver-push-card.is-blocked,.carrinho-alerta--erro,.carrinho-alerta-425--erro){background:#3a2026;color:#ffadb5;border-color:#6f3039}
+html[data-theme="dark"] :where(.restaurant-response,.resposta-publica,.ticket-response,.summary-trust,.security-summary.ok,.online-payment-option,.driver-push-card.is-active){background:#183329;color:#9de0bb;border-color:#285e45}
+html[data-theme="dark"] :where(.admin-table-wrap td,.table-wrap td,.item-track,.track-card dl div,.audit-row,.report-row,.log-row,.order-product,.ops-row){border-color:#303846}
+html[data-theme="dark"] :where(.timeline li:not(:last-child)::before,.timeline li>span,.etapas-pedido span){background:#343c49}
+html[data-theme="dark"] :where(.carrinho-minimo-barra,.driver-loading span,.admin-loading span){border-color:#3a4352;background-color:#303846}
+html[data-theme="dark"] :where(.produto-info p,.produto-card .produto-info p,.produto-card .produto-info small,.info-restaurante p,.carrinho-header h2:after,.info-item>small,.carrinho-vazio p,#carrinhoRestaurante,.item-carrinho .adicionais,.item-carrinho .observacao,.item-carrinho-unitario,.carrinho-resumo-titulo small,.carrinho-footer .linha,.grupo-adicional>small,.variante-opcao small,#produtoModal .modal-body>p,.card p,.empty p,.avaliacao-publica>p,.avaliacao-publica time){color:#aab2c0}
+html[data-theme="dark"] :where(.produto-card .produto-info strong,#infoEntrega,.info-item h4,.info-item>strong,.linha strong,.linha.total,.item-carrinho-titulo h4,.item-carrinho-total,.quantidade-valor,.carrinho-resumo-titulo span,.carrinho-footer .linha strong,.carrinho-footer .linha.total,.carrinho-footer .linha.total strong,.checkout-security strong,.endereco p,.troco-field label,.item-info h4){color:#f4f6fa}
+html[data-theme="dark"] :where(.summary-trust strong,.summary-trust small,.checkout-fast-lane strong,.checkout-fast-lane small,.ticket-response strong){color:#9de0bb}
+html[data-theme="dark"] :where(.item-carrinho-aviso,.item-status-425,.carrinho-alerta,.carrinho-alerta-425,.carrinho-minimo){background:#352f20;color:#f4d38a;border-color:#66552c}
+html[data-theme="dark"] :where(.item-carrinho-aviso--erro,.item-status-425--erro,.item-carrinho--indisponivel,.item-carrinho--indisponivel-425,.modal-feedback){background:#3a2026;color:#ffadb5;border-color:#6f3039}
+html[data-theme="dark"] :where(.modal-feedback[data-tipo="info"],.edicao-feedback-425){background:#202c3b;color:#b8c9e2;border-color:#374d69}
+html[data-theme="dark"] :where(.editar-item,.editar-item-425){background:#252c38!important;color:#f4f6fa!important;border-color:#3a4352!important}
+html[data-theme="dark"] :where(.variante-opcao,.grupo-adicional){border-color:#3a4352}
+html[data-theme="dark"] .banner-restaurante,
+html[data-theme="dark"] .banner-restaurante img{background:#202631}
+html[data-theme="dark"] .produto-card .produto-info:after{background:#3a2026;color:#ff9aa4}
+html[data-theme="dark"] .status-badge{background:color-mix(in srgb,var(--status-color) 22%,#191e27)}
+html[data-theme="dark"] .chart-grid{stroke:#303846}
+html[data-theme="dark"] .chart-point{fill:#191e27}
+html[data-theme="dark"] .order-filters button.active{background:#f4f6fa;color:#171c24}
+html[data-theme="dark"] .order-filters button.active span{background:#303846;color:#f4f6fa}
+html[data-theme="dark"] .theme-toggle{background:rgba(24,29,38,.94);color:#f4f6fa;border-color:#3a4352;box-shadow:0 14px 36px rgba(0,0,0,.34)}
+html[data-theme="dark"] .theme-toggle-icon{background:#3b311c;color:#ffd166}
+html[data-theme="dark"] ::selection{background:rgba(239,36,53,.34);color:#fff}
+
+@media(max-width:640px){.theme-toggle{left:12px;bottom:calc(12px + env(safe-area-inset-bottom));padding:9px}.theme-toggle-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.theme-toggle-icon{width:28px;height:28px}}
+@media(prefers-reduced-motion:reduce){.theme-toggle{transition:none}}

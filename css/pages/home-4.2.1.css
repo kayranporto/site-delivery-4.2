@@ -3,6 +3,11 @@
 ========================================================= */
 .home-page main{padding-top:12px}
 .home-page .topbar-inner{padding:8px 0;font-size:.78rem}
+.home-page .topbar[hidden]{display:none}
+.home-page .topbar-close{display:grid;width:30px;height:30px;flex:0 0 auto;place-items:center;padding:0;border:1px solid var(--border);border-radius:50%;background:transparent;color:var(--text);cursor:pointer;font-size:20px;line-height:1}
+.home-page .topbar-close:hover,.home-page .topbar-close:focus-visible{border-color:rgba(234,29,44,.4);background:rgba(234,29,44,.1);color:var(--primary)}
+html[data-theme="dark"] .home-page .topbar{background:rgba(20,24,32,.94);border-color:#303846}
+html[data-theme="dark"] .home-page .topbar-close{border-color:#3a4352;color:#f4f6fa}
 .home-page .container-header{min-height:72px;gap:10px}
 .home-page .logo{flex:0 0 auto;font-size:1.05rem;white-space:nowrap}
 .home-page .location{min-width:205px;padding:10px 13px;box-shadow:none;border:1px solid var(--border)}
@@ -43,6 +48,7 @@
 .home-page .cupom-action{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:42px;padding:10px 15px;border-radius:12px;background:var(--text);color:#fff;font-size:.78rem;font-weight:800;white-space:nowrap}
 .home-page .cupom-action:hover,.home-page .cupom-action:focus-visible{transform:translateY(-2px)}
 .home-page .install-app{left:18px;right:auto;bottom:18px;padding:10px 13px;border-radius:13px;font-size:.72rem}
+.home-page:has(>.install-app:not([hidden]))>.theme-toggle{bottom:78px}
 .home-page .notification-center{right:82px;bottom:18px}
 .home-page .floating-cart{right:18px;bottom:18px;width:50px;height:50px;justify-content:center;padding:0;border-radius:16px}
 .home-page .floating-cart span{top:-6px;right:-6px;width:21px;height:21px;font-size:.64rem}
@@ -86,6 +92,7 @@
   .home-page .cupom-copy{align-items:flex-start}
   .home-page .cupom-action{width:100%}
   .home-page .install-app{left:10px;bottom:10px;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .home-page:has(>.install-app:not([hidden]))>.theme-toggle{bottom:calc(68px + env(safe-area-inset-bottom))}
   .home-page .notification-center{right:70px;bottom:10px}
   .home-page .floating-cart{right:10px;bottom:10px;width:48px;height:48px}
 }
