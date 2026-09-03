@@ -31,6 +31,7 @@ const SHELL = [
   "./js/core/monitoring.js?v=4.2.0",
   "./js/core/notifications.js?v=4.4.3",
   "./js/core/favorites-sync.js?v=4.2.1",
+  "./js/core/client-mobile-4.5.js?v=4.5.0",
   "./js/pages/home.js?v=4.4.6",
   "./js/core/cart-store.js?v=4.2.0",
   "./js/modules/carrinho-4.2.5.js?v=4.2.6",
