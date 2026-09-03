@@ -47,8 +47,15 @@ O teste SQL foi executado contra o esquema ativo com a migration dentro da mesma
 transação, sem persistir a migration nem as fixtures. A conferência de rollback
 confirmou a ausência das funções novas e da empresa de teste após a execução.
 
-Resultado local: `npm run verify` concluído com 193 testes aprovados, integridade
-e TypeScript sem erros. Os cenários Playwright foram preparados, mas ainda não
-executados: o navegador remoto não acessa o servidor local e o download local do
-Chromium não foi concluído. A execução no GitHub aguarda o envio da branch.
-Nenhuma alteração desta versão foi publicada no site ou persistida no banco.
+Resultado: `npm run verify` passou localmente e no GitHub (193 testes, integridade
+e TypeScript). O Playwright passou no GitHub: 30 cenários de desktop/celular,
+incluindo os dez cenários novos desta versão. Seis verificações preexistentes da
+API remota foram ignoradas por ausência de `API_PUBLICA_URL`/`API_PUBLICA_KEY`.
+
+Execuções do código validado: [CI](https://github.com/kayranporto/site-delivery-4.2/actions/runs/33768197119)
+e [Playwright](https://github.com/kayranporto/site-delivery-4.2/actions/runs/33768197131).
+
+A prévia automática da Vercel falhou; o commit base da branch principal também
+apresenta falha na Vercel. O GitHub não fornece o motivo detalhado. A investigação
+da hospedagem depende dos logs dessa implantação na Vercel. Nenhuma alteração
+desta versão foi publicada no site de produção ou persistida no banco.
