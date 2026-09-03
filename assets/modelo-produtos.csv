@@ -1,0 +1,3 @@
+nome;categoria;preco;descricao;promocao;disponivel;controle_estoque;estoque;estoque_minimo;imagem
+Pizza margherita;Pizzas;39,90;Molho de tomate e mussarela;;sim;nao;0;5;
+Suco de laranja;Bebidas;9,90;Copo de 300 ml;8,90;sim;sim;30;5;

@@ -56,9 +56,9 @@
 
     function formatarEndereco(endereco) {
         if (!endereco || typeof endereco !== "object") return "";
-        const primeiraLinha = [endereco.logradouro, endereco.numero].filter(Boolean).join(", ");
+        const primeiraLinha = [endereco.logradouro || endereco.rua, endereco.numero].filter(Boolean).join(", ");
         const segundaLinha = [endereco.complemento, endereco.bairro].filter(Boolean).join(" • ");
-        const cidade = [endereco.cidade, endereco.uf].filter(Boolean).join("/");
+        const cidade = [endereco.cidade, endereco.uf || endereco.estado].filter(Boolean).join("/");
         const final = [cidade, endereco.cep ? `CEP ${endereco.cep}` : ""].filter(Boolean).join(" • ");
         return [primeiraLinha, segundaLinha, final].filter(Boolean).join(" — ");
     }
@@ -91,12 +91,17 @@
         return calcular(9) === Number(cpf[9]) && calcular(10) === Number(cpf[10]);
     }
 
+    function normalizarCNPJ(valor) {
+        return String(valor || "").toUpperCase().replace(/[.\/\s-]/g, "");
+    }
+
     function validarCNPJ(valor) {
-        const cnpj = somenteNumeros(valor);
-        if (!/^\d{14}$/.test(cnpj) || /^(\d)\1{13}$/.test(cnpj)) return false;
+        const cnpj = normalizarCNPJ(valor);
+        if (!/^[A-Z0-9]{12}\d{2}$/.test(cnpj) || /^(\d)\1{13}$/.test(cnpj)) return false;
 
         const calcular = (base, pesos) => {
-            const soma = [...base].reduce((total, digito, indice) => total + Number(digito) * pesos[indice], 0);
+            // Receita Federal: cada caractere vale seu código ASCII menos 48.
+            const soma = [...base].reduce((total, digito, indice) => total + (digito.charCodeAt(0) - 48) * pesos[indice], 0);
             const resto = soma % 11;
             return resto < 2 ? 0 : 11 - resto;
         };
@@ -191,6 +196,7 @@
         dinheiro,
         somenteNumeros,
         validarCPF,
+        normalizarCNPJ,
         validarCNPJ,
         validarTelefone,
         destinoInterno,

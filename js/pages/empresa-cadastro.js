@@ -23,7 +23,7 @@ if (!form || !submitButton) {
         const nome = nomeCampo.value.trim();
         const email = emailCampo.value.trim().toLowerCase();
         const telefone = telefoneCampo.value.trim();
-        const cnpj = App.somenteNumeros(cnpjCampo.value);
+        const cnpj = App.normalizarCNPJ(cnpjCampo.value);
         const senha = senhaCampo.value;
         const confirmarSenha = confirmarSenhaCampo.value;
 
@@ -99,7 +99,7 @@ if (!form || !submitButton) {
             console.error("Erro no cadastro da empresa:", erro);
             const mensagem = App.mensagemErro(erro, "Não foi possível concluir o cadastro. Tente novamente.");
             const normalizada = mensagem.toLowerCase();
-            if (/cnpj|empresas_cnpj_unique|duplicate key.*cnpj|já existe.*cnpj/.test(normalizada)) {
+            if (/empresas_cnpj.*unique|duplicate key.*cnpj|já existe.*cnpj/.test(normalizada)) {
                 avisarEmpresaCadastro("CNPJ já cadastrado", "Este CNPJ já está vinculado a outro restaurante.", "error", cnpjCampo);
             } else if (/already registered|user already registered|email.*exist|já possui uma conta/.test(normalizada)) {
                 avisarEmpresaCadastro("E-mail já cadastrado", "Entre na Área do Restaurante ou use outro e-mail.", "error", emailCampo);

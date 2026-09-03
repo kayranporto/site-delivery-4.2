@@ -13,8 +13,8 @@ test("Home usa horário real no filtro Aberto agora", () => {
     assert.match(home, /rpc\("empresa_disponibilidade"/);
     assert.match(home, /abertaAgora:\s*data\?\.aberto\s*===\s*true/);
     assert.match(home, /!filtros\.abertoAgora\s*\|\|\s*empresa\.abertaAgora\s*===\s*true/);
-    assert.match(read("index.html"), /js\/pages\/home\.js\?v=4\.4\.5\.2/);
-    assert.match(read("sw.js"), /js\/pages\/home\.js\?v=4\.4\.5\.2/);
+    assert.match(read("index.html"), /js\/pages\/home\.js\?v=4\.4\.6/);
+    assert.match(read("sw.js"), /js\/pages\/home\.js\?v=4\.4\.6/);
 });
 
 test("robots bloqueia as rotas privadas reais em html", () => {

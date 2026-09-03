@@ -41,9 +41,9 @@ form.addEventListener("submit", async (event) => {
         if (error) throw error;
         if (!data?.user) throw new Error("Usuário não encontrado.");
         salvarTentativas({ email: emailDigitado, falhas: 0, bloqueadoAte: 0 });
-        App.vincularUsuarioLocal(data.user.id);
         const solicitado = localStorage.getItem("redirect"); localStorage.removeItem("redirect");
-        window.location.replace(App.destinoInterno(solicitado, "perfil.html"));
+        App.vincularUsuarioLocal(data.user.id);
+        window.location.replace(App.destinoInterno(solicitado, "../index.html#restaurantes"));
     } catch (erro) {
         console.error("Erro ao fazer login:", erro);
         estado.falhas = Number(estado.falhas || 0) + 1;

@@ -62,14 +62,14 @@
       const { data, error } = await window.db.from("enderecos")
         .select("id,apelido,latitude,longitude,localizacao_atualizada_em,principal,created_at")
         .eq("usuario_id", user.id)
-        .order("principal", { ascending: false })
+        .order("principal", { ascending: false, nullsFirst: false })
         .order("created_at", { ascending: false });
       if (error) return;
 
       const cards = [...lista.querySelectorAll(".item-card")];
-      cards.forEach((card, indice) => {
+      cards.forEach((card) => {
         if (card.dataset.gps44 === "1") return;
-        const endereco = data?.[indice];
+        const endereco = data?.find((item) => String(item.id) === card.dataset.enderecoId);
         if (!endereco) return;
         const actions = card.querySelector(".actions");
         if (!actions) return;

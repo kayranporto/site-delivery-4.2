@@ -64,12 +64,12 @@ window.AuthPolicy = Object.freeze({
     }
 
     function formatarCNPJ(valor) {
-        const d = valor.replace(/\D/g, "").slice(0, 14);
-        return d
-            .replace(/^(\d{2})(\d)/, "$1.$2")
-            .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
-            .replace(/\.(\d{3})(\d)/, ".$1/$2")
-            .replace(/(\d{4})(\d)/, "$1-$2");
+        const d = valor.toUpperCase().replace(/[.\/\s-]/g, "").slice(0, 14);
+        return d.slice(0, 2)
+            + (d.length > 2 ? `.${d.slice(2, 5)}` : "")
+            + (d.length > 5 ? `.${d.slice(5, 8)}` : "")
+            + (d.length > 8 ? `/${d.slice(8, 12)}` : "")
+            + (d.length > 12 ? `-${d.slice(12)}` : "");
     }
 
     document.querySelectorAll("[data-mask='phone']").forEach((input) => {

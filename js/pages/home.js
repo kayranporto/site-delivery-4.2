@@ -430,9 +430,9 @@ async function atualizarEndereco(user) {
         return;
     }
     const { data, error } = await window.db.from("enderecos")
-        .select("apelido,logradouro,numero,bairro,cidade,uf")
+        .select("apelido,logradouro,rua,numero,bairro,cidade,uf,estado")
         .eq("usuario_id", user.id)
-        .order("principal", { ascending: false })
+        .order("principal", { ascending: false, nullsFirst: false })
         .order("created_at", { ascending: false })
         .limit(1)
         .maybeSingle();
@@ -440,7 +440,7 @@ async function atualizarEndereco(user) {
         locationText.textContent = "Cadastrar endereço";
         return;
     }
-    locationText.textContent = `${data.apelido || "Entrega"} • ${data.logradouro}, ${data.numero} — ${data.bairro}`;
+    locationText.textContent = `${data.apelido || "Entrega"} • ${data.logradouro || data.rua || ""}, ${data.numero || ""} — ${data.bairro || ""}`;
 }
 
 function atualizarContadoresCarrinho() {

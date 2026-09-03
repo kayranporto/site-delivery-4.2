@@ -80,11 +80,11 @@ form.addEventListener("submit", async (event) => {
         }, { onConflict: "id" });
         if (erroUsuario) throw erroUsuario;
 
-        App.vincularUsuarioLocal(data.user.id);
         const solicitado = localStorage.getItem("redirect");
         localStorage.removeItem("redirect");
+        App.vincularUsuarioLocal(data.user.id);
         window.AppToast?.("Conta criada", "Seu acesso já está liberado.", "success");
-        window.location.replace(App.destinoInterno(solicitado, "perfil.html?cadastro=sucesso"));
+        window.location.replace(App.destinoInterno(solicitado, "../index.html#restaurantes"));
     } catch (erro) {
         console.error("Erro ao criar conta:", erro);
         avisarCadastro("Não foi possível criar a conta", App.mensagemErro(erro, "erro desconhecido"), "error");

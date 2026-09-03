@@ -138,7 +138,7 @@
   async function excluirRegiao(regiao) {
     const confirmou = window.AppConfirm ? await window.AppConfirm({
       titulo: "Excluir região?",
-      mensagem: `A regra de entrega para ${regiao.bairro} será removida somente de ${nomeUnidade()}.`,
+      mensagem: `A regra de entrega para ${regiao.bairro === "*" ? "Todos os bairros" : regiao.bairro} será removida somente de ${nomeUnidade()}.`,
       confirmar: "Excluir região",
       cancelar: "Voltar",
       perigoso: true,
@@ -165,7 +165,7 @@
       const item = criar("article", "region-item");
       const texto = criar("div");
       texto.append(
-        criar("strong", "", `${regiao.bairro} • ${regiao.cidade}/${regiao.uf}`),
+        criar("strong", "", `${regiao.bairro === "*" ? "Todos os bairros" : regiao.bairro} • ${regiao.cidade}/${regiao.uf}`),
         criar("small", "", `${App.dinheiro(regiao.taxa_entrega)} de entrega • mínimo ${App.dinheiro(regiao.pedido_minimo)} • ${regiao.tempo_min}–${regiao.tempo_max} min`)
       );
       const acoes = criar("div", "operation-actions");
@@ -296,7 +296,7 @@
       const payload = {
         empresa_id: empresaId,
         unidade_id: unidadeId,
-        bairro: $("regiaoBairro").value.trim(),
+        bairro: $("regiaoCidadeInteira")?.checked ? "*" : $("regiaoBairro").value.trim(),
         cidade: $("regiaoCidade").value.trim(),
         uf: $("regiaoUf").value.trim().toUpperCase(),
         taxa_entrega: Number($("regiaoTaxa").value),

@@ -6,6 +6,7 @@ const voltar = document.getElementById("voltarEndereco");
 const continuar = document.getElementById("continuarEndereco");
 const paramsEndereco = new URLSearchParams(window.location.search);
 const destino = App.destinoInterno(paramsEndereco.get("redirect"), "perfil.html");
+const voltaAoPedido = /^(?:\.\.\/html\/)?checkout\.html(?:[?#]|$)/.test(destino);
 
 let usuarioAtual = null;
 let enderecos = [];
@@ -32,16 +33,7 @@ function textoEndereco(endereco) {
 
 async function tornarPrincipal(id) {
     if (!usuarioAtual) return;
-    const { error: erroLimpar } = await window.db.from("enderecos")
-        .update({ principal: false })
-        .eq("usuario_id", usuarioAtual.id)
-        .eq("principal", true);
-    if (erroLimpar) throw erroLimpar;
-
-    const { error } = await window.db.from("enderecos")
-        .update({ principal: true })
-        .eq("id", id)
-        .eq("usuario_id", usuarioAtual.id);
+    const { error } = await window.db.rpc("endereco_selecionar", { p_endereco_id: id });
     if (error) throw error;
 }
 
@@ -58,6 +50,7 @@ function renderizar() {
     enderecos.forEach((endereco) => {
         const item = document.createElement("article");
         item.className = "item-card";
+        item.dataset.enderecoId = endereco.id;
 
         const info = document.createElement("div");
         const titulo = document.createElement("h3");
@@ -72,12 +65,13 @@ function renderizar() {
         const usar = document.createElement("button");
         usar.className = "btn secundario";
         usar.type = "button";
-        usar.textContent = endereco.principal ? "Em uso" : "Usar este";
-        usar.disabled = endereco.principal;
+        usar.textContent = voltaAoPedido ? "Entregar aqui" : (endereco.principal ? "Em uso" : "Usar este");
+        usar.disabled = Boolean(endereco.principal && !voltaAoPedido);
         usar.addEventListener("click", async () => {
             usar.disabled = true;
             try {
                 await tornarPrincipal(endereco.id);
+                if (voltaAoPedido) { window.location.assign(destino); return; }
                 await carregar();
                 avisarEndereco("Endereço selecionado", "O próximo pedido usará este endereço.", "success");
             } catch (erro) {
@@ -107,18 +101,11 @@ function renderizar() {
             if (!confirmado) return;
 
             remover.disabled = true;
-            const { error } = await window.db.from("enderecos")
-                .delete()
-                .eq("id", endereco.id)
-                .eq("usuario_id", usuarioAtual.id);
+            const { error } = await window.db.rpc("endereco_remover", { p_endereco_id: endereco.id });
             if (error) {
                 remover.disabled = false;
                 avisarEndereco("Não foi possível remover", App.mensagemErro(error), "error");
                 return;
-            }
-            enderecos = enderecos.filter((itemEndereco) => itemEndereco.id !== endereco.id);
-            if (endereco.principal && enderecos[0]) {
-                try { await tornarPrincipal(enderecos[0].id); } catch (erro) { console.error(erro); }
             }
             await carregar();
             avisarEndereco("Endereço removido", `${nome} foi removido da sua conta.`, "success");
@@ -134,7 +121,7 @@ async function carregar() {
     const { data, error } = await window.db.from("enderecos")
         .select("*")
         .eq("usuario_id", usuarioAtual.id)
-        .order("principal", { ascending: false })
+        .order("principal", { ascending: false, nullsFirst: false })
         .order("created_at", { ascending: false });
     if (error) throw error;
     enderecos = data || [];
@@ -160,7 +147,6 @@ form.addEventListener("submit", async (event) => {
     }
 
     const payload = {
-        usuario_id: usuarioAtual.id,
         apelido: document.getElementById("apelido").value.trim(),
         cep,
         logradouro: document.getElementById("logradouro").value.trim(),
@@ -170,21 +156,14 @@ form.addEventListener("submit", async (event) => {
         cidade: document.getElementById("cidade").value.trim(),
         uf,
         referencia: document.getElementById("referencia").value.trim() || null,
-        principal: document.getElementById("principal").checked || enderecos.length === 0
+        principal: voltaAoPedido || document.getElementById("principal").checked || enderecos.length === 0
     };
 
     App.definirCarregando(botao, true, "Salvando...");
     try {
-        if (payload.principal && enderecos.some((endereco) => endereco.principal)) {
-            const { error } = await window.db.from("enderecos")
-                .update({ principal: false })
-                .eq("usuario_id", usuarioAtual.id)
-                .eq("principal", true);
-            if (error) throw error;
-        }
-
-        const { error } = await window.db.from("enderecos").insert(payload);
+        const { error } = await window.db.rpc("endereco_salvar", { p_endereco: payload });
         if (error) throw error;
+        if (voltaAoPedido) { window.location.assign(destino); return; }
         form.reset();
         document.getElementById("apelido").value = "Casa";
         document.getElementById("principal").checked = true;

@@ -6,6 +6,17 @@
     let horarios = [];
     let pausas = [];
     let regioes = [];
+    function atualizarCampoBairro() {
+        const cidadeInteira = document.getElementById("regiaoCidadeInteira")?.checked;
+        const bairro = document.getElementById("regiaoBairro");
+        if (!bairro) return;
+        bairro.disabled = Boolean(cidadeInteira);
+        bairro.required = !cidadeInteira;
+        bairro.placeholder = cidadeInteira ? "Todos os bairros" : "Ex.: Centro";
+    }
+    document.getElementById("regiaoCidadeInteira")?.addEventListener("change", atualizarCampoBairro);
+    document.getElementById("regiaoForm")?.addEventListener("reset", () => setTimeout(atualizarCampoBairro, 0));
+
     let cancelamentos = [];
 
     const $ = (id) => document.getElementById(id);
@@ -80,7 +91,7 @@
             const item = criar("article", "region-item");
             const texto = criar("div");
             texto.append(
-                criar("strong", "", `${regiao.bairro} • ${regiao.cidade}/${regiao.uf}`),
+                criar("strong", "", `${regiao.bairro === "*" ? "Todos os bairros" : regiao.bairro} • ${regiao.cidade}/${regiao.uf}`),
                 criar("small", "", `${App.dinheiro(regiao.taxa_entrega)} de entrega • mínimo ${App.dinheiro(regiao.pedido_minimo)} • ${regiao.tempo_min}–${regiao.tempo_max} min`)
             );
             const acoes = criar("div", "operation-actions");
@@ -95,7 +106,7 @@
             const remover = criar("button", "remove", "Excluir");
             remover.type = "button";
             remover.addEventListener("click", async () => {
-                const confirmar = window.AppConfirm ? await AppConfirm({ titulo: "Excluir região", mensagem: `Remover a entrega para ${regiao.bairro}?`, confirmar: "Excluir" }) : confirm("Excluir esta região?");
+                const confirmar = window.AppConfirm ? await AppConfirm({ titulo: "Excluir região", mensagem: `Remover a entrega para ${regiao.bairro === "*" ? "Todos os bairros" : regiao.bairro}?`, confirmar: "Excluir" }) : confirm("Excluir esta região?");
                 if (!confirmar) return;
                 const { error } = await window.db.from("empresa_regioes").delete().eq("id", regiao.id);
                 if (error) return erro(error);
@@ -217,7 +228,7 @@
 
     $("regiaoForm")?.addEventListener("submit", async (event) => {
         event.preventDefault();
-        const payload = { empresa_id: String(loja.id), bairro: $("regiaoBairro").value.trim(), cidade: $("regiaoCidade").value.trim(), uf: $("regiaoUf").value.trim().toUpperCase(), taxa_entrega: Number($("regiaoTaxa").value), pedido_minimo: Number($("regiaoMinimo").value), tempo_min: Number($("regiaoTempoMin").value), tempo_max: Number($("regiaoTempoMax").value), ativo: true };
+        const payload = { empresa_id: String(loja.id), bairro: $("regiaoCidadeInteira")?.checked ? "*" : $("regiaoBairro").value.trim(), cidade: $("regiaoCidade").value.trim(), uf: $("regiaoUf").value.trim().toUpperCase(), taxa_entrega: Number($("regiaoTaxa").value), pedido_minimo: Number($("regiaoMinimo").value), tempo_min: Number($("regiaoTempoMin").value), tempo_max: Number($("regiaoTempoMax").value), ativo: true };
         if (!payload.bairro || !payload.cidade || !/^[A-Z]{2}$/.test(payload.uf) || payload.tempo_max < payload.tempo_min) return erro("Revise os dados da região.");
         const { data, error } = await window.db.from("empresa_regioes").insert(payload).select("*").single();
         if (error) return erro(error); regioes.push(data); $("regiaoBairro").value = ""; renderizarRegioes(); sucesso("Região adicionada", "O checkout já usará a nova taxa e previsão.");
