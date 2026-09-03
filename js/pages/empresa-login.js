@@ -21,7 +21,7 @@ async function obterOuCriarEmpresa(user) {
     if (empresa) return empresa;
     const metadata = user.user_metadata || {};
     if (metadata.tipo_conta !== "restaurante") return null;
-    const cnpj = App.somenteNumeros(metadata.cnpj);
+    const cnpj = App.normalizarCNPJ(metadata.cnpj);
     if (!metadata.nome || !App.validarCNPJ(cnpj)) throw new Error("Os dados do restaurante estão incompletos. Procure o suporte.");
     const resposta = await window.db.from("empresas").insert({
         usuario_id: user.id, nome: String(metadata.nome).trim(), email: user.email,

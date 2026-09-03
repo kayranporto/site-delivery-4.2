@@ -104,3 +104,11 @@
   .order-card-actions,.ticket-actions{gap:9px}
   .table-wrap{margin-inline:-3px}
 }
+.product-import-card form{display:grid;gap:14px}
+.product-import-card p{font-size:12px;line-height:1.6;color:var(--muted,#626773)}
+.product-import-card input[type=file]{max-width:100%}
+.product-import-card .table-wrap{max-height:360px;overflow:auto;border-radius:12px}
+.product-import-card td{white-space:normal;max-width:360px;overflow-wrap:anywhere}
+.product-import-card button[type=submit]{justify-self:start}
+.product-import-card [data-tipo=error],.product-import-card .importacao-erro td{color:#b3152a}
+html[data-theme=dark] .product-import-card [data-tipo=error],html[data-theme=dark] .product-import-card .importacao-erro td{color:#ffb4bd}

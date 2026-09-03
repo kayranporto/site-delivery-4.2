@@ -1,6 +1,6 @@
 "use strict";
 
-const VERSION = "4.4.5";
+const VERSION = "4.4.6";
 const CACHE = `multi-delivery-v${VERSION}`;
 const DYNAMIC_CACHE = `multi-delivery-dynamic-v${VERSION}`;
 const SHELL = [
@@ -18,25 +18,25 @@ const SHELL = [
   "./css/pages/home-4.2.1.css?v=4.2.1.4",
   "./css/core/paginas.css?v=4.2.0",
   "./css/core/accessibility.css?v=4.2.0",
-  "./css/core/enhancements.css?v=4.4.5.8",
+  "./css/core/enhancements.css?v=4.4.6",
   "./css/modules/mobile-pwa-4.2.6.css?v=4.2.6",
   "./css/pages/suporte.css?v=4.2.0",
   "./css/modules/restaurante-4.2.2.css?v=4.2.4",
   "./css/modules/carrinho-4.2.5.css?v=4.2.6",
   "./css/modules/checkout-4.2.3.css?v=4.2.4",
   "./css/modules/operacao-restaurante-4.2.7.css?v=4.2.7.1",
-  "./js/core/app-utils.js?v=4.2.0",
-  "./js/core/config.js?v=4.4.5",
+  "./js/core/app-utils.js?v=4.4.6",
+  "./js/core/config.js?v=4.4.6",
   "./js/core/monitoring.js?v=4.2.0",
   "./js/core/notifications.js?v=4.4.3",
   "./js/core/favorites-sync.js?v=4.2.1",
-  "./js/pages/home.js?v=4.4.5.2",
+  "./js/pages/home.js?v=4.4.6",
   "./js/core/cart-store.js?v=4.2.0",
   "./js/modules/carrinho-4.2.5.js?v=4.2.6",
   "./js/modules/checkout-4.2.3.js?v=4.2.4",
   "./js/modules/operacao-restaurante-4.2.7.js?v=4.2.7",
   "./js/pages/suporte.js?v=4.2.0",
-  "./js/core/site-enhancements.js?v=4.4.5.3"
+  "./js/core/site-enhancements.js?v=4.4.6"
 ];
 
 self.addEventListener("install", (event) => {

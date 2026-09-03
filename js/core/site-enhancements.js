@@ -129,7 +129,7 @@
     document.body.append(unidadesJs);
 
     const operacaoUnidadesJs = document.createElement("script");
-    operacaoUnidadesJs.src = `${assetRoot}js/modules/operacao-unidades-4.3.js?v=4.3.0.1`;
+    operacaoUnidadesJs.src = `${assetRoot}js/modules/operacao-unidades-4.3.js?v=4.4.6`;
     operacaoUnidadesJs.async = false;
     document.body.append(operacaoUnidadesJs);
 
@@ -185,14 +185,14 @@
 
   if (/checkout\.html$/i.test(location.pathname)) {
     const checkoutUnidadeJs = document.createElement("script");
-    checkoutUnidadeJs.src = `${assetRoot}js/modules/checkout-unidade-4.3.js?v=4.3.0.1`;
+    checkoutUnidadeJs.src = `${assetRoot}js/modules/checkout-unidade-4.3.js?v=4.4.6`;
     checkoutUnidadeJs.async = false;
     document.body.append(checkoutUnidadeJs);
   }
 
   if (/enderecos\.html$/i.test(location.pathname)) {
     const localizacaoEnderecosJs = document.createElement("script");
-    localizacaoEnderecosJs.src = `${assetRoot}js/modules/localizacao-enderecos-4.4.js?v=4.4.0`;
+    localizacaoEnderecosJs.src = `${assetRoot}js/modules/localizacao-enderecos-4.4.js?v=4.4.6`;
     localizacaoEnderecosJs.async = false;
     document.body.append(localizacaoEnderecosJs);
   }
@@ -378,7 +378,27 @@
     const nextTheme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
     applyTheme(nextTheme, true);
   });
-  document.body.append(themeToggle);
+  const profilePreferences = document.querySelector('[data-theme-preferences]');
+  if (profilePreferences) {
+    themeToggle.classList.add("theme-toggle-profile", "menu-item");
+    const copy = document.createElement("span");
+    copy.className = "menu-texto";
+    const title = document.createElement("strong");
+    title.textContent = "Aparência";
+    copy.append(title, themeLabel);
+    themeToggle.replaceChildren(themeIcon, copy);
+    profilePreferences.append(themeToggle);
+  } else {
+    const preferences = document.createElement("nav");
+    preferences.className = "theme-preferences";
+    preferences.setAttribute("aria-label", "Preferências de aparência");
+    preferences.append(themeToggle);
+    const footer = document.querySelector("body > footer:not(.checkout-footer)");
+    const main = document.querySelector("body > main, .dashboard-main");
+    if (footer) footer.append(preferences);
+    else if (main) main.insertAdjacentElement("afterend", preferences);
+    else document.body.append(preferences);
+  }
   updateThemeButton(document.documentElement.dataset.theme);
 
   const net=document.createElement("div");net.className="network-banner";net.setAttribute("role","status");document.body.append(net);
@@ -392,7 +412,7 @@
 
   if("serviceWorker" in navigator && location.protocol!=="file:") addEventListener("load",async()=>{
     try{
-      const swUrl=/\/html\/[^/]+\.html$/i.test(location.pathname)?"../sw.js?v=4.4.5":"./sw.js?v=4.4.5";
+      const swUrl=/\/html\/[^/]+\.html$/i.test(location.pathname)?"../sw.js?v=4.4.6":"./sw.js?v=4.4.6";
       const registro=await navigator.serviceWorker.register(swUrl,{updateViaCache:"none"});
       if(registro.waiting)mostrarAtualizacao(registro.waiting);
       registro.addEventListener("updatefound",()=>{const worker=registro.installing;if(!worker)return;worker.addEventListener("statechange",()=>{if(worker.state==="installed"&&navigator.serviceWorker.controller)mostrarAtualizacao(worker)})});

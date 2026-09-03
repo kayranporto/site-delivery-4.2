@@ -62,7 +62,10 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 /* Republicação solicitada após indisponibilidade temporária do artefato do Pages. */
 
 /* Tema claro/escuro global. A preferência é aplicada por site-enhancements.js. */
-.theme-toggle{position:fixed;left:22px;bottom:22px;z-index:11000;display:flex;min-height:46px;align-items:center;gap:9px;padding:9px 14px;border:1px solid rgba(23,25,35,.14);border-radius:999px;background:rgba(255,255,255,.94);color:#171923;box-shadow:0 14px 36px rgba(17,21,34,.18);backdrop-filter:blur(16px);cursor:pointer;font:700 11px/1.1 Poppins,system-ui,sans-serif}
+.theme-preferences{display:flex;justify-content:center;width:100%;padding:20px 16px 32px;clear:both}
+.theme-toggle{position:static;display:flex;min-height:46px;align-items:center;gap:9px;padding:9px 14px;border:1px solid rgba(23,25,35,.14);border-radius:999px;background:rgba(255,255,255,.94);color:#171923;cursor:pointer;font:700 11px/1.4 Poppins,system-ui,sans-serif}
+.theme-toggle-profile{width:100%;text-align:left;border-radius:14px;box-shadow:none}
+.theme-toggle-profile .theme-toggle-label{display:block;font-size:11px;font-weight:500}
 .theme-toggle:hover{border-color:rgba(234,29,44,.35);box-shadow:0 16px 42px rgba(17,21,34,.24);transform:translateY(-1px)}
 .theme-toggle:focus-visible{outline:3px solid rgba(234,29,44,.24);outline-offset:3px}
 .theme-toggle-icon{display:grid;width:27px;height:27px;place-items:center;border-radius:50%;background:#fff0f1;color:#c81725;font-size:17px}
@@ -245,5 +248,5 @@ html[data-theme="dark"] .theme-toggle{background:rgba(24,29,38,.94);color:#f4f6f
 html[data-theme="dark"] .theme-toggle-icon{background:#3b311c;color:#ffd166}
 html[data-theme="dark"] ::selection{background:rgba(239,36,53,.34);color:#fff}
 
-@media(max-width:640px){.theme-toggle{left:12px;bottom:calc(12px + env(safe-area-inset-bottom));padding:9px}.theme-toggle-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.theme-toggle-icon{width:28px;height:28px}}
+@media(max-width:640px){.theme-preferences{padding-bottom:calc(100px + env(safe-area-inset-bottom))}.theme-toggle{padding:9px 14px}.theme-toggle-icon{width:28px;height:28px}}
 @media(prefers-reduced-motion:reduce){.theme-toggle{transition:none}}

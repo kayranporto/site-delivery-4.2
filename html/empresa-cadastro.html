@@ -10,7 +10,7 @@
     <title>Cadastrar restaurante | Delivery</title>
     <link href="../css/core/auth.css?v=4.2.0" rel="stylesheet">
     <link href="../css/core/accessibility.css?v=4.2.0" rel="stylesheet">
-<link rel="manifest" href="../manifest.webmanifest"><meta name="theme-color" content="#ea1d2c"><link rel="stylesheet" href="../css/core/enhancements.css?v=4.4.5.8"></head>
+<link rel="manifest" href="../manifest.webmanifest"><meta name="theme-color" content="#ea1d2c"><link rel="stylesheet" href="../css/core/enhancements.css?v=4.4.6"></head>
 <body class="auth-page auth-business auth-register-page">
 <noscript>Este site precisa de JavaScript habilitado para funcionar.</noscript>
 
@@ -101,9 +101,9 @@
                     <label for="cnpj">CNPJ</label>
                     <div class="auth-input-wrap">
                         <span class="auth-input-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M7 9h4M7 13h7M17 9h.01"></path></svg></span>
-                        <input autocomplete="off" data-mask="cnpj" id="cnpj" inputmode="numeric" maxlength="18" name="cnpj" placeholder="00.000.000/0000-00" required type="text">
+                        <input autocomplete="off" autocapitalize="characters" spellcheck="false" data-mask="cnpj" id="cnpj" inputmode="text" maxlength="18" name="cnpj" placeholder="12.ABC.345/01DE-35" required type="text" aria-describedby="cnpjAjuda">
                     </div>
-                    <p class="auth-form-help">Use o CNPJ vinculado ao restaurante. Ele não poderá ser repetido em outra conta.</p>
+                    <p class="auth-form-help" id="cnpjAjuda">Aceita CNPJ numérico ou com letras. Use o CNPJ do restaurante; ele não poderá ser repetido em outra conta.</p>
                 </div>
 
                 <div class="auth-grid">
@@ -157,11 +157,11 @@
 </main>
 
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.111.0"></script>
-<script defer src="../js/core/app-utils.js?v=4.2.0"></script>
-<script defer src="../js/core/config.js?v=4.4.5"></script>
+<script defer src="../js/core/app-utils.js?v=4.4.6"></script>
+<script defer src="../js/core/config.js?v=4.4.6"></script>
 <script defer src="../js/core/supabase.js?v=4.2.0"></script>
-<script defer src="../js/core/auth-ui.js?v=4.2.0"></script>
+<script defer src="../js/core/auth-ui.js?v=4.4.6"></script>
 <script defer src="../js/core/captcha.js?v=4.2.0"></script>
-<script defer src="../js/pages/empresa-cadastro.js?v=4.2.0"></script>
-<script defer src="../js/core/site-enhancements.js?v=4.4.5.3"></script></body>
+<script defer src="../js/pages/empresa-cadastro.js?v=4.4.6"></script>
+<script defer src="../js/core/site-enhancements.js?v=4.4.6"></script></body>
 </html>

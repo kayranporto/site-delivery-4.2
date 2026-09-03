@@ -80,7 +80,7 @@ test("aviso de aprovação respeita o estado publicado da loja", () => {
     assert.match(html, /id="publicacaoAviso" hidden/);
     assert.match(js, /publicacaoAviso"\)\.hidden = empresa\.publicado === true/);
     assert.match(css, /\.approval-alert\[hidden\]\{display:none!important\}/);
-    assert.match(html, /empresa-dashboard\.css\?v=4\.4\.5\.3/);
+    assert.match(html, /empresa-dashboard\.css\?v=4\.4\.6/);
 });
 
 test("estoque mantém trilha de auditoria protegida", () => {
@@ -92,9 +92,9 @@ test("estoque mantém trilha de auditoria protegida", () => {
     assert.match(read("empresa-dashboard.html"), /id="estoqueMovimentos"/);
 });
 
-test("release 4.4.5 está versionado de forma consistente", () => {
-    assert.equal(JSON.parse(read("package.json")).version, "4.4.5");
-    assert.equal(JSON.parse(read("package-lock.json")).version, "4.4.5");
-    assert.match(read("sw.js"), /const VERSION = "4\.4\.5"/);
-    assert.match(read("js/core/site-enhancements.js"), /sw\.js\?v=4\.4\.5/);
+test("release 4.4.6 está versionado de forma consistente", () => {
+    assert.equal(JSON.parse(read("package.json")).version, "4.4.6");
+    assert.equal(JSON.parse(read("package-lock.json")).version, "4.4.6");
+    assert.match(read("sw.js"), /const VERSION = "4\.4\.6"/);
+    assert.match(read("js/core/site-enhancements.js"), /sw\.js\?v=4\.4\.6/);
 });

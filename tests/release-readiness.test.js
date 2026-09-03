@@ -30,7 +30,7 @@ test("release possui uma única árvore canônica e o empacotamento exclui metad
     assert.ok(fs.existsSync(path.join(root, "supabase/migrations/20260811022438_valida_pedido_antes_evento_pagamento_4_2_8.sql")));
     assert.ok(fs.existsSync(path.join(root, "supabase/migrations/20260811171220_bloqueia_operacao_pagamento_online_pendente_4_2_8.sql")));
     assert.ok(fs.existsSync(path.join(root, "supabase/migrations/20260811175328_remove_rpc_login_legada_4_2_8.sql")));
-    assert.equal(JSON.parse(read("package.json")).version, "4.4.5");
+    assert.equal(JSON.parse(read("package.json")).version, "4.4.6");
 });
 
 test("GitHub Pages publica as entradas da raiz e as páginas da aplicação", () => {
@@ -234,7 +234,7 @@ test("checkout falha com segurança enquanto o gateway online está indisponíve
     const acompanhamento = read("js/pages/acompanhamento.js");
     assert.match(config, /pagamentoOnlineAtivo:\s*false/);
     assert.match(html, /<input disabled name="pagamento" type="radio" value="Online"/);
-    assert.match(html, /js\/core\/config\.js\?v=4\.4\.5/);
+    assert.match(html, /js\/core\/config\.js\?v=4\.4\.6/);
     assert.match(checkout, /pagamentoOnlineAtivo !== true/);
     assert.match(acompanhamento, /pagamentoOnlineAtivo !== true/);
 });
@@ -303,8 +303,8 @@ test("versão de assets e caches é consistente", () => {
         .filter((file) => file.endsWith(".html")).map((file) => fs.readFileSync(file, "utf8"))];
     const joined = sources.join("\n");
     assert.doesNotMatch(joined, /\?v=(?:2\.|3\.)/);
-    assert.match(read("sw.js"), /const VERSION = "4\.4\.5"/);
-    assert.match(read("js/core/site-enhancements.js"), /sw\.js\?v=4\.4\.5/);
+    assert.match(read("sw.js"), /const VERSION = "4\.4\.6"/);
+    assert.match(read("js/core/site-enhancements.js"), /sw\.js\?v=4\.4\.6/);
     assert.match(read("sw.js"), /mobile-pwa-4\.2\.6\.css\?v=4\.2\.6/);
     assert.match(read("sw.js"), /operacao-restaurante-4\.2\.7\.js\?v=4\.2\.7/);
 });

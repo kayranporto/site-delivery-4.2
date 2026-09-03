@@ -13,9 +13,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="../css/pages/empresa-dashboard.css?v=4.4.5.3"/>
+  <link rel="stylesheet" href="../css/pages/empresa-dashboard.css?v=4.4.6"/>
   <link rel="stylesheet" href="../css/core/accessibility.css?v=4.2.0"/>
-  <link rel="stylesheet" href="../css/core/enhancements.css?v=4.4.5.8"/>
+  <link rel="stylesheet" href="../css/core/enhancements.css?v=4.4.6"/>
 </head>
 <body>
   <noscript>Este site precisa de JavaScript habilitado para funcionar.</noscript>
@@ -179,6 +179,16 @@
             </form>
           </article>
         </div>
+        <article class="dashboard-card product-import-card">
+          <div class="section-heading"><div><h3>Importar produtos em lote</h3><p>Preencha o modelo, salve como CSV UTF-8 e confira os produtos antes de importar.</p></div><a class="btn" href="../assets/modelo-produtos.csv" download>Baixar modelo CSV</a></div>
+          <form id="importacaoForm">
+            <div class="field"><label for="importacaoArquivo">Arquivo de produtos</label><input id="importacaoArquivo" type="file" accept=".csv,text/csv" aria-describedby="importacaoAjuda"/></div>
+            <p id="importacaoAjuda">Até 500 produtos e 1 MB. Nome e preço são obrigatórios. Categorias novas serão criadas na unidade selecionada. Produtos repetidos serão apontados na prévia. Use sim ou nao nos campos de disponibilidade e estoque.</p>
+            <p id="importacaoStatus" role="status" aria-live="polite">Selecione um arquivo CSV para conferir os produtos.</p>
+            <div id="importacaoPrevia" class="table-wrap" role="region" aria-label="Prévia da importação" tabindex="0"></div>
+            <button class="btn" id="importacaoConfirmar" type="submit" disabled>Confirmar importação</button>
+          </form>
+        </article>
         <article class="dashboard-card products-table-card">
           <div class="section-heading"><h3>Produtos cadastrados</h3><span id="resumoProdutos">0 produtos</span></div>
           <div class="table-wrap"><table><thead><tr><th>Produto</th><th>Categoria</th><th>Preço</th><th>Variações</th><th>Disponível</th><th>Ações</th></tr></thead><tbody id="produtosEmpresa"><tr><td colspan="6">Carregando...</td></tr></tbody></table></div>
@@ -262,7 +272,8 @@
           </article>
         </div>
         <article class="dashboard-card operation-card">
-          <div class="section-heading"><div><h3>Regiões de entrega</h3><p>Se houver ao menos uma região ativa, somente os bairros cadastrados poderão pedir.</p></div></div>
+          <div class="section-heading"><div><h3>Cidades e regiões de entrega</h3><p>Cadastre quantas cidades precisar. Com regiões cadastradas, somente os bairros ou cidades ativos recebem pedidos. Uma regra de bairro tem prioridade sobre a cidade inteira.</p></div></div>
+          <label class="checkbox-admin"><input id="regiaoCidadeInteira" type="checkbox" form="regiaoForm"/> Atender todos os bairros desta cidade</label>
           <form id="regiaoForm" class="region-form"><div class="field"><label for="regiaoBairro">Bairro</label><input id="regiaoBairro" maxlength="100" required/></div><div class="field"><label for="regiaoCidade">Cidade</label><input id="regiaoCidade" maxlength="100" required/></div><div class="field"><label for="regiaoUf">UF</label><input id="regiaoUf" maxlength="2" pattern="[A-Za-z]{2}" required/></div><div class="field"><label for="regiaoTaxa">Taxa</label><input id="regiaoTaxa" min="0" step="0.01" value="0" type="number" required/></div><div class="field"><label for="regiaoMinimo">Pedido mínimo</label><input id="regiaoMinimo" min="0" step="0.01" value="0" type="number" required/></div><div class="field"><label for="regiaoTempoMin">Previsão mín.</label><input id="regiaoTempoMin" min="5" max="240" value="25" type="number" required/></div><div class="field"><label for="regiaoTempoMax">Previsão máx.</label><input id="regiaoTempoMax" min="5" max="300" value="45" type="number" required/></div><button class="btn" type="submit">Adicionar região</button></form>
           <div class="region-list" id="regioesEmpresa"><p class="empty">Nenhuma região específica cadastrada.</p></div>
         </article>
@@ -298,7 +309,7 @@
               <div class="field"><label for="lojaCategoria">Categoria</label><input id="lojaCategoria" maxlength="80" placeholder="Ex.: Pizza, Lanches"/></div>
               <div class="field"><label for="lojaTaxa">Taxa de entrega</label><input id="lojaTaxa" min="0" required step="0.01" type="number"/></div>
               <div class="field"><label for="lojaMinimo">Pedido mínimo</label><input id="lojaMinimo" min="0" required step="0.01" type="number"/></div>
-              <div class="field"><label for="lojaCidade">Cidade atendida</label><input autocomplete="address-level2" id="lojaCidade" maxlength="100"/></div>
+              <div class="field"><label for="lojaCidade">Cidade principal</label><input autocomplete="address-level2" id="lojaCidade" maxlength="100"/><small>Outras cidades podem ser adicionadas em Operação → Cidades e regiões de entrega.</small></div>
               <div class="field"><label for="lojaUf">UF</label><input autocomplete="address-level1" id="lojaUf" maxlength="2" pattern="[A-Za-z]{2}" placeholder="SP"/></div>
               <div class="field"><label for="lojaTempoMin">Previsão mínima</label><input id="lojaTempoMin" min="5" max="240" required type="number"/></div>
               <div class="field"><label for="lojaTempoMax">Previsão máxima</label><input id="lojaTempoMax" min="5" max="360" required type="number"/></div>
@@ -320,14 +331,16 @@
 
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.111.0"></script>
-  <script defer src="../js/core/app-utils.js?v=4.2.0"></script>
+  <script defer src="../js/core/app-utils.js?v=4.4.6"></script>
   <script defer src="../js/core/supabase.js?v=4.2.0"></script>
   <script defer src="../js/core/media-uploader.js?v=4.2.0"></script>
-  <script defer src="../js/core/config.js?v=4.4.5"></script>
+  <script defer src="../js/core/config.js?v=4.4.6"></script>
   <script defer src="../js/core/monitoring.js?v=4.2.0"></script>
   <script defer src="../js/core/notifications.js?v=4.2.0"></script>
   <script defer src="../js/pages/empresa-dashboard.js?v=4.4.5.2"></script>
-  <script defer src="../js/modules/operacao-empresa.js?v=4.2.0"></script>
-  <script defer src="../js/core/site-enhancements.js?v=4.4.5.3"></script>
+  <script defer src="../js/modules/operacao-empresa.js?v=4.4.6"></script>
+  <script defer src="../js/core/product-import.js?v=4.4.6"></script>
+  <script defer src="../js/modules/empresa-importacao.js?v=4.4.6"></script>
+  <script defer src="../js/core/site-enhancements.js?v=4.4.6"></script>
 </body>
 </html>

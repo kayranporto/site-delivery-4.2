@@ -39,7 +39,7 @@ test("notificação abre a oferta do entregador", () => {
   assert.match(migration, /entregador\.html\?oferta=/);
   assert.match(notifications, /item\?\.destino/);
   assert.match(notifications, /pushManager\.subscribe/);
-  assert.match(notifications, /sw\.js\?v=4\.4\.5/);
+  assert.match(notifications, /sw\.js\?v=4\.4\.6/);
   assert.match(sw, /addEventListener\("push"/);
   assert.match(sw, /requireInteraction: entrega/);
 });

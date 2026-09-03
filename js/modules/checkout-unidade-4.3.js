@@ -17,7 +17,7 @@
       const { data, error } = await window.db.from("enderecos")
         .select("id")
         .eq("usuario_id", user.id)
-        .order("principal", { ascending: false })
+        .order("principal", { ascending: false, nullsFirst: false })
         .order("created_at", { ascending: false })
         .limit(1)
         .maybeSingle();
