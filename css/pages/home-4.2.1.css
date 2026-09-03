@@ -205,3 +205,32 @@ html[data-theme="dark"] .home-page .topbar-close{border-color:#3a4352;color:#f4f
   .home-page .partner-cta,
   .home-page footer{content-visibility:auto;contain-intrinsic-size:auto 620px}
 }
+
+/* =========================================================
+   HERO POLISH — MENOS RUÍDO VISUAL, MAIS HIERARQUIA
+========================================================= */
+.home-page .hero-orb{display:none}
+.home-page .hero-trust{display:none}
+.home-page .hero-time-card{display:none}
+.home-page .hero-visual{isolation:isolate}
+.home-page .hero-glow{opacity:.72;transform:scale(.9)}
+.home-page .hero-visual img{width:79%;max-height:324px}
+.home-page .hero-deal-card{left:5%;bottom:6%;width:min(72%,300px)}
+.home-page .hero-rating-card{top:8%;right:4%}
+.home-page .hero-sparkles span:nth-child(2),
+.home-page .hero-sparkles span:nth-child(3){opacity:.48}
+.home-page .hero-stats{margin-top:-10px}
+.home-page .cupom{padding-top:30px}
+
+@media(max-width:860px){
+  .home-page .hero-deal-card{left:4%;width:min(76%,300px)}
+  .home-page .hero-rating-card{right:2%}
+}
+
+@media(max-width:640px){
+  .home-page .hero-visual img{width:88%;max-height:235px}
+  .home-page .hero-rating-card{display:none}
+  .home-page .hero-deal-card{left:7%;bottom:2%;width:86%;padding:13px}
+  .home-page .hero-stats{margin-top:2px}
+  .home-page .cupom{padding-top:22px}
+}
