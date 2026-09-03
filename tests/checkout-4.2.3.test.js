@@ -51,3 +51,19 @@ test("checkout rápido recolhe opcionais e reaproveita preferências", () => {
     assert.match(core, /checkoutInicializado/);
     assert.match(core, /checkout-inicializado/);
 });
+
+test("checkout bloqueia pagamento e oculta valores finais quando o endereço não é atendido", () => {
+    const ux = ler("js/modules/checkout-4.2.3.js");
+    const css = ler("css/modules/checkout-4.2.3.css");
+    assert.match(ux, /checked:not\(:disabled\)/);
+    assert.match(ux, /bloquearPagamento\(!enderecoValido\)/);
+    assert.match(ux, /dados\?\.regiao_atendida !== false/);
+    assert.match(ux, /Entrega indisponível neste endereço/);
+    assert.match(ux, /marcarValorPendente\(taxa, totalPendente/);
+    assert.match(ux, /marcarValorPendente\(total, totalPendente/);
+    assert.match(ux, /marcarValorPendente\(footerTotal, totalPendente/);
+    assert.match(ux, /stepPagamento\.dataset\.estado = enderecoValido/);
+    assert.match(css, /data-checkout-bloqueado/);
+    assert.match(css, /#total\[data-pendente="true"\]/);
+    assert.match(css, /checkout-fast-lane\[data-estado="erro"\]/);
+});
