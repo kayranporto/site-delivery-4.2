@@ -1,0 +1,265 @@
+/* Multi Delivery 4.5 — fundação visual mobile da experiência do cliente. */
+:root {
+  --client-bg: #090b0d;
+  --client-surface: #14171a;
+  --client-surface-raised: #1b1e22;
+  --client-border: #30343a;
+  --client-text: #f7f7f8;
+  --client-muted: #a7a9ae;
+  --client-red: #ff3038;
+  --client-red-soft: rgba(255, 48, 56, .13);
+  --client-nav-height: 74px;
+}
+
+html[data-theme="dark"] .client-mobile-shell {
+  --bg: var(--client-bg);
+  --surface: var(--client-surface);
+  --surface-soft: var(--client-surface-raised);
+  --surface-muted: #20242a;
+  --border: var(--client-border);
+  --text: var(--client-text);
+  --muted: var(--client-muted);
+  --primary: var(--client-red);
+  --primary-dark: #d9212b;
+  color: var(--client-text);
+  background: var(--client-bg);
+}
+
+.client-bottom-nav { display: none; }
+
+@media (max-width: 768px) {
+  html { scroll-padding-bottom: calc(var(--client-nav-height) + env(safe-area-inset-bottom)); }
+
+  html[data-theme="dark"] .client-mobile-shell {
+    min-width: 320px;
+    padding-bottom: calc(var(--client-nav-height) + env(safe-area-inset-bottom));
+    background: var(--client-bg);
+    color: var(--client-text);
+  }
+
+  .client-mobile-shell[data-client-page="restaurante"],
+  .client-mobile-shell[data-client-page="checkout"],
+  .client-mobile-shell[data-client-page="pedido-sucesso"],
+  .client-mobile-shell[data-client-page="acompanhamento"],
+  .client-mobile-shell[data-client-page="enderecos"],
+  .client-mobile-shell[data-client-page="dados"],
+  .client-mobile-shell[data-client-page="suporte"],
+  .client-mobile-shell[data-client-page="privacidade"] { padding-bottom: env(safe-area-inset-bottom); }
+
+  html[data-theme="dark"] .client-mobile-shell :is(input, select, textarea) {
+    border-color: var(--client-border);
+    background: var(--client-surface);
+    color: var(--client-text);
+  }
+
+  html[data-theme="dark"] .client-mobile-shell :is(input, textarea)::placeholder { color: #85888e; }
+
+  .client-mobile-shell :is(a, button, input, select, textarea):focus-visible {
+    outline: 3px solid rgba(255, 48, 56, .48);
+    outline-offset: 3px;
+  }
+
+  .client-mobile-shell button,
+  .client-mobile-shell a { -webkit-tap-highlight-color: transparent; }
+
+  .client-bottom-nav {
+    position: fixed;
+    z-index: 90;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    min-height: calc(var(--client-nav-height) + env(safe-area-inset-bottom));
+    padding: 7px max(8px, env(safe-area-inset-left)) env(safe-area-inset-bottom) max(8px, env(safe-area-inset-right));
+    border-top: 1px solid var(--client-border);
+    background: rgba(10, 12, 14, .94);
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, .24);
+    backdrop-filter: blur(18px);
+  }
+
+  .client-bottom-nav a {
+    position: relative;
+    display: flex;
+    min-width: 0;
+    min-height: 58px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 3px;
+    padding: 5px 2px;
+    border-radius: 13px;
+    color: #999ca1;
+    font-size: clamp(.62rem, 2.8vw, .72rem);
+    font-weight: 500;
+    line-height: 1.1;
+    text-align: center;
+  }
+
+  .client-bottom-nav a::after {
+    position: absolute;
+    right: 28%;
+    bottom: 1px;
+    left: 28%;
+    height: 3px;
+    border-radius: 999px;
+    background: transparent;
+    content: "";
+  }
+
+  .client-bottom-nav svg {
+    width: 25px;
+    height: 25px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.9;
+  }
+
+  .client-bottom-nav a.active { color: var(--client-red); }
+  .client-bottom-nav a.active::after { background: var(--client-red); }
+  .client-bottom-nav a:active { background: var(--client-red-soft); }
+
+  /* A home vira uma vitrine compacta, sem o hero ocupar a primeira dobra. */
+  .client-mobile-shell.home-page .topbar { display: none; }
+  .client-mobile-shell.home-page .header {
+    position: relative;
+    border-bottom: 0;
+    background: var(--client-bg);
+    backdrop-filter: none;
+  }
+  .client-mobile-shell.home-page .container-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 48px;
+    gap: 10px;
+    width: 100%;
+    padding: calc(14px + env(safe-area-inset-top)) 16px 12px;
+  }
+  .client-mobile-shell.home-page .logo {
+    min-height: 48px;
+    color: var(--client-text);
+    font-size: 1.1rem;
+  }
+  .client-mobile-shell.home-page .logo span:first-child { color: var(--client-red); }
+  .client-mobile-shell.home-page .location {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    min-height: 64px;
+    border: 1px solid var(--client-border);
+    border-radius: 17px;
+    background: var(--client-surface);
+    color: var(--client-text);
+  }
+  .client-mobile-shell.home-page .location small { color: var(--client-muted); }
+  .client-mobile-shell.home-page .location strong { max-width: calc(100vw - 92px); }
+  .client-mobile-shell.home-page .search {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    min-width: 0;
+    min-height: 56px;
+    border: 1px solid var(--client-border);
+    border-radius: 17px;
+    background: var(--client-surface);
+  }
+  .client-mobile-shell.home-page .search input { color: var(--client-text); }
+  .client-mobile-shell.home-page #menuUsuario { display: none; }
+  .client-mobile-shell.home-page .cart {
+    grid-column: 2;
+    grid-row: 1;
+    width: 48px;
+    height: 48px;
+    border-color: transparent;
+    background: transparent;
+    color: var(--client-text);
+  }
+  .client-mobile-shell.home-page main { padding: 0 0 24px; }
+  .client-mobile-shell.home-page .banner { display: none; }
+  .client-mobile-shell.home-page :is(.cupom-box, .restaurant-tools, .card, .produto-destaque, .step-card, .beneficio) {
+    border-color: var(--client-border);
+    background: var(--client-surface);
+    color: var(--client-text);
+    box-shadow: none;
+  }
+  .client-mobile-shell.home-page :is(.categorias, .restaurantes, .destaques, .como-funciona, .beneficios) { padding-top: 22px; }
+  .client-mobile-shell.home-page :is(.section-title, .cupom-box, .restaurant-tools, .hero-stats, .steps-grid, .footer-container) {
+    width: calc(100% - 32px);
+  }
+  .client-mobile-shell.home-page .section-title { margin-bottom: 13px; }
+  .client-mobile-shell.home-page .section-title h2 { color: var(--client-text); font-size: 1.25rem; }
+  .client-mobile-shell.home-page .eyebrow { color: var(--client-red); }
+  .client-mobile-shell.home-page .categoria {
+    border-color: var(--client-border);
+    background: var(--client-surface);
+    color: var(--client-text);
+  }
+  .client-mobile-shell.home-page .categoria[aria-pressed="true"],
+  .client-mobile-shell.home-page .filter-pill[aria-pressed="true"] {
+    border-color: var(--client-red);
+    background: var(--client-red-soft);
+    color: var(--client-red);
+    box-shadow: none;
+  }
+  .client-mobile-shell.home-page .card-link > img,
+  .client-mobile-shell.home-page .produto-destaque > img { background: #0f1113; }
+  .client-mobile-shell.home-page .partner-cta,
+  .client-mobile-shell.home-page footer { display: none; }
+  .client-mobile-shell.home-page .notification-center { right: 78px; bottom: calc(var(--client-nav-height) + env(safe-area-inset-bottom) + 12px); }
+  .client-mobile-shell.home-page .floating-cart { bottom: calc(var(--client-nav-height) + env(safe-area-inset-bottom) + 12px); }
+
+  /* Cabeçalhos das rotas internas seguem o mesmo ritmo visual do aplicativo. */
+  html[data-theme="dark"] .client-mobile-shell :is(.orders-header, .perfil-header, .page-header, .track-header, .support-header, .checkout-header, body > header:not(.header)) {
+    border-color: var(--client-border);
+    background: var(--client-bg);
+    color: var(--client-text);
+    box-shadow: none;
+  }
+  .client-mobile-shell :is(.orders-header, .page-header, .track-header, .support-header, body > header:not(.header)) {
+    padding-top: calc(14px + env(safe-area-inset-top));
+  }
+  .client-mobile-shell :is(.orders-header, .perfil-header-inner, .page-header, .track-header, .support-header, .checkout-header-inner) {
+    width: 100%;
+    max-width: none;
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+  .client-mobile-shell :is(.orders-header, .track-header, .support-header, .checkout-header-inner) a:first-child,
+  .client-mobile-shell .page-header .voltar,
+  .client-mobile-shell .perfil-header .voltar {
+    display: grid;
+    width: 46px;
+    height: 46px;
+    flex: 0 0 46px;
+    place-items: center;
+    border: 1px solid var(--client-border);
+    border-radius: 50%;
+    background: var(--client-surface);
+    color: var(--client-text);
+  }
+  html[data-theme="dark"] .client-mobile-shell :is(.orders-main, .perfil-container, .page-main, .track-main, .support-main, .checkout-container) { color: var(--client-text); }
+  html[data-theme="dark"] .client-mobile-shell :is(.orders-intro, .order-card, .usuario-card, .menu-card, .page-card, .track-card, .track-hero, .support-card, .support-side article, .checkout-card) {
+    border-color: var(--client-border);
+    background: var(--client-surface);
+    color: var(--client-text);
+    box-shadow: none;
+  }
+
+  .client-mobile-shell .theme-preferences { display: none; }
+  .client-mobile-shell .theme-toggle-profile { min-height: 48px; }
+  .client-mobile-shell .app-toast-region { bottom: calc(var(--client-nav-height) + env(safe-area-inset-bottom) + 12px); }
+  .client-mobile-shell .network-banner { bottom: calc(var(--client-nav-height) + env(safe-area-inset-bottom) + 8px); }
+  .client-mobile-shell[data-client-page="checkout"] .app-toast-region,
+  .client-mobile-shell[data-client-page="restaurante"] .app-toast-region { bottom: calc(16px + env(safe-area-inset-bottom)); }
+}
+
+@media (max-width: 370px) {
+  .client-bottom-nav { padding-inline: 3px; }
+  .client-bottom-nav a { font-size: .61rem; }
+  .client-bottom-nav svg { width: 23px; height: 23px; }
+  .client-mobile-shell.home-page .container-header { padding-inline: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .client-bottom-nav *,
+  .client-mobile-shell * { scroll-behavior: auto !important; }
+}

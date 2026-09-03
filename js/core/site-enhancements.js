@@ -40,9 +40,10 @@
     }
   }
 
-  applyTheme(storedTheme || (darkThemeMedia?.matches ? "dark" : "light"));
+  const preparedTheme = document.documentElement.dataset.theme;
+  applyTheme(storedTheme || (["light", "dark"].includes(preparedTheme) ? preparedTheme : (darkThemeMedia?.matches ? "dark" : "light")));
   darkThemeMedia?.addEventListener?.("change", (event) => {
-    if (!storedTheme) applyTheme(event.matches ? "dark" : "light");
+    if (!storedTheme && document.documentElement.dataset.clientMobile !== "true") applyTheme(event.matches ? "dark" : "light");
   });
 
   const speedInsightsHost = location.hostname.toLowerCase();

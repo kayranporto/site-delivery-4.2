@@ -95,9 +95,12 @@ test("uploads e chips do cardapio permanecem legiveis no modo escuro", () => {
 test("camada do tema vem depois dos estilos especificos", () => {
     for (const file of ["index.html", "html/restaurante.html", "html/empresa-equipe.html", "html/empresa-colaborador.html"]) {
         const html = read(file);
-        const theme = html.indexOf("css/core/enhancements.css");
-        const lastPageCss = Math.max(html.lastIndexOf("css/pages/"), html.lastIndexOf("css/modules/"));
+        const withoutClientMobile = html.replace(/[^"']*css\/modules\/client-mobile-4\.5\.css[^"']*/g, "");
+        const theme = withoutClientMobile.indexOf("css/core/enhancements.css");
+        const lastPageCss = Math.max(withoutClientMobile.lastIndexOf("css/pages/"), withoutClientMobile.lastIndexOf("css/modules/"));
         assert.ok(theme > lastPageCss, `${file} pode sobrescrever o modo escuro`);
+        const clientMobile = html.indexOf("css/modules/client-mobile-4.5.css");
+        if (clientMobile >= 0) assert.ok(clientMobile > html.indexOf("css/core/enhancements.css"), `${file} deve priorizar o design mobile do cliente`);
     }
 });
 
