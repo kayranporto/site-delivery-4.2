@@ -20,6 +20,7 @@ const SHELL = [
   "./css/core/accessibility.css?v=4.2.0",
   "./css/core/enhancements.css?v=4.4.6",
   "./css/modules/mobile-pwa-4.2.6.css?v=4.2.6",
+  "./css/modules/client-mobile-4.5.css?v=4.5.0",
   "./css/pages/suporte.css?v=4.2.0",
   "./css/modules/restaurante-4.2.2.css?v=4.2.4",
   "./css/modules/carrinho-4.2.5.css?v=4.2.6",
