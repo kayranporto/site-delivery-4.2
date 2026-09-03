@@ -65,6 +65,14 @@ begin
     raise exception using errcode='ZX001',message='Removeu endereço alheio';
   exception when raise_exception then null; end;
 
+  update public.empresas set bairros_atendidos=array['Todos os Bairros da cidade'] where id::text=v_ctx.empresa;
+  v_resultado:=public.calcular_entrega_empresa(v_ctx.empresa,'São Paulo','SP','Pampulha');
+  assert (v_resultado->>'atendido')::boolean, 'Marcador legado de cidade inteira não liberou o bairro';
+  update public.empresas set bairros_atendidos=array['Centro'] where id::text=v_ctx.empresa;
+  v_resultado:=public.calcular_entrega_empresa(v_ctx.empresa,'São Paulo','SP','Pampulha');
+  assert not (v_resultado->>'atendido')::boolean, 'Bairro fora da lista legada foi liberado';
+  update public.empresas set bairros_atendidos='{}'::text[] where id::text=v_ctx.empresa;
+
   insert into public.empresa_regioes(empresa_id,unidade_id,bairro,cidade,uf,taxa_entrega,pedido_minimo)
   values(v_ctx.empresa,v_ctx.unidade,'Centro','São Paulo','SP',5,10),
     (v_ctx.empresa,v_ctx.unidade,'*','Rio de Janeiro','RJ',7,10),

@@ -67,3 +67,16 @@ test("checkout bloqueia pagamento e oculta valores finais quando o endereço nã
     assert.match(css, /#total\[data-pendente="true"\]/);
     assert.match(css, /checkout-fast-lane\[data-estado="erro"\]/);
 });
+
+test("checkout reconhece cidade inteira e não redireciona silenciosamente", () => {
+    const core = ler("js/pages/checkout.js");
+    const migration = ler("supabase/migrations/20260903183440_corrige_bairros_cidade_inteira.sql");
+    const listener = core.slice(core.indexOf('btnFinalizar.addEventListener("click"'));
+    assert.match(core, /"todos os bairros da cidade"/);
+    assert.match(migration, /'\*', 'todos', 'todos os bairros', 'todos os bairros da cidade'/);
+    assert.match(migration, /set bairros_atendidos = '\{\}'::text\[\]/);
+    assert.match(core, /titulo: "Endereço fora da área"/);
+    assert.match(core, /confirmar: "Escolher outro endereço"/);
+    assert.doesNotMatch(listener, /if \(!validarAreaEntrega\(\)\) \{\s*window\.location\.href/);
+    assert.match(listener, /await finalizarPedido\(\)/);
+});

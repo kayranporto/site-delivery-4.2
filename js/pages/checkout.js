@@ -377,7 +377,12 @@ function validarAreaEntrega() {
     const bairros = Array.isArray(carrinhoMeta?.bairros_atendidos) ? carrinhoMeta.bairros_atendidos : [];
     if (cidade && String(enderecoSelecionado.cidade || "").trim().toLowerCase() !== cidade) return false;
     if (uf && String(enderecoSelecionado.uf || "").trim().toUpperCase() !== uf) return false;
-    if (bairros.length && !bairros.some((bairro) => String(bairro).trim().toLowerCase() === String(enderecoSelecionado.bairro || "").trim().toLowerCase())) return false;
+    const bairroEndereco = String(enderecoSelecionado.bairro || "").trim().toLowerCase();
+    const marcadoresCidadeInteira = new Set(["*", "todos", "todos os bairros", "todos os bairros da cidade"]);
+    if (bairros.length && !bairros.some((bairro) => {
+        const normalizado = String(bairro).trim().toLowerCase();
+        return marcadoresCidadeInteira.has(normalizado) || normalizado === bairroEndereco;
+    })) return false;
     return true;
 }
 
@@ -436,7 +441,20 @@ async function finalizarPedido() {
         if (cadastrar) window.location.href = "enderecos.html?redirect=checkout.html";
         return;
     }
-    if (!validarAreaEntrega()) return avisarCheckout("O endereço selecionado está fora da área de entrega deste restaurante.");
+    if (!validarAreaEntrega()) {
+        const mensagem = carrinhoMeta?.mensagem_entrega || "O endereço selecionado está fora da área de entrega deste restaurante.";
+        const trocar = window.AppConfirm
+            ? await window.AppConfirm({
+                titulo: "Endereço fora da área",
+                mensagem,
+                confirmar: "Escolher outro endereço",
+                cancelar: "Continuar no checkout"
+            })
+            : false;
+        if (trocar) window.location.href = "enderecos.html?redirect=checkout.html";
+        else if (!window.AppConfirm) avisarCheckout(mensagem);
+        return;
+    }
 
     const pagamento = document.querySelector("input[name='pagamento']:checked")?.value;
     if (!pagamento) return avisarCheckout("Selecione uma forma de pagamento.", "info");
@@ -550,15 +568,6 @@ observacoes.addEventListener("input", () => {
 });
 btnFinalizar.addEventListener("click", async () => {
     if (!checkoutInicializado) return;
-    if (!enderecoSelecionado) {
-        const user = await verificarUsuario();
-        if (user) window.location.href = "enderecos.html?redirect=checkout.html";
-        return;
-    }
-    if (!validarAreaEntrega()) {
-        window.location.href = "enderecos.html?redirect=checkout.html";
-        return;
-    }
     try {
         await finalizarPedido();
     } finally {

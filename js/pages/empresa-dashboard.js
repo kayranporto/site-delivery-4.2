@@ -1105,6 +1105,7 @@ document.getElementById("lojaForm").addEventListener("submit", async (event) => 
         .map((bairro) => bairro.trim())
         .filter((bairro, indice, todos) => bairro && todos.findIndex((item) => item.toLowerCase() === bairro.toLowerCase()) === indice)
         .slice(0, 100);
+    const cidadeInteira = bairros.some((bairro) => ["*", "todos", "todos os bairros", "todos os bairros da cidade"].includes(bairro.toLowerCase()));
     const payload = {
         nome: document.getElementById("lojaNome").value.trim(),
         telefone: document.getElementById("lojaTelefone").value.trim(),
@@ -1114,7 +1115,7 @@ document.getElementById("lojaForm").addEventListener("submit", async (event) => 
         pedido_minimo: Number(document.getElementById("lojaMinimo").value),
         cidade_atendimento: document.getElementById("lojaCidade").value.trim() || null,
         uf_atendimento: document.getElementById("lojaUf").value.trim().toUpperCase() || null,
-        bairros_atendidos: bairros,
+        bairros_atendidos: cidadeInteira ? [] : bairros,
         tempo_estimado_min: Number(document.getElementById("lojaTempoMin").value),
         tempo_estimado_max: Number(document.getElementById("lojaTempoMax").value),
         logo: document.getElementById("lojaLogo").value.trim() || null,

@@ -70,7 +70,7 @@ test("painel mantém pedidos ativos visíveis fora do período selecionado", () 
     const js = read("js/pages/empresa-dashboard.js");
     assert.match(js, /const ativo = !\["entregue", "cancelado"\]\.includes\(pedido\.status\)/);
     assert.match(js, /const noPeriodo = ativo \|\| filtroPeriodo === "todos"/);
-    assert.match(html, /empresa-dashboard\.js\?v=4\.4\.5\.2/);
+    assert.match(html, /empresa-dashboard\.js\?v=4\.4\.6\.1/);
 });
 
 test("aviso de aprovação respeita o estado publicado da loja", () => {
