@@ -4,7 +4,10 @@
     const endereco = document.getElementById("enderecoEntrega");
     const enderecoStatus = document.getElementById("enderecoStatus");
     const area = document.getElementById("areaCheckout");
+    const previsao = document.getElementById("previsaoCheckout");
     const pagamentoResumo = document.getElementById("pagamentoSelecionadoResumo");
+    const pagamentoCard = document.querySelector("[aria-labelledby='tituloPagamento']");
+    const opcoesPagamento = [...document.querySelectorAll("input[name='pagamento']")];
     const cupom = document.getElementById("cupom");
     const cupomFeedback = document.getElementById("cupomFeedback");
     const btnCupom = document.getElementById("btnCupom");
@@ -12,10 +15,14 @@
     const btnFinalizar = document.getElementById("finalizarPedido");
     const submitStatus = document.getElementById("checkoutSubmitStatus");
     const troco = document.getElementById("trocoPara");
+    const trocoField = document.getElementById("trocoField");
     const taxa = document.getElementById("taxa");
+    const total = document.getElementById("total");
+    const footerTotal = document.getElementById("footerTotal");
     const stepEndereco = document.getElementById("stepEndereco");
     const stepPagamento = document.getElementById("stepPagamento");
     const stepRevisao = document.getElementById("stepRevisao");
+    const fastLane = document.getElementById("checkoutFastLane");
     const fastStatus = document.getElementById("checkoutFastStatus");
     const fastBadge = document.getElementById("checkoutFastBadge");
     const observacoes = document.getElementById("observacoesPedido");
@@ -24,6 +31,10 @@
     if (!btnFinalizar) return;
 
     let cliqueProtegido = false;
+    opcoesPagamento.forEach((input) => {
+        input.dataset.checkoutDisabledOriginal = input.disabled ? "true" : "false";
+    });
+
     const cart = () => window.CartStore?.ler?.() || App.lerJSON("carrinho", []) || [];
     const meta = () => window.CartStore?.meta?.() || App.lerJSON("carrinhoMeta", null) || {};
     const definirTexto = (elemento, texto) => {
@@ -38,13 +49,36 @@
             && !texto.includes("adicione um endereço");
     };
     const areaInvalida = () => /fora da área|não atend/i.test(String(area?.textContent || ""));
-    const pagamento = () => document.querySelector("input[name='pagamento']:checked")?.value || "";
+    const pagamento = () => document.querySelector("input[name='pagamento']:checked:not(:disabled)")?.value || "";
     const rotuloPagamento = (valor) => ({
         PIX: "PIX na entrega",
         "Cartão": "Cartão na entrega",
         Dinheiro: "Dinheiro",
         Online: "Pagamento online"
     })[valor] || "Não selecionado";
+
+    function bloquearPagamento(bloqueado) {
+        opcoesPagamento.forEach((input) => {
+            const indisponivelOriginal = input.dataset.checkoutDisabledOriginal === "true";
+            input.disabled = bloqueado || indisponivelOriginal;
+        });
+        if (pagamentoCard) {
+            pagamentoCard.dataset.checkoutBloqueado = bloqueado ? "true" : "false";
+            pagamentoCard.setAttribute("aria-disabled", bloqueado ? "true" : "false");
+        }
+        if (trocoField) trocoField.hidden = bloqueado || pagamento() !== "Dinheiro";
+    }
+
+    function marcarValorPendente(elemento, pendente, rotulo) {
+        if (!elemento) return;
+        if (pendente) {
+            elemento.dataset.pendente = "true";
+            elemento.setAttribute("aria-label", `${rotulo}: a calcular`);
+        } else {
+            delete elemento.dataset.pendente;
+            elemento.removeAttribute("aria-label");
+        }
+    }
 
     function restaurarPagamentoPreferido() {
         const preferencia = App.lerJSON("checkoutPreferencias", {});
@@ -68,13 +102,29 @@
         const dados = meta();
         const quantidade = itens.reduce((soma, item) => soma + (Number(item?.quantidade) || 0), 0);
         const possuiEndereco = temEndereco();
-        const enderecoValido = possuiEndereco && !areaInvalida();
-        const formaPagamento = pagamento();
+        const enderecoValido = possuiEndereco && dados?.regiao_atendida !== false && !areaInvalida();
         const inicializado = document.body.dataset.checkoutInicializado === "true";
         const finalizarTexto = document.getElementById("finalizarPedidoTexto");
 
+        bloquearPagamento(!enderecoValido);
+        const formaPagamento = pagamento();
+        const totalPendente = !enderecoValido;
+        marcarValorPendente(taxa, totalPendente, "Taxa de entrega");
+        marcarValorPendente(total, totalPendente, "Total do pedido");
+        marcarValorPendente(footerTotal, totalPendente, "Total do pedido");
+
+        if (previsao) {
+            if (!possuiEndereco) definirTexto(previsao, "Selecione um endereço para calcular a entrega");
+            else if (!enderecoValido) definirTexto(previsao, "Entrega indisponível neste endereço");
+            else {
+                const minimo = Number(dados?.tempo_estimado_min || 25);
+                const maximo = Number(dados?.tempo_estimado_max || 45);
+                definirTexto(previsao, `Previsão de ${minimo}–${maximo} minutos`);
+            }
+        }
+
         if (stepEndereco) stepEndereco.dataset.estado = possuiEndereco ? (enderecoValido ? "ok" : "erro") : "pendente";
-        if (stepPagamento) stepPagamento.dataset.estado = formaPagamento ? "ok" : "pendente";
+        if (stepPagamento) stepPagamento.dataset.estado = enderecoValido ? (formaPagamento ? "ok" : "pendente") : "bloqueado";
         if (stepRevisao) stepRevisao.dataset.estado = quantidade > 0 && enderecoValido && formaPagamento ? "ok" : "pendente";
 
         if (enderecoStatus) {
@@ -85,38 +135,46 @@
                     : "Este endereço está fora da área de entrega. Escolha outro endereço.")
                 : "O frete e o total final serão confirmados depois que você selecionar o endereço.");
         }
-        if (taxa) {
-            if (!possuiEndereco) taxa.dataset.pendente = "true";
-            else delete taxa.dataset.pendente;
+
+        if (pagamentoResumo) {
+            pagamentoResumo.dataset.tipo = enderecoValido ? (formaPagamento ? "success" : "info") : "info";
+            definirTexto(pagamentoResumo, enderecoValido
+                ? `Selecionado: ${rotuloPagamento(formaPagamento)}.`
+                : "Pagamento bloqueado até confirmar um endereço atendido.");
         }
 
-        definirTexto(pagamentoResumo, `Selecionado: ${rotuloPagamento(formaPagamento)}.`);
         definirTexto(resumo, `${dados.empresa_nome || "Restaurante"} • ${quantidade} ${quantidade === 1 ? "item" : "itens"}`);
         if (!inicializado) {
+            if (fastLane) fastLane.dataset.estado = "carregando";
             definirTexto(fastStatus, "Carregando endereço, frete e valores atualizados...");
             definirTexto(fastBadge, "Preparando");
             definirTexto(finalizarTexto, "Preparando checkout...");
         } else if (!quantidade) {
+            if (fastLane) fastLane.dataset.estado = "pendente";
             definirTexto(fastStatus, "Volte ao restaurante e adicione itens ao carrinho.");
             definirTexto(fastBadge, "Carrinho vazio");
             definirTexto(finalizarTexto, "Carrinho vazio");
         } else if (!possuiEndereco) {
-            definirTexto(fastStatus, "Seu pedido está pronto; falta apenas escolher onde entregar.");
+            if (fastLane) fastLane.dataset.estado = "pendente";
+            definirTexto(fastStatus, "Escolha um endereço para calcular entrega, frete e total.");
             definirTexto(fastBadge, "Falta endereço");
             definirTexto(finalizarTexto, "Entrar e escolher endereço");
         } else if (!enderecoValido) {
-            definirTexto(fastStatus, "Troque o endereço para continuar com este restaurante.");
+            if (fastLane) fastLane.dataset.estado = "erro";
+            definirTexto(fastStatus, "Este endereço não é atendido. Troque o endereço para continuar.");
             definirTexto(fastBadge, "Revisar entrega");
             definirTexto(finalizarTexto, "Trocar endereço");
         } else {
+            if (fastLane) fastLane.dataset.estado = "ok";
             definirTexto(fastStatus, `${rotuloPagamento(formaPagamento)} e endereço já preenchidos. Confira o total e confirme.`);
             definirTexto(fastBadge, "Pronto para enviar");
             definirTexto(finalizarTexto, "Confirmar pedido");
         }
         if (submitStatus && !cliqueProtegido) {
             if (!quantidade) definirTexto(submitStatus, "Seu carrinho precisa ter pelo menos um item.");
-            else if (!possuiEndereco) definirTexto(submitStatus, "Ao continuar, entre na conta e selecione o endereço de entrega.");
+            else if (!possuiEndereco) definirTexto(submitStatus, "Escolha um endereço para calcular a entrega antes de continuar.");
             else if (!enderecoValido) definirTexto(submitStatus, "Escolha outro endereço antes de enviar o pedido.");
+            else if (!formaPagamento) definirTexto(submitStatus, "Selecione uma forma de pagamento para continuar.");
             else definirTexto(submitStatus, "Revise o total e confirme quando estiver pronto.");
         }
     }
@@ -150,7 +208,7 @@
         }, 450);
     });
 
-    document.querySelectorAll("input[name='pagamento']").forEach((input) => input.addEventListener("change", () => {
+    opcoesPagamento.forEach((input) => input.addEventListener("change", () => {
         if (input.checked) salvarPagamentoPreferido(input.value);
         atualizar();
     }));
