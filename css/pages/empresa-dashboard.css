@@ -112,3 +112,65 @@
 .product-import-card button[type=submit]{justify-self:start}
 .product-import-card [data-tipo=error],.product-import-card .importacao-erro td{color:#b3152a}
 html[data-theme=dark] .product-import-card [data-tipo=error],html[data-theme=dark] .product-import-card .importacao-erro td{color:#ffb4bd}
+
+/* Gestão mobile do restaurante — resumo, promoções, avaliações e financeiro. */
+.restaurant-management-mobile{display:none}
+@media(max-width:620px){
+  .restaurant-management-mobile{position:sticky;z-index:28;top:68px;display:flex;gap:7px;width:100%;padding:8px 12px;overflow-x:auto;border-bottom:1px solid var(--line);background:rgba(255,255,255,.95);scroll-padding-inline:12px;scroll-snap-type:x proximity;scrollbar-width:none;backdrop-filter:blur(16px)}
+  .restaurant-management-mobile::-webkit-scrollbar{display:none}
+  .restaurant-management-mobile a{display:inline-flex;min-width:max-content;min-height:44px;align-items:center;gap:7px;padding:9px 13px;border:1px solid var(--line);border-radius:13px;background:#fff;color:var(--muted);font-size:12px;font-weight:800;text-decoration:none;scroll-snap-align:start}
+  .restaurant-management-mobile a.active{border-color:var(--red);background:#fff0f1;color:var(--red)}
+  .restaurant-management-mobile a span{font-size:14px}
+  #visaoGeral .overview-hero{padding:20px 17px}
+  #visaoGeral .overview-copy h2{font-size:22px}
+  #visaoGeral .store-control{padding:15px;border-radius:15px}
+  #visaoGeral .metrics-grid{display:flex;gap:10px;margin-inline:-12px;padding:0 12px 7px;overflow-x:auto;scroll-padding-inline:12px;scroll-snap-type:x proximity;scrollbar-width:none}
+  #visaoGeral .metrics-grid::-webkit-scrollbar{display:none}
+  #visaoGeral .metric-card{min-width:min(230px,72vw);scroll-snap-align:start}
+  #visaoGeral .sales-chart{height:180px;overflow-x:auto}
+  #visaoGeral .sales-chart svg{min-width:620px}
+  #promocoes .management-grid{gap:12px}
+  #promocoes .grid{gap:12px}
+  #promocoes .field input,#promocoes .field select{min-height:48px;font-size:14px}
+  #promocoes form>.btn{width:100%;min-height:50px;font-size:14px}
+  #promocoes .promo-card{padding:15px;border-radius:14px}
+  #promocoes .promo-card header{align-items:flex-start;flex-direction:column}
+  #promocoes .promo-card strong{font-size:14px}
+  #promocoes .promo-card small,#promocoes .promo-card p{font-size:12px}
+  #promocoes .promo-card footer{flex-wrap:wrap}
+  #promocoes .promo-card button{min-height:44px;padding:10px 13px;font-size:12px}
+  #avaliacoes .section-heading{align-items:flex-start}
+  #avaliacoes .section-heading>strong{padding:8px 11px;border-radius:12px;background:#fff6da;color:#8c6200;white-space:nowrap}
+  #avaliacoes .review-admin-card{padding:15px;border-radius:14px}
+  #avaliacoes .review-admin-card header{align-items:flex-start;flex-direction:column}
+  #avaliacoes .review-admin-card strong{font-size:14px}
+  #avaliacoes .review-admin-card small,#avaliacoes .review-admin-card p{font-size:12px}
+  #avaliacoes .review-response-form{display:grid;grid-template-columns:1fr}
+  #avaliacoes .review-response-form input{min-height:48px;font-size:14px}
+  #avaliacoes .review-response-form button{min-height:46px;font-size:12px}
+  #financeiro .section-heading{align-items:stretch;flex-direction:column}
+  #financeiro .finance-period{width:100%;justify-content:space-between;font-size:13px}
+  #financeiro .finance-period select{min-width:150px;min-height:46px;font-size:14px}
+  #financeiro .finance-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  #financeiro .finance-grid article{min-height:112px;padding:16px 14px}
+  #financeiro .finance-grid article.highlight{grid-column:1/-1;grid-row:1}
+  #financeiro .finance-grid small{font-size:12px;line-height:1.4}
+  #financeiro .finance-grid strong{font-size:18px;overflow-wrap:anywhere}
+  #financeiro .finance-grid .highlight strong{font-size:23px}
+  #financeiro .finance-note{font-size:12px;line-height:1.55}
+}
+@media(max-width:370px){
+  #financeiro .finance-grid{grid-template-columns:1fr}
+  #financeiro .finance-grid article.highlight{grid-column:1}
+}
+html[data-theme=dark] body .restaurant-management-mobile{border-color:#30343a;background:rgba(10,12,15,.96)}
+html[data-theme=dark] body .restaurant-management-mobile a{border-color:#343941;background:#191c21;color:#abb0b8}
+html[data-theme=dark] body .restaurant-management-mobile a.active{border-color:#ef2435;background:#351a20;color:#ff6873}
+@media(max-width:620px){
+  html[data-theme=dark] body :is(#promocoes,#avaliacoes,#financeiro).management-section{border-color:#30343a;background:#111419}
+  html[data-theme=dark] body :is(#promocoes,#avaliacoes,#financeiro) .dashboard-card{border-color:#30343a;background:#191c21}
+  html[data-theme=dark] body #promocoes :is(.promo-card,.field input,.field select),html[data-theme=dark] body #avaliacoes :is(.review-admin-card,.review-response-form input),html[data-theme=dark] body #financeiro :is(.finance-period select,.finance-grid article){border-color:#363b44;background:#20242a;color:#f3f4f6}
+  html[data-theme=dark] body #financeiro .finance-grid article.highlight{border-color:#563038;background:linear-gradient(135deg,#401b22,#241a1e)}
+  html[data-theme=dark] body #promocoes .promo-card p,html[data-theme=dark] body #avaliacoes .review-admin-card p,html[data-theme=dark] body #financeiro .finance-note{color:#b6bbc4}
+  html[data-theme=dark] body #promocoes .promo-card button{background:#2b3037;color:#f3f4f6}
+}
