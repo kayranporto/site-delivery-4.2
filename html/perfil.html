@@ -13,7 +13,7 @@
   <link href="../css/pages/perfil.css?v=4.2.0.1" rel="stylesheet"/>
   <link href="../css/core/accessibility.css?v=4.2.0" rel="stylesheet"/>
   <link href="../css/core/enhancements.css?v=4.4.6" rel="stylesheet"/>
-  <link href="../css/modules/client-mobile-4.5.css?v=4.6.2" rel="stylesheet"/>
+  <link href="../css/modules/client-mobile-4.5.css?v=4.6.3" rel="stylesheet"/>
   <link rel="manifest" href="../manifest.webmanifest"/>
 </head>
 <body>
@@ -22,6 +22,9 @@
   <header class="perfil-header">
     <div class="perfil-header-inner">
       <a class="voltar" href="../index.html" aria-label="Voltar para o início">←</a>
+      <a class="perfil-mobile-brand" href="../index.html" aria-label="Multi Delivery — página inicial">
+        <span aria-hidden="true">➟</span><strong>Multi</strong><em>Delivery</em>
+      </a>
       <div class="header-title">
         <span>Área do cliente</span>
         <h1>Minha conta</h1>
@@ -31,6 +34,7 @@
   </header>
 
   <main class="perfil-container">
+    <h1 class="perfil-mobile-title">Perfil</h1>
     <section class="usuario-card" aria-labelledby="nomeUsuario">
       <a class="avatar-link" href="dados.html" aria-label="Alterar foto de perfil"><div class="avatar" id="avatarUsuario"><span>U</span></div><span class="avatar-camera" aria-hidden="true">📷</span></a>
       <div class="usuario-info">
@@ -87,30 +91,55 @@
             </div>
           </div>
           <nav class="menu" aria-label="Opções da conta">
-            <a class="menu-item" href="meus-pedidos.html">
+            <a class="menu-item desktop-profile-shortcut" href="meus-pedidos.html">
               <span class="menu-icone pedidos" aria-hidden="true">📦</span>
               <span class="menu-texto"><strong>Meus pedidos</strong><small>Acompanhe entregas e consulte seu histórico</small></span>
               <span class="menu-seta" aria-hidden="true">›</span>
             </a>
-            <a class="menu-item" href="favoritos.html">
+            <a class="menu-item mobile-profile-shortcut" href="favoritos.html">
               <span class="menu-icone favoritos" aria-hidden="true">♥</span>
               <span class="menu-texto"><strong>Favoritos</strong><small>Encontre rapidamente os lugares que você gosta</small></span>
               <span class="menu-seta" aria-hidden="true">›</span>
             </a>
-            <a class="menu-item" href="enderecos.html">
+            <a class="menu-item mobile-profile-shortcut" href="enderecos.html">
               <span class="menu-icone enderecos" aria-hidden="true">⌖</span>
               <span class="menu-texto"><strong>Endereços</strong><small>Cadastre sua casa, trabalho e outros locais</small></span>
               <span class="menu-seta" aria-hidden="true">›</span>
             </a>
-            <a class="menu-item" href="dados.html">
+            <a class="menu-item desktop-profile-shortcut" href="dados.html">
               <span class="menu-icone dados" aria-hidden="true">⚙</span>
               <span class="menu-texto"><strong>Dados e segurança</strong><small>Atualize informações pessoais e sua senha</small></span>
               <span class="menu-seta" aria-hidden="true">›</span>
             </a>
+            <a class="menu-item mobile-profile-shortcut" href="checkout.html">
+              <span class="menu-icone pagamentos" aria-hidden="true">▣</span>
+              <span class="menu-texto"><strong>Pagamentos</strong><small>Formas de pagamento</small></span>
+              <span class="menu-seta" aria-hidden="true">›</span>
+            </a>
+            <a class="menu-item mobile-profile-shortcut" href="../index.html#cupom">
+              <span class="menu-icone cupons" aria-hidden="true">◇</span>
+              <span class="menu-texto"><strong>Cupons</strong><small>Descontos disponíveis</small></span>
+              <span class="menu-seta" aria-hidden="true">›</span>
+            </a>
+            <button class="menu-item mobile-profile-shortcut mobile-notification-shortcut" type="button" data-open-notifications>
+              <span class="menu-icone notificacoes" aria-hidden="true">♢</span>
+              <span class="menu-texto"><strong>Notificações</strong><small>Avisos e atualizações</small></span>
+              <span class="menu-seta" aria-hidden="true">›</span>
+            </button>
+            <button class="menu-item mobile-profile-shortcut mobile-appearance-shortcut" type="button" data-theme-toggle-profile>
+              <span class="menu-icone aparencia" aria-hidden="true">◔</span>
+              <span class="menu-texto"><strong>Aparência</strong><small>Claro ou escuro</small></span>
+              <span class="menu-seta" aria-hidden="true">›</span>
+            </button>
             <div data-theme-preferences></div>
-            <a class="menu-item" href="suporte.html">
+            <a class="menu-item mobile-profile-shortcut" href="suporte.html">
               <span class="menu-icone suporte" aria-hidden="true">?</span>
               <span class="menu-texto"><strong>Ajuda e suporte</strong><small>Abra solicitações e acompanhe as respostas</small></span>
+              <span class="menu-seta" aria-hidden="true">›</span>
+            </a>
+            <a class="menu-item mobile-profile-shortcut" href="suporte.html#contato">
+              <span class="menu-icone contato" aria-hidden="true">◉</span>
+              <span class="menu-texto"><strong>Fale conosco</strong><small>Atendimento</small></span>
               <span class="menu-seta" aria-hidden="true">›</span>
             </a>
             <a class="menu-item" href="entregador.html">
@@ -131,7 +160,15 @@
           </nav>
         </section>
         <section class="painel-card loyalty-card" aria-labelledby="fidelidadeTitulo">
-          <div class="secao-cabecalho"><div><span class="secao-kicker">FIDELIDADE</span><h2 id="fidelidadeTitulo">Seus pontos</h2></div><span class="loyalty-total" id="totalPontosPerfil">0 pontos</span></div>
+          <div class="secao-cabecalho fidelity-heading"><div><span class="fidelity-icon" aria-hidden="true">◇</span><span><h2 id="fidelidadeTitulo">Fidelidade</h2><small>Quanto mais pede, mais ganha!</small></span></div><span class="fidelity-level">Nível <strong>Vermelho</strong></span></div>
+          <div class="fidelity-summary" aria-label="Resumo da fidelidade">
+            <div><span>Pontos disponíveis</span><strong id="totalPontosPerfil">0</strong><small>pontos</small></div>
+            <div><span>Cashback disponível</span><strong id="cashbackPerfil">R$ 0,00</strong><small>em crédito</small></div>
+            <div><span>Próxima recompensa</span><strong id="proximaRecompensaPerfil">2.000</strong><small>pontos</small></div>
+          </div>
+          <div class="fidelity-progress-copy">Faltam <strong id="pontosFaltantesPerfil">2.000 pontos</strong> para a próxima recompensa</div>
+          <div class="fidelity-progress"><span id="fidelidadeBarraPerfil"></span></div>
+          <a class="fidelity-all" href="#fidelidadePerfil">Ver todas as recompensas <span aria-hidden="true">›</span></a>
           <div class="loyalty-list" id="fidelidadePerfil"><div class="perfil-loading">Buscando seus benefícios...</div></div>
         </section>
       </div>
@@ -174,7 +211,7 @@
   <script defer src="../js/core/monitoring.js?v=4.2.0"></script>
   <script defer src="../js/core/notifications.js?v=4.2.0"></script>
 <script defer src="../js/core/favorites-sync.js?v=4.2.1"></script>
-<script defer src="../js/pages/perfil.js?v=4.2.1"></script>
+<script defer src="../js/pages/perfil.js?v=4.2.2"></script>
   <script defer src="../js/core/client-mobile-4.5.js?v=4.6.0"></script>
   <script defer src="../js/core/site-enhancements.js?v=4.4.6"></script>
 </body>

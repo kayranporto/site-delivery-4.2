@@ -149,7 +149,13 @@ async function carregarFidelidade() {
     const { data: empresas } = ids.length ? await window.db.from("empresas_catalogo").select("id,nome").in("id", ids) : { data: [] };
     const nomes = new Map((empresas || []).map((item) => [String(item.id), item.nome]));
     const total = (saldos || []).reduce((soma, item) => soma + Number(item.pontos || 0), 0);
-    document.getElementById("totalPontosPerfil").textContent = `${total} ${total === 1 ? "ponto" : "pontos"}`;
+    const meta = Math.max(2000, Math.ceil((total + 1) / 2000) * 2000);
+    const faltantes = Math.max(0, meta - total);
+    document.getElementById("totalPontosPerfil").textContent = total.toLocaleString("pt-BR");
+    document.getElementById("cashbackPerfil").textContent = App.dinheiro(total / 100);
+    document.getElementById("proximaRecompensaPerfil").textContent = meta.toLocaleString("pt-BR");
+    document.getElementById("pontosFaltantesPerfil").textContent = `${faltantes.toLocaleString("pt-BR")} pontos`;
+    document.getElementById("fidelidadeBarraPerfil").style.width = `${Math.min(100, (total / meta) * 100)}%`;
     container.replaceChildren();
     if (!saldos?.length) return container.append(criar("p", "loyalty-empty", "Quando um restaurante oferecer fidelidade, seus pedidos entregues acumularão pontos aqui."));
     saldos.forEach((saldo) => {
@@ -308,6 +314,14 @@ modalLogout.confirmar.addEventListener("click", async () => {
         modalLogout.confirmar.disabled = false;
         modalLogout.confirmar.textContent = "Sair da conta";
     }
+});
+
+document.querySelector("[data-open-notifications]")?.addEventListener("click", () => {
+    document.getElementById("notificationTrigger")?.click();
+});
+
+document.querySelector("[data-theme-toggle-profile]")?.addEventListener("click", () => {
+    document.querySelector(".theme-toggle-profile")?.click();
 });
 
 carregarPerfil();
