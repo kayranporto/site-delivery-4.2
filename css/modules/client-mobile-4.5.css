@@ -26,6 +26,8 @@ html[data-theme="dark"] .client-mobile-shell {
 }
 
 .client-bottom-nav { display: none; }
+.client-mobile-greeting,
+.client-home-quick { display: none; }
 
 @media (max-width: 768px) {
   html { scroll-padding-bottom: calc(var(--client-nav-height) + env(safe-area-inset-bottom)); }
@@ -137,14 +139,26 @@ html[data-theme="dark"] .client-mobile-shell {
     padding: calc(14px + env(safe-area-inset-top)) 16px 12px;
   }
   .client-mobile-shell.home-page .logo {
+    grid-column: 1;
+    grid-row: 1;
     min-height: 48px;
     color: var(--client-text);
     font-size: 1.1rem;
   }
   .client-mobile-shell.home-page .logo span:first-child { color: var(--client-red); }
-  .client-mobile-shell.home-page .location {
+  .client-mobile-shell.home-page .client-mobile-greeting {
+    display: block;
     grid-column: 1 / -1;
     grid-row: 2;
+    margin: 3px 0 0;
+    color: var(--client-text);
+    font-size: clamp(1.45rem, 7vw, 1.85rem);
+    font-weight: 750;
+    line-height: 1.2;
+  }
+  .client-mobile-shell.home-page .location {
+    grid-column: 1 / -1;
+    grid-row: 3;
     min-height: 64px;
     border: 1px solid var(--client-border);
     border-radius: 17px;
@@ -155,7 +169,7 @@ html[data-theme="dark"] .client-mobile-shell {
   .client-mobile-shell.home-page .location strong { max-width: calc(100vw - 92px); }
   .client-mobile-shell.home-page .search {
     grid-column: 1 / -1;
-    grid-row: 3;
+    grid-row: 4;
     min-width: 0;
     min-height: 56px;
     border: 1px solid var(--client-border);
@@ -173,8 +187,118 @@ html[data-theme="dark"] .client-mobile-shell {
     background: transparent;
     color: var(--client-text);
   }
+  .client-mobile-shell.home-page .cart-count { border-color: var(--client-bg); background: var(--client-red); }
   .client-mobile-shell.home-page main { padding: 0 0 24px; }
   .client-mobile-shell.home-page .banner { display: none; }
+  .client-mobile-shell.home-page .cupom,
+  .client-mobile-shell.home-page .como-funciona,
+  .client-mobile-shell.home-page .beneficios { display: none; }
+
+  .client-mobile-shell.home-page .client-home-quick {
+    display: block;
+    width: 100%;
+    padding: 22px 0 0;
+  }
+  .client-mobile-shell.home-page .client-home-quick[hidden] { display: none; }
+  .client-section-heading {
+    display: flex;
+    width: calc(100% - 32px);
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0 auto 13px;
+  }
+  .client-section-heading h2 {
+    margin: 0;
+    color: var(--client-text);
+    font-size: 1.25rem;
+    line-height: 1.3;
+  }
+  .client-section-heading a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--client-red);
+    font-size: .85rem;
+    font-weight: 700;
+  }
+  .client-section-heading a span { font-size: 1.6rem; line-height: 1; }
+  .client-repeat-list,
+  .client-favorites-list {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 0 16px 8px;
+    scroll-padding-inline: 16px;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+  }
+  .client-repeat-list::-webkit-scrollbar,
+  .client-favorites-list::-webkit-scrollbar { display: none; }
+  .client-repeat-card {
+    display: grid;
+    min-width: min(330px, calc(100vw - 48px));
+    grid-template-columns: 42% minmax(0, 1fr);
+    overflow: hidden;
+    border: 1px solid var(--client-border);
+    border-radius: 17px;
+    background: var(--client-surface);
+    scroll-snap-align: start;
+  }
+  .client-repeat-card > img {
+    width: 100%;
+    height: 148px;
+    object-fit: cover;
+    background: #0f1113;
+  }
+  .client-repeat-card > div { position: relative; display: flex; min-width: 0; flex-direction: column; padding: 15px 13px; }
+  .client-repeat-card h3 { margin: 0; color: var(--client-text); font-size: .95rem; line-height: 1.35; }
+  .client-repeat-card p { margin: 7px 0 0; overflow: hidden; color: var(--client-muted); font-size: .8rem; text-overflow: ellipsis; white-space: nowrap; }
+  .client-repeat-card strong { margin-top: auto; padding-right: 48px; color: var(--client-text); font-size: .92rem; }
+  .client-repeat-card button {
+    position: absolute;
+    right: 11px;
+    bottom: 11px;
+    width: 42px;
+    height: 42px;
+    border: 0;
+    border-radius: 12px;
+    background: var(--client-red);
+    color: #fff;
+    font-size: 1.65rem;
+    line-height: 1;
+  }
+  .client-favorite-card {
+    position: relative;
+    min-width: min(218px, 58vw);
+    overflow: hidden;
+    border: 1px solid var(--client-border);
+    border-radius: 17px;
+    background: var(--client-surface);
+    scroll-snap-align: start;
+  }
+  .client-favorite-card > a { display: block; color: inherit; }
+  .client-favorite-card img { width: 100%; height: 132px; object-fit: cover; background: #0f1113; }
+  .client-favorite-card a > div { padding: 12px; }
+  .client-favorite-card h3 { margin: 0; color: var(--client-text); font-size: .96rem; }
+  .client-favorite-card p { margin: 5px 0 0; color: var(--client-muted); font-size: .78rem; }
+  .client-favorite-card small { display: block; margin-top: 6px; color: var(--client-muted); font-size: .72rem; }
+  .client-favorite-toggle {
+    position: absolute;
+    top: 9px;
+    right: 9px;
+    display: grid;
+    width: 40px;
+    height: 40px;
+    place-items: center;
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 50%;
+    background: rgba(9,11,13,.86);
+    color: var(--client-red);
+    font-size: 1.2rem;
+    backdrop-filter: blur(8px);
+  }
   .client-mobile-shell.home-page :is(.cupom-box, .restaurant-tools, .card, .produto-destaque, .step-card, .beneficio) {
     border-color: var(--client-border);
     background: var(--client-surface);
@@ -204,7 +328,9 @@ html[data-theme="dark"] .client-mobile-shell {
   .client-mobile-shell.home-page .produto-destaque > img { background: #0f1113; }
   .client-mobile-shell.home-page .partner-cta,
   .client-mobile-shell.home-page footer { display: none; }
-  .client-mobile-shell.home-page .notification-center { right: 78px; bottom: calc(var(--client-nav-height) + env(safe-area-inset-bottom) + 12px); }
+  .client-mobile-shell.home-page .notification-center { top: calc(14px + env(safe-area-inset-top)); right: 70px; bottom: auto; }
+  .client-mobile-shell.home-page .notification-trigger { width: 48px; height: 48px; border-radius: 50%; background: transparent; box-shadow: none; }
+  .client-mobile-shell.home-page .notification-panel { top: 58px; right: -54px; bottom: auto; }
   .client-mobile-shell.home-page .floating-cart { bottom: calc(var(--client-nav-height) + env(safe-area-inset-bottom) + 12px); }
 
   /* Cabeçalhos das rotas internas seguem o mesmo ritmo visual do aplicativo. */
