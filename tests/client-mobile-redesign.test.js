@@ -143,3 +143,19 @@ test("carrinho mobile preserva o pedido e mantém a finalização acessível", (
   assert.match(css, /\.quantidade button\{width:44px;height:44px/);
   assert.match(css, /safe-area-inset-bottom/);
 });
+
+test("checkout mobile concentra entrega, pagamento, revisão e envio", () => {
+  const html = read("html/checkout.html");
+  const core = read("js/pages/checkout.js");
+  const ux = read("js/modules/checkout-4.2.3.js");
+  const css = read("css/modules/checkout-4.2.3.css");
+  for (const anchor of ["#checkoutEndereco", "#checkoutPagamento", "#checkoutResumo"]) {
+    assert.match(html, new RegExp(`href="${anchor}"`));
+  }
+  assert.match(html, /id="finalizarPedidoTotal"/);
+  assert.match(core, /finalizarTotalElemento\.textContent = App\.dinheiro\(calcularTotal\(\)\)/);
+  assert.match(ux, /"Fazer pedido"/);
+  assert.match(css, /body\[data-client-page="checkout"\][^{]*\{[^}]*padding-bottom:calc\(94px \+ env\(safe-area-inset-bottom\)\)/s);
+  assert.match(css, /\.payment-options\{grid-template-columns:1fr/);
+  assert.match(css, /#finalizarPedido\{width:100%;max-width:none;min-height:56px/);
+});

@@ -27,6 +27,7 @@ const trocoField = document.getElementById("trocoField");
 const trocoPara = document.getElementById("trocoPara");
 const pagamentoNota = document.getElementById("pagamentoNota");
 const footerTotalElemento = document.getElementById("footerTotal");
+const finalizarTotalElemento = document.getElementById("finalizarPedidoTotal");
 
 function avisarCheckout(mensagem, tipo = "error", titulo = "Finalizar pedido") {
     if (window.AppToast) window.AppToast(titulo, mensagem, tipo);
@@ -209,6 +210,7 @@ function atualizarTotais() {
     descontoElemento.textContent = `− ${App.dinheiro(desconto)}`;
     totalElemento.textContent = App.dinheiro(calcularTotal());
     if (footerTotalElemento) footerTotalElemento.textContent = App.dinheiro(calcularTotal());
+    if (finalizarTotalElemento) finalizarTotalElemento.textContent = App.dinheiro(calcularTotal());
     atualizarMensagemPedidoMinimo();
 }
 

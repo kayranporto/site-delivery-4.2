@@ -6,9 +6,96 @@
 .checkout-inline-status{margin:12px 2px 0;padding:10px 12px;border:1px solid #e5e8ee;border-radius:12px;background:#f8f9fb;color:#5e6675;font-size:10px;line-height:1.5}.checkout-inline-status[data-tipo="success"],.checkout-inline-status--ok{border-color:#c9ead8;background:#f0fbf5;color:#087749}.checkout-inline-status[data-tipo="error"]{border-color:#f0c5c1;background:#fff4f3;color:#b42318}.checkout-inline-status[data-tipo="info"]{border-color:#dbe4f2;background:#f5f8fc;color:#475467}
 .summary-context{margin:-8px 0 14px;padding:11px 13px;border:1px solid #eceef2;border-radius:12px;background:#fafbfc;color:#475467;font-size:10px;font-weight:700}.summary-totals .linha strong{font-variant-numeric:tabular-nums}.checkout-submit-copy{display:grid;min-width:0;max-width:420px;gap:2px}.checkout-submit-copy p{margin:0;color:#344054;font-size:10px;font-weight:700;line-height:1.4}.checkout-submit-copy small{color:#7b8493;font-size:8px}
 #finalizarPedido[data-checkout-lock="true"]{pointer-events:none;opacity:.72;cursor:wait}#cupom{text-transform:uppercase}.cupom-box:focus-within{outline:3px solid rgba(234,29,44,.08);border-radius:14px}.payment-option:has(input:focus-visible){outline:3px solid rgba(234,29,44,.14);outline-offset:2px}.checkout-card--address:has(#enderecoStatus[data-tipo="error"]){border-color:#efc0bc}.checkout-summary{position:sticky;top:172px}
-#taxa[data-pendente="true"],#total[data-pendente="true"],#footerTotal[data-pendente="true"]{font-size:0;color:#667085}#taxa[data-pendente="true"]::after,#total[data-pendente="true"]::after,#footerTotal[data-pendente="true"]::after{content:"A calcular";font-size:12px;font-weight:700;color:currentColor}#total[data-pendente="true"]::after{font-size:16px}#footerTotal[data-pendente="true"]::after{font-size:18px}
+#finalizarPedidoTotal{display:none;font-variant-numeric:tabular-nums;white-space:nowrap}
+#taxa[data-pendente="true"],#total[data-pendente="true"],#footerTotal[data-pendente="true"],#finalizarPedidoTotal[data-pendente="true"]{font-size:0;color:#667085}#taxa[data-pendente="true"]::after,#total[data-pendente="true"]::after,#footerTotal[data-pendente="true"]::after,#finalizarPedidoTotal[data-pendente="true"]::after{content:"A calcular";font-size:12px;font-weight:700;color:currentColor}#total[data-pendente="true"]::after{font-size:16px}#footerTotal[data-pendente="true"]::after{font-size:18px}
 .checkout-card[data-checkout-bloqueado="true"]{border-color:#e4e7ec;background:#fafbfc}.checkout-card[data-checkout-bloqueado="true"] .payment-options{opacity:.7}.checkout-card[data-checkout-bloqueado="true"] .payment-option{pointer-events:none}.checkout-card[data-checkout-bloqueado="true"] .payment-option:has(input:checked){border-color:#d0d5dd;background:#f2f4f7;box-shadow:none}.checkout-card[data-checkout-bloqueado="true"] .payment-check{border-color:#d0d5dd}.checkout-card[data-checkout-bloqueado="true"] .payment-option:has(input:checked) .payment-check{border-color:#98a2b3;background:#f8fafc}
 .checkout-fast-lane[data-estado="erro"]{border-color:#f0c5c1;background:linear-gradient(135deg,#fff4f3,#fff);box-shadow:0 10px 28px rgba(180,35,24,.06)}.checkout-fast-lane[data-estado="erro"] .checkout-fast-icon{background:#fee4e2}.checkout-fast-lane[data-estado="erro"] strong{color:#912018}.checkout-fast-lane[data-estado="erro"] small{color:#7a453f}.checkout-fast-lane[data-estado="erro"] .checkout-fast-badge{background:#fee4e2;color:#b42318}.checkout-fast-lane[data-estado="pendente"],.checkout-fast-lane[data-estado="carregando"]{border-color:#e4e7ec;background:linear-gradient(135deg,#f8fafc,#fff);box-shadow:0 10px 28px rgba(52,64,84,.05)}.checkout-fast-lane[data-estado="pendente"] .checkout-fast-icon,.checkout-fast-lane[data-estado="carregando"] .checkout-fast-icon{background:#eef2f6}.checkout-fast-lane[data-estado="pendente"] strong,.checkout-fast-lane[data-estado="carregando"] strong{color:#344054}.checkout-fast-lane[data-estado="pendente"] small,.checkout-fast-lane[data-estado="carregando"] small{color:#667085}.checkout-fast-lane[data-estado="pendente"] .checkout-fast-badge,.checkout-fast-lane[data-estado="carregando"] .checkout-fast-badge{background:#eef2f6;color:#475467}
-html[data-theme="dark"] body .checkout-step[data-estado="bloqueado"]{color:#858f9f}html[data-theme="dark"] body .checkout-step[data-estado="bloqueado"]>b{border-color:#3a4352;background:#202631;color:#858f9f}html[data-theme="dark"] body .checkout-card[data-checkout-bloqueado="true"]{border-color:#303846;background:#171c24}html[data-theme="dark"] body .checkout-card[data-checkout-bloqueado="true"] .payment-option:has(input:checked){border-color:#3a4352;background:#202631;box-shadow:none}html[data-theme="dark"] body :is(#taxa,#total,#footerTotal)[data-pendente="true"]{color:#aab2c0}html[data-theme="dark"] body .checkout-fast-lane[data-estado="erro"]{border-color:#6f3039;background:linear-gradient(135deg,#3a2026,#202631);box-shadow:none}html[data-theme="dark"] body .checkout-fast-lane[data-estado="erro"] .checkout-fast-icon{background:#4b252d}html[data-theme="dark"] body .checkout-fast-lane[data-estado="erro"] strong{color:#ffadb5}html[data-theme="dark"] body .checkout-fast-lane[data-estado="erro"] small{color:#d7a4aa}html[data-theme="dark"] body .checkout-fast-lane[data-estado="erro"] .checkout-fast-badge{background:#4b252d;color:#ffadb5}html[data-theme="dark"] body .checkout-fast-lane[data-estado="pendente"],html[data-theme="dark"] body .checkout-fast-lane[data-estado="carregando"]{border-color:#303846;background:linear-gradient(135deg,#202631,#191e27);box-shadow:none}html[data-theme="dark"] body .checkout-fast-lane[data-estado="pendente"] .checkout-fast-icon,html[data-theme="dark"] body .checkout-fast-lane[data-estado="carregando"] .checkout-fast-icon{background:#252c38}html[data-theme="dark"] body .checkout-fast-lane[data-estado="pendente"] strong,html[data-theme="dark"] body .checkout-fast-lane[data-estado="carregando"] strong{color:#f4f6fa}html[data-theme="dark"] body .checkout-fast-lane[data-estado="pendente"] small,html[data-theme="dark"] body .checkout-fast-lane[data-estado="carregando"] small{color:#aab2c0}html[data-theme="dark"] body .checkout-fast-lane[data-estado="pendente"] .checkout-fast-badge,html[data-theme="dark"] body .checkout-fast-lane[data-estado="carregando"] .checkout-fast-badge{background:#252c38;color:#c3cad6}
+html[data-theme="dark"] body .checkout-step[data-estado="bloqueado"]{color:#858f9f}html[data-theme="dark"] body .checkout-step[data-estado="bloqueado"]>b{border-color:#3a4352;background:#202631;color:#858f9f}html[data-theme="dark"] body .checkout-card[data-checkout-bloqueado="true"]{border-color:#303846;background:#171c24}html[data-theme="dark"] body .checkout-card[data-checkout-bloqueado="true"] .payment-option:has(input:checked){border-color:#3a4352;background:#202631;box-shadow:none}html[data-theme="dark"] body :is(#taxa,#total,#footerTotal,#finalizarPedidoTotal)[data-pendente="true"]{color:#aab2c0}html[data-theme="dark"] body .checkout-fast-lane[data-estado="erro"]{border-color:#6f3039;background:linear-gradient(135deg,#3a2026,#202631);box-shadow:none}html[data-theme="dark"] body .checkout-fast-lane[data-estado="erro"] .checkout-fast-icon{background:#4b252d}html[data-theme="dark"] body .checkout-fast-lane[data-estado="erro"] strong{color:#ffadb5}html[data-theme="dark"] body .checkout-fast-lane[data-estado="erro"] small{color:#d7a4aa}html[data-theme="dark"] body .checkout-fast-lane[data-estado="erro"] .checkout-fast-badge{background:#4b252d;color:#ffadb5}html[data-theme="dark"] body .checkout-fast-lane[data-estado="pendente"],html[data-theme="dark"] body .checkout-fast-lane[data-estado="carregando"]{border-color:#303846;background:linear-gradient(135deg,#202631,#191e27);box-shadow:none}html[data-theme="dark"] body .checkout-fast-lane[data-estado="pendente"] .checkout-fast-icon,html[data-theme="dark"] body .checkout-fast-lane[data-estado="carregando"] .checkout-fast-icon{background:#252c38}html[data-theme="dark"] body .checkout-fast-lane[data-estado="pendente"] strong,html[data-theme="dark"] body .checkout-fast-lane[data-estado="carregando"] strong{color:#f4f6fa}html[data-theme="dark"] body .checkout-fast-lane[data-estado="pendente"] small,html[data-theme="dark"] body .checkout-fast-lane[data-estado="carregando"] small{color:#aab2c0}html[data-theme="dark"] body .checkout-fast-lane[data-estado="pendente"] .checkout-fast-badge,html[data-theme="dark"] body .checkout-fast-lane[data-estado="carregando"] .checkout-fast-badge{background:#252c38;color:#c3cad6}
 @media(max-width:900px){.checkout-progress{top:78px}.checkout-progress-inner{width:min(100% - 24px,720px);min-height:56px;justify-content:space-between;gap:7px}.checkout-progress-line{width:20px}.checkout-step small{display:none}.checkout-summary{position:static}.checkout-submit-copy{display:none}}
 @media(max-width:560px){.checkout-progress-inner{width:calc(100% - 20px)}.checkout-step{gap:5px}.checkout-step>b{width:24px;height:24px}.checkout-step strong{font-size:9px}.checkout-progress-line{flex:1;min-width:10px}.checkout-container{margin-top:18px}.checkout-card{border-radius:18px}.payment-options{grid-template-columns:1fr}.checkout-footer-inner{gap:10px}.checkout-footer #finalizarPedido{min-width:0;flex:1}.footer-total{flex:none}}
+
+/* Checkout mobile: uma pagina compacta, escura e com o total sempre acionavel. */
+@media(max-width:768px){
+html[data-theme="dark"] body[data-client-page="checkout"]{padding-bottom:calc(94px + env(safe-area-inset-bottom));background:#0f1115;color:#f6f7f9}
+html[data-theme="dark"] body[data-client-page="checkout"] :is(#checkoutEndereco,#checkoutPagamento,#checkoutResumo){scroll-margin-top:130px}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-header{border-color:#282c34;background:rgba(15,17,21,.96);box-shadow:none}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-header-inner{width:calc(100% - 24px);min-height:64px;gap:12px}
+html[data-theme="dark"] body[data-client-page="checkout"] .voltar{width:44px;height:44px;border-color:#30353f;border-radius:14px;background:#1a1e25;color:#f6f7f9}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-heading>span{display:block;color:#ff5966;font-size:8px}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-heading h1{color:#fff;font-size:18px}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-security{display:flex;margin-left:auto}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-security>span{width:38px;height:38px;background:#20252d}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-security div{display:none}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-progress{top:64px;border-color:#282c34;background:rgba(15,17,21,.96)}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-progress-inner{width:calc(100% - 24px);min-height:54px;gap:6px}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-step{min-height:44px;gap:6px;color:#aeb5c0;text-decoration:none}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-step>b{width:25px;height:25px;border-color:#3a414d;background:#1a1e25;color:inherit}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-step strong{color:inherit;font-size:9px}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-step small{display:none}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-step[data-estado="ok"]{color:#70db9e}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-step[data-estado="ok"]>b{border-color:#286d49;background:#173825;color:#70db9e}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-progress-line{min-width:8px;width:auto;flex:1;background:#343a44}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-container{grid-template-columns:1fr;width:100%;margin:0;padding:14px 12px 20px;gap:14px}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-flow{gap:12px}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-card{padding:18px;border-color:#282d36;border-radius:18px;background:#171a20;box-shadow:none}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-card:focus-within{border-color:#744049;box-shadow:none}
+html[data-theme="dark"] body[data-client-page="checkout"] .card-heading{margin-bottom:15px;gap:11px}
+html[data-theme="dark"] body[data-client-page="checkout"] .card-icon{width:40px;height:40px;border-color:#472b31;border-radius:13px;background:#2a1b20}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-card h2{color:#f6f7f9;font-size:17px}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-fast-lane{min-height:60px;padding:11px 12px;border-color:#294739;border-radius:16px;background:#17241e;box-shadow:none}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-fast-icon{background:#203b2d}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-fast-lane strong{color:#d9f7e5}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-fast-lane small{color:#9bb9a7;white-space:normal}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-fast-badge{display:none}
+html[data-theme="dark"] body[data-client-page="checkout"] .endereco{padding:14px;align-items:stretch;flex-direction:column;border-color:#30353f;background:#1d2128}
+html[data-theme="dark"] body[data-client-page="checkout"] .endereco p{color:#e6e9ee;font-size:13px}
+html[data-theme="dark"] body[data-client-page="checkout"] #alterarEndereco{width:100%;min-height:48px}
+html[data-theme="dark"] body[data-client-page="checkout"] .delivery-preview{padding:13px;border-color:#422d33;background:#211a1e}
+html[data-theme="dark"] body[data-client-page="checkout"] .delivery-preview>span{background:#29242a;box-shadow:none}
+html[data-theme="dark"] body[data-client-page="checkout"] .delivery-preview strong{color:#f1f2f4}
+html[data-theme="dark"] body[data-client-page="checkout"] .delivery-preview small,html[data-theme="dark"] body[data-client-page="checkout"] .pedido-minimo{color:#aeb5c0;white-space:normal}
+html[data-theme="dark"] body[data-client-page="checkout"] .delivery-preview a{min-height:44px;padding-top:12px;color:#ff7580}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-inline-status{border-color:#30353f;background:#1d2128;color:#bdc3cd}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-inline-status[data-tipo="success"],html[data-theme="dark"] body[data-client-page="checkout"] .checkout-inline-status--ok{border-color:#28503c;background:#17271f;color:#7bdda3}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-inline-status[data-tipo="error"]{border-color:#67353c;background:#2b1b20;color:#ffadb5}
+html[data-theme="dark"] body[data-client-page="checkout"] .payment-options{grid-template-columns:1fr;gap:9px}
+html[data-theme="dark"] body[data-client-page="checkout"] .payment-option{min-height:72px;padding:13px;border-color:#30353f;background:#1d2128;color:#f3f4f6}
+html[data-theme="dark"] body[data-client-page="checkout"] .payment-option:has(input:checked){border-color:#ea1d2c;background:#291a1e;box-shadow:0 0 0 2px rgba(234,29,44,.12)}
+html[data-theme="dark"] body[data-client-page="checkout"] .payment-icon{background:#292e36}
+html[data-theme="dark"] body[data-client-page="checkout"] .payment-copy strong{font-size:14px}
+html[data-theme="dark"] body[data-client-page="checkout"] .payment-copy small{color:#aeb5c0;font-size:10px}
+html[data-theme="dark"] body[data-client-page="checkout"] .payment-check{border-color:#59616d}
+html[data-theme="dark"] body[data-client-page="checkout"] .payment-option:has(input:checked) .payment-check{background:#fff}
+html[data-theme="dark"] body[data-client-page="checkout"] .pagamento-note{background:#1d2128;color:#aeb5c0}
+html[data-theme="dark"] body[data-client-page="checkout"] :is(.troco-field input,.cupom-box input,textarea){border-color:#363c47;background:#111419;color:#f6f7f9}
+html[data-theme="dark"] body[data-client-page="checkout"] .troco-field label{color:#e6e9ee}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-optional{padding:0}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-optional>summary{min-height:68px;padding:12px 14px}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-optional .card-icon{background:#22262d;border-color:#343943}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-optional-action{min-height:44px;border-color:#383e48;background:#20242b;color:#d3d7de}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-optional-body{padding:0 14px 14px;border-color:#2b3039}
+html[data-theme="dark"] body[data-client-page="checkout"] .cupom-box{flex-direction:column}
+html[data-theme="dark"] body[data-client-page="checkout"] #btnCupom{width:100%;min-height:48px}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-summary{position:static;order:2;padding:18px}
+html[data-theme="dark"] body[data-client-page="checkout"] .summary-heading{margin-bottom:14px}
+html[data-theme="dark"] body[data-client-page="checkout"] .summary-heading h2{font-size:20px}
+html[data-theme="dark"] body[data-client-page="checkout"] .summary-badge{display:none}
+html[data-theme="dark"] body[data-client-page="checkout"] .summary-context{border-color:#30353f;background:#1d2128;color:#bdc3cd}
+html[data-theme="dark"] body[data-client-page="checkout"] #listaResumo{max-height:none}
+html[data-theme="dark"] body[data-client-page="checkout"] .item-resumo{border-color:#2b3038}
+html[data-theme="dark"] body[data-client-page="checkout"] .item-info h4,html[data-theme="dark"] body[data-client-page="checkout"] .item-preco{color:#e9ebef}
+html[data-theme="dark"] body[data-client-page="checkout"] .item-info small,html[data-theme="dark"] body[data-client-page="checkout"] .linha{color:#aeb5c0}
+html[data-theme="dark"] body[data-client-page="checkout"] .summary-totals{border-color:#30353f}
+html[data-theme="dark"] body[data-client-page="checkout"] .linha strong{color:#e6e9ee}
+html[data-theme="dark"] body[data-client-page="checkout"] .linha.total{border-color:#424852;color:#f6f7f9}
+html[data-theme="dark"] body[data-client-page="checkout"] .linha.total strong{color:#ff5966}
+html[data-theme="dark"] body[data-client-page="checkout"] .summary-trust{background:#17271f}
+html[data-theme="dark"] body[data-client-page="checkout"] .summary-trust strong{color:#bde8ce}
+html[data-theme="dark"] body[data-client-page="checkout"] .summary-trust small{color:#91aa9b}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-footer{padding:10px 12px calc(10px + env(safe-area-inset-bottom));border-color:#2b3038;background:rgba(15,17,21,.97);box-shadow:0 -12px 30px rgba(0,0,0,.3)}
+html[data-theme="dark"] body[data-client-page="checkout"] .checkout-footer-inner{width:100%;min-height:56px;gap:0}
+html[data-theme="dark"] body[data-client-page="checkout"] :is(.footer-total,.checkout-submit-copy){display:none}
+html[data-theme="dark"] body[data-client-page="checkout"] #finalizarPedido{width:100%;max-width:none;min-height:56px;padding:0 18px;border-radius:16px}
+html[data-theme="dark"] body[data-client-page="checkout"] #finalizarPedidoTotal{display:block;font-size:15px}
+html[data-theme="dark"] body[data-client-page="checkout"] #finalizarPedidoTotal[data-pendente="true"]::after{font-size:12px;color:#fff}
+}

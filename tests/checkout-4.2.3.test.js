@@ -80,3 +80,24 @@ test("checkout reconhece cidade inteira e não redireciona silenciosamente", () 
     assert.doesNotMatch(listener, /if \(!validarAreaEntrega\(\)\) \{\s*window\.location\.href/);
     assert.match(listener, /await finalizarPedido\(\)/);
 });
+
+test("checkout mobile mantém as três etapas na mesma página e o total no CTA", () => {
+    const html = ler("checkout.html");
+    const core = ler("js/pages/checkout.js");
+    const ux = ler("js/modules/checkout-4.2.3.js");
+    const css = ler("css/modules/checkout-4.2.3.css");
+    for (const id of ["checkoutEndereco", "checkoutPagamento", "checkoutResumo", "finalizarPedidoTotal"]) {
+        assert.match(html, new RegExp(`id=["']${id}["']`), `checkout sem ${id}`);
+    }
+    for (const alvo of ["#checkoutEndereco", "#checkoutPagamento", "#checkoutResumo"]) {
+        assert.match(html, new RegExp(`href=["']${alvo}["']`));
+    }
+    assert.match(core, /finalizarTotalElemento\.textContent = App\.dinheiro\(calcularTotal\(\)\)/);
+    assert.match(ux, /definirTexto\(finalizarTexto, "Fazer pedido"\)/);
+    assert.match(ux, /marcarValorPendente\(finalizarTotal, totalPendente/);
+    assert.match(css, /body\[data-client-page="checkout"\]/);
+    assert.match(css, /\.payment-options\{grid-template-columns:1fr/);
+    assert.match(css, /#finalizarPedidoTotal\{display:block/);
+    assert.match(css, /safe-area-inset-bottom/);
+    assert.match(css, /min-height:44px/);
+});

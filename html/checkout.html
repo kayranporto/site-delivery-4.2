@@ -17,7 +17,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="../css/core/style.css?v=4.2.0"/>
   <link rel="stylesheet" href="../css/pages/checkout.css?v=4.2.4"/>
-  <link rel="stylesheet" href="../css/modules/checkout-4.2.3.css?v=4.2.4"/>
+  <link rel="stylesheet" href="../css/modules/checkout-4.2.3.css?v=4.5.6"/>
   <link rel="stylesheet" href="../css/core/accessibility.css?v=4.2.0"/>
   <link rel="stylesheet" href="../css/core/enhancements.css?v=4.4.6"/>
   <link rel="stylesheet" href="../css/modules/client-mobile-4.5.css?v=4.5.2"/>
@@ -41,11 +41,11 @@
 
   <nav class="checkout-progress" aria-label="Etapas do checkout">
     <div class="checkout-progress-inner">
-      <div class="checkout-step" id="stepEndereco" data-estado="pendente"><b>1</b><span><strong>Entrega</strong><small>Endereço e frete</small></span></div>
+      <a class="checkout-step" id="stepEndereco" data-estado="pendente" href="#checkoutEndereco"><b>1</b><span><strong>Entrega</strong><small>Endereço e frete</small></span></a>
       <span class="checkout-progress-line" aria-hidden="true"></span>
-      <div class="checkout-step" id="stepPagamento" data-estado="pendente"><b>2</b><span><strong>Pagamento</strong><small>Escolha a forma</small></span></div>
+      <a class="checkout-step" id="stepPagamento" data-estado="pendente" href="#checkoutPagamento"><b>2</b><span><strong>Pagamento</strong><small>Escolha a forma</small></span></a>
       <span class="checkout-progress-line" aria-hidden="true"></span>
-      <div class="checkout-step" id="stepRevisao" data-estado="pendente"><b>3</b><span><strong>Revisão</strong><small>Confira e envie</small></span></div>
+      <a class="checkout-step" id="stepRevisao" data-estado="pendente" href="#checkoutResumo"><b>3</b><span><strong>Revisão</strong><small>Confira e envie</small></span></a>
     </div>
   </nav>
 
@@ -56,7 +56,7 @@
         <div><strong>Checkout rápido</strong><small id="checkoutFastStatus">Carregando seus dados salvos...</small></div>
         <span class="checkout-fast-badge" id="checkoutFastBadge">Preparando</span>
       </div>
-      <section class="checkout-card checkout-card--address" aria-labelledby="tituloEndereco">
+      <section class="checkout-card checkout-card--address" id="checkoutEndereco" aria-labelledby="tituloEndereco">
         <div class="card-heading">
           <span class="card-icon" aria-hidden="true">📍</span>
           <div><small>ETAPA 1</small><h2 id="tituloEndereco">Endereço de entrega</h2></div>
@@ -80,7 +80,7 @@
         <p class="checkout-inline-status" id="enderecoStatus" data-tipo="info" role="status">O frete e o total final serão confirmados depois que você selecionar o endereço.</p>
       </section>
 
-      <section class="checkout-card" aria-labelledby="tituloPagamento">
+      <section class="checkout-card" id="checkoutPagamento" aria-labelledby="tituloPagamento">
         <div class="card-heading">
           <span class="card-icon" aria-hidden="true">💳</span>
           <div><small>ETAPA 2</small><h2 id="tituloPagamento">Forma de pagamento</h2></div>
@@ -172,7 +172,7 @@
         <p id="checkoutSubmitStatus" role="status">Revise o total e confirme quando estiver pronto.</p>
         <small>Envio em um toque, com proteção contra pedido duplicado.</small>
       </div>
-      <button id="finalizarPedido" type="button"><span id="finalizarPedidoTexto">Preparando checkout...</span><span aria-hidden="true">→</span></button>
+      <button id="finalizarPedido" type="button"><span id="finalizarPedidoTexto">Preparando checkout...</span><strong id="finalizarPedidoTotal">R$ 0,00</strong></button>
     </div>
   </footer>
 
@@ -183,8 +183,8 @@
   <script defer src="../js/core/dialogs.js?v=4.2.0"></script>
   <script defer src="../js/core/cart-store.js?v=4.2.0"></script>
   <script defer src="../js/core/monitoring.js?v=4.2.0"></script>
-  <script defer src="../js/pages/checkout.js?v=4.4.6.1"></script>
-  <script defer src="../js/modules/checkout-4.2.3.js?v=4.2.4"></script>
+  <script defer src="../js/pages/checkout.js?v=4.5.6"></script>
+  <script defer src="../js/modules/checkout-4.2.3.js?v=4.5.6"></script>
   <script defer src="../js/core/client-mobile-4.5.js?v=4.5.0"></script>
   <script defer src="../js/core/site-enhancements.js?v=4.4.6"></script>
 </body>
