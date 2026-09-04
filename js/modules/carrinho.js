@@ -17,6 +17,7 @@ const cartButton = document.querySelector(".cart");
 const btnCheckout = document.getElementById("btnCheckout");
 const quantidadeResumo = document.getElementById("carrinhoQuantidadeResumo");
 const restauranteResumo = document.getElementById("carrinhoRestaurante");
+const previsaoResumo = document.getElementById("carrinhoPrevisao");
 const minimoBloco = document.getElementById("carrinhoMinimo");
 const minimoTexto = document.getElementById("carrinhoMinimoTexto");
 const minimoValor = document.getElementById("carrinhoMinimoValor");
@@ -88,6 +89,7 @@ function abrirCarrinho() {
     focoAnteriorCarrinho = document.activeElement;
     drawer.removeAttribute("inert");
     drawer.setAttribute("aria-hidden", "false");
+    document.body.classList.add("cart-drawer-open");
     document.body.style.overflow = "hidden";
     fecharBtn?.focus();
 }
@@ -98,6 +100,7 @@ function fecharCarrinho() {
     overlay.classList.remove("aberto");
     drawer.setAttribute("aria-hidden", "true");
     drawer.setAttribute("inert", "");
+    document.body.classList.remove("cart-drawer-open");
     document.body.style.overflow = "";
     (focoAnteriorCarrinho || cartButton)?.focus?.();
 }
@@ -303,8 +306,14 @@ function atualizarCarrinho() {
     if (contadorTopo) contadorTopo.textContent = String(quantidadeTotal);
     if (quantidadeResumo) quantidadeResumo.textContent = `${quantidadeTotal} ${quantidadeTotal === 1 ? "item" : "itens"}`;
     if (restauranteResumo) restauranteResumo.textContent = carrinhoMeta?.empresa_nome || "Revise os itens antes de continuar";
-    if (checkoutTexto) checkoutTexto.textContent = "Ir para o checkout";
+    if (checkoutTexto) checkoutTexto.textContent = "Finalizar pedido";
     if (checkoutTotal) checkoutTotal.textContent = App.dinheiro(total);
+    if (previsaoResumo) {
+        const tempoMin = Number(carrinhoMeta?.tempo_estimado_min || 0);
+        const tempoMax = Number(carrinhoMeta?.tempo_estimado_max || 0);
+        previsaoResumo.hidden = !carrinho.length || tempoMin <= 0 || tempoMax <= 0;
+        previsaoResumo.textContent = previsaoResumo.hidden ? "" : `Entrega estimada: ${tempoMin}–${tempoMax} min`;
+    }
     if (cartButton) cartButton.setAttribute("aria-label", quantidadeTotal ? `Abrir carrinho, ${quantidadeTotal} ${quantidadeTotal === 1 ? "item" : "itens"}` : "Abrir carrinho vazio");
     drawer?.classList.toggle("carrinho-sem-itens", !carrinho.length);
     if (limparCarrinhoBtn) limparCarrinhoBtn.hidden = !carrinho.length;
