@@ -607,8 +607,8 @@ html[data-theme="dark"] .client-mobile-shell {
   .client-mobile-shell[data-client-page="perfil"] .resumo-conta { display: none; }
   .client-mobile-shell[data-client-page="perfil"] .usuario-info h2 { font-size: 1.35rem; }
   .client-mobile-shell[data-client-page="perfil"] .usuario-info > p { margin-top: 5px; font-size: .82rem; }
-  .client-mobile-shell[data-client-page="perfil"] .perfil-grid,
-  .client-mobile-shell[data-client-page="perfil"] .perfil-principal { display: contents; }
+  .client-mobile-shell[data-client-page="perfil"] .perfil-grid { display: contents; }
+  .client-mobile-shell[data-client-page="perfil"] .perfil-principal { display: flex; flex-direction: column; }
   .client-mobile-shell[data-client-page="perfil"] .perfil-lateral { display: none; }
   .client-mobile-shell[data-client-page="perfil"] .loyalty-card { order: 1; padding: 16px 14px 0; }
   .client-mobile-shell[data-client-page="perfil"] .perfil-principal > .painel-card:not(.loyalty-card):not(.pedido-destaque) { order: 2; }
@@ -638,7 +638,8 @@ html[data-theme="dark"] .client-mobile-shell {
   .client-mobile-shell[data-client-page="perfil"] .perfil-principal > .painel-card:not(.loyalty-card):not(.pedido-destaque) > .secao-cabecalho { display: none; }
   .client-mobile-shell[data-client-page="perfil"] .menu { grid-template-columns: repeat(4,minmax(0,1fr)); gap: 8px; }
   .client-mobile-shell[data-client-page="perfil"] .menu-item { display: none; }
-  html[data-theme="dark"] .client-mobile-shell[data-client-page="perfil"] .menu-item.mobile-profile-shortcut {
+  .client-mobile-shell[data-client-page="perfil"] .menu-item.mobile-profile-shortcut,
+  .client-mobile-shell[data-client-page="perfil"] .theme-toggle-profile {
     display: flex;
     min-height: 92px;
     flex-direction: column;
@@ -649,6 +650,7 @@ html[data-theme="dark"] .client-mobile-shell {
     color: var(--client-text);
     text-align: center;
   }
+  .client-mobile-shell[data-client-page="perfil"] [data-theme-preferences] { display: contents; }
   .client-mobile-shell[data-client-page="perfil"] button.menu-item { width: 100%; font-family: inherit; cursor: pointer; }
   .client-mobile-shell[data-client-page="perfil"] .menu-icone { width: auto; height: auto; background: transparent; color: #ff3d49; font-size: 1.65rem; }
   .client-mobile-shell[data-client-page="perfil"] .menu-texto { display: block; flex: none; }

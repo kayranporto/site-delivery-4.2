@@ -320,8 +320,4 @@ document.querySelector("[data-open-notifications]")?.addEventListener("click", (
     document.getElementById("notificationTrigger")?.click();
 });
 
-document.querySelector("[data-theme-toggle-profile]")?.addEventListener("click", () => {
-    document.querySelector(".theme-toggle-profile")?.click();
-});
-
 carregarPerfil();
