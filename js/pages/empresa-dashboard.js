@@ -1447,7 +1447,7 @@ menuDashboard.addEventListener("click", () => {
 sidebarOverlay.addEventListener("click", fecharSidebar);
 
 const dashboardViews = [...document.querySelectorAll("[data-dashboard-view]")];
-const dashboardLinks = [...sidebar.querySelectorAll('nav a[href^="#"]')];
+const dashboardLinks = [...document.querySelectorAll('.dashboard-sidebar nav a[href^="#"], [data-dashboard-link][href^="#"]')];
 const dashboardViewIds = new Set(dashboardViews.map((view) => view.id));
 
 function idSecaoPainel(valor = location.hash) {
