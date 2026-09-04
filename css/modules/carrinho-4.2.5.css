@@ -76,3 +76,52 @@
   .carrinho-footer{padding:14px 16px calc(16px + env(safe-area-inset-bottom))}
   #btnCheckout{min-height:54px}
 }
+
+/* Carrinho do aplicativo mobile. */
+@media(max-width:768px){
+html[data-theme="dark"] body[data-client-page="restaurante"] #overlay{z-index:998;background:rgba(0,0,0,.78);backdrop-filter:blur(8px)}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho{z-index:999;width:100%;max-width:100%;height:100dvh;border:0;background:#090b0d;color:#f7f7f8;box-shadow:none}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho .carrinho-header{position:relative;z-index:2;align-items:flex-start;padding:calc(14px + env(safe-area-inset-top)) 16px 14px;border-color:#30343a;background:rgba(9,11,13,.97);box-shadow:0 8px 24px rgba(0,0,0,.18);backdrop-filter:blur(16px)}
+.carrinho-header-acoes{display:flex;flex:0 0 auto;align-items:center;gap:6px}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho .carrinho-eyebrow{margin-bottom:5px;color:#ff3038;font-size:.72rem}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho .carrinho-header h2{display:block;margin:0;color:#f7f7f8;font-size:1.3rem;line-height:1.3}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho #carrinhoQuantidadeResumo{display:inline-flex;margin-left:5px;padding:4px 7px;background:rgba(255,48,56,.12);color:#ff8086;font-size:.72rem;vertical-align:middle}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho #carrinhoRestaurante{margin-top:6px;color:#c4c6ca;font-size:.84rem}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho #carrinhoPrevisao{margin:4px 0 0;color:#8be0b1;font-size:.76rem;font-weight:700}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho #carrinhoPrevisao[hidden]{display:none}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho #limparCarrinhoBtn{min-width:58px;min-height:44px;padding:0 8px;border:0;background:transparent;color:#ff8b91;font-size:.78rem;font-weight:800}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho #fecharCarrinho{width:46px;height:46px;flex-basis:46px;border-color:#30343a;border-radius:50%;background:#1b1e22;color:#f7f7f8}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho .carrinho-itens{padding:14px 12px 20px;background:#090b0d;overscroll-behavior:contain}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho .item-carrinho{grid-template-columns:78px minmax(0,1fr);gap:12px;padding:13px;border:1px solid #30343a;border-radius:18px;background:#14171a;box-shadow:none}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho .item-carrinho+.item-carrinho{margin-top:10px}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho .item-carrinho img{width:78px;height:78px;border-radius:14px;background:#0f1113}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho .item-carrinho-titulo{display:block}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho .item-carrinho-titulo h4{margin:0 0 5px;color:#f7f7f8;font-size:.92rem;line-height:1.35}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho .item-carrinho-total{display:block;margin-bottom:5px;color:#ff5e65;font-size:.88rem}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho :is(.item-carrinho .adicionais,.item-carrinho .observacao){margin:3px 0;color:#b5b8bd;font-size:.76rem;line-height:1.45}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho .item-carrinho .observacao{border-color:#474c54;color:#d0d2d5}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho .item-carrinho-unitario{color:#8c9097;font-size:.72rem}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho .editar-item-425{min-height:42px!important;margin:9px 0 0!important;border-color:#3b4047!important;border-radius:11px!important;background:#1b1e22!important;color:#f7f7f8!important;font-size:.76rem!important}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho .quantidade{gap:5px;margin-top:9px;padding-top:10px;border-color:#30343a}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho .quantidade button{width:44px;height:44px;border-color:#3b4047;border-radius:12px;background:#25292f;color:#f7f7f8;font-size:1.15rem}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho .quantidade-valor{min-width:30px;height:44px;color:#f7f7f8;font-size:.9rem}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho .quantidade .remover-item{min-width:68px;min-height:44px;margin-left:auto;padding:0 7px!important;border-color:transparent!important;background:transparent!important;color:#ff8b91!important;font-size:.73rem!important}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho .carrinho-footer{position:relative;z-index:2;padding:14px 16px calc(14px + env(safe-area-inset-bottom));border-color:#30343a;border-radius:24px 24px 0 0;background:#14171a;box-shadow:0 -16px 38px rgba(0,0,0,.34)}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho .carrinho-minimo{margin-bottom:13px;border-color:#66552c;background:#352f20;color:#f4d38a}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho .carrinho-resumo-titulo{margin-bottom:9px}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho .carrinho-resumo-titulo span{color:#f7f7f8;font-size:.9rem}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho .carrinho-resumo-titulo small{color:#8c9097;font-size:.7rem}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho .carrinho-footer .linha{margin-bottom:7px;color:#a7a9ae;font-size:.84rem}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho .carrinho-footer .linha strong{color:#f7f7f8}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho .carrinho-footer .linha.total{margin-top:10px;padding-top:10px;border-color:#30343a;color:#f7f7f8;font-size:1rem}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho .carrinho-footer .linha.total strong{color:#f7f7f8;font-size:1.15rem}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho #btnCheckout{min-height:56px;margin-top:12px;border-radius:15px;background:#ff3038;color:#fff;font-size:.9rem;box-shadow:0 10px 24px rgba(255,48,56,.22)}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho #btnCheckout:disabled{background:#30343a;color:#8c9097;box-shadow:none}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho .carrinho-acoes-secundarias{grid-template-columns:1fr;margin-top:8px}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho .carrinho-acoes-secundarias button{min-height:44px;border-color:#30343a;background:#1b1e22;color:#f7f7f8;font-size:.78rem}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho .carrinho-vazio{min-height:100%;color:#f7f7f8}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho .carrinho-vazio:before{background:rgba(255,48,56,.12);color:#ff8086}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho .carrinho-vazio p{color:#a7a9ae;font-size:.86rem}
+html[data-theme="dark"] body[data-client-page="restaurante"] #carrinho .carrinho-vazio button{min-height:48px;border-color:#ff3038;background:transparent;color:#ff6b72;font-size:.84rem}
+body[data-client-page="restaurante"].cart-drawer-open .restaurant-actions{visibility:hidden}
+}
