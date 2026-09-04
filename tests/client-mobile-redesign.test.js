@@ -105,5 +105,23 @@ test("produto mobile não oferece escolha de tamanho", () => {
   assert.match(modal, /varianteRepresentaTamanho/);
   assert.match(restaurante, /filter\(\(variante\) => !varianteRepresentaTamanho\(variante\)\)/);
   assert.match(modal, /filter\(\(variante\) => !varianteRepresentaTamanho\(variante\)\)/);
-  assert.match(html, /modal\.js\?v=4\.5\.3/);
+  assert.match(html, /modal\.js\?v=4\.5\.4/);
+});
+
+test("produto mobile destaca adicionais, quantidade e total sem inventar opções", () => {
+  const html = read("html/restaurante.html");
+  const modal = read("js/modules/modal.js");
+  const css = read("css/modules/restaurante-4.2.2.css");
+  for (const id of ["modalPrecoBase", "listaAdicionais", "observacaoContador", "menosQtd", "maisQtd", "precoFinal"]) {
+    assert.match(html, new RegExp(`id="${id}"`));
+  }
+  assert.match(modal, /grupo\.minimo > 0/);
+  assert.match(modal, /grupo\.maximo/);
+  assert.match(modal, /atualizarEstadoDosGrupos/);
+  assert.match(modal, /Sem acréscimo/);
+  assert.match(modal, /observacao\.value\.length/);
+  assert.match(css, /\.produto-modal-rodape\{position:sticky/);
+  assert.match(css, /\.adicional:has\(input:checked\)/);
+  assert.match(css, /safe-area-inset-bottom/);
+  assert.doesNotMatch(html, /Escolha o tamanho/i);
 });
