@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="../css/pages/empresa-dashboard.css?v=4.5.8"/>
+  <link rel="stylesheet" href="../css/pages/empresa-dashboard.css?v=4.6.0"/>
   <link rel="stylesheet" href="../css/core/accessibility.css?v=4.2.0"/>
   <link rel="stylesheet" href="../css/core/enhancements.css?v=4.4.6"/>
 </head>
@@ -46,6 +46,7 @@
   <div class="dashboard-shell">
     <header class="dashboard-header">
       <button class="menu-toggle" id="menuDashboard" type="button" aria-label="Abrir menu" aria-expanded="false">☰</button>
+      <span class="restaurant-mobile-logo" id="restaurantMobileLogo" aria-hidden="true">🍔</span>
       <div class="header-copy">
         <span>PAINEL DO RESTAURANTE</span>
         <h1 id="nomeEmpresa">Carregando restaurante...</h1>
@@ -57,13 +58,6 @@
         <button class="logout-button" id="logoutEmpresa" type="button">Sair</button>
       </div>
     </header>
-
-    <nav class="restaurant-management-mobile" aria-label="Gestão rápida do restaurante">
-      <a class="active" href="#visaoGeral" data-dashboard-link><span aria-hidden="true">⌂</span> Resumo</a>
-      <a href="#promocoes" data-dashboard-link><span aria-hidden="true">%</span> Promoções</a>
-      <a href="#avaliacoes" data-dashboard-link><span aria-hidden="true">★</span> Avaliações</a>
-      <a href="#financeiro" data-dashboard-link><span aria-hidden="true">R$</span> Financeiro</a>
-    </nav>
 
     <main class="dashboard-main">
       <section class="dashboard-view dashboard-overview is-active" id="visaoGeral" data-dashboard-view tabindex="-1" aria-label="Visão geral">
@@ -135,6 +129,12 @@
             </select>
           </label>
         </div>
+        <nav class="mobile-order-tabs" aria-label="Status dos pedidos">
+          <button class="active" type="button" data-order-mobile-filter="recebido">Novos</button>
+          <button type="button" data-order-mobile-filter="preparando">Em preparo</button>
+          <button type="button" data-order-mobile-filter="pronto">Prontos</button>
+          <button type="button" data-order-mobile-filter="finalizados">Finalizados</button>
+        </nav>
         <div class="kanban" id="pedidosEmpresa" aria-live="polite"><div class="panel-loading">Carregando pedidos...</div></div>
       </section>
 
@@ -336,6 +336,13 @@
     </main>
   </div>
 
+  <nav class="restaurant-management-mobile" aria-label="Navegação do restaurante">
+    <a class="active" href="#visaoGeral" data-dashboard-link><span aria-hidden="true">⌂</span>Início</a>
+    <a href="#pedidos" data-dashboard-link><span aria-hidden="true">▣</span>Pedidos</a>
+    <a href="#cardapio" data-dashboard-link><span aria-hidden="true">☷</span>Cardápio</a>
+    <a href="#operacao" data-dashboard-link><span aria-hidden="true">▥</span>Operação</a>
+    <button id="maisDashboard" type="button" aria-label="Abrir mais opções" aria-expanded="false"><span aria-hidden="true">•••</span>Mais</button>
+  </nav>
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.111.0"></script>
   <script defer src="../js/core/app-utils.js?v=4.4.6"></script>
@@ -344,7 +351,7 @@
   <script defer src="../js/core/config.js?v=4.4.6"></script>
   <script defer src="../js/core/monitoring.js?v=4.2.0"></script>
   <script defer src="../js/core/notifications.js?v=4.2.0"></script>
-  <script defer src="../js/pages/empresa-dashboard.js?v=4.5.8"></script>
+  <script defer src="../js/pages/empresa-dashboard.js?v=4.6.0"></script>
   <script defer src="../js/modules/operacao-empresa.js?v=4.4.6"></script>
   <script defer src="../js/core/product-import.js?v=4.4.6"></script>
   <script defer src="../js/modules/empresa-importacao.js?v=4.4.6"></script>
