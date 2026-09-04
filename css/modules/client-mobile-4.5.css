@@ -559,3 +559,175 @@ html[data-theme="dark"] .client-mobile-shell {
   .client-bottom-nav *,
   .client-mobile-shell * { scroll-behavior: auto !important; }
 }
+
+/* Multi Delivery 4.5.7 — conclusão da jornada mobile do cliente. */
+@media (max-width: 768px) {
+  html[data-theme="dark"] body.client-mobile-shell:not(.home-page) {
+    background: var(--client-bg);
+    color: var(--client-text);
+  }
+
+  /* Confirmação: resposta imediata e caminho direto para o acompanhamento. */
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="pedido-sucesso"] {
+    min-height: 100dvh;
+    padding: max(18px, env(safe-area-inset-top)) 14px max(18px, env(safe-area-inset-bottom));
+    align-items: center;
+    background: radial-gradient(circle at 50% 12%, rgba(255,48,56,.16), transparent 18rem), var(--client-bg);
+  }
+  .client-mobile-shell[data-client-page="pedido-sucesso"] .success-main { display: grid; width: 100%; min-height: calc(100dvh - 36px); place-items: center; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="pedido-sucesso"] .sucesso {
+    width: min(100%, 480px);
+    padding: 30px 20px 20px;
+    border: 1px solid var(--client-border);
+    border-radius: 26px;
+    background: var(--client-surface);
+    box-shadow: 0 24px 60px rgba(0,0,0,.28);
+  }
+  .client-mobile-shell[data-client-page="pedido-sucesso"] .icone { display: grid; width: 82px; height: 82px; margin: 0 auto 18px; place-items: center; border-radius: 50%; background: rgba(41,189,95,.13); font-size: 0; }
+  .client-mobile-shell[data-client-page="pedido-sucesso"] .icone span { display: grid; width: 58px; height: 58px; place-items: center; border-radius: 50%; background: #21a957; color: #fff; font-size: 2rem; box-shadow: 0 0 0 9px rgba(41,189,95,.08); }
+  .client-mobile-shell[data-client-page="pedido-sucesso"] .success-kicker { color: #62dc91; font-size: .75rem; font-weight: 800; letter-spacing: .12em; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="pedido-sucesso"] h1 { margin-top: 7px; color: var(--client-text); font-size: 1.75rem; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="pedido-sucesso"] .sucesso > p { margin: 9px auto 0; color: var(--client-muted); font-size: .9rem; line-height: 1.6; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="pedido-sucesso"] .pedido-info { display: grid; margin: 24px 0 18px; padding: 4px 16px; border: 1px solid var(--client-border); border-radius: 17px; background: var(--client-surface-raised); }
+  .client-mobile-shell[data-client-page="pedido-sucesso"] .pedido-info > div { display: flex; min-height: 58px; align-items: center; justify-content: space-between; gap: 14px; border-bottom: 1px solid var(--client-border); }
+  .client-mobile-shell[data-client-page="pedido-sucesso"] .pedido-info > div:last-child { border-bottom: 0; }
+  .client-mobile-shell[data-client-page="pedido-sucesso"] .pedido-info span { color: var(--client-muted); font-size: .82rem; }
+  .client-mobile-shell[data-client-page="pedido-sucesso"] .pedido-info strong { color: var(--client-text); font-size: .92rem; }
+  .client-mobile-shell[data-client-page="pedido-sucesso"] .success-steps { display: grid; grid-template-columns: repeat(3,1fr); margin: 0 0 22px; padding: 0; list-style: none; }
+  .client-mobile-shell[data-client-page="pedido-sucesso"] .success-steps li { position: relative; display: grid; justify-items: center; gap: 7px; color: #767b83; font-size: .72rem; }
+  .client-mobile-shell[data-client-page="pedido-sucesso"] .success-steps li:not(:last-child)::after { position: absolute; top: 15px; left: calc(50% + 19px); width: calc(100% - 38px); height: 2px; background: #343941; content: ""; }
+  .client-mobile-shell[data-client-page="pedido-sucesso"] .success-steps li > span { display: grid; z-index: 1; width: 32px; height: 32px; place-items: center; border-radius: 50%; background: #292d34; }
+  .client-mobile-shell[data-client-page="pedido-sucesso"] .success-steps .active { color: #62dc91; }
+  .client-mobile-shell[data-client-page="pedido-sucesso"] .success-steps .active > span { background: #21a957; color: #fff; }
+  .client-mobile-shell[data-client-page="pedido-sucesso"] .acoes { display: grid; gap: 10px; }
+  .client-mobile-shell[data-client-page="pedido-sucesso"] .btn { min-height: 54px; margin: 0; padding: 14px 17px; align-items: center; justify-content: space-between; border-radius: 15px; font-size: .9rem; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="pedido-sucesso"] .btn.secundario { justify-content: center; border: 1px solid var(--client-border); background: var(--client-surface-raised); color: var(--client-text); }
+
+  /* Histórico: filtros roláveis e cards de ação sem aperto. */
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="meus-pedidos"] .orders-main { padding: 14px 12px 28px; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="meus-pedidos"] .orders-intro { padding: 20px 18px; border: 1px solid #30343a; border-radius: 20px; background: linear-gradient(135deg,#171a20,#25191e); box-shadow: none; }
+  .client-mobile-shell[data-client-page="meus-pedidos"] .orders-intro h2 { margin: 8px 0 7px; font-size: 1.35rem; }
+  .client-mobile-shell[data-client-page="meus-pedidos"] .orders-intro p { color: #b6bac2; font-size: .85rem; }
+  .client-mobile-shell[data-client-page="meus-pedidos"] .orders-total { margin-top: 16px; border-radius: 14px; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="meus-pedidos"] .order-filters { margin: 14px 0 10px; border-color: var(--client-border); background: var(--client-surface); scroll-snap-type: x proximity; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="meus-pedidos"] .order-filters button { min-height: 46px; color: var(--client-muted); scroll-snap-align: start; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="meus-pedidos"] .order-filters button span { background: #292d34; color: #c5c8ce; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="meus-pedidos"] .order-filters button.active { background: var(--client-red); color: #fff; box-shadow: none; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="meus-pedidos"] .order-card { gap: 14px; padding: 19px 17px; border-color: var(--client-border); background: var(--client-surface); box-shadow: none; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="meus-pedidos"] :is(.order-number,.order-store,.order-price) { color: var(--client-text); }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="meus-pedidos"] :is(.order-date,.order-items,.payment-label,.results-row p) { color: var(--client-muted); }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="meus-pedidos"] .order-side { border-color: var(--client-border); }
+  .client-mobile-shell[data-client-page="meus-pedidos"] .order-actions { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .client-mobile-shell[data-client-page="meus-pedidos"] .order-actions > * { min-height: 48px; }
+  .client-mobile-shell[data-client-page="meus-pedidos"] .order-actions > :only-child { grid-column: 1/-1; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="meus-pedidos"] :is(.action-secondary,.action-cancel) { border-color: #3a404a; background: #23272e; color: #f1f2f4; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="meus-pedidos"] :is(.orders-empty,.orders-loading) { border-color: #373c45; background: var(--client-surface); color: var(--client-muted); }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="meus-pedidos"] .orders-empty h2 { color: var(--client-text); }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="meus-pedidos"] .cancel-dialog-panel { border: 1px solid var(--client-border); background: var(--client-surface); color: var(--client-text); }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="meus-pedidos"] .cancel-dialog-panel p { color: var(--client-muted); }
+
+  /* Acompanhamento: status primeiro, recibo e conversa abaixo. */
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="acompanhamento"] .track-main { padding: 14px 12px 28px; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="acompanhamento"] .track-hero { padding: 22px 18px; border: 1px solid #623039; border-radius: 20px; background: linear-gradient(135deg,#b91827,#631923); box-shadow: none; }
+  .client-mobile-shell[data-client-page="acompanhamento"] .track-hero h2 { font-size: 1.45rem; }
+  .client-mobile-shell[data-client-page="acompanhamento"] .eta { margin-top: 17px; padding: 15px; border-radius: 15px; background: rgba(10,12,15,.28); color: #fff; }
+  .client-mobile-shell[data-client-page="acompanhamento"] .eta small { color: #f0b5ba; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="acompanhamento"] .track-card { margin-top: 12px; padding: 18px 16px; border-color: var(--client-border); border-radius: 18px; background: var(--client-surface); box-shadow: none; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="acompanhamento"] .track-card h2 { color: var(--client-text); font-size: 1.05rem; }
+  .client-mobile-shell[data-client-page="acompanhamento"] .timeline li { min-height: 72px; padding-bottom: 14px; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="acompanhamento"] .timeline li:not(:last-child)::before { background: #343941; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="acompanhamento"] .timeline li > span { width: 44px; height: 44px; background: #2a2e35; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="acompanhamento"] .timeline strong { color: var(--client-text); font-size: .9rem; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="acompanhamento"] .timeline small { color: var(--client-muted); font-size: .78rem; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="acompanhamento"] :is(.item-track,.receipt-totals,.receipt-total,.track-card dl div) { border-color: var(--client-border); }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="acompanhamento"] :is(.item-track strong,.item-track>span,.receipt-totals strong,.receipt-totals b,.track-card dd) { color: var(--client-text); }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="acompanhamento"] :is(.item-track small,.receipt-totals>div,.track-card dt) { color: var(--client-muted); }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="acompanhamento"] :is(.order-note,.chat-messages) { background: #1e2228; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="acompanhamento"] .chat-message { background: #292d34; color: var(--client-text); box-shadow: none; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="acompanhamento"] .chat-message.mine { background: #3a1c22; }
+  .client-mobile-shell[data-client-page="acompanhamento"] .chat-form { display: grid; grid-template-columns: minmax(0,1fr) auto; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="acompanhamento"] .chat-form input { min-height: 48px; border-color: #3b414b; background: #101216; color: var(--client-text); }
+  .client-mobile-shell[data-client-page="acompanhamento"] .chat-form button { min-width: 74px; min-height: 48px; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="acompanhamento"] :is(.btn-outline,.icon-action) { min-height: 46px; border-color: #3b414b; background: #23272e; color: var(--client-text); }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="acompanhamento"] .review-card textarea { background: #101216; color: var(--client-text); }
+  .client-mobile-shell[data-client-page="acompanhamento"] .stars { gap: 2px; }
+  .client-mobile-shell[data-client-page="acompanhamento"] .stars button { min-width: 48px; min-height: 48px; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="acompanhamento"] :is(.post-order-actions,.help) { border: 1px solid var(--client-border); background: #1b1e23; box-shadow: none; }
+  .client-mobile-shell[data-client-page="acompanhamento"] :is(.post-order-actions button,.help a,.review-submit) { min-height: 48px; }
+
+  /* Favoritos, endereços, dados e privacidade compartilham cartões consistentes. */
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="favoritos"] .page-main,
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="enderecos"] .page-main,
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="dados"] .page-main,
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="privacidade"] .page-main { padding: 14px 12px 28px; }
+  html[data-theme="dark"] .client-mobile-shell :is(.item-card,.empty) { border-color: var(--client-border); background: var(--client-surface); color: var(--client-text); box-shadow: none; }
+  html[data-theme="dark"] .client-mobile-shell .item-card p,
+  html[data-theme="dark"] .client-mobile-shell .empty p,
+  html[data-theme="dark"] .client-mobile-shell .muted { color: var(--client-muted); }
+  .client-mobile-shell[data-client-page="favoritos"] .restaurant-row { display: grid; grid-template-columns: 76px minmax(0,1fr); gap: 13px; padding: 14px; border-radius: 17px; }
+  .client-mobile-shell[data-client-page="favoritos"] .restaurant-row > img { width: 76px; height: 76px; object-fit: cover; border-radius: 14px; background: #0f1114; }
+  .client-mobile-shell[data-client-page="favoritos"] .restaurant-row .actions { grid-column: 1/-1; display: grid; grid-template-columns: 1fr auto; margin: 0; }
+  .client-mobile-shell[data-client-page="favoritos"] .restaurant-row .btn { min-height: 48px; }
+  html[data-theme="dark"] .client-mobile-shell .btn.secundario { border-color: #3b4049; background: #23272e; color: var(--client-text); }
+  .client-mobile-shell[data-client-page="enderecos"] .page-card { padding: 18px 15px; }
+  .client-mobile-shell[data-client-page="enderecos"] .grid { gap: 14px; }
+  html[data-theme="dark"] .client-mobile-shell .field label { color: #e3e5e9; }
+  .client-mobile-shell :is(.field input,.field select,.field textarea) { min-height: 50px; font-size: 1rem; }
+  .client-mobile-shell[data-client-page="enderecos"] .item-card { padding: 17px 15px; }
+  .client-mobile-shell[data-client-page="enderecos"] .item-card .actions { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .client-mobile-shell[data-client-page="enderecos"] .item-card .actions .btn { min-height: 48px; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="dados"] .foto-editor { padding: 17px; border-color: #3b3033; background: #21191d; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="dados"] .foto-status { background: #282c33; color: #c6cad1; }
+  .client-mobile-shell[data-client-page="dados"] .foto-acoes { grid-template-columns: 1fr; }
+  .client-mobile-shell[data-client-page="dados"] .foto-acoes .foto-escolher { grid-column: auto; }
+  .client-mobile-shell[data-client-page="dados"] .foto-acoes .btn { min-height: 48px; }
+  .client-mobile-shell[data-client-page="privacidade"] .page-card { padding: 21px 18px; }
+  .client-mobile-shell[data-client-page="privacidade"] .page-card h2 { margin: 26px 0 8px; font-size: 1.1rem; }
+  .client-mobile-shell[data-client-page="privacidade"] .page-card p { color: #c1c5cc; font-size: .9rem; line-height: 1.7; }
+  .client-mobile-shell[data-client-page="privacidade"] .page-card a { color: #ff727c; }
+
+  /* Perfil: resumo rápido, menu de conta e fidelidade em uma coluna. */
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="perfil"] .perfil-container { padding: 14px 12px 28px; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="perfil"] :is(.usuario-card,.resumo-card,.painel-card) { border: 1px solid var(--client-border); background: var(--client-surface); color: var(--client-text); box-shadow: none; }
+  .client-mobile-shell[data-client-page="perfil"] .usuario-card { padding: 18px 15px; border-radius: 19px; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="perfil"] :is(.usuario-info h2,.secao-cabecalho h2,.menu-texto strong,.resumo-card strong) { color: var(--client-text); }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="perfil"] :is(.usuario-info p,.menu-texto small,.resumo-card span:last-child,.progresso-card p) { color: var(--client-muted); }
+  .client-mobile-shell[data-client-page="perfil"] .resumo-conta { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .client-mobile-shell[data-client-page="perfil"] .resumo-card { min-height: 84px; }
+  .client-mobile-shell[data-client-page="perfil"] .painel-card { padding: 18px 15px; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="perfil"] .menu-item { min-height: 68px; border-color: #343941; background: #1d2026; color: var(--client-text); }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="perfil"] .restaurante-menu-item { border-color: #4d3930; background: #221b18; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="perfil"] .loyalty-row { border-color: #4b4129; background: #211f17; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="perfil"] .loyalty-empty { background: #1d2026; color: var(--client-muted); }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="perfil"] .progresso-trilha { background: #30343b; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="perfil"] :is(.acao-secundaria,.sair) { min-height: 48px; border-color: #4a3438; background: #21191d; color: #ff7781; }
+
+  /* Suporte: formulário primeiro e histórico legível. */
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="suporte"] .support-main { padding: 14px 12px 28px; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="suporte"] .support-hero { padding: 22px 18px; border: 1px solid var(--client-border); border-radius: 20px; background: linear-gradient(135deg,#171a20,#281a20); box-shadow: none; }
+  .client-mobile-shell[data-client-page="suporte"] .support-hero h2 { font-size: 1.55rem; }
+  .client-mobile-shell[data-client-page="suporte"] .support-hero p { color: #bdc1c9; font-size: .85rem; }
+  .client-mobile-shell[data-client-page="suporte"] .support-hero aside { margin-top: 16px; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="suporte"] .support-card { padding: 18px 15px; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="suporte"] .support-card label > span { color: #d9dce1; font-size: .82rem; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="suporte"] :is(.support-card input,.support-card select,.support-card textarea) { min-height: 50px; border-color: #3b414b; background: #101216; color: var(--client-text); font-size: 1rem; }
+  .client-mobile-shell[data-client-page="suporte"] .support-card form button { width: 100%; min-height: 50px; font-size: .9rem; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="suporte"] .ticket { border-color: var(--client-border); background: #1d2026; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="suporte"] .ticket p { color: #c3c7ce; font-size: .85rem; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="suporte"] .ticket-response { background: #18271f; color: #a9dfbd; }
+
+  /* Estados e cabeçalhos comuns. */
+  .client-mobile-shell :is(.orders-header,.track-header,.support-header,.page-header,.perfil-header-inner) { min-height: 68px; }
+  .client-mobile-shell :is(.orders-header,.track-header,.support-header,.page-header) h1,
+  .client-mobile-shell .perfil-header h1 { color: var(--client-text); font-size: 1.15rem; }
+  html[data-theme="dark"] .client-mobile-shell .erro-aplicacao { border: 1px solid #653038; background: #2b191e; color: #ffadb5; }
+  .client-mobile-shell :is(.empty,.orders-empty,.orders-loading,.support-loading,.ticket-empty,.perfil-loading) { min-height: 120px; padding: 28px 18px; }
+  .client-mobile-shell :is(.btn,.action-primary,.action-secondary,.action-cancel,.review-submit,.btn-outline,.btn-payment) { min-height: 44px; }
+}
+
+@media (max-width: 370px) {
+  .client-mobile-shell[data-client-page="pedido-sucesso"] .sucesso { padding-inline: 15px; }
+  .client-mobile-shell[data-client-page="meus-pedidos"] .order-actions { grid-template-columns: 1fr; }
+  .client-mobile-shell[data-client-page="meus-pedidos"] .order-actions > * { grid-column: 1; }
+  .client-mobile-shell[data-client-page="acompanhamento"] .track-header .live span { display: none; }
+}

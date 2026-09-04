@@ -35,7 +35,7 @@ test("camada mobile possui JavaScript e CSS próprios", () => {
   const shared = read("js/core/site-enhancements.js");
   assert.doesNotMatch(shared, /CLIENT_NAV_PAGES|client-bottom-nav|navItems/);
   assert.match(read("sw.js"), /client-mobile-4\.5\.js\?v=4\.5\.0/);
-  assert.match(read("sw.js"), /client-mobile-4\.5\.css\?v=4\.5\.2/);
+  assert.match(read("sw.js"), /client-mobile-4\.5\.css\?v=4\.5\.7/);
 });
 
 test("assets mobile são carregados somente nas páginas do cliente", () => {
@@ -55,7 +55,7 @@ test("assets mobile são carregados somente nas páginas do cliente", () => {
   ];
   for (const page of clientPages) {
     const html = read(page);
-    assert.match(html, /client-mobile-4\.5\.css\?v=4\.5\.2/, `${page} deve carregar o CSS mobile`);
+    assert.match(html, /client-mobile-4\.5\.css\?v=4\.5\.7/, `${page} deve carregar o CSS mobile`);
     assert.match(html, /client-mobile-4\.5\.js\?v=4\.5\.0/, `${page} deve carregar o JS mobile`);
     assert.ok(html.indexOf("client-mobile-4.5.js") < html.indexOf("site-enhancements.js"), `${page} deve preparar o tema antes da camada compartilhada`);
   }
@@ -158,4 +158,44 @@ test("checkout mobile concentra entrega, pagamento, revisão e envio", () => {
   assert.match(css, /body\[data-client-page="checkout"\][^{]*\{[^}]*padding-bottom:calc\(94px \+ env\(safe-area-inset-bottom\)\)/s);
   assert.match(css, /\.payment-options\{grid-template-columns:1fr/);
   assert.match(css, /#finalizarPedido\{width:100%;max-width:none;min-height:56px/);
+});
+
+test("confirmação mobile leva diretamente ao acompanhamento real", () => {
+  const html = read("html/pedido-sucesso.html");
+  const js = read("js/pages/pedido-sucesso.js");
+  const css = read("css/modules/client-mobile-4.5.css");
+  for (const id of ["tituloSucesso", "numeroPedido", "previsaoPedido", "acompanharPedido"]) assert.match(html, new RegExp(`id="${id}"`));
+  assert.match(js, /acompanhamento\.html\?id=/);
+  assert.match(js, /encodeURIComponent\(pedido\.id\)/);
+  assert.match(css, /data-client-page="pedido-sucesso"/);
+  assert.match(css, /\.success-steps/);
+  assert.match(read("sw.js"), /pedido-sucesso\.js\?v=4\.5\.7/);
+});
+
+test("pedidos e acompanhamento mobile preservam dados reais e ações", () => {
+  const pedidos = read("js/pages/meus-pedidos.js");
+  const acompanhamento = read("js/pages/acompanhamento.js");
+  const css = read("css/modules/client-mobile-4.5.css");
+  assert.match(pedidos, /from\("pedidos"\)/);
+  assert.match(pedidos, /cliente_solicitar_cancelamento/);
+  assert.match(pedidos, /PosPedido\?\.pedirNovamente/);
+  assert.match(acompanhamento, /postgres_changes/);
+  assert.match(acompanhamento, /pedido_mensagens/);
+  assert.match(acompanhamento, /avaliacoes/);
+  assert.match(css, /data-client-page="meus-pedidos"/);
+  assert.match(css, /data-client-page="acompanhamento"/);
+  assert.match(css, /\.order-actions\s*\{[^}]*display:\s*grid;[^}]*grid-template-columns:\s*repeat\(2/s);
+});
+
+test("favoritos, perfil, endereços, dados e suporte recebem acabamento mobile", () => {
+  const css = read("css/modules/client-mobile-4.5.css");
+  for (const page of ["favoritos", "perfil", "enderecos", "dados", "suporte", "privacidade"]) {
+    assert.match(css, new RegExp(`data-client-page="${page}"`), `CSS mobile sem ${page}`);
+  }
+  assert.match(read("js/pages/favoritos.js"), /empresas_catalogo/);
+  assert.match(read("js/pages/perfil.js"), /totalPontosPerfil/);
+  assert.match(read("js/pages/enderecos.js"), /from\("enderecos"\)/);
+  assert.match(read("js/pages/dados.js"), /storage\.from\("avatars"\)/);
+  assert.match(read("js/pages/suporte.js"), /abrir_chamado_suporte/);
+  assert.match(css, /min-height:\s*50px/);
 });
