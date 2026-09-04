@@ -544,6 +544,8 @@ html[data-theme="dark"] .client-mobile-shell {
   .client-mobile-shell .theme-toggle-profile { min-height: 48px; }
   .client-mobile-shell .app-toast-region { bottom: calc(var(--client-nav-height) + env(safe-area-inset-bottom) + 12px); }
   .client-mobile-shell .network-banner { bottom: calc(var(--client-nav-height) + env(safe-area-inset-bottom) + 8px); }
+  .client-mobile-shell .network-banner:not(.show) { visibility: hidden; opacity: 0; pointer-events: none; }
+  .client-mobile-shell .network-banner.show { visibility: visible; opacity: 1; }
   .client-mobile-shell[data-client-page="checkout"] .app-toast-region,
   .client-mobile-shell[data-client-page="restaurante"] .app-toast-region { bottom: calc(16px + env(safe-area-inset-bottom)); }
 }
