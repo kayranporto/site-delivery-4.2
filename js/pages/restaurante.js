@@ -33,6 +33,11 @@ function normalizar(valor) {
     return String(valor || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 }
 
+function varianteRepresentaTamanho(variante) {
+    const rotulo = normalizar(variante?.nome).replace(/\s+/g, " ").trim();
+    return /^(?:tamanho )?(?:pp|p|m|g|gg|xg|pequeno|pequena|medio|media|grande|extra grande|broto|familia)$/.test(rotulo);
+}
+
 function criarImagem(src, alt, fallback) {
     const imagem = document.createElement("img");
     imagem.src = src || fallback;
@@ -260,7 +265,7 @@ async function carregarProdutos() {
             .filter((vinculo) => gruposObrigatorios.has(String(vinculo.grupo_id)))
             .map((vinculo) => String(vinculo.produto_id)));
         produtos = produtos.map((produto) => {
-            const variantesProduto = porProduto.get(String(produto.id)) || [];
+            const variantesProduto = (porProduto.get(String(produto.id)) || []).filter((variante) => !varianteRepresentaTamanho(variante));
             return { ...produto, variantes: variantesProduto, requer_configuracao: variantesProduto.length > 0 || configuracaoObrigatoria.has(String(produto.id)) };
         });
     }
