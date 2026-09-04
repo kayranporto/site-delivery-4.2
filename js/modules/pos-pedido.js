@@ -1,6 +1,9 @@
 "use strict";
 
 (function iniciarPosPedido() {
+    const emPastaHtml = /\/html\/[^/]+\.html$/i.test(location.pathname);
+    const paginaCliente = (caminho) => emPastaHtml ? caminho : `html/${caminho}`;
+
     function chaveProduto(produto) {
         const adicionais = (produto.adicionais || [])
             .map((item) => String(item.id))
@@ -156,7 +159,7 @@
 
             if (!carrinho.length) {
                 avisar("Itens indisponíveis", "Os itens deste pedido não estão mais disponíveis. Vamos abrir o cardápio para você escolher outras opções.", "warning", 6500);
-                setTimeout(() => { location.href = `restaurante.html?id=${encodeURIComponent(empresa.id)}`; }, 900);
+                setTimeout(() => { location.href = paginaCliente(`restaurante.html?id=${encodeURIComponent(empresa.id)}`); }, 900);
                 return;
             }
 
@@ -184,7 +187,7 @@
                     `${itensIgnorados} ${itensIgnorados === 1 ? "item indisponível foi removido" : "itens indisponíveis foram removidos"} do pedido repetido.`
                 );
             }
-            location.href = "checkout.html";
+            location.href = paginaCliente("checkout.html");
         } catch (error) {
             console.error("Erro ao repetir pedido:", error);
             avisar("Não foi possível repetir o pedido", App.mensagemErro(error), "error", 6500);

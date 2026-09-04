@@ -24,7 +24,7 @@
   <link href="css/core/accessibility.css?v=4.2.0" rel="stylesheet"/>
   <link href="css/pages/home-4.2.1.css?v=4.2.1.4" rel="stylesheet"/>
   <link href="css/core/enhancements.css?v=4.4.6" rel="stylesheet"/>
-  <link href="css/modules/client-mobile-4.5.css?v=4.5.0" rel="stylesheet"/>
+  <link href="css/modules/client-mobile-4.5.css?v=4.5.1" rel="stylesheet"/>
   <link href="assets/favicon.svg" rel="icon" type="image/svg+xml"/>
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#ea1d2c">
@@ -44,6 +44,7 @@
   <header class="header">
     <div class="container-header">
       <a class="logo" href="index.html" aria-label="Delivery — página inicial"><span aria-hidden="true">🍔</span><span>Multi Delivery</span></a>
+      <p class="client-mobile-greeting" id="saudacaoCliente">Olá! <span aria-hidden="true">👋</span></p>
       <button class="location" id="seletorEndereco" type="button" aria-label="Selecionar endereço de entrega">
         <span aria-hidden="true">📍</span><span class="location-content"><small>Entregar em</small><strong id="enderecoAtual">Selecionar endereço</strong></span>
       </button>
@@ -75,6 +76,14 @@
         <div><span class="stat-icon" aria-hidden="true">🍽</span><strong>Parceiros</strong><span>restaurantes disponíveis</span></div><div><span class="stat-icon" aria-hidden="true">⌕</span><strong>Busca</strong><span>por prato ou categoria</span></div><div><span class="stat-icon" aria-hidden="true">📦</span><strong>Status</strong><span>acompanhe o pedido</span></div><div><span class="stat-icon" aria-hidden="true">💳</span><strong>Flexível</strong><span>formas de pagamento</span></div>
       </div>
     </section>
+    <section class="client-home-quick" id="pedirNovamente" hidden aria-labelledby="pedirNovamenteTitulo">
+      <div class="client-section-heading"><h2 id="pedirNovamenteTitulo">Pedir novamente</h2><a href="html/meus-pedidos.html">Ver histórico <span aria-hidden="true">›</span></a></div>
+      <div class="client-repeat-list" id="listaPedirNovamente"></div>
+    </section>
+    <section class="client-home-quick" id="favoritosInicio" hidden aria-labelledby="favoritosInicioTitulo">
+      <div class="client-section-heading"><h2 id="favoritosInicioTitulo">Favoritos</h2><a href="html/favoritos.html">Ver todos <span aria-hidden="true">›</span></a></div>
+      <div class="client-favorites-list" id="listaFavoritosInicio"></div>
+    </section>
     <section class="cupom" aria-labelledby="cupomTitulo">
       <div class="cupom-box"><div class="cupom-copy"><span class="cupom-badge">OFERTAS</span><div><h2 id="cupomTitulo">Cupons e promoções quando disponíveis</h2><p>Cada restaurante pode oferecer benefícios próprios. Confira as condições antes de finalizar o pedido.</p></div><a class="cupom-action" href="#destaques">Explorar ofertas <span aria-hidden="true">→</span></a></div><img alt="Ilustração de cupom promocional" decoding="async" height="300" loading="lazy" src="assets/promo.svg" width="520"/></div>
     </section>
@@ -96,6 +105,6 @@
   </main>
   <footer><div class="footer-container"><div><h2>🍔 Multi Delivery</h2><p>Comida boa na sua porta.</p></div><div><h3>Cliente</h3><p><a href="html/perfil.html">Minha conta</a></p><p><a href="html/meus-pedidos.html">Meus pedidos</a></p><p><a href="html/suporte.html">Ajuda</a></p><p><a href="html/privacidade.html">Privacidade</a></p></div><div><h3>Restaurante</h3><p><a href="html/empresa-cadastro.html">Cadastrar restaurante</a></p><p><a href="html/empresa-login.html">Área do parceiro</a></p></div><div><h3>Entregador</h3><p><a href="html/entregador.html">Quero fazer entregas</a></p><p><a href="html/entregador.html">Painel do entregador</a></p></div></div><div class="copyright">© 2026 Multi Delivery</div></footer>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.111.0" defer></script>
-  <script src="js/core/app-utils.js?v=4.4.6" defer></script><script src="js/core/supabase.js?v=4.2.0" defer></script><script src="js/core/config.js?v=4.4.6" defer></script><script src="js/core/monitoring.js?v=4.2.0" defer></script><script src="js/core/notifications.js?v=4.2.0" defer></script><script src="js/core/favorites-sync.js?v=4.2.1" defer></script><script src="js/pages/home.js?v=4.4.6" defer></script><script src="js/core/client-mobile-4.5.js?v=4.5.0" defer></script><script src="js/core/site-enhancements.js?v=4.4.6" defer></script>
+  <script src="js/core/app-utils.js?v=4.4.6" defer></script><script src="js/core/supabase.js?v=4.2.0" defer></script><script src="js/core/config.js?v=4.4.6" defer></script><script src="js/core/monitoring.js?v=4.2.0" defer></script><script src="js/core/notifications.js?v=4.2.0" defer></script><script src="js/core/favorites-sync.js?v=4.2.1" defer></script><script src="js/modules/pos-pedido.js?v=4.5.1" defer></script><script src="js/pages/home.js?v=4.5.1" defer></script><script src="js/core/client-mobile-4.5.js?v=4.5.0" defer></script><script src="js/core/site-enhancements.js?v=4.4.6" defer></script>
 </body>
 </html>
