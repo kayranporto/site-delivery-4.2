@@ -26,6 +26,8 @@ html[data-theme="dark"] .client-mobile-shell {
 }
 
 .client-bottom-nav { display: none; }
+.client-mobile-shell .network-banner:not(.show) { visibility: hidden; opacity: 0; pointer-events: none; }
+.client-mobile-shell .network-banner.show { visibility: visible; opacity: 1; }
 .client-mobile-greeting,
 .client-home-quick { display: none; }
 
