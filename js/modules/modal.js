@@ -14,6 +14,8 @@ const menosQtd = document.getElementById("menosQtd");
 const maisQtd = document.getElementById("maisQtd");
 const quantidadeSpan = document.getElementById("quantidade");
 const precoFinal = document.getElementById("precoFinal");
+const modalPrecoBase = document.getElementById("modalPrecoBase");
+const observacaoContador = document.getElementById("observacaoContador");
 const confirmarProduto = document.getElementById("confirmarProduto");
 
 let produtoAtual = null;
@@ -59,6 +61,31 @@ function varianteRepresentaTamanho(variante) {
 
 function precoBaseAtual() {
     return varianteSelecionada ? precoVariante(varianteSelecionada) : precoProduto(produtoAtual);
+}
+
+function selecoesDoGrupo(grupoId) {
+    return listaAdicionais.querySelectorAll(`input[data-grupo-id="${CSS.escape(grupoId)}"]:checked`).length;
+}
+
+function atualizarEstadoDosGrupos() {
+    if (!adicionaisCarregados) {
+        confirmarProduto.disabled = true;
+        return false;
+    }
+    let valido = true;
+    gruposAtuais.forEach((grupo) => {
+        const selecionados = selecoesDoGrupo(grupo.id);
+        const completo = selecionados >= grupo.minimo && selecionados <= grupo.maximo;
+        const bloco = listaAdicionais.querySelector(`[data-grupo-id="${CSS.escape(grupo.id)}"]`);
+        bloco?.setAttribute("data-completo", String(completo));
+        const badge = bloco?.querySelector(".grupo-adicional-status");
+        if (badge) badge.textContent = grupo.minimo > 0 ? (completo ? "Completo" : "Obrigatório") : "Opcional";
+        const contador = bloco?.querySelector(".grupo-adicional-contador");
+        if (contador) contador.textContent = `${selecionados}/${grupo.maximo}`;
+        if (!completo) valido = false;
+    });
+    confirmarProduto.disabled = !valido;
+    return valido;
 }
 
 function fechar() {
@@ -164,15 +191,26 @@ async function carregarAdicionais(produtoId, solicitacao) {
         const bloco = document.createElement("fieldset");
         bloco.className = "grupo-adicional";
         bloco.dataset.grupoId = grupo.id;
+        bloco.dataset.obrigatorio = String(grupo.minimo > 0);
 
         const titulo = document.createElement("legend");
         titulo.textContent = grupo.nome || "Adicionais";
         bloco.append(titulo);
 
+        const status = document.createElement("span");
+        status.className = "grupo-adicional-status";
+        status.textContent = grupo.minimo > 0 ? "Obrigatório" : "Opcional";
+        bloco.append(status);
+
         const regra = document.createElement("small");
+        regra.className = "grupo-adicional-regra";
         regra.textContent = grupo.minimo > 0
             ? (grupo.maximo === grupo.minimo ? `Escolha ${grupo.minimo}` : `Escolha de ${grupo.minimo} até ${grupo.maximo}`)
             : `Escolha até ${grupo.maximo}`;
+        const contador = document.createElement("span");
+        contador.className = "grupo-adicional-contador";
+        contador.textContent = `0/${grupo.maximo}`;
+        regra.append(" • ", contador);
         bloco.append(regra);
 
         if (!adicionais.length) {
@@ -192,8 +230,13 @@ async function carregarAdicionais(produtoId, solicitacao) {
             input.dataset.preco = String(Number(adicional.preco || 0));
             input.dataset.nome = adicional.nome || "Adicional";
             const texto = document.createElement("span");
-            texto.textContent = `${adicional.nome || "Adicional"} (+ ${App.dinheiro(adicional.preco)})`;
-            label.append(input, texto);
+            texto.className = "adicional-copy";
+            const nome = document.createElement("strong");
+            nome.textContent = adicional.nome || "Adicional";
+            const preco = document.createElement("small");
+            preco.textContent = Number(adicional.preco || 0) > 0 ? `+ ${App.dinheiro(adicional.preco)}` : "Sem acréscimo";
+            texto.append(nome, preco);
+            label.append(texto, input);
             bloco.append(label);
         });
 
@@ -201,6 +244,7 @@ async function carregarAdicionais(produtoId, solicitacao) {
     });
 
     adicionaisCarregados = true;
+    atualizarEstadoDosGrupos();
     return true;
 }
 
@@ -218,7 +262,9 @@ async function abrirModalProduto(produto) {
     modalImagem.addEventListener("error", () => { modalImagem.src = "../assets/produto-padrao.svg"; }, { once: true });
     modalNome.textContent = produto.nome || "Produto";
     modalDescricao.textContent = produto.descricao || "";
+    modalPrecoBase.textContent = App.dinheiro(precoProduto(produto));
     quantidadeSpan.textContent = "1";
+    observacaoContador.textContent = "0/300";
     menosQtd.disabled = true;
     maisQtd.disabled = false;
     confirmarProduto.disabled = true;
@@ -236,7 +282,7 @@ async function abrirModalProduto(produto) {
         if (solicitacao !== solicitacaoModal || !modal.classList.contains("aberto")) return;
         if (!variantesCarregadas || !adicionaisCarregadosOk) return;
         atualizarPreco();
-        confirmarProduto.disabled = false;
+        atualizarEstadoDosGrupos();
     } catch (error) {
         console.error("Erro ao carregar adicionais:", error);
         listaAdicionais.replaceChildren();
@@ -252,6 +298,7 @@ async function abrirModalProduto(produto) {
 function atualizarPreco() {
     if (!produtoAtual) return;
     let total = precoBaseAtual();
+    modalPrecoBase.textContent = App.dinheiro(total);
     listaAdicionais.querySelectorAll("input:checked").forEach((input) => {
         total += Number(input.dataset.preco || 0);
     });
@@ -294,6 +341,11 @@ listaAdicionais.addEventListener("change", (event) => {
         }
     }
     atualizarPreco();
+    atualizarEstadoDosGrupos();
+});
+
+observacao.addEventListener("input", () => {
+    observacaoContador.textContent = `${observacao.value.length}/300`;
 });
 
 maisQtd.addEventListener("click", () => {
