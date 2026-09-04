@@ -19,6 +19,7 @@
     const taxa = document.getElementById("taxa");
     const total = document.getElementById("total");
     const footerTotal = document.getElementById("footerTotal");
+    const finalizarTotal = document.getElementById("finalizarPedidoTotal");
     const stepEndereco = document.getElementById("stepEndereco");
     const stepPagamento = document.getElementById("stepPagamento");
     const stepRevisao = document.getElementById("stepRevisao");
@@ -112,6 +113,7 @@
         marcarValorPendente(taxa, totalPendente, "Taxa de entrega");
         marcarValorPendente(total, totalPendente, "Total do pedido");
         marcarValorPendente(footerTotal, totalPendente, "Total do pedido");
+        marcarValorPendente(finalizarTotal, totalPendente, "Total do pedido");
 
         if (previsao) {
             if (!possuiEndereco) definirTexto(previsao, "Selecione um endereço para calcular a entrega");
@@ -168,7 +170,7 @@
             if (fastLane) fastLane.dataset.estado = "ok";
             definirTexto(fastStatus, `${rotuloPagamento(formaPagamento)} e endereço já preenchidos. Confira o total e confirme.`);
             definirTexto(fastBadge, "Pronto para enviar");
-            definirTexto(finalizarTexto, "Confirmar pedido");
+            definirTexto(finalizarTexto, "Fazer pedido");
         }
         if (submitStatus && !cliqueProtegido) {
             if (!quantidade) definirTexto(submitStatus, "Seu carrinho precisa ter pelo menos um item.");
