@@ -548,6 +548,62 @@ html[data-theme="dark"] .client-mobile-shell {
   .client-mobile-shell[data-client-page="restaurante"] .app-toast-region { bottom: calc(16px + env(safe-area-inset-bottom)); }
 }
 
+/* Multi Delivery 4.6.2 — perfil compacto e elementos flutuantes sem sobreposição. */
+@media (max-width: 768px) {
+  .client-mobile-shell .install-app { display: none !important; }
+  .client-mobile-shell[data-client-page="perfil"] .notification-center {
+    top: calc(10px + env(safe-area-inset-top));
+    right: 12px;
+    bottom: auto;
+  }
+  .client-mobile-shell[data-client-page="perfil"] .notification-trigger {
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--client-border);
+    border-radius: 50%;
+    background: var(--client-surface);
+    box-shadow: none;
+  }
+  .client-mobile-shell[data-client-page="perfil"] .notification-panel {
+    top: 52px;
+    right: 0;
+    bottom: auto;
+  }
+  .client-mobile-shell[data-client-page="perfil"] .perfil-header-inner { min-height: 62px; padding-block: 8px; padding-right: 66px; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="perfil"] .perfil-container { padding: 10px 10px calc(var(--client-nav-height) + 28px); }
+  .client-mobile-shell[data-client-page="perfil"] .usuario-card {
+    grid-template-columns: 52px minmax(0,1fr);
+    gap: 11px;
+    padding: 14px 13px;
+    border-radius: 16px;
+  }
+  .client-mobile-shell[data-client-page="perfil"] .avatar { width: 52px; height: 52px; border-width: 3px; font-size: 17px; }
+  .client-mobile-shell[data-client-page="perfil"] .avatar-camera { width: 25px; height: 25px; border-width: 2px; font-size: 10px; }
+  .client-mobile-shell[data-client-page="perfil"] .boas-vindas { margin: 0; font-size: .7rem; }
+  .client-mobile-shell[data-client-page="perfil"] .usuario-info h2 { font-size: 1.05rem; }
+  .client-mobile-shell[data-client-page="perfil"] .usuario-info > p { margin: 2px 0 6px; font-size: .68rem; }
+  .client-mobile-shell[data-client-page="perfil"] .usuario-meta { display: flex; gap: 4px 10px; font-size: .62rem; }
+  .client-mobile-shell[data-client-page="perfil"] .editar-perfil { min-height: 42px; font-size: .75rem; }
+  .client-mobile-shell[data-client-page="perfil"] .resumo-conta { gap: 7px; margin: 8px 0; }
+  .client-mobile-shell[data-client-page="perfil"] .resumo-card { min-height: 70px; gap: 8px; padding: 10px; border-radius: 13px; }
+  .client-mobile-shell[data-client-page="perfil"] .resumo-icone { width: 34px; height: 34px; border-radius: 10px; font-size: .9rem; }
+  .client-mobile-shell[data-client-page="perfil"] .resumo-card strong { font-size: .96rem; }
+  .client-mobile-shell[data-client-page="perfil"] .resumo-card span:last-child { font-size: .58rem; }
+  .client-mobile-shell[data-client-page="perfil"] :is(.perfil-grid,.perfil-principal,.perfil-lateral) { gap: 8px; }
+  .client-mobile-shell[data-client-page="perfil"] .painel-card { padding: 14px 13px; border-radius: 15px; }
+  .client-mobile-shell[data-client-page="perfil"] .secao-cabecalho { margin-bottom: 13px; }
+  .client-mobile-shell[data-client-page="perfil"] .secao-kicker { font-size: .58rem; }
+  .client-mobile-shell[data-client-page="perfil"] .secao-cabecalho h2 { font-size: 1rem; }
+  .client-mobile-shell[data-client-page="perfil"] .pedido-conteudo { min-height: 112px; }
+  .client-mobile-shell[data-client-page="perfil"] .pedido-atual { gap: 12px; }
+  .client-mobile-shell[data-client-page="perfil"] .pedido-restaurante h3 { font-size: .95rem; }
+  .client-mobile-shell[data-client-page="perfil"] .pedido-acao { min-height: 46px; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="perfil"] .menu-item { min-height: 58px; padding: 10px 11px; border-radius: 13px; }
+  .client-mobile-shell[data-client-page="perfil"] .menu-icone { width: 36px; height: 36px; border-radius: 10px; font-size: 1rem; }
+  .client-mobile-shell[data-client-page="perfil"] .menu-texto strong { font-size: .75rem; }
+  .client-mobile-shell[data-client-page="perfil"] .menu-texto small { font-size: .58rem; }
+}
+
 @media (max-width: 370px) {
   .client-bottom-nav { padding-inline: 3px; }
   .client-bottom-nav a { font-size: .61rem; }
@@ -933,4 +989,13 @@ html[data-theme="dark"] .client-mobile-shell {
   .client-mobile-shell[data-client-page="meus-pedidos"] .order-actions { grid-template-columns: 1fr; }
   .client-mobile-shell[data-client-page="meus-pedidos"] .order-actions > * { grid-column: 1; }
   .client-mobile-shell[data-client-page="acompanhamento"] .track-header .live span { display: none; }
+}
+
+@media (max-width: 768px) {
+  .client-mobile-shell[data-client-page="perfil"] .perfil-header-inner { min-height: 62px; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="perfil"] .perfil-container { padding: 10px 10px calc(var(--client-nav-height) + 28px); }
+  .client-mobile-shell[data-client-page="perfil"] .usuario-card { padding: 14px 13px; border-radius: 16px; }
+  .client-mobile-shell[data-client-page="perfil"] .resumo-card { min-height: 70px; }
+  .client-mobile-shell[data-client-page="perfil"] .painel-card { padding: 14px 13px; border-radius: 15px; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="perfil"] .menu-item { min-height: 58px; }
 }
