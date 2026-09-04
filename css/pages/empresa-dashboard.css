@@ -174,3 +174,80 @@ html[data-theme=dark] body .restaurant-management-mobile a.active{border-color:#
   html[data-theme=dark] body #promocoes .promo-card p,html[data-theme=dark] body #avaliacoes .review-admin-card p,html[data-theme=dark] body #financeiro .finance-note{color:#b6bbc4}
   html[data-theme=dark] body #promocoes .promo-card button{background:#2b3037;color:#f3f4f6}
 }
+
+/* Redesign mobile aprovado — painel do restaurante 4.6 */
+.restaurant-mobile-logo,.mobile-order-tabs{display:none}
+@media(max-width:620px){
+  html{background:#050607;color-scheme:dark}
+  body{--ink:#f7f7f8;--ink-2:#e8e9eb;--muted:#9a9da3;--line:#2b2e33;--page:#08090b;--surface:#121417;min-height:100vh;color:#f7f7f8;background:#08090b}
+  .dashboard-shell{min-height:100vh;background:radial-gradient(circle at 85% -8%,rgba(239,36,53,.1),transparent 26%),#08090b}
+  .dashboard-header{top:0;min-height:94px;gap:12px;padding:calc(14px + env(safe-area-inset-top)) 16px 13px;color:#fff;background:rgba(5,6,7,.96);border-color:#24272c;backdrop-filter:blur(18px)}
+  .menu-toggle{display:none}
+  .restaurant-mobile-logo{display:grid;width:56px;height:56px;flex:none;place-items:center;border:2px solid #ef2435;border-radius:50%;background:#111318 center/cover no-repeat;font-size:25px;box-shadow:0 0 0 3px #050607}
+  .restaurant-mobile-logo.has-image{background-size:cover}
+  .header-copy span{display:block;color:#999da5;font-size:10px;letter-spacing:.08em}
+  .header-copy h1{max-width:none;margin-top:3px;color:#fff;font-size:17px;line-height:1.25}
+  .header-copy h1:after{content:"  • Unidade principal";display:block;margin-top:4px;color:#9a9da3;font-size:11px;font-weight:500}
+  .header-actions{gap:7px}
+  .alert-button{position:relative;min-width:46px;min-height:46px;padding:0;color:#fff;background:#121417;border-color:#2d3036;border-radius:50%;font-size:17px}
+  .alert-button:after{content:"";position:absolute;right:5px;top:5px;width:8px;height:8px;background:#ef2435;border:2px solid #08090b;border-radius:50%}
+  .alert-button.active{background:#18291f;border-color:#315e40}
+  .logout-button{display:none}
+  .dashboard-main{gap:16px;padding:18px 14px calc(92px + env(safe-area-inset-bottom))}
+  .dashboard-overview{gap:16px}
+  .approval-alert{padding:15px;color:#ffd990;background:#211b10;border-color:#57431d;border-radius:16px}
+  .overview-hero{padding:0!important;overflow:visible;background:none;border-radius:0;box-shadow:none}
+  .overview-hero:after{display:none}
+  .overview-copy h2{margin:0 0 7px!important;color:#fff;font-size:24px!important;line-height:1.2}
+  .overview-copy p{color:#9ea1a8;font-size:14px;line-height:1.5}
+  .eyebrow{display:none}
+  .store-control{display:flex!important;align-items:center;min-width:0;margin:17px 0 0!important;padding:16px!important;background:linear-gradient(135deg,#15171a,#101113);border:1px solid #2d3035;border-radius:17px!important}
+  .store-control small{color:#8f939a;font-size:10px}.store-control strong{color:#42d46f;font-size:14px}
+  .store-switch{margin:0 0 0 auto!important}.store-switch em{font-size:11px}
+  .dashboard-toolbar{padding:0}.dashboard-toolbar>div{display:flex;color:#8e9299}.dashboard-toolbar strong{color:#eee}
+  .dashboard-toolbar label{width:auto;color:#9a9da3}.dashboard-toolbar select{min-width:118px;min-height:44px;color:#fff;background:#15171a;border-color:#30343a}
+  #visaoGeral .metrics-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0;padding:0;overflow:visible}
+  #visaoGeral .metric-card{min-width:0;min-height:118px;align-items:flex-start;padding:15px;background:linear-gradient(145deg,#17191d,#111316);border-color:#2c3035;border-radius:17px;box-shadow:none}
+  #visaoGeral .metric-card:last-child{grid-column:1/-1;min-height:94px}
+  .metric-icon{width:38px;height:38px;border-radius:12px}
+  .metric-card.red .metric-icon{color:#ff5360;background:#40191e}.metric-card.orange .metric-icon{color:#ff9b42;background:#3b2817}.metric-card.green .metric-icon{color:#49d67a;background:#183323}.metric-card.blue .metric-icon{color:#79a0ff;background:#172446}.metric-card.purple .metric-icon{color:#b795ff;background:#2a2042}
+  .metric-card small{color:#a2a5ab;font-size:11px}.metric-card strong{color:#fff;font-size:21px}.metric-card p{color:#777b83;font-size:10px}
+  .analytics-grid{gap:12px}.dashboard-card,.orders-section,.management-section{color:#f5f5f6;background:#111316;border-color:#2d3035;box-shadow:none}
+  .dashboard-card{padding:17px 15px}.section-heading h2,.section-heading h3,.dashboard-card>h3{color:#fff}.section-heading p{color:#9a9da3;font-size:12px}.section-heading>span{color:#999da4}.section-kicker{color:#ff4755}
+  #visaoGeral .sales-chart{height:180px}.chart-grid{stroke:#2b2e33}.chart-label{fill:#858990}.chart-point{fill:#111316}.top-product strong,.top-product>em{color:#f5f5f6}.top-product small{color:#90949b}.product-bar{background:#2b2e33}
+
+  .restaurant-management-mobile{position:fixed;inset:auto 0 0;z-index:70;display:grid;grid-template-columns:repeat(5,1fr);gap:0;width:100%;padding:7px 5px calc(6px + env(safe-area-inset-bottom));overflow:visible;background:rgba(10,11,13,.97);border-top:1px solid #303238;border-bottom:0;backdrop-filter:blur(20px)}
+  .restaurant-management-mobile a,.restaurant-management-mobile button{display:flex;min-width:0;min-height:58px;align-items:center;justify-content:center;flex-direction:column;gap:3px;padding:4px 2px;color:#a0a3a9;background:transparent;border:0;border-radius:10px;font-size:10px;font-weight:600;text-decoration:none}
+  .restaurant-management-mobile a span,.restaurant-management-mobile button span{font-size:22px;line-height:1}
+  .restaurant-management-mobile a.active,.restaurant-management-mobile button.active{color:#ff3544;background:transparent;border:0;box-shadow:inset 0 3px #ef2435}
+  .restaurant-management-mobile button{cursor:pointer}
+
+  .dashboard-sidebar{inset:auto 10px calc(76px + env(safe-area-inset-bottom));width:calc(100% - 20px);max-height:min(72vh,620px);padding:17px;color:#fff;background:#141619;border:1px solid #34373d;border-radius:22px;box-shadow:0 -22px 60px rgba(0,0,0,.65);transform:translateY(calc(100% + 100px));overflow-y:auto}
+  .dashboard-sidebar.open{transform:translateY(0)}
+  .dashboard-brand{padding:2px 5px 14px}.dashboard-brand>span{background:#2b191a;box-shadow:none}.dashboard-sidebar nav{grid-template-columns:1fr 1fr;gap:7px}
+  .dashboard-sidebar nav a{min-height:50px;color:#c0c2c7;background:#1c1f23;border:1px solid #2c3035}.dashboard-sidebar nav a.active{color:#ff5966;background:#351a1f;box-shadow:none}.dashboard-sidebar nav a b{font-size:10px}
+  .sidebar-footer{margin-top:10px;background:#1b1d21;border-color:#30343a}.sidebar-overlay{z-index:60;background:rgba(0,0,0,.72)}
+
+  .orders-section,.management-section{padding:17px 14px;border-radius:0;background:transparent;border:0}
+  .orders-title{align-items:center}.orders-title h2{font-size:24px}.orders-title p{display:none}.refresh-button{width:44px;overflow:hidden;padding:0;color:#fff;background:#17191d;border-color:#34373d;font-size:0}.refresh-button:first-letter{font-size:20px}
+  .order-filters{margin:15px 0 12px}.search-field{background:#141619;border-color:#30343a}.search-field input{height:46px;color:#fff;font-size:14px}.order-filters>label:not(.search-field){display:none}
+  .mobile-order-tabs{display:flex;gap:8px;margin:0 -1px 16px;overflow-x:auto;scrollbar-width:none}.mobile-order-tabs::-webkit-scrollbar{display:none}
+  .mobile-order-tabs button{min-width:max-content;min-height:48px;padding:10px 17px;color:#b2b4b9;background:#17191d;border:1px solid #22252a;border-radius:999px;font-size:13px;font-weight:700}
+  .mobile-order-tabs button.active{color:#fff;background:linear-gradient(135deg,#c51d2a,#ef2435);border-color:#ef2435}
+  .kanban{display:block;overflow:visible;padding:0}.kanban-column{display:none;min-width:0;padding:0;background:transparent;border:0}.kanban-column.mobile-column-active{display:block}.kanban-column-header{display:none}.kanban-list{gap:13px}
+  .order-card{padding:17px;color:#f5f5f6;background:linear-gradient(145deg,#17191c,#111315);border-color:#373a40;border-radius:17px;box-shadow:none}
+  .order-card.new-order{border-color:#7c3037;box-shadow:inset 3px 0 #ef2435}
+  .order-card-head strong,.order-total-row strong{color:#fff;font-size:16px}.order-card-head time{color:#999da3;font-size:11px}.order-customer{padding:11px;background:#1d2024}.order-customer strong{color:#fff;font-size:13px}.order-customer span,.order-customer a{color:#a4a7ad;font-size:11px}
+  .order-item strong{color:#f1f1f2;font-size:12px}.order-item small,.order-note{font-size:11px}.order-note{color:#ffd2a1;background:#2a1e13}.order-total-row{border-color:#30343a}.payment-chip{font-size:9px}.order-action{min-height:48px;font-size:12px}.order-action.primary{background:linear-gradient(135deg,#d51e2c,#f02a3a)}.order-action.secondary{color:#e6e7e9;background:#292c31}.order-action.cancel{color:#ff606d;background:#36191e}
+
+  #cardapio .management-grid{gap:12px}#cardapio .dashboard-card{border-radius:17px}
+  .field label,.checkbox-admin{color:#f1f1f2;font-size:13px}.field input,.field select,.field textarea{min-height:50px;color:#fff;background:#181a1e;border-color:#393c42;border-radius:13px;font-size:14px}.field textarea{min-height:108px}.field input::placeholder,.field textarea::placeholder{color:#777b82}
+  .media-upload,.personalization-grid form,.link-form{background:#17191d;border-color:#383b41}.media-upload input[type=file]{color:#aaa;background:#111316}.media-upload small{color:#999da4;font-size:11px}
+  .btn{min-height:50px;color:#fff;background:linear-gradient(135deg,#d51e2c,#f02a3a);border-radius:13px;font-size:14px}.chip-admin{min-height:40px;color:#e9eaeb;background:#202328;border-color:#373b42}
+  .product-import-card{display:none}.products-table-card .table-wrap{overflow:visible;border:0}.products-table-card table{min-width:0}.products-table-card thead{display:none}.products-table-card tbody{display:grid;gap:10px}.products-table-card tr{display:grid;grid-template-columns:1fr auto;gap:4px;padding:14px;background:#181a1e;border:1px solid #34383e;border-radius:14px}.products-table-card td{display:block;padding:2px;border:0;color:#d9dade;font-size:11px}.products-table-card td:first-child{grid-column:1;color:#fff;font-size:14px}.products-table-card td:nth-child(4){display:none}.products-table-card td:nth-child(5){grid-column:2;grid-row:1}.products-table-card td:last-child{grid-column:1/-1;margin-top:7px}.products-table-card .btn-mini{min-height:40px;font-size:11px}.variants-card{display:none}
+
+  .kitchen-section,.operation-section{background:transparent}.kitchen-metrics{gap:9px}.kitchen-metrics article,.finance-grid article{background:#17191d;border-color:#34373d}.kitchen-metrics article.danger{background:#32191d;border-color:#633039}.kitchen-metrics small{font-size:10px}.kitchen-board{display:block;overflow:visible}.kitchen-column{min-width:0;margin-bottom:12px;background:#141619;border-color:#30343a}.kitchen-ticket{color:#f5f5f6;background:#1a1d21;border-color:#383c43}.kitchen-ticket .ticket-customer{color:#a8abb1}.kitchen-ticket .ticket-items,.stock-movement,.operation-item,.region-item{background:#202328;border-color:#383c43}.kitchen-ticket .ticket-items strong{font-size:12px}.kitchen-ticket .ticket-items small,.ticket-timer span{color:#a1a5ab;font-size:10px}.prep-time-select{min-height:44px;color:#fff;background:#15171a;border-color:#3a3d43}
+  .hours-row{background:#17191d;border-color:#34373d}.hours-row input[type=time],.finance-period select{color:#fff;background:#202328;border-color:#3a3e44}.operation-live{color:#58db83;background:#173320}.operation-live.closed{color:#ffb263;background:#382516}.card-help,.operation-item small,.region-item small,.finance-note{color:#a0a4aa;font-size:11px}.finance-grid strong{color:#fff}.finance-grid article.highlight{background:linear-gradient(135deg,#4b171e,#241416);border-color:#6a2830}
+  .promo-card,.review-admin-card{color:#f5f5f6!important;background:#181a1e!important;border-color:#363a40!important}.promo-card p,.review-admin-card p{color:#b5b8bd!important}.promo-card button{color:#fff!important;background:#292c31!important}.review-response-form input{color:#fff;background:#202328!important;border-color:#3a3e44!important}
+  .group-admin-card,.grupo-admin-card{background:#17191d;border-color:#35393f}.empty,.column-empty,.chart-loading,.panel-loading{color:#9b9fa5}
+}
