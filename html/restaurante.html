@@ -12,7 +12,7 @@
 <link href="../css/modules/carrinho.css?v=4.2.0" rel="stylesheet"/>
 <link href="../css/modules/modal.css?v=4.2.0" rel="stylesheet"/>
 <link href="../css/core/accessibility.css?v=4.2.0" rel="stylesheet"/>
-<link href="../css/modules/restaurante-4.2.2.css?v=4.5.2" rel="stylesheet"/>
+<link href="../css/modules/restaurante-4.2.2.css?v=4.5.4" rel="stylesheet"/>
 <link href="../css/modules/carrinho-4.2.5.css?v=4.2.6" rel="stylesheet"/>
 <link href="../css/core/enhancements.css?v=4.4.6" rel="stylesheet"/>
 <link href="../css/modules/client-mobile-4.5.css?v=4.5.2" rel="stylesheet"/>
@@ -95,17 +95,24 @@
 <button class="fechar-modal" type="button">×</button>
 <img alt="Produto" id="modalImagem" src=""/>
 <div class="modal-body">
+<div class="produto-modal-resumo">
+<div>
 <h2 id="modalNome"></h2>
 <p id="modalDescricao"></p>
-<div id="blocoVariantes" hidden><h3>Escolha uma opção</h3><div id="listaVariantes"></div></div>
-<h3>Escolha os adicionais</h3>
-<div id="listaAdicionais"></div>
-<h3>Observações</h3>
-<textarea aria-label="Observações do produto" id="observacao" maxlength="300" placeholder="Ex: sem cebola, molho à parte..."></textarea>
-<div class="quantidade-modal">
-<button id="menosQtd" type="button">−</button><span id="quantidade">1</span><button id="maisQtd" type="button">+</button>
 </div>
-<button id="confirmarProduto" type="button">Adicionar ao carrinho • <span id="precoFinal">R$ 0,00</span></button>
+<strong id="modalPrecoBase">R$ 0,00</strong>
+</div>
+<div id="blocoVariantes" hidden><h3>Escolha uma opção</h3><div id="listaVariantes"></div></div>
+<div class="produto-secao-titulo"><h3>Adicionais</h3><span>Personalize seu pedido</span></div>
+<div id="listaAdicionais"></div>
+<div class="produto-secao-titulo produto-secao-titulo--observacao"><h3>Observações</h3><span id="observacaoContador">0/300</span></div>
+<textarea aria-label="Observações do produto" id="observacao" maxlength="300" placeholder="Ex: sem cebola, molho à parte..."></textarea>
+<div class="produto-modal-rodape">
+<div class="quantidade-modal" aria-label="Quantidade do produto">
+<button id="menosQtd" type="button">−</button><span id="quantidade" aria-live="polite">1</span><button id="maisQtd" type="button">+</button>
+</div>
+<button id="confirmarProduto" type="button">Adicionar • <span id="precoFinal" aria-live="polite">R$ 0,00</span></button>
+</div>
 </div>
 </div>
 </div>
@@ -117,7 +124,7 @@
 <script defer src="../js/core/favorites-sync.js?v=4.2.1"></script>
 <script defer src="../js/pages/restaurante.js?v=4.5.3"></script>
 <script defer src="../js/modules/carrinho.js?v=4.2.6"></script>
-<script defer src="../js/modules/modal.js?v=4.5.3"></script>
+<script defer src="../js/modules/modal.js?v=4.5.4"></script>
 <script defer src="../js/modules/carrinho-4.2.5.js?v=4.2.6"></script>
 <script defer src="../js/core/client-mobile-4.5.js?v=4.5.0"></script>
 <script defer src="../js/core/site-enhancements.js?v=4.4.6"></script>

@@ -30,6 +30,6 @@ test("cabeçalho mantém nome abaixo do banner e limita a sobreposição ao logo
   assert.match(css, /\.info-restaurante>div\{min-width:0;padding-top:42px\}/);
   assert.match(css, /\.info-restaurante h1\{[^}]*overflow-wrap:anywhere/);
   assert.match(css, /@media\(max-width:680px\).*\.banner-restaurante\{height:clamp\(170px,55vw,240px\)\}.*\.info-restaurante\{[^}]*margin-top:-32px/s);
-  assert.match(html, /restaurante-4\.2\.2\.css\?v=4\.5\.2/);
-  assert.match(sw, /restaurante-4\.2\.2\.css\?v=4\.5\.2/);
+  assert.match(html, /restaurante-4\.2\.2\.css\?v=4\.5\.4/);
+  assert.match(sw, /restaurante-4\.2\.2\.css\?v=4\.5\.4/);
 });
