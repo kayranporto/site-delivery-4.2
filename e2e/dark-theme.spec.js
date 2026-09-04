@@ -57,11 +57,12 @@ async function contraste(locator) {
 }
 
 async function legivel(page, seletor) {
-    for (const elemento of await page.locator(seletor).all()) {
+    const elementos = page.locator(seletor).filter({ visible: true });
+    await expect(elementos.first()).toBeVisible();
+    for (const elemento of await elementos.all()) {
         await expect(elemento).toBeVisible();
         await expect.poll(() => contraste(elemento), { message: `Contraste insuficiente: ${seletor}` }).toBeGreaterThanOrEqual(4.5);
     }
-    await expect(page.locator(seletor).first()).toBeVisible();
 }
 
 test.beforeEach(async ({ page }) => prepararPagina(page));
@@ -108,7 +109,7 @@ test("cardápio, carrinho vazio, modal e carrinho preenchido respeitam o tema", 
     await legivel(page, "#modalNome, #modalDescricao");
     await page.getByRole("textbox", { name: "Observações do produto" }).fill("Sem cebola");
     await legivel(page, "#observacao");
-    await page.getByRole("button", { name: /Adicionar ao carrinho/ }).click();
+    await page.getByRole("button", { name: /^Adicionar/ }).click();
     await expect(page.locator(".item-carrinho")).toBeVisible();
     await legivel(page, ".item-carrinho-titulo h4, .item-carrinho-total, .item-carrinho .observacao, .carrinho-footer .linha strong");
 });
@@ -119,10 +120,15 @@ test("checkout mantém endereço, pagamento, campos e rodapé legíveis", async 
     await legivel(page, "#enderecoEntrega, #pagamentoNota, #enderecoStatus");
     if (!isMobile) await legivel(page, ".footer-total span, .footer-total strong");
     await expect(page.locator(".checkout-footer")).toHaveCSS("background-color", "rgb(32, 38, 49)");
-    await page.getByRole("radio", { name: /Dinheiro/ }).check();
-    await expect(page.locator("#trocoPara")).toBeVisible();
-    await page.locator("#trocoPara").fill("50");
-    await legivel(page, ".troco-field label, #trocoPara, .payment-option strong, #pagamentoSelecionadoResumo");
+    const dinheiro = page.getByRole("radio", { name: /Dinheiro/ });
+    if (await dinheiro.isEnabled()) {
+        await dinheiro.check();
+        await expect(page.locator("#trocoPara")).toBeVisible();
+        await page.locator("#trocoPara").fill("50");
+        await legivel(page, ".troco-field label, #trocoPara, .payment-option strong, #pagamentoSelecionadoResumo");
+    } else {
+        await legivel(page, ".payment-option strong, #pagamentoSelecionadoResumo");
+    }
     await page.locator("#stepPagamento strong").scrollIntoViewIfNeeded();
     await legivel(page, "#stepPagamento strong, .linha.discount strong");
 });

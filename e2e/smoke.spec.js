@@ -34,6 +34,11 @@ test("Home carrega, oferece busca e filtros acessíveis", async ({ page, isMobil
     await page.keyboard.press("Control+K");
     await expect(busca).toBeFocused();
 
+    if (isMobile) {
+        await page.getByRole("button", { name: "Voltar para o início" }).click();
+        await expect(page.locator("#buscaMobile")).toBeHidden();
+    }
+
     const pizza = page.locator('.categoria[data-categoria="Pizza"]');
     await pizza.click();
     await expect(pizza).toHaveAttribute("aria-pressed", "true");
