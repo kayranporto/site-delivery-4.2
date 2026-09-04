@@ -24,7 +24,7 @@
   <link href="css/core/accessibility.css?v=4.2.0" rel="stylesheet"/>
   <link href="css/pages/home-4.2.1.css?v=4.2.1.4" rel="stylesheet"/>
   <link href="css/core/enhancements.css?v=4.4.6" rel="stylesheet"/>
-  <link href="css/modules/client-mobile-4.5.css?v=4.5.7" rel="stylesheet"/>
+  <link href="css/modules/client-mobile-4.5.css?v=4.6.0" rel="stylesheet"/>
   <link href="assets/favicon.svg" rel="icon" type="image/svg+xml"/>
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#ea1d2c">
@@ -53,6 +53,37 @@
       <button class="cart" id="abrirCarrinho" type="button" aria-label="Abrir carrinho">🛒<span class="cart-count">0</span></button>
     </div>
   </header>
+  <section class="client-search-view" id="buscaMobile" aria-labelledby="buscaMobileTitulo" hidden>
+    <div class="client-search-header">
+      <button class="client-search-back" id="fecharBuscaMobile" type="button" aria-label="Voltar para o início">←</button>
+      <h1 id="buscaMobileTitulo">Buscar</h1>
+      <span aria-hidden="true"></span>
+    </div>
+    <label class="client-search-field" for="campoBuscaMobile"><span aria-hidden="true">⌕</span><input id="campoBuscaMobile" type="search" maxlength="120" autocomplete="off" placeholder="Restaurante, prato ou categoria"/><button id="limparBuscaMobile" type="button" aria-label="Limpar busca" hidden>×</button></label>
+    <div class="client-search-content">
+      <section class="client-search-discovery" id="descobertaBuscaMobile">
+        <div class="client-search-title"><h2>Buscas recentes</h2><button type="button" id="limparHistoricoBusca">Limpar</button></div>
+        <div class="client-search-chips" id="historicoBuscaMobile"><span class="client-search-empty">Suas buscas aparecerão aqui.</span></div>
+        <div class="client-search-title"><h2>Que tal buscar por</h2></div>
+        <div class="client-search-suggestions" aria-label="Sugestões de busca">
+          <button type="button" data-search-mobile="Hambúrguer"><span>🍔</span>Hambúrguer</button>
+          <button type="button" data-search-mobile="Pizza"><span>🍕</span>Pizza</button>
+          <button type="button" data-search-mobile="Sushi"><span>🍣</span>Sushi</button>
+          <button type="button" data-search-mobile="Doces"><span>🍰</span>Doces</button>
+        </div>
+      </section>
+      <section class="client-search-results" id="resultadosBuscaMobile" hidden aria-labelledby="resultadosBuscaTitulo">
+        <div class="client-search-title"><div><small>PERTO DE VOCÊ</small><h2 id="resultadosBuscaTitulo">Restaurantes</h2></div><span id="totalBuscaMobile" aria-live="polite"></span></div>
+        <div class="client-search-filters" aria-label="Filtros da busca">
+          <button type="button" data-mobile-filter="abertoAgora" aria-pressed="false">Aberto agora</button>
+          <button type="button" data-mobile-filter="entregaGratis" aria-pressed="false">Entrega grátis</button>
+          <button type="button" data-mobile-filter="ordenarPorTempo" aria-pressed="false">Mais rápidos</button>
+          <button type="button" data-mobile-filter="ordenarPorTaxa" aria-pressed="false">Menor taxa</button>
+        </div>
+        <div class="cards client-search-cards" id="listaBuscaMobile"></div>
+      </section>
+    </div>
+  </section>
   <main>
     <section class="banner" aria-labelledby="heroTitulo">
       <span class="hero-orb hero-orb-one" aria-hidden="true"></span><span class="hero-orb hero-orb-two" aria-hidden="true"></span><span class="hero-orb hero-orb-three" aria-hidden="true"></span>
@@ -95,7 +126,7 @@
     </section>
     <section class="restaurantes" id="restaurantes" aria-labelledby="restaurantesTitulo">
       <div class="section-title"><div><span class="eyebrow">Perto de você</span><h2 id="restaurantesTitulo">Restaurantes em destaque</h2></div><a href="#restaurantes" id="verTodosRestaurantes">Ver todos <span aria-hidden="true">→</span></a></div>
-      <div class="restaurant-tools" aria-label="Ferramentas de filtro e ordenação de restaurantes"><button type="button" id="toggleAberto" class="filter-pill" aria-pressed="false">Aberto agora</button><button type="button" id="ordenarTaxa" class="filter-pill" aria-pressed="false">Menor taxa</button><div class="resultado-info" id="resultadoResumo" aria-live="polite">Mostrando restaurantes disponíveis.</div></div>
+      <div class="restaurant-tools" aria-label="Ferramentas de filtro e ordenação de restaurantes"><button type="button" id="toggleAberto" class="filter-pill" aria-pressed="false">Aberto agora</button><button type="button" id="toggleGratis" class="filter-pill" aria-pressed="false">Entrega grátis</button><button type="button" id="ordenarTempo" class="filter-pill" aria-pressed="false">Mais rápidos</button><button type="button" id="ordenarTaxa" class="filter-pill" aria-pressed="false">Menor taxa</button><div class="resultado-info" id="resultadoResumo" aria-live="polite">Mostrando restaurantes disponíveis.</div></div>
       <div class="cards" id="listaRestaurantes"><div class="loading">Carregando restaurantes...</div></div>
     </section>
     <section class="destaques" id="destaques" aria-labelledby="destaquesTitulo"><div class="section-title"><div><span class="eyebrow">Os favoritos da galera</span><h2 id="destaquesTitulo">🔥 Mais pedidos</h2></div></div><div class="produtos" id="listaProdutos"></div></section>
@@ -105,6 +136,6 @@
   </main>
   <footer><div class="footer-container"><div><h2>🍔 Multi Delivery</h2><p>Comida boa na sua porta.</p></div><div><h3>Cliente</h3><p><a href="html/perfil.html">Minha conta</a></p><p><a href="html/meus-pedidos.html">Meus pedidos</a></p><p><a href="html/suporte.html">Ajuda</a></p><p><a href="html/privacidade.html">Privacidade</a></p></div><div><h3>Restaurante</h3><p><a href="html/empresa-cadastro.html">Cadastrar restaurante</a></p><p><a href="html/empresa-login.html">Área do parceiro</a></p></div><div><h3>Entregador</h3><p><a href="html/entregador.html">Quero fazer entregas</a></p><p><a href="html/entregador.html">Painel do entregador</a></p></div></div><div class="copyright">© 2026 Multi Delivery</div></footer>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.111.0" defer></script>
-  <script src="js/core/app-utils.js?v=4.4.6" defer></script><script src="js/core/supabase.js?v=4.2.0" defer></script><script src="js/core/config.js?v=4.4.6" defer></script><script src="js/core/monitoring.js?v=4.2.0" defer></script><script src="js/core/notifications.js?v=4.2.0" defer></script><script src="js/core/favorites-sync.js?v=4.2.1" defer></script><script src="js/modules/pos-pedido.js?v=4.5.1" defer></script><script src="js/pages/home.js?v=4.5.1" defer></script><script src="js/core/client-mobile-4.5.js?v=4.5.0" defer></script><script src="js/core/site-enhancements.js?v=4.4.6" defer></script>
+  <script src="js/core/app-utils.js?v=4.4.6" defer></script><script src="js/core/supabase.js?v=4.2.0" defer></script><script src="js/core/config.js?v=4.4.6" defer></script><script src="js/core/monitoring.js?v=4.2.0" defer></script><script src="js/core/notifications.js?v=4.2.0" defer></script><script src="js/core/favorites-sync.js?v=4.2.1" defer></script><script src="js/modules/pos-pedido.js?v=4.5.1" defer></script><script src="js/pages/home.js?v=4.6.0" defer></script><script src="js/core/client-mobile-4.5.js?v=4.6.0" defer></script><script src="js/core/site-enhancements.js?v=4.4.6" defer></script>
 </body>
 </html>

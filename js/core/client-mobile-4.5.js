@@ -87,10 +87,9 @@
 
   function focusHomeSearch() {
     if (currentPage !== "index.html" || location.hash !== "#buscar") return;
-    const search = document.getElementById("campoBusca");
+    const search = document.getElementById("campoBuscaMobile") || document.getElementById("campoBusca");
     if (!search) return;
     requestAnimationFrame(() => {
-      search.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
       search.focus({ preventScroll: true });
     });
   }

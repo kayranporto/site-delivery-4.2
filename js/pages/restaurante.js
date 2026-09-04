@@ -106,7 +106,7 @@ async function carregarAvaliacoesPublicas() {
         else { const iniciais = document.createElement("span"); iniciais.textContent = (avaliacao.autor_nome || "Cliente").trim().charAt(0).toUpperCase(); autor.append(iniciais); }
         const nomeAutor = document.createElement("strong"); nomeAutor.textContent = avaliacao.autor_nome || "Cliente verificado"; autor.append(nomeAutor);
         const estrelas = document.createElement("span"); estrelas.className = "estrelas"; estrelas.textContent = "★".repeat(avaliacao.nota) + "☆".repeat(5 - avaliacao.nota);
-        const comentario = document.createElement("p"); comentario.textContent = avaliacao.comentario || "Cliente deixou apenas a nota.";
+        const comentario = document.createElement("p"); comentario.textContent = String(avaliacao.comentario || "").replace(/^\[Notas: Comida \d \| Entrega \d \| Embalagem \d\]\n?/i, "") || "Cliente deixou apenas a nota.";
         const dataAvaliacao = document.createElement("time"); dataAvaliacao.dateTime = avaliacao.created_at; dataAvaliacao.textContent = new Date(avaliacao.created_at).toLocaleDateString("pt-BR");
         card.append(autor, estrelas, comentario, dataAvaliacao);
         if (avaliacao.resposta) { const resposta = document.createElement("div"); resposta.className = "resposta-publica"; const titulo = document.createElement("strong"); titulo.textContent = "RESPOSTA DO RESTAURANTE"; const texto = document.createElement("p"); texto.textContent = avaliacao.resposta; resposta.append(titulo, texto); card.append(resposta); }

@@ -9,7 +9,7 @@
 <title>Pedido Realizado</title>
 <link href="../css/core/style.css?v=4.2.0" rel="stylesheet"/>
 <link href="../css/pages/pedido-sucesso.css?v=4.2.0" rel="stylesheet"/>
-<link href="../css/core/accessibility.css?v=4.2.0" rel="stylesheet"/><meta content="Pedido Realizado — plataforma de pedidos e restaurantes." name="description"/><link rel="manifest" href="../manifest.webmanifest"><meta name="theme-color" content="#ea1d2c"><link rel="stylesheet" href="../css/core/enhancements.css?v=4.4.6"><link rel="stylesheet" href="../css/modules/client-mobile-4.5.css?v=4.5.7"></head>
+<link href="../css/core/accessibility.css?v=4.2.0" rel="stylesheet"/><meta content="Pedido Realizado — plataforma de pedidos e restaurantes." name="description"/><link rel="manifest" href="../manifest.webmanifest"><meta name="theme-color" content="#ea1d2c"><link rel="stylesheet" href="../css/core/enhancements.css?v=4.4.6"><link rel="stylesheet" href="../css/modules/client-mobile-4.5.css?v=4.6.0"></head>
 <body><noscript>Este site precisa de JavaScript habilitado para funcionar.</noscript>
 <main class="success-main">
   <section class="sucesso" aria-labelledby="tituloSucesso">
@@ -21,6 +21,15 @@
       <div><span>Pedido</span><strong id="numeroPedido">—</strong></div>
       <div><span>Tempo estimado</span><strong id="previsaoPedido">30–45 minutos</strong></div>
     </div>
+    <section class="success-order-summary" id="resumoPedidoSucesso" aria-labelledby="resumoPedidoSucessoTitulo" hidden>
+      <div class="success-summary-heading"><span>RESUMO</span><h2 id="resumoPedidoSucessoTitulo">Seu pedido</h2></div>
+      <div class="success-summary-items" id="itensPedidoSucesso"></div>
+      <div class="success-summary-totals">
+        <div><span>Subtotal</span><strong id="subtotalPedidoSucesso">R$ 0,00</strong></div>
+        <div><span>Entrega</span><strong id="taxaPedidoSucesso">R$ 0,00</strong></div>
+        <div class="success-summary-total"><span>Total</span><strong id="totalPedidoSucesso">R$ 0,00</strong></div>
+      </div>
+    </section>
     <ol class="success-steps" aria-label="Próximas etapas">
       <li class="active"><span>1</span><strong>Recebido</strong></li>
       <li><span>2</span><strong>Preparando</strong></li>
@@ -32,6 +41,6 @@
     </div>
   </section>
 </main>
-<script defer src="../js/core/app-utils.js?v=4.4.6"></script><script defer src="../js/pages/pedido-sucesso.js?v=4.5.7"></script>
-<script defer src="../js/core/client-mobile-4.5.js?v=4.5.0"></script><script defer src="../js/core/site-enhancements.js?v=4.4.6"></script></body>
+<script defer src="../js/core/app-utils.js?v=4.4.6"></script><script defer src="../js/pages/pedido-sucesso.js?v=4.6.0"></script>
+<script defer src="../js/core/client-mobile-4.5.js?v=4.6.0"></script><script defer src="../js/core/site-enhancements.js?v=4.4.6"></script></body>
 </html>

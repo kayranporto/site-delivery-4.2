@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="../css/pages/acompanhamento.css?v=4.2.0"/>
   <link rel="stylesheet" href="../css/core/accessibility.css?v=4.2.0"/>
   <link rel="stylesheet" href="../css/core/enhancements.css?v=4.4.6"/>
-  <link rel="stylesheet" href="../css/modules/client-mobile-4.5.css?v=4.5.7"/>
+  <link rel="stylesheet" href="../css/modules/client-mobile-4.5.css?v=4.6.0"/>
 </head>
 <body>
   <noscript>Este site precisa de JavaScript habilitado.</noscript>
@@ -40,6 +40,12 @@
       <div class="card-title-row"><div><span class="section-kicker">LOCALIZAÇÃO AO VIVO</span><h2>Seu entregador está a caminho</h2></div><span class="map-updated" id="mapaAtualizado">Atualizando...</span></div>
       <iframe id="mapaFrame" title="Localização aproximada do entregador" loading="lazy" referrerpolicy="no-referrer"></iframe>
       <p>A posição é aproximada e atualizada enquanto o entregador está com o painel aberto.</p>
+    </section>
+
+    <section class="track-card courier-card" id="cartaoEntregador" hidden aria-labelledby="tituloEntregador">
+      <span class="courier-avatar" id="avatarEntregador" aria-hidden="true">E</span>
+      <div><small>SEU ENTREGADOR</small><h2 id="tituloEntregador">Entregador atribuído</h2><p id="statusEntregador">Preparando a retirada do pedido</p></div>
+      <button id="falarEntregador" type="button" aria-label="Falar com o entregador">💬</button>
     </section>
 
     <section class="track-card progress-card">
@@ -104,14 +110,12 @@
         <p>Sua nota ajuda outras pessoas e o restaurante a melhorar.</p>
       </div>
       <form id="avaliacaoForm">
-        <div class="stars" id="estrelasAvaliacao" role="radiogroup" aria-label="Nota do pedido">
-          <button type="button" data-nota="1" role="radio" aria-checked="false" aria-label="1 estrela">★</button>
-          <button type="button" data-nota="2" role="radio" aria-checked="false" aria-label="2 estrelas">★</button>
-          <button type="button" data-nota="3" role="radio" aria-checked="false" aria-label="3 estrelas">★</button>
-          <button type="button" data-nota="4" role="radio" aria-checked="false" aria-label="4 estrelas">★</button>
-          <button type="button" data-nota="5" role="radio" aria-checked="false" aria-label="5 estrelas">★</button>
+        <div class="rating-categories" id="estrelasAvaliacao">
+          <div class="rating-category"><span><b>Comida</b><small>Sabor e qualidade</small></span><div class="stars" data-rating-type="comida" role="radiogroup" aria-label="Nota da comida"><button type="button" data-nota="1" role="radio" aria-checked="false" aria-label="1 estrela">★</button><button type="button" data-nota="2" role="radio" aria-checked="false" aria-label="2 estrelas">★</button><button type="button" data-nota="3" role="radio" aria-checked="false" aria-label="3 estrelas">★</button><button type="button" data-nota="4" role="radio" aria-checked="false" aria-label="4 estrelas">★</button><button type="button" data-nota="5" role="radio" aria-checked="false" aria-label="5 estrelas">★</button></div></div>
+          <div class="rating-category"><span><b>Entrega</b><small>Tempo e cuidado</small></span><div class="stars" data-rating-type="entrega" role="radiogroup" aria-label="Nota da entrega"><button type="button" data-nota="1" role="radio" aria-checked="false" aria-label="1 estrela">★</button><button type="button" data-nota="2" role="radio" aria-checked="false" aria-label="2 estrelas">★</button><button type="button" data-nota="3" role="radio" aria-checked="false" aria-label="3 estrelas">★</button><button type="button" data-nota="4" role="radio" aria-checked="false" aria-label="4 estrelas">★</button><button type="button" data-nota="5" role="radio" aria-checked="false" aria-label="5 estrelas">★</button></div></div>
+          <div class="rating-category"><span><b>Embalagem</b><small>Organização e conservação</small></span><div class="stars" data-rating-type="embalagem" role="radiogroup" aria-label="Nota da embalagem"><button type="button" data-nota="1" role="radio" aria-checked="false" aria-label="1 estrela">★</button><button type="button" data-nota="2" role="radio" aria-checked="false" aria-label="2 estrelas">★</button><button type="button" data-nota="3" role="radio" aria-checked="false" aria-label="3 estrelas">★</button><button type="button" data-nota="4" role="radio" aria-checked="false" aria-label="4 estrelas">★</button><button type="button" data-nota="5" role="radio" aria-checked="false" aria-label="5 estrelas">★</button></div></div>
         </div>
-        <p class="rating-label" id="textoNota">Selecione de 1 a 5 estrelas</p>
+        <p class="rating-label" id="textoNota">Avalie os três itens de 1 a 5 estrelas</p>
         <label for="comentarioAvaliacao">Comentário <span>(opcional)</span></label>
         <textarea id="comentarioAvaliacao" maxlength="1000" rows="4" placeholder="Conte o que mais gostou ou o que poderia melhorar..."></textarea>
         <div class="review-footer">
@@ -135,8 +139,8 @@
   <script defer src="../js/core/monitoring.js?v=4.2.0"></script>
   <script defer src="../js/core/notifications.js?v=4.2.0"></script>
   <script defer src="../js/modules/pos-pedido.js?v=4.5.1"></script>
-<script defer src="../js/pages/acompanhamento.js?v=4.2.0"></script>
-  <script defer src="../js/core/client-mobile-4.5.js?v=4.5.0"></script>
+<script defer src="../js/pages/acompanhamento.js?v=4.6.0"></script>
+  <script defer src="../js/core/client-mobile-4.5.js?v=4.6.0"></script>
   <script defer src="../js/core/site-enhancements.js?v=4.4.6"></script>
 </body>
 </html>

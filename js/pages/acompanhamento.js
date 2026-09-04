@@ -4,6 +4,7 @@ let pedidoAtual = null;
 let usuarioAtual = null;
 let avaliacaoAtual = null;
 let notaAtual = 0;
+const notasAvaliacao = { comida: 0, entrega: 0, embalagem: 0 };
 let canal = null;
 let mensagensPedido = [];
 const ordem = ["recebido", "preparando", "saiu_para_entrega", "entregue"];
@@ -109,6 +110,19 @@ function renderizarAcoes(status) {
     document.getElementById("avaliacao").hidden = status !== "entregue";
 }
 
+function renderizarEntregador(pedido) {
+    const card = document.getElementById("cartaoEntregador");
+    if (!card) return;
+    const visivel = Boolean(pedido.entregador_id) || ["saiu_para_entrega", "entregue"].includes(pedido.status);
+    card.hidden = !visivel;
+    if (!visivel) return;
+    const mensagemEntregador = [...mensagensPedido].reverse().find((mensagem) => mensagem.autor_tipo === "entregador");
+    const nome = String(mensagemEntregador?.autor_nome || "Entregador atribuído").trim();
+    document.getElementById("tituloEntregador").textContent = nome;
+    document.getElementById("avatarEntregador").textContent = nome.charAt(0).toUpperCase() || "E";
+    document.getElementById("statusEntregador").textContent = pedido.status === "entregue" ? "Entrega concluída" : pedido.status === "saiu_para_entrega" ? "A caminho do seu endereço" : "Preparando a retirada do pedido";
+}
+
 function render(pedido) {
     pedidoAtual = pedido;
     const status = pedido.status || "recebido";
@@ -154,17 +168,35 @@ function render(pedido) {
     renderizarItens(pedido);
     renderizarRecibo(pedido);
     renderizarAcoes(status);
+    renderizarEntregador(pedido);
 }
 
-function selecionarNota(nota) {
-    notaAtual = Number(nota) || 0;
-    document.querySelectorAll("#estrelasAvaliacao button").forEach((botao) => {
-        const selecionada = Number(botao.dataset.nota) <= notaAtual;
+function atualizarMediaAvaliacao() {
+    const valores = Object.values(notasAvaliacao).filter((nota) => nota > 0);
+    notaAtual = valores.length === 3 ? Math.round(valores.reduce((soma, nota) => soma + nota, 0) / 3) : 0;
+    document.getElementById("textoNota").textContent = valores.length === 3 ? textosNota[notaAtual] : `Avalie os três itens • ${valores.length}/3 concluídos`;
+}
+
+function selecionarNota(tipo, nota) {
+    if (!(tipo in notasAvaliacao)) return;
+    notasAvaliacao[tipo] = Number(nota) || 0;
+    document.querySelectorAll(`[data-rating-type="${tipo}"] button`).forEach((botao) => {
+        const selecionada = Number(botao.dataset.nota) <= notasAvaliacao[tipo];
         botao.classList.toggle("selected", selecionada);
-        botao.setAttribute("aria-checked", String(Number(botao.dataset.nota) === notaAtual));
-        botao.tabIndex = Number(botao.dataset.nota) === (notaAtual || 1) ? 0 : -1;
+        botao.setAttribute("aria-checked", String(Number(botao.dataset.nota) === notasAvaliacao[tipo]));
+        botao.tabIndex = Number(botao.dataset.nota) === (notasAvaliacao[tipo] || 1) ? 0 : -1;
     });
-    document.getElementById("textoNota").textContent = textosNota[notaAtual] || textosNota[0];
+    atualizarMediaAvaliacao();
+}
+
+function separarComentarioAvaliacao(comentario) {
+    const texto = String(comentario || "");
+    const resultado = texto.match(/^\[Notas: Comida (\d) \| Entrega (\d) \| Embalagem (\d)\]\n?/i);
+    if (!resultado) return { comentario: texto, notas: null };
+    return {
+        comentario: texto.slice(resultado[0].length),
+        notas: { comida: Number(resultado[1]), entrega: Number(resultado[2]), embalagem: Number(resultado[3]) }
+    };
 }
 
 async function carregarAvaliacao() {
@@ -179,8 +211,10 @@ async function carregarAvaliacao() {
         return;
     }
     avaliacaoAtual = data || null;
-    selecionarNota(avaliacaoAtual?.nota || 0);
-    document.getElementById("comentarioAvaliacao").value = avaliacaoAtual?.comentario || "";
+    const detalhes = separarComentarioAvaliacao(avaliacaoAtual?.comentario);
+    const notas = detalhes.notas || { comida: avaliacaoAtual?.nota || 0, entrega: avaliacaoAtual?.nota || 0, embalagem: avaliacaoAtual?.nota || 0 };
+    Object.entries(notas).forEach(([tipo, nota]) => selecionarNota(tipo, nota));
+    document.getElementById("comentarioAvaliacao").value = detalhes.comentario;
     document.getElementById("salvarAvaliacao").textContent = avaliacaoAtual ? "Atualizar avaliação" : "Enviar avaliação";
     document.getElementById("statusAvaliacao").textContent = avaliacaoAtual ? "Avaliação enviada. Você pode editá-la." : "";
     const resposta = String(avaliacaoAtual?.resposta || "").trim();
@@ -208,6 +242,7 @@ function renderizarMensagens() {
         item.append(cabecalho, texto, horario); box.append(item);
     });
     box.scrollTop = box.scrollHeight;
+    if (pedidoAtual) renderizarEntregador(pedidoAtual);
 }
 
 function atualizarMapa(localizacao) {
@@ -231,14 +266,16 @@ async function carregarRecursosTempoReal(id) {
 async function salvarAvaliacao(event) {
     event.preventDefault();
     if (!pedidoAtual || pedidoAtual.status !== "entregue" || !usuarioAtual) return;
-    if (notaAtual < 1 || notaAtual > 5) {
-        document.getElementById("statusAvaliacao").textContent = "Escolha uma nota de 1 a 5 estrelas.";
+    if (Object.values(notasAvaliacao).some((nota) => nota < 1 || nota > 5)) {
+        document.getElementById("statusAvaliacao").textContent = "Avalie comida, entrega e embalagem.";
         document.getElementById("estrelasAvaliacao").querySelector("button")?.focus();
         return;
     }
 
     const botao = document.getElementById("salvarAvaliacao");
-    const comentario = document.getElementById("comentarioAvaliacao").value.trim().slice(0, 1000);
+    const comentarioCliente = document.getElementById("comentarioAvaliacao").value.trim();
+    const marcadorNotas = `[Notas: Comida ${notasAvaliacao.comida} | Entrega ${notasAvaliacao.entrega} | Embalagem ${notasAvaliacao.embalagem}]`;
+    const comentario = `${marcadorNotas}${comentarioCliente ? `\n${comentarioCliente}` : ""}`.slice(0, 1000);
     botao.disabled = true;
     botao.textContent = "Salvando...";
     document.getElementById("statusAvaliacao").textContent = "";
@@ -320,16 +357,26 @@ async function carregar() {
 
 document.getElementById("estrelasAvaliacao").addEventListener("click", (event) => {
     const botao = event.target.closest("button[data-nota]");
-    if (botao) selecionarNota(botao.dataset.nota);
+    const grupo = botao?.closest("[data-rating-type]");
+    if (botao && grupo) selecionarNota(grupo.dataset.ratingType, botao.dataset.nota);
 });
 
 document.getElementById("estrelasAvaliacao").addEventListener("keydown", (event) => {
     if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) return;
     event.preventDefault();
+    const botao = event.target.closest("button[data-nota]");
+    const grupo = botao?.closest("[data-rating-type]");
+    if (!grupo) return;
     const delta = ["ArrowRight", "ArrowUp"].includes(event.key) ? 1 : -1;
-    const proxima = Math.min(5, Math.max(1, (notaAtual || 1) + delta));
-    selecionarNota(proxima);
-    document.querySelector(`#estrelasAvaliacao button[data-nota="${proxima}"]`)?.focus();
+    const atual = notasAvaliacao[grupo.dataset.ratingType] || 1;
+    const proxima = Math.min(5, Math.max(1, atual + delta));
+    selecionarNota(grupo.dataset.ratingType, proxima);
+    grupo.querySelector(`button[data-nota="${proxima}"]`)?.focus();
+});
+
+document.getElementById("falarEntregador")?.addEventListener("click", () => {
+    document.getElementById("chatPedido")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    document.getElementById("mensagemTexto")?.focus({ preventScroll: true });
 });
 
 document.getElementById("avaliacaoForm").addEventListener("submit", salvarAvaliacao);
@@ -366,5 +413,5 @@ addEventListener("beforeunload", () => {
     if (canal) db.removeChannel(canal);
 });
 
-selecionarNota(0);
+Object.keys(notasAvaliacao).forEach((tipo) => selecionarNota(tipo, 0));
 carregar();

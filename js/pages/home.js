@@ -9,6 +9,8 @@ const locationText = locationBox?.querySelector("strong");
 const cupomButton = document.getElementById("copiarCupom");
 const verTodos = document.getElementById("verTodosRestaurantes");
 const filtroAberto = document.getElementById("toggleAberto");
+const filtroGratis = document.getElementById("toggleGratis");
+const ordenarTempo = document.getElementById("ordenarTempo");
 const ordenarTaxa = document.getElementById("ordenarTaxa");
 const resumoResultado = document.getElementById("resultadoResumo");
 const carts = document.querySelectorAll("#abrirCarrinho, #floatingCart");
@@ -19,6 +21,14 @@ const secaoPedirNovamente = document.getElementById("pedirNovamente");
 const listaPedirNovamente = document.getElementById("listaPedirNovamente");
 const secaoFavoritosInicio = document.getElementById("favoritosInicio");
 const listaFavoritosInicio = document.getElementById("listaFavoritosInicio");
+const buscaMobile = document.getElementById("buscaMobile");
+const pesquisaMobile = document.getElementById("campoBuscaMobile");
+const listaBuscaMobile = document.getElementById("listaBuscaMobile");
+const descobertaBuscaMobile = document.getElementById("descobertaBuscaMobile");
+const resultadosBuscaMobile = document.getElementById("resultadosBuscaMobile");
+const totalBuscaMobile = document.getElementById("totalBuscaMobile");
+const historicoBuscaMobile = document.getElementById("historicoBuscaMobile");
+const BUSCAS_STORAGE_KEY = "multi-delivery-buscas-recentes";
 const TOPBAR_STORAGE_KEY = "multi-delivery-topbar-hidden";
 
 if (topbar) {
@@ -40,6 +50,8 @@ topbarClose?.addEventListener("click", () => {
 
 const filtros = {
     abertoAgora: false,
+    entregaGratis: false,
+    ordenarPorTempo: false,
     ordenarPorTaxa: false
 };
 
@@ -219,6 +231,7 @@ function renderizarEmpresas(lista) {
     if (!lista.length) {
         cards.append(criarTexto("p", "sem-restaurantes", "Nenhum restaurante encontrado."));
         atualizarResumo(0);
+        renderizarResultadoBuscaMobile([]);
         return;
     }
 
@@ -280,6 +293,17 @@ function renderizarEmpresas(lista) {
 
     cards.append(fragmento);
     atualizarResumo(lista.length);
+    renderizarResultadoBuscaMobile(lista);
+}
+
+function renderizarResultadoBuscaMobile(lista) {
+    if (!listaBuscaMobile) return;
+    listaBuscaMobile.replaceChildren(...Array.from(cards.children).map((item) => item.cloneNode(true)));
+    if (totalBuscaMobile) totalBuscaMobile.textContent = `${lista.length} ${lista.length === 1 ? "resultado" : "resultados"}`;
+    const temConsulta = Boolean(String(pesquisaMobile?.value || "").trim());
+    const temFiltro = filtros.abertoAgora || filtros.entregaGratis || filtros.ordenarPorTempo || filtros.ordenarPorTaxa;
+    if (descobertaBuscaMobile) descobertaBuscaMobile.hidden = temConsulta || temFiltro;
+    if (resultadosBuscaMobile) resultadosBuscaMobile.hidden = !temConsulta && !temFiltro;
 }
 
 function atualizarResumo(total) {
@@ -306,7 +330,8 @@ function atualizarResumo(total) {
 }
 
 function aplicarFiltros() {
-    const texto = normalizar(pesquisa?.value);
+    const buscaDedicadaAberta = location.hash === "#buscar" && buscaMobile && !buscaMobile.hidden;
+    const texto = normalizar(buscaDedicadaAberta ? pesquisaMobile?.value : pesquisa?.value);
     const categoria = normalizar(categoriaSelecionada);
 
     const resultado = empresas.filter((empresa) => {
@@ -319,10 +344,13 @@ function aplicarFiltros() {
 
         return (!texto || conteudo.includes(texto)) &&
             (!categoria || conteudo.includes(categoria)) &&
-            (!filtros.abertoAgora || empresa.abertaAgora === true);
+            (!filtros.abertoAgora || empresa.abertaAgora === true) &&
+            (!filtros.entregaGratis || Number(empresa.taxa_entrega || 0) === 0);
     });
 
-    if (filtros.ordenarPorTaxa) {
+    if (filtros.ordenarPorTempo) {
+        resultado.sort((a, b) => (Number(a?.tempo_estimado_min) || 999) - (Number(b?.tempo_estimado_min) || 999));
+    } else if (filtros.ordenarPorTaxa) {
         resultado.sort((a, b) => (Number(a?.taxa_entrega) || 0) - (Number(b?.taxa_entrega) || 0));
     }
 
@@ -566,7 +594,7 @@ function atualizarContadoresCarrinho() {
     });
 }
 
-cards?.addEventListener("click", async (event) => {
+async function tratarFavorito(event) {
     const favorito = event.target.closest("[data-favorite-id]");
     if (favorito) {
         event.preventDefault();
@@ -582,16 +610,27 @@ cards?.addEventListener("click", async (event) => {
             window.AppToast?.("Não foi possível atualizar", App.mensagemErro(erro), "error");
             return;
         }
-        favorito.textContent = favoritos.has(id) ? "❤️" : "🤍";
-        favorito.setAttribute("aria-pressed", String(favoritos.has(id)));
+        document.querySelectorAll(`[data-favorite-id="${CSS.escape(id)}"]`).forEach((botao) => {
+            botao.textContent = favoritos.has(id) ? "❤️" : "🤍";
+            botao.setAttribute("aria-pressed", String(favoritos.has(id)));
+        });
         const nomeEmpresa = favorito.closest(".card")?.querySelector("h3")?.textContent || "restaurante";
         favorito.setAttribute("aria-label", favoritos.has(id) ? `Remover ${nomeEmpresa} dos favoritos` : `Adicionar ${nomeEmpresa} aos favoritos`);
         return;
     }
 
-});
+}
+
+cards?.addEventListener("click", tratarFavorito);
+listaBuscaMobile?.addEventListener("click", tratarFavorito);
 
 pesquisa?.addEventListener("input", aplicarFiltros);
+pesquisaMobile?.addEventListener("input", () => {
+    if (pesquisa) pesquisa.value = pesquisaMobile.value;
+    const limpar = document.getElementById("limparBuscaMobile");
+    if (limpar) limpar.hidden = !pesquisaMobile.value;
+    aplicarFiltros();
+});
 
 categorias[0]?.classList.add("ativa");
 
@@ -634,8 +673,12 @@ verTodos?.addEventListener("click", (event) => {
     event.preventDefault();
     categoriaSelecionada = "";
     filtros.abertoAgora = false;
+    filtros.entregaGratis = false;
+    filtros.ordenarPorTempo = false;
     filtros.ordenarPorTaxa = false;
     filtroAberto?.classList.remove("active");
+    filtroGratis?.classList.remove("active");
+    ordenarTempo?.classList.remove("active");
     ordenarTaxa?.classList.remove("active");
     if (pesquisa) pesquisa.value = "";
     categorias.forEach((item) => item.classList.toggle("ativa", !item.dataset.categoria));
@@ -652,10 +695,122 @@ filtroAberto?.addEventListener("click", () => {
 
 ordenarTaxa?.addEventListener("click", () => {
     filtros.ordenarPorTaxa = !filtros.ordenarPorTaxa;
+    if (filtros.ordenarPorTaxa) filtros.ordenarPorTempo = false;
     ordenarTaxa.classList.toggle("active", filtros.ordenarPorTaxa);
     ordenarTaxa.setAttribute("aria-pressed", String(filtros.ordenarPorTaxa));
+    ordenarTempo?.classList.toggle("active", filtros.ordenarPorTempo);
+    ordenarTempo?.setAttribute("aria-pressed", String(filtros.ordenarPorTempo));
     aplicarFiltros();
 });
+
+filtroGratis?.addEventListener("click", () => {
+    filtros.entregaGratis = !filtros.entregaGratis;
+    filtroGratis.classList.toggle("active", filtros.entregaGratis);
+    filtroGratis.setAttribute("aria-pressed", String(filtros.entregaGratis));
+    aplicarFiltros();
+});
+
+ordenarTempo?.addEventListener("click", () => {
+    filtros.ordenarPorTempo = !filtros.ordenarPorTempo;
+    if (filtros.ordenarPorTempo) filtros.ordenarPorTaxa = false;
+    ordenarTempo.classList.toggle("active", filtros.ordenarPorTempo);
+    ordenarTempo.setAttribute("aria-pressed", String(filtros.ordenarPorTempo));
+    ordenarTaxa?.classList.toggle("active", filtros.ordenarPorTaxa);
+    ordenarTaxa?.setAttribute("aria-pressed", String(filtros.ordenarPorTaxa));
+    aplicarFiltros();
+});
+
+function lerHistoricoBusca() {
+    try {
+        const historico = JSON.parse(localStorage.getItem(BUSCAS_STORAGE_KEY) || "[]");
+        return Array.isArray(historico) ? historico.filter(Boolean).slice(0, 6) : [];
+    } catch {
+        return [];
+    }
+}
+
+function renderizarHistoricoBusca() {
+    if (!historicoBuscaMobile) return;
+    const historico = lerHistoricoBusca();
+    historicoBuscaMobile.replaceChildren();
+    if (!historico.length) {
+        historicoBuscaMobile.append(criarTexto("span", "client-search-empty", "Suas buscas aparecerão aqui."));
+        return;
+    }
+    historico.forEach((termo) => {
+        const botao = criarTexto("button", "", termo);
+        botao.type = "button";
+        botao.dataset.searchMobile = termo;
+        historicoBuscaMobile.append(botao);
+    });
+}
+
+function salvarBuscaRecente(termo) {
+    const valor = String(termo || "").trim().slice(0, 120);
+    if (valor.length < 2) return;
+    const historico = lerHistoricoBusca().filter((item) => normalizar(item) !== normalizar(valor));
+    try { localStorage.setItem(BUSCAS_STORAGE_KEY, JSON.stringify([valor, ...historico].slice(0, 6))); } catch { /* armazenamento opcional */ }
+    renderizarHistoricoBusca();
+}
+
+function aplicarTermoBuscaMobile(termo, salvar = true) {
+    if (!pesquisaMobile) return;
+    pesquisaMobile.value = String(termo || "");
+    if (pesquisa) pesquisa.value = pesquisaMobile.value;
+    const limpar = document.getElementById("limparBuscaMobile");
+    if (limpar) limpar.hidden = !pesquisaMobile.value;
+    if (salvar) salvarBuscaRecente(pesquisaMobile.value);
+    aplicarFiltros();
+    pesquisaMobile.focus();
+}
+
+function atualizarTelaBuscaMobile() {
+    if (!buscaMobile) return;
+    const aberta = location.hash === "#buscar" && matchMedia("(max-width: 768px)").matches;
+    buscaMobile.hidden = !aberta;
+    document.body.classList.toggle("client-search-open", aberta);
+    if (!aberta) {
+        if (location.hash === "#buscar") pesquisa?.focus();
+        return;
+    }
+    if (pesquisaMobile && pesquisa) pesquisaMobile.value = pesquisa.value;
+    renderizarHistoricoBusca();
+    aplicarFiltros();
+    requestAnimationFrame(() => pesquisaMobile?.focus());
+}
+
+document.getElementById("fecharBuscaMobile")?.addEventListener("click", () => {
+    history.pushState(null, "", `${location.pathname}${location.search}`);
+    atualizarTelaBuscaMobile();
+});
+document.getElementById("limparBuscaMobile")?.addEventListener("click", () => aplicarTermoBuscaMobile("", false));
+document.getElementById("limparHistoricoBusca")?.addEventListener("click", () => {
+    try { localStorage.removeItem(BUSCAS_STORAGE_KEY); } catch { /* armazenamento opcional */ }
+    renderizarHistoricoBusca();
+});
+document.querySelector(".client-search-view")?.addEventListener("click", (event) => {
+    const sugestao = event.target.closest("[data-search-mobile]");
+    if (sugestao) aplicarTermoBuscaMobile(sugestao.dataset.searchMobile);
+    const filtro = event.target.closest("[data-mobile-filter]");
+    if (!filtro) return;
+    const chave = filtro.dataset.mobileFilter;
+    if (!(chave in filtros)) return;
+    filtros[chave] = !filtros[chave];
+    if (chave === "ordenarPorTempo" && filtros[chave]) filtros.ordenarPorTaxa = false;
+    if (chave === "ordenarPorTaxa" && filtros[chave]) filtros.ordenarPorTempo = false;
+    document.querySelectorAll("[data-mobile-filter]").forEach((botao) => {
+        const ativo = Boolean(filtros[botao.dataset.mobileFilter]);
+        botao.classList.toggle("active", ativo);
+        botao.setAttribute("aria-pressed", String(ativo));
+    });
+    aplicarFiltros();
+});
+pesquisaMobile?.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") salvarBuscaRecente(pesquisaMobile.value);
+});
+addEventListener("hashchange", atualizarTelaBuscaMobile);
+addEventListener("resize", atualizarTelaBuscaMobile);
+atualizarTelaBuscaMobile();
 
 carts.forEach((cart) => {
     cart.setAttribute("aria-label", "Abrir carrinho");

@@ -34,8 +34,8 @@ test("checkout e fluxos focados não recebem navegação inferior", () => {
 test("camada mobile possui JavaScript e CSS próprios", () => {
   const shared = read("js/core/site-enhancements.js");
   assert.doesNotMatch(shared, /CLIENT_NAV_PAGES|client-bottom-nav|navItems/);
-  assert.match(read("sw.js"), /client-mobile-4\.5\.js\?v=4\.5\.0/);
-  assert.match(read("sw.js"), /client-mobile-4\.5\.css\?v=4\.5\.7/);
+  assert.match(read("sw.js"), /client-mobile-4\.5\.js\?v=4\.6\.0/);
+  assert.match(read("sw.js"), /client-mobile-4\.5\.css\?v=4\.6\.0/);
 });
 
 test("assets mobile são carregados somente nas páginas do cliente", () => {
@@ -55,8 +55,8 @@ test("assets mobile são carregados somente nas páginas do cliente", () => {
   ];
   for (const page of clientPages) {
     const html = read(page);
-    assert.match(html, /client-mobile-4\.5\.css\?v=4\.5\.7/, `${page} deve carregar o CSS mobile`);
-    assert.match(html, /client-mobile-4\.5\.js\?v=4\.5\.0/, `${page} deve carregar o JS mobile`);
+    assert.match(html, /client-mobile-4\.5\.css\?v=4\.6\.0/, `${page} deve carregar o CSS mobile`);
+    assert.match(html, /client-mobile-4\.5\.js\?v=4\.6\.0/, `${page} deve carregar o JS mobile`);
     assert.ok(html.indexOf("client-mobile-4.5.js") < html.indexOf("site-enhancements.js"), `${page} deve preparar o tema antes da camada compartilhada`);
   }
 
@@ -169,7 +169,7 @@ test("confirmação mobile leva diretamente ao acompanhamento real", () => {
   assert.match(js, /encodeURIComponent\(pedido\.id\)/);
   assert.match(css, /data-client-page="pedido-sucesso"/);
   assert.match(css, /\.success-steps/);
-  assert.match(read("sw.js"), /pedido-sucesso\.js\?v=4\.5\.7/);
+  assert.match(read("sw.js"), /pedido-sucesso\.js\?v=4\.6\.0/);
 });
 
 test("pedidos e acompanhamento mobile preservam dados reais e ações", () => {
@@ -198,4 +198,40 @@ test("favoritos, perfil, endereços, dados e suporte recebem acabamento mobile",
   assert.match(read("js/pages/dados.js"), /storage\.from\("avatars"\)/);
   assert.match(read("js/pages/suporte.js"), /abrir_chamado_suporte/);
   assert.match(css, /min-height:\s*50px/);
+});
+
+test("busca mobile dedicada possui histórico, sugestões e filtros reais", () => {
+  const home = read("index.html");
+  const js = read("js/pages/home.js");
+  const css = read("css/modules/client-mobile-4.5.css");
+  for (const id of ["buscaMobile", "campoBuscaMobile", "historicoBuscaMobile", "listaBuscaMobile", "toggleGratis", "ordenarTempo"]) {
+    assert.match(home, new RegExp(`id="${id}"`));
+  }
+  assert.match(js, /multi-delivery-buscas-recentes/);
+  assert.match(js, /entregaGratis/);
+  assert.match(js, /ordenarPorTempo/);
+  assert.match(css, /\.client-search-view/);
+  assert.match(css, /\.client-search-suggestions/);
+});
+
+test("confirmação apresenta itens e totais reais do pedido", () => {
+  const html = read("html/pedido-sucesso.html");
+  const js = read("js/pages/pedido-sucesso.js");
+  for (const id of ["resumoPedidoSucesso", "itensPedidoSucesso", "subtotalPedidoSucesso", "taxaPedidoSucesso", "totalPedidoSucesso"]) {
+    assert.match(html, new RegExp(`id="${id}"`));
+  }
+  assert.match(js, /pedido\.pedido_itens/);
+  assert.match(js, /App\.dinheiro\(pedido\.total\)/);
+});
+
+test("acompanhamento mostra entregador e avaliação por categoria", () => {
+  const html = read("html/acompanhamento.html");
+  const js = read("js/pages/acompanhamento.js");
+  const css = read("css/modules/client-mobile-4.5.css");
+  for (const label of ["Comida", "Entrega", "Embalagem"]) assert.match(html, new RegExp(label));
+  assert.match(html, /id="cartaoEntregador"/);
+  assert.match(js, /notasAvaliacao/);
+  assert.match(js, /\[Notas: Comida/);
+  assert.match(css, /\.courier-card/);
+  assert.match(css, /\.rating-category/);
 });
