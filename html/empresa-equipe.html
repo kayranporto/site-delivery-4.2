@@ -14,13 +14,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/core/accessibility.css?v=4.2.0">
-  <link rel="stylesheet" href="../css/modules/equipe-4.3.css?v=4.3.0">
+  <link rel="stylesheet" href="../css/modules/equipe-4.3.css?v=4.6.0">
   <link rel="stylesheet" href="../css/core/enhancements.css?v=4.4.6">
 </head>
 <body class="team-page">
   <noscript>Este site precisa de JavaScript habilitado para funcionar.</noscript>
   <header class="team-topbar">
-    <a class="team-brand" href="empresa-dashboard.html"><span class="team-brand-mark" aria-hidden="true">🍔</span><span>Multi Delivery</span></a>
+    <a class="team-brand" href="empresa-dashboard.html"><span class="team-brand-mark" aria-hidden="true">🍔</span><span><strong id="equipeMobileNome">Equipe</strong><small>Gestão do restaurante</small></span></a>
     <div class="team-topbar-actions">
       <a class="team-link-button" href="empresa-dashboard.html">← Painel do restaurante</a>
       <button class="team-button secondary" id="equipeLogout" type="button">Sair</button>
@@ -80,6 +80,14 @@
       </div>
     </div>
   </main>
+
+  <nav class="team-mobile-nav" aria-label="Navegação do restaurante">
+    <a href="empresa-dashboard.html#visaoGeral"><span aria-hidden="true">⌂</span>Início</a>
+    <a href="empresa-dashboard.html#pedidos"><span aria-hidden="true">▣</span>Pedidos</a>
+    <a href="empresa-dashboard.html#cardapio"><span aria-hidden="true">☷</span>Cardápio</a>
+    <a href="empresa-dashboard.html#operacao"><span aria-hidden="true">▥</span>Operação</a>
+    <a class="active" href="#conteudoPrincipal" aria-current="page"><span aria-hidden="true">•••</span>Mais</a>
+  </nav>
 
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.111.0"></script>
   <script defer src="../js/core/app-utils.js?v=4.4.6"></script>
