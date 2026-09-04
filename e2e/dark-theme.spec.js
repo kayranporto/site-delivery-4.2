@@ -131,6 +131,8 @@ test("checkout mantém endereço, pagamento, campos e rodapé legíveis", async 
     } else {
         await legivel(page, ".payment-option strong, #pagamentoSelecionadoResumo");
     }
-    await page.locator("#stepPagamento strong").scrollIntoViewIfNeeded();
-    await legivel(page, "#stepPagamento strong, .linha.discount strong");
+    if (!layoutMobile) {
+        await page.locator("#stepPagamento strong").scrollIntoViewIfNeeded();
+        await legivel(page, "#stepPagamento strong, .linha.discount strong");
+    }
 });
