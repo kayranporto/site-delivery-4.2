@@ -14,6 +14,11 @@ const resumoResultado = document.getElementById("resultadoResumo");
 const carts = document.querySelectorAll("#abrirCarrinho, #floatingCart");
 const topbar = document.querySelector(".topbar");
 const topbarClose = document.getElementById("fecharTopbar");
+const saudacaoCliente = document.getElementById("saudacaoCliente");
+const secaoPedirNovamente = document.getElementById("pedirNovamente");
+const listaPedirNovamente = document.getElementById("listaPedirNovamente");
+const secaoFavoritosInicio = document.getElementById("favoritosInicio");
+const listaFavoritosInicio = document.getElementById("listaFavoritosInicio");
 const TOPBAR_STORAGE_KEY = "multi-delivery-topbar-hidden";
 
 if (topbar) {
@@ -96,6 +101,7 @@ function iniciarHeroInterativo() {
 }
 
 let empresas = [];
+let produtosDestaque = [];
 let categoriaSelecionada = "";
 const favoritos = new Set();
 
@@ -111,6 +117,23 @@ function dinheiro(valor) {
         style: "currency",
         currency: "BRL"
     });
+}
+
+function periodoDoDia() {
+    const hora = new Date().getHours();
+    if (hora < 12) return "Bom dia";
+    if (hora < 18) return "Boa tarde";
+    return "Boa noite";
+}
+
+async function atualizarSaudacao(user) {
+    if (!saudacaoCliente) return;
+    let nome = "";
+    if (user) {
+        const { data } = await window.db.from("usuarios").select("nome").eq("id", user.id).maybeSingle();
+        nome = String(data?.nome || user.user_metadata?.nome || "").trim().split(/\s+/)[0];
+    }
+    saudacaoCliente.firstChild.textContent = `${periodoDoDia()}${nome ? `, ${nome}` : ""} `;
 }
 
 function criarTexto(tag, classe, texto) {
@@ -211,7 +234,7 @@ function renderizarEmpresas(lista) {
         link.href = `html/restaurante.html?id=${encodeURIComponent(empresa.id)}`;
         link.setAttribute("aria-label", `Abrir cardápio de ${empresa.nome}`);
 
-        link.append(imagemComFallback(empresa.logo, empresa.nome));
+        link.append(imagemComFallback(empresa.banner || empresa.logo, empresa.nome));
 
         const body = document.createElement("div");
         body.className = "card-body";
@@ -304,6 +327,7 @@ function aplicarFiltros() {
     }
 
     renderizarEmpresas(resultado);
+    aplicarBuscaProdutos(texto);
 }
 
 async function carregarEmpresas() {
@@ -336,23 +360,17 @@ async function carregarEmpresas() {
 }
 
 
-async function carregarDestaques() {
+function renderizarDestaques(lista) {
     const container = document.getElementById("listaProdutos");
     if (!container) return;
-    const { data, error } = await window.db
-        .from("produtos")
-        .select("id,nome,descricao,imagem,preco,promocao,empresa_id")
-        .eq("disponivel", true)
-        .limit(6);
-
     container.replaceChildren();
-    if (error || !data?.length) {
+    if (!lista.length) {
         const vazio = criarTexto("p", "sem-restaurantes", "Os produtos em destaque aparecerão aqui em breve.");
         container.append(vazio);
         return;
     }
 
-    data.forEach((produto) => {
+    lista.forEach((produto) => {
         const card = document.createElement("a");
         card.className = "produto-destaque";
         card.href = `html/restaurante.html?id=${encodeURIComponent(produto.empresa_id)}`;
@@ -367,6 +385,99 @@ async function carregarDestaques() {
         card.append(corpo);
         container.append(card);
     });
+}
+
+function aplicarBuscaProdutos(texto = normalizar(pesquisa?.value)) {
+    const filtrados = texto
+        ? produtosDestaque.filter((produto) => normalizar(`${produto.nome} ${produto.descricao}`).includes(texto)).slice(0, 20)
+        : produtosDestaque.slice(0, 6);
+    renderizarDestaques(filtrados);
+}
+
+async function carregarDestaques() {
+    const { data, error } = await window.db
+        .from("produtos")
+        .select("id,nome,descricao,imagem,preco,promocao,empresa_id")
+        .eq("disponivel", true)
+        .limit(80);
+    produtosDestaque = error || !Array.isArray(data) ? [] : data;
+    aplicarBuscaProdutos();
+}
+
+function renderizarFavoritosInicio() {
+    if (!secaoFavoritosInicio || !listaFavoritosInicio) return;
+    const selecionadas = empresas.filter((empresa) => favoritos.has(String(empresa.id))).slice(0, 6);
+    listaFavoritosInicio.replaceChildren();
+    secaoFavoritosInicio.hidden = selecionadas.length === 0;
+    selecionadas.forEach((empresa) => {
+        const card = document.createElement("article");
+        card.className = "client-favorite-card";
+        const link = document.createElement("a");
+        link.href = `html/restaurante.html?id=${encodeURIComponent(empresa.id)}`;
+        link.append(imagemComFallback(empresa.logo, empresa.nome));
+        const corpo = document.createElement("div");
+        corpo.append(
+            criarTexto("h3", "", empresa.nome || "Restaurante"),
+            criarTexto("p", "", `${empresa.quantidade_avaliacoes ? `★ ${Number(empresa.nota_media).toFixed(1)} · ` : ""}${Number(empresa.tempo_estimado_min || 25)}–${Number(empresa.tempo_estimado_max || 45)} min`),
+            criarTexto("small", "", `${dinheiro(empresa.taxa_entrega)} taxa de entrega`)
+        );
+        link.append(corpo);
+        const remover = criarTexto("button", "client-favorite-toggle", "♥");
+        remover.type = "button";
+        remover.setAttribute("aria-label", `Remover ${empresa.nome} dos favoritos`);
+        remover.addEventListener("click", async () => {
+            try {
+                await window.FavoritesSync?.toggle(String(empresa.id));
+                favoritos.delete(String(empresa.id));
+                aplicarFiltros();
+                renderizarFavoritosInicio();
+            } catch (erro) {
+                window.AppToast?.("Não foi possível atualizar", App.mensagemErro(erro), "error");
+            }
+        });
+        card.append(link, remover);
+        listaFavoritosInicio.append(card);
+    });
+}
+
+async function carregarPedidosRecentes(user) {
+    if (!user || !secaoPedirNovamente || !listaPedirNovamente) return;
+    const { data: pedidosRecentes, error } = await window.db.from("pedidos")
+        .select("id,empresa_id,empresa_nome,status,created_at,pedido_itens(*)")
+        .eq("usuario_id", user.id)
+        .in("status", ["entregue", "cancelado"])
+        .order("created_at", { ascending: false })
+        .limit(4);
+    if (error || !pedidosRecentes?.length) return;
+
+    const exibidos = pedidosRecentes.filter((pedido) => pedido.pedido_itens?.length).slice(0, 2);
+    const produtoIds = [...new Set(exibidos.flatMap((pedido) => pedido.pedido_itens.map((item) => item.produto_id)).filter(Boolean))];
+    const produtosResposta = produtoIds.length
+        ? await window.db.from("produtos").select("id,imagem").in("id", produtoIds)
+        : { data: [] };
+    const imagens = new Map((produtosResposta.data || []).map((produto) => [String(produto.id), produto.imagem]));
+
+    listaPedirNovamente.replaceChildren();
+    exibidos.forEach((pedido) => {
+        const item = pedido.pedido_itens[0];
+        const card = document.createElement("article");
+        card.className = "client-repeat-card";
+        card.append(imagemComFallback(imagens.get(String(item.produto_id)), item.nome_produto, "assets/produto-padrao.svg"));
+        const corpo = document.createElement("div");
+        corpo.append(
+            criarTexto("h3", "", item.nome_produto || "Pedido anterior"),
+            criarTexto("p", "", pedido.empresa_nome || "Restaurante"),
+            criarTexto("strong", "", dinheiro(Number(item.preco_unitario || 0) * Number(item.quantidade || 1)))
+        );
+        const repetir = criarTexto("button", "", "+");
+        repetir.type = "button";
+        repetir.setAttribute("aria-label", `Pedir ${item.nome_produto || "este pedido"} novamente`);
+        repetir.addEventListener("click", () => window.PosPedido?.pedirNovamente(pedido, repetir));
+        corpo.append(repetir);
+        card.append(corpo);
+        listaPedirNovamente.append(card);
+    });
+    secaoPedirNovamente.hidden = exibidos.length === 0;
 }
 
 async function atualizarMenuUsuario(user) {
@@ -577,12 +688,17 @@ carts.forEach((cart) => {
     const [salvos] = await Promise.all([
         favoritosSalvos,
         atualizarEndereco(user),
-        atualizarMenuUsuario(user)
+        atualizarMenuUsuario(user),
+        atualizarSaudacao(user),
+        carregarPedidosRecentes(user)
     ]);
     favoritos.clear();
     salvos.forEach((id) => favoritos.add(String(id)));
     await conteudo;
-    if (empresas.length) aplicarFiltros();
+    if (empresas.length) {
+        aplicarFiltros();
+        renderizarFavoritosInicio();
+    }
 })();
 
 // Atalhos de busca e teclado da página inicial.
