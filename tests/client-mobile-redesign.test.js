@@ -96,3 +96,14 @@ test("restaurante mobile mantém catálogo real e adição rápida segura", () =
   assert.match(css, /\.restaurant-actions\s*\{[^}]*position:\s*fixed/s);
   assert.match(css, /min-height:\s*44px/);
 });
+
+test("produto mobile não oferece escolha de tamanho", () => {
+  const restaurante = read("js/pages/restaurante.js");
+  const modal = read("js/modules/modal.js");
+  const html = read("html/restaurante.html");
+  assert.match(restaurante, /varianteRepresentaTamanho/);
+  assert.match(modal, /varianteRepresentaTamanho/);
+  assert.match(restaurante, /filter\(\(variante\) => !varianteRepresentaTamanho\(variante\)\)/);
+  assert.match(modal, /filter\(\(variante\) => !varianteRepresentaTamanho\(variante\)\)/);
+  assert.match(html, /modal\.js\?v=4\.5\.3/);
+});
