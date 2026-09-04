@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="../css/pages/empresa-dashboard.css?v=4.4.6"/>
+  <link rel="stylesheet" href="../css/pages/empresa-dashboard.css?v=4.5.8"/>
   <link rel="stylesheet" href="../css/core/accessibility.css?v=4.2.0"/>
   <link rel="stylesheet" href="../css/core/enhancements.css?v=4.4.6"/>
 </head>
@@ -57,6 +57,13 @@
         <button class="logout-button" id="logoutEmpresa" type="button">Sair</button>
       </div>
     </header>
+
+    <nav class="restaurant-management-mobile" aria-label="Gestão rápida do restaurante">
+      <a class="active" href="#visaoGeral" data-dashboard-link><span aria-hidden="true">⌂</span> Resumo</a>
+      <a href="#promocoes" data-dashboard-link><span aria-hidden="true">%</span> Promoções</a>
+      <a href="#avaliacoes" data-dashboard-link><span aria-hidden="true">★</span> Avaliações</a>
+      <a href="#financeiro" data-dashboard-link><span aria-hidden="true">R$</span> Financeiro</a>
+    </nav>
 
     <main class="dashboard-main">
       <section class="dashboard-view dashboard-overview is-active" id="visaoGeral" data-dashboard-view tabindex="-1" aria-label="Visão geral">
@@ -337,7 +344,7 @@
   <script defer src="../js/core/config.js?v=4.4.6"></script>
   <script defer src="../js/core/monitoring.js?v=4.2.0"></script>
   <script defer src="../js/core/notifications.js?v=4.2.0"></script>
-  <script defer src="../js/pages/empresa-dashboard.js?v=4.4.6.1"></script>
+  <script defer src="../js/pages/empresa-dashboard.js?v=4.5.8"></script>
   <script defer src="../js/modules/operacao-empresa.js?v=4.4.6"></script>
   <script defer src="../js/core/product-import.js?v=4.4.6"></script>
   <script defer src="../js/modules/empresa-importacao.js?v=4.4.6"></script>
