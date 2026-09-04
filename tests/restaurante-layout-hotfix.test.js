@@ -16,7 +16,7 @@ test("cardápio do restaurante neutraliza a grade global de .produtos", () => {
 
 test("cards do restaurante ocupam a largura da coluna sem herdar linhas da Home", () => {
   const css = read("css/modules/restaurante-4.2.2.css");
-  assert.match(css, /\.produto-card\{display:grid;width:100%;grid-template-columns:145px minmax\(0,1fr\);grid-template-rows:1fr;/);
+  assert.match(css, /\.produto-card\{position:relative;display:grid;width:100%;grid-template-columns:145px minmax\(0,1fr\);grid-template-rows:1fr;/);
   assert.match(css, /@media\(max-width:900px\).*\.lista-produtos\{grid-template-columns:1fr\}/s);
 });
 
@@ -30,6 +30,6 @@ test("cabeçalho mantém nome abaixo do banner e limita a sobreposição ao logo
   assert.match(css, /\.info-restaurante>div\{min-width:0;padding-top:42px\}/);
   assert.match(css, /\.info-restaurante h1\{[^}]*overflow-wrap:anywhere/);
   assert.match(css, /@media\(max-width:680px\).*\.banner-restaurante\{height:clamp\(170px,55vw,240px\)\}.*\.info-restaurante\{[^}]*margin-top:-32px/s);
-  assert.match(html, /restaurante-4\.2\.2\.css\?v=4\.2\.4/);
-  assert.match(sw, /restaurante-4\.2\.2\.css\?v=4\.2\.4/);
+  assert.match(html, /restaurante-4\.2\.2\.css\?v=4\.5\.2/);
+  assert.match(sw, /restaurante-4\.2\.2\.css\?v=4\.5\.2/);
 });
