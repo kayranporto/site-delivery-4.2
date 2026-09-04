@@ -16,11 +16,14 @@ const avaliacaoRestaurante = document.getElementById("avaliacaoRestaurante");
 const tempoEntrega = document.getElementById("tempoEntrega");
 const pedidoMinimo = document.getElementById("pedidoMinimo");
 const cartButton = document.querySelector(".cart");
+const favoritarRestaurante = document.getElementById("favoritarRestaurante");
+const resumoTotalCarrinho = document.getElementById("resumoTotalCarrinho");
 
 const params = new URLSearchParams(window.location.search);
 const empresaId = params.get("id");
 let produtos = [];
 let categoriaSelecionada = "";
+let restauranteFavorito = false;
 
 function dinheiro(valor) {
     return Number(valor || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -28,6 +31,11 @@ function dinheiro(valor) {
 
 function normalizar(valor) {
     return String(valor || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+}
+
+function varianteRepresentaTamanho(variante) {
+    const rotulo = normalizar(variante?.nome).replace(/\s+/g, " ").trim();
+    return /^(?:tamanho )?(?:pp|p|m|g|gg|xg|pequeno|pequena|medio|media|grande|extra grande|broto|familia)$/.test(rotulo);
 }
 
 function criarImagem(src, alt, fallback) {
@@ -43,7 +51,13 @@ function criarImagem(src, alt, fallback) {
 function atualizarCarrinhoTopo() {
     const carrinho = App.lerJSON("carrinho", []);
     const quantidade = Array.isArray(carrinho) ? carrinho.reduce((total, item) => total + (Number(item?.quantidade) || 0), 0) : 0;
+    const subtotal = Array.isArray(carrinho) ? carrinho.reduce((total, item) => {
+        const adicionais = (Array.isArray(item?.adicionais) ? item.adicionais : []).reduce((soma, adicional) => soma + Number(adicional?.preco || 0), 0);
+        return total + (Number(item?.preco || 0) + adicionais) * Number(item?.quantidade || 0);
+    }, 0) : 0;
     contadorCarrinho && (contadorCarrinho.textContent = String(quantidade));
+    resumoTotalCarrinho && (resumoTotalCarrinho.textContent = dinheiro(subtotal));
+    document.body.classList.toggle("restaurant-cart-has-items", quantidade > 0);
     document.querySelectorAll(".cart span").forEach((span) => { span.textContent = String(quantidade); });
 }
 
@@ -144,6 +158,35 @@ async function carregarEmpresa() {
     atualizarCarrinhoTopo();
 }
 
+function atualizarBotaoFavorito() {
+    if (!favoritarRestaurante) return;
+    favoritarRestaurante.textContent = restauranteFavorito ? "♥" : "♡";
+    favoritarRestaurante.classList.toggle("active", restauranteFavorito);
+    favoritarRestaurante.setAttribute("aria-pressed", String(restauranteFavorito));
+    favoritarRestaurante.setAttribute("aria-label", restauranteFavorito ? "Remover restaurante dos favoritos" : "Adicionar restaurante aos favoritos");
+}
+
+async function prepararFavorito() {
+    if (!favoritarRestaurante || !empresaId || !window.FavoritesSync) return;
+    const { data } = await window.db.auth.getUser();
+    await window.FavoritesSync.ready(data?.user || null);
+    restauranteFavorito = window.FavoritesSync.has(empresaId);
+    atualizarBotaoFavorito();
+}
+
+favoritarRestaurante?.addEventListener("click", async () => {
+    if (!window.FavoritesSync || !empresaId) return;
+    favoritarRestaurante.disabled = true;
+    try {
+        restauranteFavorito = await window.FavoritesSync.toggle(empresaId);
+        atualizarBotaoFavorito();
+    } catch (erro) {
+        window.AppToast?.("Não foi possível atualizar", App.mensagemErro(erro), "error");
+    } finally {
+        favoritarRestaurante.disabled = false;
+    }
+});
+
 btnVerCarrinho?.addEventListener("click", () => {
     if (typeof window.abrirCarrinho === "function") {
         window.abrirCarrinho();
@@ -195,19 +238,36 @@ async function carregarProdutos() {
     produtos = Array.isArray(data) ? data : [];
     const ids = produtos.map((produto) => String(produto.id));
     if (ids.length) {
-        const { data: variantes, error: erroVariantes } = await window.db.from("produto_variantes")
-            .select("id,produto_id,nome,preco,promocao,ordem")
-            .in("produto_id", ids)
-            .eq("ativo", true)
-            .order("ordem");
+        const [variantesResposta, vinculosResposta] = await Promise.all([
+            window.db.from("produto_variantes")
+                .select("id,produto_id,nome,preco,promocao,ordem")
+                .in("produto_id", ids)
+                .eq("ativo", true)
+                .order("ordem"),
+            window.db.from("produto_grupos").select("produto_id,grupo_id").in("produto_id", ids)
+        ]);
+        const { data: variantes, error: erroVariantes } = variantesResposta;
         if (erroVariantes) throw new Error(erroVariantes.message);
+        if (vinculosResposta.error) throw new Error(vinculosResposta.error.message);
         const porProduto = new Map();
         (variantes || []).forEach((variante) => {
             const chave = String(variante.produto_id);
             if (!porProduto.has(chave)) porProduto.set(chave, []);
             porProduto.get(chave).push(variante);
         });
-        produtos = produtos.map((produto) => ({ ...produto, variantes: porProduto.get(String(produto.id)) || [] }));
+        const grupoIds = [...new Set((vinculosResposta.data || []).map((item) => String(item.grupo_id)).filter(Boolean))];
+        const gruposResposta = grupoIds.length
+            ? await window.db.from("grupos_adicionais").select("id,minimo,ativo").in("id", grupoIds).eq("ativo", true)
+            : { data: [], error: null };
+        if (gruposResposta.error) throw new Error(gruposResposta.error.message);
+        const gruposObrigatorios = new Set((gruposResposta.data || []).filter((grupo) => Number(grupo.minimo || 0) > 0).map((grupo) => String(grupo.id)));
+        const configuracaoObrigatoria = new Set((vinculosResposta.data || [])
+            .filter((vinculo) => gruposObrigatorios.has(String(vinculo.grupo_id)))
+            .map((vinculo) => String(vinculo.produto_id)));
+        produtos = produtos.map((produto) => {
+            const variantesProduto = (porProduto.get(String(produto.id)) || []).filter((variante) => !varianteRepresentaTamanho(variante));
+            return { ...produto, variantes: variantesProduto, requer_configuracao: variantesProduto.length > 0 || configuracaoObrigatoria.has(String(produto.id)) };
+        });
     }
     renderizarProdutos(produtos);
 }
@@ -231,9 +291,6 @@ function renderizarProdutos(lista) {
         const card = document.createElement("article");
         card.className = "produto-card";
         card.dataset.id = String(produto.id);
-        card.tabIndex = 0;
-        card.setAttribute("role", "button");
-        card.setAttribute("aria-label", `Personalizar ${produto.nome}`);
         card.append(criarImagem(produto.imagem, produto.nome, "../assets/produto-padrao.svg"));
 
         const info = document.createElement("div");
@@ -253,8 +310,18 @@ function renderizarProdutos(lista) {
 
         const valor = document.createElement("strong");
         valor.textContent = `${precosVariantes.length ? "A partir de " : ""}${dinheiro(preco)}`;
-        info.append(valor);
-        card.append(info);
+        const adicionar = document.createElement("button");
+        adicionar.type = "button";
+        adicionar.className = "btn-add";
+        adicionar.dataset.action = "adicionar";
+        adicionar.textContent = "+";
+        adicionar.setAttribute("aria-label", produto.requer_configuracao ? `Personalizar ${produto.nome}` : `Adicionar ${produto.nome} ao carrinho`);
+        info.append(valor, adicionar);
+        const abrir = document.createElement("button");
+        abrir.type = "button";
+        abrir.className = "produto-open";
+        abrir.setAttribute("aria-label", `Personalizar ${produto.nome}`);
+        card.append(info, abrir);
         fragmento.append(card);
     });
     listaProdutos.append(fragmento);
@@ -284,9 +351,25 @@ categoriasContainer.addEventListener("click", (event) => {
     categoriaSelecionada = botao.dataset.id || "";
     filtrarProdutos();
 });
-listaProdutos.addEventListener("click", (event) => abrirCard(event.target.closest(".produto-card")));
+listaProdutos.addEventListener("click", async (event) => {
+    const card = event.target.closest(".produto-card");
+    if (!card) return;
+    const produto = produtos.find((item) => String(item.id) === String(card.dataset.id));
+    if (event.target.closest("[data-action='adicionar']") && produto && !produto.requer_configuracao && typeof window.adicionarAoCarrinho === "function") {
+        await window.adicionarAoCarrinho({
+            id: String(produto.id),
+            nome: produto.nome,
+            imagem: produto.imagem || "../assets/produto-padrao.svg",
+            preco: Number(produto.promocao || 0) > 0 ? Number(produto.promocao) : Number(produto.preco || 0),
+            quantidade: 1,
+            adicionais: []
+        });
+        return;
+    }
+    abrirCard(card);
+});
 listaProdutos.addEventListener("keydown", (event) => {
-    if (event.key === "Enter" || event.key === " ") {
+    if ((event.key === "Enter" || event.key === " ") && event.target.closest(".produto-open")) {
         event.preventDefault();
         abrirCard(event.target.closest(".produto-card"));
     }
@@ -301,7 +384,7 @@ listaProdutos.addEventListener("keydown", (event) => {
 
     try {
         localStorage.removeItem("empresaAtual");
-        await carregarEmpresa();
+        await Promise.all([carregarEmpresa(), prepararFavorito()]);
         await Promise.all([carregarCategorias(), carregarProdutos(), carregarAvaliacaoRestaurante(), carregarAvaliacoesPublicas()]);
     } catch (error) {
         console.error(error);

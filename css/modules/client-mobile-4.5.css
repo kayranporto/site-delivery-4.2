@@ -333,6 +333,176 @@ html[data-theme="dark"] .client-mobile-shell {
   .client-mobile-shell.home-page .notification-panel { top: 58px; right: -54px; bottom: auto; }
   .client-mobile-shell.home-page .floating-cart { bottom: calc(var(--client-nav-height) + env(safe-area-inset-bottom) + 12px); }
 
+  /* Restaurante: cardápio denso, navegável e com o carrinho sempre ao alcance. */
+  .client-mobile-shell[data-client-page="restaurante"] { padding-bottom: calc(96px + env(safe-area-inset-bottom)); }
+  .client-mobile-shell[data-client-page="restaurante"] > header {
+    min-height: 68px;
+    padding: calc(8px + env(safe-area-inset-top)) 14px 8px;
+    border: 0;
+    background: rgba(9, 11, 13, .96);
+  }
+  .client-mobile-shell[data-client-page="restaurante"] > header .logo {
+    margin: 0 auto 0 0;
+    color: var(--client-text);
+    font-size: 1rem;
+  }
+  .client-mobile-shell[data-client-page="restaurante"] .favorite-restaurante,
+  .client-mobile-shell[data-client-page="restaurante"] > header .cart {
+    position: relative;
+    display: grid;
+    width: 46px;
+    min-width: 46px;
+    height: 46px;
+    min-height: 46px;
+    place-items: center;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--client-text);
+    box-shadow: none;
+    font-size: 1.7rem;
+  }
+  .client-mobile-shell[data-client-page="restaurante"] .favorite-restaurante.active { color: var(--client-red); }
+  .client-mobile-shell[data-client-page="restaurante"] .banner-restaurante {
+    width: 100%;
+    height: clamp(210px, 62vw, 290px);
+    margin: 0;
+    border-radius: 0;
+    background: #0f1113;
+    box-shadow: none;
+  }
+  .client-mobile-shell[data-client-page="restaurante"] .banner-restaurante img { object-fit: cover; background: #0f1113; }
+  .client-mobile-shell[data-client-page="restaurante"] .info-restaurante {
+    min-height: 0;
+    margin: 0;
+    padding: 16px;
+    align-items: flex-start;
+    gap: 13px;
+    background: var(--client-bg);
+    text-align: left;
+  }
+  .client-mobile-shell[data-client-page="restaurante"] .logo-restaurante {
+    width: 76px;
+    height: 76px;
+    flex: 0 0 76px;
+    margin-top: -48px;
+    border: 3px solid var(--client-border);
+    border-radius: 18px;
+    background: var(--client-surface);
+    box-shadow: 0 12px 28px rgba(0,0,0,.35);
+  }
+  .client-mobile-shell[data-client-page="restaurante"] .info-restaurante > div { padding-top: 0; }
+  .client-mobile-shell[data-client-page="restaurante"] .info-restaurante h1 { margin: 0 0 5px; color: var(--client-text); font-size: 1.45rem; }
+  .client-mobile-shell[data-client-page="restaurante"] .info-restaurante p { margin: 3px 0; color: var(--client-muted); font-size: .82rem; }
+  .client-mobile-shell[data-client-page="restaurante"] #infoEntrega { display: none; }
+  .client-mobile-shell[data-client-page="restaurante"] .restaurante-meta {
+    width: 100%;
+    margin: 0;
+    padding: 0 16px 14px;
+    background: var(--client-bg);
+  }
+  .client-mobile-shell[data-client-page="restaurante"] .metas { gap: 7px; }
+  .client-mobile-shell[data-client-page="restaurante"] :is(.status-badge, .meta-chip) {
+    min-height: 38px;
+    padding: 8px 11px;
+    border-color: var(--client-border);
+    background: var(--client-surface);
+    color: var(--client-text);
+    font-size: .75rem;
+  }
+  .client-mobile-shell[data-client-page="restaurante"] .status-badge.aberta { border: 1px solid rgba(64,214,92,.35); background: rgba(64,214,92,.1); color: #65e979; }
+  .client-mobile-shell[data-client-page="restaurante"] .status-badge.fechado { border: 1px solid var(--client-border); color: var(--client-muted); }
+  .client-mobile-shell[data-client-page="restaurante"] .pesquisa-produtos {
+    position: sticky;
+    z-index: 25;
+    top: calc(68px + env(safe-area-inset-top));
+    width: 100%;
+    margin: 0;
+    padding: 10px 16px 7px;
+    border-radius: 0;
+    background: rgba(9,11,13,.96);
+    box-shadow: none;
+    backdrop-filter: blur(16px);
+  }
+  .client-mobile-shell[data-client-page="restaurante"] .pesquisa-produtos::before { left: 33px; }
+  .client-mobile-shell[data-client-page="restaurante"] .pesquisa-produtos input {
+    min-height: 50px;
+    border-color: var(--client-border);
+    border-radius: 15px;
+    background: var(--client-surface);
+    color: var(--client-text);
+    box-shadow: none;
+    font-size: 1rem;
+  }
+  .client-mobile-shell[data-client-page="restaurante"] .categorias {
+    position: sticky;
+    z-index: 24;
+    top: calc(135px + env(safe-area-inset-top));
+    width: 100%;
+    margin: 0;
+    padding: 7px 16px 12px;
+    gap: 9px;
+    background: rgba(9,11,13,.96);
+    backdrop-filter: blur(16px);
+  }
+  .client-mobile-shell[data-client-page="restaurante"] .categorias button {
+    min-height: 44px;
+    border: 1px solid var(--client-border);
+    background: var(--client-surface);
+    color: var(--client-text);
+    box-shadow: none;
+  }
+  .client-mobile-shell[data-client-page="restaurante"] .categorias .ativo { border-color: var(--client-red); background: var(--client-red-soft); color: var(--client-red); }
+  .client-mobile-shell[data-client-page="restaurante"] .produtos { width: 100%; margin: 0; padding: 14px 16px 24px; }
+  .client-mobile-shell[data-client-page="restaurante"] .lista-produtos { gap: 11px; }
+  .client-mobile-shell[data-client-page="restaurante"] .produto-card {
+    grid-template-columns: min(38vw, 146px) minmax(0,1fr);
+    min-height: 142px;
+    border-color: var(--client-border);
+    border-radius: 17px;
+    background: var(--client-surface);
+    box-shadow: none;
+  }
+  .client-mobile-shell[data-client-page="restaurante"] .produto-card > img { width: min(38vw,146px); min-height: 142px; object-fit: cover; background: #0f1113; }
+  .client-mobile-shell[data-client-page="restaurante"] .produto-card .produto-info { padding: 14px 13px; }
+  .client-mobile-shell[data-client-page="restaurante"] .produto-card .produto-info h3 { color: var(--client-text); font-size: .96rem; }
+  .client-mobile-shell[data-client-page="restaurante"] .produto-card .produto-info p { color: var(--client-muted); font-size: .76rem; }
+  .client-mobile-shell[data-client-page="restaurante"] .produto-card .produto-info small { color: var(--client-muted); }
+  .client-mobile-shell[data-client-page="restaurante"] .produto-card .produto-info strong { color: var(--client-red); font-size: 1rem; }
+  .client-mobile-shell[data-client-page="restaurante"] .produto-card .btn-add { right: 11px; bottom: 11px; width: 44px; height: 44px; border-radius: 12px; background: var(--client-red); }
+  .client-mobile-shell[data-client-page="restaurante"] .avaliacoes-publicas { padding-inline: 16px; }
+  .client-mobile-shell[data-client-page="restaurante"] .restaurant-actions {
+    position: fixed;
+    z-index: 80;
+    right: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    left: 12px;
+    display: none;
+    margin: 0;
+  }
+  .client-mobile-shell[data-client-page="restaurante"].restaurant-cart-has-items .restaurant-actions { display: block; }
+  .client-mobile-shell[data-client-page="restaurante"] .restaurant-actions .btn-primary {
+    display: grid;
+    width: 100%;
+    min-height: 72px;
+    grid-template-columns: minmax(0,1fr) auto auto;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 16px;
+    border: 1px solid var(--client-border);
+    border-radius: 18px;
+    background: rgba(24,27,31,.97);
+    color: var(--client-text);
+    text-align: left;
+    box-shadow: 0 18px 45px rgba(0,0,0,.42);
+    backdrop-filter: blur(18px);
+  }
+  .client-mobile-shell[data-client-page="restaurante"] .restaurant-cart-copy { display: flex; flex-direction: column; gap: 3px; }
+  .client-mobile-shell[data-client-page="restaurante"] .restaurant-cart-copy strong { font-size: .95rem; }
+  .client-mobile-shell[data-client-page="restaurante"] .restaurant-cart-copy small { color: var(--client-muted); font-size: .75rem; }
+  .client-mobile-shell[data-client-page="restaurante"] #resumoTotalCarrinho { color: var(--client-text); font-size: 1rem; }
+  .client-mobile-shell[data-client-page="restaurante"] .restaurant-actions .btn-primary > span:last-child { color: var(--client-red); font-size: 1.9rem; }
+
   /* Cabeçalhos das rotas internas seguem o mesmo ritmo visual do aplicativo. */
   html[data-theme="dark"] .client-mobile-shell :is(.orders-header, .perfil-header, .page-header, .track-header, .support-header, .checkout-header, body > header:not(.header)) {
     border-color: var(--client-border);

@@ -52,6 +52,11 @@ function precoVariante(variante) {
     return promocao > 0 ? promocao : Number(variante?.preco || 0);
 }
 
+function varianteRepresentaTamanho(variante) {
+    const rotulo = String(variante?.nome || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, " ").trim();
+    return /^(?:tamanho )?(?:pp|p|m|g|gg|xg|pequeno|pequena|medio|media|grande|extra grande|broto|familia)$/.test(rotulo);
+}
+
 function precoBaseAtual() {
     return varianteSelecionada ? precoVariante(varianteSelecionada) : precoProduto(produtoAtual);
 }
@@ -79,7 +84,7 @@ async function carregarVariantes(produtoId, solicitacao) {
         .order("nome");
     if (error) throw error;
     if (solicitacao !== solicitacaoModal) return false;
-    variantesAtuais = data || [];
+    variantesAtuais = (data || []).filter((variante) => !varianteRepresentaTamanho(variante));
     if (!variantesAtuais.length) return true;
 
     blocoVariantes.hidden = false;

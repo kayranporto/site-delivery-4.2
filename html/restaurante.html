@@ -12,10 +12,10 @@
 <link href="../css/modules/carrinho.css?v=4.2.0" rel="stylesheet"/>
 <link href="../css/modules/modal.css?v=4.2.0" rel="stylesheet"/>
 <link href="../css/core/accessibility.css?v=4.2.0" rel="stylesheet"/>
-<link href="../css/modules/restaurante-4.2.2.css?v=4.2.4" rel="stylesheet"/>
+<link href="../css/modules/restaurante-4.2.2.css?v=4.5.2" rel="stylesheet"/>
 <link href="../css/modules/carrinho-4.2.5.css?v=4.2.6" rel="stylesheet"/>
 <link href="../css/core/enhancements.css?v=4.4.6" rel="stylesheet"/>
-<link href="../css/modules/client-mobile-4.5.css?v=4.5.1" rel="stylesheet"/>
+<link href="../css/modules/client-mobile-4.5.css?v=4.5.2" rel="stylesheet"/>
 <meta content="Confira o cardápio, personalize seus produtos e faça seu pedido pelo Multi Delivery." name="description"/>
 <link rel="manifest" href="../manifest.webmanifest"/>
 <meta name="theme-color" content="#ea1d2c"/>
@@ -27,6 +27,7 @@
 <header>
 <a class="voltar" href="../index.html" aria-label="Voltar para a página inicial">←</a>
 <div class="logo">Multi Delivery</div>
+<button class="favorite-restaurante" id="favoritarRestaurante" type="button" aria-label="Adicionar restaurante aos favoritos" aria-pressed="false">♡</button>
 <button class="cart" type="button" aria-label="Abrir carrinho">🛒<span>0</span></button>
 </header>
 <section class="banner-restaurante">
@@ -48,7 +49,7 @@
 <span class="meta-chip" id="pedidoMinimo">Pedido mínimo</span>
 </div>
 <div class="restaurant-actions">
-<button id="btnVerCarrinho" type="button" class="btn-primary">Revisar carrinho • <span id="contadorCarrinho">0</span></button>
+<button id="btnVerCarrinho" type="button" class="btn-primary"><span class="restaurant-cart-copy"><strong>Ver carrinho</strong><small><span id="contadorCarrinho">0</span> itens</small></span><strong id="resumoTotalCarrinho">R$ 0,00</strong><span aria-hidden="true">›</span></button>
 </div>
 </section>
 <section class="pesquisa-produtos">
@@ -113,9 +114,10 @@
 <script defer src="../js/core/supabase.js?v=4.2.0"></script>
 <script defer src="../js/core/dialogs.js?v=4.2.0"></script>
 <script defer src="../js/core/cart-store.js?v=4.2.0"></script>
-<script defer src="../js/pages/restaurante.js?v=4.2.1"></script>
+<script defer src="../js/core/favorites-sync.js?v=4.2.1"></script>
+<script defer src="../js/pages/restaurante.js?v=4.5.3"></script>
 <script defer src="../js/modules/carrinho.js?v=4.2.6"></script>
-<script defer src="../js/modules/modal.js?v=4.2.0"></script>
+<script defer src="../js/modules/modal.js?v=4.5.3"></script>
 <script defer src="../js/modules/carrinho-4.2.5.js?v=4.2.6"></script>
 <script defer src="../js/core/client-mobile-4.5.js?v=4.5.0"></script>
 <script defer src="../js/core/site-enhancements.js?v=4.4.6"></script>
