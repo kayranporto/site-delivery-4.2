@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="../css/pages/acompanhamento.css?v=4.2.0"/>
   <link rel="stylesheet" href="../css/core/accessibility.css?v=4.2.0"/>
   <link rel="stylesheet" href="../css/core/enhancements.css?v=4.4.6"/>
-  <link rel="stylesheet" href="../css/modules/client-mobile-4.5.css?v=4.6.0"/>
+  <link rel="stylesheet" href="../css/modules/client-mobile-4.5.css?v=4.6.1"/>
 </head>
 <body>
   <noscript>Este site precisa de JavaScript habilitado.</noscript>
@@ -34,18 +34,13 @@
         <p id="nomeEmpresa">Restaurante</p>
       </div>
       <div class="eta"><small>PREVISÃO</small><strong id="previsao">—</strong></div>
+      <div class="delivery-progress" id="progressoEntrega" aria-label="Progresso da entrega"><span></span><i></i><i></i><i></i><i></i></div>
     </section>
 
     <section class="track-card live-map-card" id="mapaEntrega" hidden>
       <div class="card-title-row"><div><span class="section-kicker">LOCALIZAÇÃO AO VIVO</span><h2>Seu entregador está a caminho</h2></div><span class="map-updated" id="mapaAtualizado">Atualizando...</span></div>
       <iframe id="mapaFrame" title="Localização aproximada do entregador" loading="lazy" referrerpolicy="no-referrer"></iframe>
       <p>A posição é aproximada e atualizada enquanto o entregador está com o painel aberto.</p>
-    </section>
-
-    <section class="track-card courier-card" id="cartaoEntregador" hidden aria-labelledby="tituloEntregador">
-      <span class="courier-avatar" id="avatarEntregador" aria-hidden="true">E</span>
-      <div><small>SEU ENTREGADOR</small><h2 id="tituloEntregador">Entregador atribuído</h2><p id="statusEntregador">Preparando a retirada do pedido</p></div>
-      <button id="falarEntregador" type="button" aria-label="Falar com o entregador">💬</button>
     </section>
 
     <section class="track-card progress-card">
@@ -57,6 +52,12 @@
         <li data-status="entregue"><span>4</span><div><strong>Pedido entregue</strong><small>Bom apetite!</small></div></li>
       </ol>
       <div class="cancelado" id="cancelado" hidden>Este pedido foi cancelado.</div>
+    </section>
+
+    <section class="track-card courier-card" id="cartaoEntregador" hidden aria-labelledby="tituloEntregador">
+      <span class="courier-avatar" id="avatarEntregador" aria-hidden="true">E</span>
+      <div><small>SEU ENTREGADOR</small><h2 id="tituloEntregador">Entregador atribuído</h2><p id="statusEntregador">Preparando a retirada do pedido</p></div>
+      <button id="falarEntregador" type="button" aria-label="Falar com o entregador">💬</button>
     </section>
 
     <div class="track-grid">
@@ -104,6 +105,7 @@
     </section>
 
     <section class="track-card review-card" id="avaliacao" hidden tabindex="-1">
+      <div class="rating-hero-visual" aria-hidden="true">🛍️</div>
       <div class="review-copy">
         <span class="section-kicker">SUA EXPERIÊNCIA</span>
         <h2>Como foi seu pedido?</h2>
@@ -139,7 +141,7 @@
   <script defer src="../js/core/monitoring.js?v=4.2.0"></script>
   <script defer src="../js/core/notifications.js?v=4.2.0"></script>
   <script defer src="../js/modules/pos-pedido.js?v=4.5.1"></script>
-<script defer src="../js/pages/acompanhamento.js?v=4.6.0"></script>
+<script defer src="../js/pages/acompanhamento.js?v=4.6.1"></script>
   <script defer src="../js/core/client-mobile-4.5.js?v=4.6.0"></script>
   <script defer src="../js/core/site-enhancements.js?v=4.4.6"></script>
 </body>

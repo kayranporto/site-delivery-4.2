@@ -35,7 +35,7 @@ test("camada mobile possui JavaScript e CSS próprios", () => {
   const shared = read("js/core/site-enhancements.js");
   assert.doesNotMatch(shared, /CLIENT_NAV_PAGES|client-bottom-nav|navItems/);
   assert.match(read("sw.js"), /client-mobile-4\.5\.js\?v=4\.6\.0/);
-  assert.match(read("sw.js"), /client-mobile-4\.5\.css\?v=4\.6\.0/);
+  assert.match(read("sw.js"), /client-mobile-4\.5\.css\?v=4\.6\.1/);
 });
 
 test("assets mobile são carregados somente nas páginas do cliente", () => {
@@ -55,7 +55,7 @@ test("assets mobile são carregados somente nas páginas do cliente", () => {
   ];
   for (const page of clientPages) {
     const html = read(page);
-    assert.match(html, /client-mobile-4\.5\.css\?v=4\.6\.0/, `${page} deve carregar o CSS mobile`);
+    assert.match(html, /client-mobile-4\.5\.css\?v=4\.6\.1/, `${page} deve carregar o CSS mobile`);
     assert.match(html, /client-mobile-4\.5\.js\?v=4\.6\.0/, `${page} deve carregar o JS mobile`);
     assert.ok(html.indexOf("client-mobile-4.5.js") < html.indexOf("site-enhancements.js"), `${page} deve preparar o tema antes da camada compartilhada`);
   }
@@ -169,7 +169,7 @@ test("confirmação mobile leva diretamente ao acompanhamento real", () => {
   assert.match(js, /encodeURIComponent\(pedido\.id\)/);
   assert.match(css, /data-client-page="pedido-sucesso"/);
   assert.match(css, /\.success-steps/);
-  assert.match(read("sw.js"), /pedido-sucesso\.js\?v=4\.6\.0/);
+  assert.match(read("sw.js"), /pedido-sucesso\.js\?v=4\.6\.1/);
 });
 
 test("pedidos e acompanhamento mobile preservam dados reais e ações", () => {

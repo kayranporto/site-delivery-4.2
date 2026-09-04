@@ -102,12 +102,18 @@ function renderizarRecibo(pedido) {
 
 function renderizarAcoes(status) {
     const finalizado = finais.has(status);
+    const modoAvaliacao = status === "entregue" && location.hash === "#avaliacao";
     const live = document.getElementById("indicadorLive");
     live.classList.toggle("final", finalizado);
     live.querySelector("span").textContent = finalizado ? "FINALIZADO" : "AO VIVO";
     document.getElementById("acoesPosPedido").hidden = !finalizado;
     document.getElementById("ativarNotificacoes").hidden = finalizado;
     document.getElementById("avaliacao").hidden = status !== "entregue";
+    document.body.classList.toggle("rating-focus", modoAvaliacao);
+    if (modoAvaliacao) {
+        document.querySelector(".track-header small").textContent = "AVALIAÇÃO";
+        document.getElementById("tituloPedido").textContent = "Avaliar pedido";
+    }
 }
 
 function renderizarEntregador(pedido) {
@@ -159,6 +165,8 @@ function render(pedido) {
     if (numero) telefone.href = `tel:${numero}`;
 
     const atual = ordem.indexOf(status);
+    const progresso = document.getElementById("progressoEntrega");
+    if (progresso) progresso.style.setProperty("--delivery-progress", `${status === "cancelado" ? 0 : [18, 45, 74, 100][Math.max(atual, 0)]}%`);
     document.querySelectorAll("#timeline li").forEach((li, indice) => {
         li.classList.toggle("done", status === "entregue" || indice < atual);
         li.classList.toggle("active", indice === atual);

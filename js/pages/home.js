@@ -741,6 +741,9 @@ function renderizarHistoricoBusca() {
         const botao = criarTexto("button", "", termo);
         botao.type = "button";
         botao.dataset.searchMobile = termo;
+        const icone = criarTexto("span", "", "↗");
+        icone.setAttribute("aria-hidden", "true");
+        botao.prepend(icone);
         historicoBuscaMobile.append(botao);
     });
 }
@@ -787,6 +790,20 @@ document.getElementById("limparBuscaMobile")?.addEventListener("click", () => ap
 document.getElementById("limparHistoricoBusca")?.addEventListener("click", () => {
     try { localStorage.removeItem(BUSCAS_STORAGE_KEY); } catch { /* armazenamento opcional */ }
     renderizarHistoricoBusca();
+});
+document.getElementById("ordenarBuscaMobile")?.addEventListener("click", (event) => {
+    filtros.ordenarPorTempo = !filtros.ordenarPorTempo;
+    filtros.ordenarPorTaxa = false;
+    event.currentTarget.classList.toggle("active", filtros.ordenarPorTempo);
+    event.currentTarget.setAttribute("aria-pressed", String(filtros.ordenarPorTempo));
+    event.currentTarget.lastChild.textContent = filtros.ordenarPorTempo ? " Mais rápidos" : " Ordenar";
+    aplicarFiltros();
+});
+document.getElementById("filtrosBuscaMobile")?.addEventListener("click", (event) => {
+    const filtrosBusca = document.querySelector(".client-search-filters");
+    const expandido = event.currentTarget.getAttribute("aria-expanded") !== "false";
+    event.currentTarget.setAttribute("aria-expanded", String(!expandido));
+    filtrosBusca?.classList.toggle("collapsed", expandido);
 });
 document.querySelector(".client-search-view")?.addEventListener("click", (event) => {
     const sugestao = event.target.closest("[data-search-mobile]");

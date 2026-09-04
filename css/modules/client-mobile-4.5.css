@@ -555,6 +555,132 @@ html[data-theme="dark"] .client-mobile-shell {
   .client-mobile-shell.home-page .container-header { padding-inline: 12px; }
 }
 
+/* Multi Delivery 4.6.1 — ajuste final conforme os mockups mobile aprovados. */
+@media (max-width: 768px) {
+  /* Busca: linhas compactas, ações de ordenação e filtros como no aplicativo. */
+  .client-search-content { padding: 20px 16px 96px; }
+  .client-search-discovery .client-search-title:not(:first-child) { margin-top: 26px; }
+  .client-search-chips,
+  .client-search-suggestions { display: grid; grid-template-columns: 1fr; gap: 0; margin: 6px 0 0; overflow: visible; }
+  .client-search-chips button,
+  .client-search-suggestions button { display: flex; width: 100%; min-height: 52px; padding: 0 4px; align-items: center; gap: 13px; border: 0; border-bottom: 1px solid var(--client-border); border-radius: 0; background: transparent; color: var(--client-text); font-size: .9rem; font-weight: 500; text-align: left; }
+  .client-search-chips button span,
+  .client-search-suggestions button span { display: grid; width: 32px; height: 32px; flex: 0 0 32px; place-items: center; border-radius: 50%; background: #25292f; color: #aeb2ba; font-size: 1rem; }
+  .client-search-chips button span { margin-left: auto; order: 2; background: transparent; }
+  .client-search-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0 10px; }
+  .client-search-actions button { min-height: 48px; border: 1px solid var(--client-border); border-radius: 12px; background: #24272d; color: var(--client-text); font: inherit; font-size: .84rem; font-weight: 700; }
+  .client-search-actions button:first-child { border-color: var(--client-red); background: var(--client-red); color: #fff; }
+  .client-search-actions button.active { box-shadow: inset 0 0 0 2px rgba(255,255,255,.2); }
+  .client-search-filters { max-height: 64px; margin: 6px -16px 14px; opacity: 1; transition: max-height .18s ease, opacity .18s ease, margin .18s ease; }
+  .client-search-filters.collapsed { max-height: 0; margin-block: 0; opacity: 0; overflow: hidden; }
+  .client-search-cards { gap: 10px; }
+  .client-search-cards .card { border-radius: 13px; }
+  .client-search-cards .card-link { grid-template-columns: 92px minmax(0,1fr); min-height: 96px; }
+  .client-search-cards .card-link > img { width: 92px; min-height: 96px; }
+  .client-search-cards .card-body { padding: 11px 36px 10px 11px; }
+
+  /* Checkout: uma única coluna direta, sem banners e etapas de desktop. */
+  .client-mobile-shell[data-client-page="checkout"] .checkout-progress,
+  .client-mobile-shell[data-client-page="checkout"] .checkout-fast-lane,
+  .client-mobile-shell[data-client-page="checkout"] .checkout-security,
+  .client-mobile-shell[data-client-page="checkout"] .card-icon,
+  .client-mobile-shell[data-client-page="checkout"] .card-heading small,
+  .client-mobile-shell[data-client-page="checkout"] .summary-heading small,
+  .client-mobile-shell[data-client-page="checkout"] .checkout-summary,
+  .client-mobile-shell[data-client-page="checkout"] .online-payment-option,
+  .client-mobile-shell[data-client-page="checkout"] .pagamento-note,
+  .client-mobile-shell[data-client-page="checkout"] #pagamentoSelecionadoResumo,
+  .client-mobile-shell[data-client-page="checkout"] .checkout-submit-copy { display: none !important; }
+  .client-mobile-shell[data-client-page="checkout"] .checkout-header { position: sticky; top: 0; z-index: 20; }
+  .client-mobile-shell[data-client-page="checkout"] .checkout-header-inner { min-height: 64px; padding-block: 8px; }
+  .client-mobile-shell[data-client-page="checkout"] .checkout-heading span { display: none; }
+  .client-mobile-shell[data-client-page="checkout"] .checkout-heading h1 { margin: 0; font-size: 1.1rem; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="checkout"] .checkout-container { display: block; padding: 12px 12px 112px; }
+  .client-mobile-shell[data-client-page="checkout"] .checkout-flow { display: grid; gap: 10px; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="checkout"] .checkout-card { margin: 0; padding: 15px 14px; border-radius: 14px; }
+  .client-mobile-shell[data-client-page="checkout"] .card-heading { display: flex; min-height: 26px; margin: 0 0 11px; align-items: center; }
+  .client-mobile-shell[data-client-page="checkout"] .card-heading h2 { margin: 0; color: var(--client-text); font-size: .96rem; }
+  .client-mobile-shell[data-client-page="checkout"] .endereco { display: grid; grid-template-columns: minmax(0,1fr) auto; padding: 0; align-items: center; gap: 10px; border: 0; background: transparent; }
+  .client-mobile-shell[data-client-page="checkout"] .endereco-label { color: var(--client-muted); font-size: .62rem; }
+  .client-mobile-shell[data-client-page="checkout"] .endereco p { margin-top: 3px; color: var(--client-text); font-size: .8rem; line-height: 1.45; }
+  .client-mobile-shell[data-client-page="checkout"] #alterarEndereco { width: auto; min-height: 44px; padding: 8px 11px; border: 0; background: transparent; color: #ff6670; font-size: .75rem; }
+  .client-mobile-shell[data-client-page="checkout"] .delivery-preview { display: grid; grid-template-columns: 32px minmax(0,1fr) auto; margin-top: 12px; padding: 11px; gap: 9px; border: 1px solid var(--client-border); border-radius: 11px; background: #1b1e23; }
+  .client-mobile-shell[data-client-page="checkout"] .delivery-preview > span { font-size: 1rem; }
+  .client-mobile-shell[data-client-page="checkout"] .delivery-preview strong { font-size: .75rem; }
+  .client-mobile-shell[data-client-page="checkout"] .delivery-preview small { color: var(--client-muted); font-size: .62rem; }
+  .client-mobile-shell[data-client-page="checkout"] .delivery-preview a { font-size: .68rem; }
+  .client-mobile-shell[data-client-page="checkout"] .checkout-inline-status:empty,
+  .client-mobile-shell[data-client-page="checkout"] .pedido-minimo:empty { display: none; }
+  .client-mobile-shell[data-client-page="checkout"] #enderecoStatus[data-tipo="info"] { display: none; }
+  .client-mobile-shell[data-client-page="checkout"] .payment-options { display: grid; gap: 0; }
+  .client-mobile-shell[data-client-page="checkout"] .payment-option { grid-template-columns: 24px minmax(0,1fr); min-height: 51px; padding: 0 2px; border: 0; border-bottom: 1px solid var(--client-border); border-radius: 0; background: transparent !important; box-shadow: none !important; transform: none !important; }
+  .client-mobile-shell[data-client-page="checkout"] .payment-option:last-child { border-bottom: 0; }
+  .client-mobile-shell[data-client-page="checkout"] .payment-option input { position: static; display: block; width: 17px; height: 17px; grid-column: 1; grid-row: 1; opacity: 1; accent-color: var(--client-red); }
+  .client-mobile-shell[data-client-page="checkout"] .payment-icon,
+  .client-mobile-shell[data-client-page="checkout"] .payment-check,
+  .client-mobile-shell[data-client-page="checkout"] .payment-copy small { display: none; }
+  .client-mobile-shell[data-client-page="checkout"] .payment-copy { grid-column: 2; grid-row: 1; }
+  .client-mobile-shell[data-client-page="checkout"] .payment-copy strong { font-size: .82rem; }
+  .client-mobile-shell[data-client-page="checkout"] .checkout-optional { padding: 0 14px; }
+  .client-mobile-shell[data-client-page="checkout"] .checkout-optional > summary { min-height: 54px; margin: 0; }
+  .client-mobile-shell[data-client-page="checkout"] .checkout-optional-action { margin-left: auto; color: #ff6871; font-size: .73rem; }
+  .client-mobile-shell[data-client-page="checkout"] .checkout-optional-body { padding-bottom: 14px; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="checkout"] .checkout-footer { border-color: var(--client-border); background: rgba(15,17,20,.97); }
+  .client-mobile-shell[data-client-page="checkout"] .checkout-footer-inner { display: grid; grid-template-columns: minmax(82px,.55fr) minmax(190px,1.45fr); padding: 10px 12px max(10px,env(safe-area-inset-bottom)); gap: 10px; }
+  .client-mobile-shell[data-client-page="checkout"] .footer-total { display: flex !important; flex-direction: column; justify-content: center; }
+  .client-mobile-shell[data-client-page="checkout"] .footer-total span { color: var(--client-muted); font-size: .65rem; }
+  .client-mobile-shell[data-client-page="checkout"] .footer-total strong { color: var(--client-text); font-size: .92rem; }
+  .client-mobile-shell[data-client-page="checkout"] #finalizarPedido { min-height: 54px; padding: 10px 13px; justify-content: space-between; border-radius: 13px; }
+  .client-mobile-shell[data-client-page="checkout"] #finalizarPedidoTexto { font-size: .78rem; }
+  .client-mobile-shell[data-client-page="checkout"] #finalizarPedidoTotal { font-size: .8rem; }
+
+  /* Confirmação: ícone e destaques vermelhos, com previsão depois do resumo. */
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="pedido-sucesso"] { background: var(--client-bg); }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="pedido-sucesso"] .sucesso { padding: 24px 16px 18px; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+  .client-mobile-shell[data-client-page="pedido-sucesso"] .icone { width: 76px; height: 76px; margin-bottom: 15px; background: rgba(234,29,44,.13); }
+  .client-mobile-shell[data-client-page="pedido-sucesso"] .icone span { width: 56px; height: 56px; background: var(--client-red); box-shadow: 0 0 0 9px rgba(234,29,44,.08); }
+  .client-mobile-shell[data-client-page="pedido-sucesso"] .success-kicker,
+  .client-mobile-shell[data-client-page="pedido-sucesso"] .success-steps .active { color: #ff6670; }
+  .client-mobile-shell[data-client-page="pedido-sucesso"] .success-order-number { color: var(--client-text) !important; font-size: .9rem !important; }
+  .client-mobile-shell[data-client-page="pedido-sucesso"] .success-order-number strong { color: #ff6670; }
+  .client-mobile-shell[data-client-page="pedido-sucesso"] .success-order-summary { margin-top: 20px; margin-bottom: 10px; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="pedido-sucesso"] .pedido-info { margin: 10px 0 16px; border-color: #4d3035; background: #26191d; }
+  .client-mobile-shell[data-client-page="pedido-sucesso"] .pedido-info strong { color: #ff7b83; }
+  .client-mobile-shell[data-client-page="pedido-sucesso"] .success-steps { display: none; }
+
+  /* Acompanhamento: painel de ETA escuro e progresso vermelho. */
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="acompanhamento"] .track-hero { padding: 17px 15px; border-color: var(--client-border); border-radius: 15px; background: var(--client-surface); }
+  .client-mobile-shell[data-client-page="acompanhamento"] .track-hero h2 { margin: 9px 0 3px; color: var(--client-text); font-size: 1.02rem; }
+  .client-mobile-shell[data-client-page="acompanhamento"] .track-hero p { color: var(--client-muted); font-size: .73rem; }
+  .client-mobile-shell[data-client-page="acompanhamento"] .status-pill { background: rgba(234,29,44,.14); color: #ff7179; }
+  .client-mobile-shell[data-client-page="acompanhamento"] .eta { margin-top: 13px; padding: 10px 0 4px; border-top: 1px solid var(--client-border); border-radius: 0; background: transparent; color: var(--client-text); }
+  .client-mobile-shell[data-client-page="acompanhamento"] .eta small { color: var(--client-muted); }
+  .client-mobile-shell[data-client-page="acompanhamento"] .eta strong { color: #ff6972; }
+  .delivery-progress { --delivery-progress: 18%; position: relative; display: flex; height: 22px; margin-top: 9px; align-items: center; justify-content: space-between; }
+  .delivery-progress::before,
+  .delivery-progress > span { position: absolute; top: 10px; left: 0; height: 3px; border-radius: 99px; content: ""; }
+  .delivery-progress::before { width: 100%; background: #343840; }
+  .delivery-progress > span { z-index: 1; width: var(--delivery-progress); background: var(--client-red); transition: width .25s ease; }
+  .delivery-progress i { z-index: 2; width: 9px; height: 9px; border: 2px solid #555a63; border-radius: 50%; background: #202329; }
+  .delivery-progress i:first-of-type { border-color: var(--client-red); background: var(--client-red); }
+  .client-mobile-shell[data-client-page="acompanhamento"] .progress-card { padding-bottom: 8px; }
+  .client-mobile-shell[data-client-page="acompanhamento"] .timeline li { min-height: 62px; }
+
+  /* Avaliação: quando acessada pelo histórico, vira a tela de foco do mockup. */
+  .client-mobile-shell[data-client-page="acompanhamento"].rating-focus .track-header .live,
+  .client-mobile-shell[data-client-page="acompanhamento"].rating-focus .track-main > :not(#avaliacao) { display: none !important; }
+  .client-mobile-shell[data-client-page="acompanhamento"].rating-focus .track-main { display: block; padding: 0 16px 28px; }
+  html[data-theme="dark"] .client-mobile-shell[data-client-page="acompanhamento"].rating-focus #avaliacao { display: block; margin: 0; padding: 20px 0 0; border: 0; background: transparent; }
+  .rating-hero-visual { display: grid; width: 96px; height: 96px; margin: 2px auto 14px; place-items: center; border-radius: 50%; background: radial-gradient(circle,#342126 0 55%,transparent 56%); font-size: 3.5rem; }
+  .client-mobile-shell[data-client-page="acompanhamento"] .review-copy { text-align: center; }
+  .client-mobile-shell[data-client-page="acompanhamento"] .review-copy h2 { margin: 5px 0; font-size: 1.35rem; }
+  .client-mobile-shell[data-client-page="acompanhamento"] .review-copy p { margin: 0 auto 18px; color: var(--client-muted); font-size: .78rem; }
+  .client-mobile-shell[data-client-page="acompanhamento"] .rating-label { text-align: center; }
+  .client-mobile-shell[data-client-page="acompanhamento"] .review-card textarea { min-height: 110px; border-radius: 13px; }
+  .client-mobile-shell[data-client-page="acompanhamento"] .review-footer { display: grid; gap: 8px; }
+  .client-mobile-shell[data-client-page="acompanhamento"] .review-submit { width: 100%; min-height: 54px; border-radius: 13px; }
+}
+
 /* Multi Delivery 4.6 — busca, confirmação e acompanhamento fiéis aos mockups. */
 @media (max-width: 768px) {
   .client-mobile-shell.home-page.client-search-open { overflow: hidden; }
