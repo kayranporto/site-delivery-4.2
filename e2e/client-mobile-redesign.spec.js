@@ -26,7 +26,8 @@ for (const width of mobileWidths) {
 test("busca recebe foco e estado ativo pelo atalho inferior", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/#buscar");
-  await expect(page.locator("#campoBusca")).toBeFocused();
+  await expect(page.locator("#buscaMobile")).toBeVisible();
+  await expect(page.locator("#campoBuscaMobile")).toBeFocused();
   await expect(page.locator('.client-bottom-nav [data-nav-key="search"]')).toHaveAttribute("aria-current", "page");
 });
 

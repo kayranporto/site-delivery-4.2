@@ -888,7 +888,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keydown', (evento) => {
       if ((evento.ctrlKey || evento.metaKey) && evento.key.toLowerCase() === 'k') {
         evento.preventDefault();
-        busca?.focus();
+        const buscaDedicada = location.hash === '#buscar' && matchMedia('(max-width: 768px)').matches;
+        (buscaDedicada ? pesquisaMobile : busca)?.focus();
       }
     });
   });

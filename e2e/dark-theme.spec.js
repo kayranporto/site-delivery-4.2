@@ -33,7 +33,10 @@ async function prepararPagina(page) {
 }
 
 async function ativarEscuro(page) {
-    await page.getByRole("button", { name: "Ativar modo escuro", exact: true }).click();
+    const temaAtual = await page.locator("html").getAttribute("data-theme");
+    if (temaAtual !== "dark") {
+        await page.getByRole("button", { name: "Ativar modo escuro", exact: true }).click();
+    }
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
 }
 

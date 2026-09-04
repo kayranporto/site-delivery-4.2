@@ -53,6 +53,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test("perfil oferece tema no menu e persiste a escolha nas outras páginas", async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem("multi-delivery-theme", "light"));
     await page.goto("/html/perfil.html");
     const botao=page.getByRole("button",{name:"Ativar modo escuro",exact:true});
     await expect(page.locator("[data-theme-preferences]").getByRole("button")).toBeVisible();
@@ -85,6 +86,7 @@ test("endereço salvo com erro mantém a tela e a seleção anterior", async ({ 
 });
 
 test("painel confere CSV e importa só depois de confirmar", async ({ page }) => {
+    await page.setViewportSize({width:1280,height:900});
     await page.goto("/html/empresa-dashboard.html#cardapio");
     await expect(page.locator("#unidadePainelSelect")).toHaveValue("unidade-qa");
     await page.locator("#importacaoArquivo").setInputFiles({name:"produtos.csv",mimeType:"text/csv",buffer:Buffer.from("nome;categoria;preco\nPizza QA;Pizzas;39,90\nSuco QA;Bebidas;9,90")});

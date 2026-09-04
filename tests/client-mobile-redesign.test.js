@@ -210,6 +210,7 @@ test("busca mobile dedicada possui histórico, sugestões e filtros reais", () =
   assert.match(js, /multi-delivery-buscas-recentes/);
   assert.match(js, /entregaGratis/);
   assert.match(js, /ordenarPorTempo/);
+  assert.match(js, /buscaDedicada \? pesquisaMobile : busca/);
   assert.match(css, /\.client-search-view/);
   assert.match(css, /\.client-search-suggestions/);
 });
