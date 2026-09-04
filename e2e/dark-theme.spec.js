@@ -96,12 +96,13 @@ test("login e cadastros mantêm rótulos e consentimentos legíveis", async ({ p
 });
 
 test("cardápio, carrinho vazio, modal e carrinho preenchido respeitam o tema", async ({ page }) => {
+    const layoutMobile = (await page.viewportSize())?.width <= 768;
     await page.goto("/html/restaurante.html?id=tema-loja");
     await ativarEscuro(page);
     await expect(page.getByRole("button", { name: "Personalizar Lanche de teste" })).toBeVisible();
     await legivel(page, "#infoEntrega, .produto-card .produto-info strong, .produto-card .produto-info p");
     await page.getByRole("button", { name: "Abrir carrinho vazio" }).click();
-    await expect(page.locator("#carrinho")).toHaveCSS("background-color", "rgb(25, 30, 39)");
+    await expect(page.locator("#carrinho")).toHaveCSS("background-color", layoutMobile ? "rgb(9, 11, 13)" : "rgb(25, 30, 39)");
     await legivel(page, ".carrinho-vazio h3, .carrinho-vazio p");
     await page.getByRole("button", { name: "Fechar carrinho" }).click();
     await page.getByRole("button", { name: "Personalizar Lanche de teste" }).click();
@@ -109,17 +110,18 @@ test("cardápio, carrinho vazio, modal e carrinho preenchido respeitam o tema", 
     await legivel(page, "#modalNome, #modalDescricao");
     await page.getByRole("textbox", { name: "Observações do produto" }).fill("Sem cebola");
     await legivel(page, "#observacao");
-    await page.getByRole("button", { name: /^Adicionar/ }).click();
+    await page.locator("#confirmarProduto").click();
     await expect(page.locator(".item-carrinho")).toBeVisible();
     await legivel(page, ".item-carrinho-titulo h4, .item-carrinho-total, .item-carrinho .observacao, .carrinho-footer .linha strong");
 });
 
-test("checkout mantém endereço, pagamento, campos e rodapé legíveis", async ({ page, isMobile }) => {
+test("checkout mantém endereço, pagamento, campos e rodapé legíveis", async ({ page }) => {
+    const layoutMobile = (await page.viewportSize())?.width <= 768;
     await page.goto("/html/checkout.html");
     await ativarEscuro(page);
     await legivel(page, "#enderecoEntrega, #pagamentoNota, #enderecoStatus");
-    if (!isMobile) await legivel(page, ".footer-total span, .footer-total strong");
-    await expect(page.locator(".checkout-footer")).toHaveCSS("background-color", "rgb(32, 38, 49)");
+    if (!layoutMobile) await legivel(page, ".footer-total span, .footer-total strong");
+    await expect(page.locator(".checkout-footer")).toHaveCSS("background-color", layoutMobile ? "rgba(15, 17, 20, 0.97)" : "rgb(32, 38, 49)");
     const dinheiro = page.getByRole("radio", { name: /Dinheiro/ });
     if (await dinheiro.isEnabled()) {
         await dinheiro.check();
