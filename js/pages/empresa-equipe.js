@@ -125,6 +125,7 @@
             return false;
         }
         $("equipeEmpresaNome").textContent = acesso.empresa_nome || "Restaurante";
+        if ($("equipeMobileNome")) $("equipeMobileNome").textContent = acesso.empresa_nome || "Equipe";
         return true;
     }
 
