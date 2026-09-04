@@ -9,50 +9,29 @@
 <title>Pedido Realizado</title>
 <link href="../css/core/style.css?v=4.2.0" rel="stylesheet"/>
 <link href="../css/pages/pedido-sucesso.css?v=4.2.0" rel="stylesheet"/>
-<link href="../css/core/accessibility.css?v=4.2.0" rel="stylesheet"/><meta content="Pedido Realizado — plataforma de pedidos e restaurantes." name="description"/><link rel="manifest" href="../manifest.webmanifest"><meta name="theme-color" content="#ea1d2c"><link rel="stylesheet" href="../css/core/enhancements.css?v=4.4.6"><link rel="stylesheet" href="../css/modules/client-mobile-4.5.css?v=4.5.2"></head>
+<link href="../css/core/accessibility.css?v=4.2.0" rel="stylesheet"/><meta content="Pedido Realizado — plataforma de pedidos e restaurantes." name="description"/><link rel="manifest" href="../manifest.webmanifest"><meta name="theme-color" content="#ea1d2c"><link rel="stylesheet" href="../css/core/enhancements.css?v=4.4.6"><link rel="stylesheet" href="../css/modules/client-mobile-4.5.css?v=4.5.7"></head>
 <body><noscript>Este site precisa de JavaScript habilitado para funcionar.</noscript>
-<div class="sucesso">
-<div class="icone">
-
-        ✅
-
+<main class="success-main">
+  <section class="sucesso" aria-labelledby="tituloSucesso">
+    <div class="icone" aria-hidden="true"><span>✓</span></div>
+    <span class="success-kicker">PEDIDO ENVIADO</span>
+    <h1 id="tituloSucesso">Pedido realizado!</h1>
+    <p>O restaurante recebeu seu pedido. Agora você pode acompanhar cada etapa da entrega.</p>
+    <div class="pedido-info">
+      <div><span>Pedido</span><strong id="numeroPedido">—</strong></div>
+      <div><span>Tempo estimado</span><strong id="previsaoPedido">30–45 minutos</strong></div>
     </div>
-<h1>Pedido realizado!</h1>
-<p>
-
-        Seu pedido foi enviado para o restaurante.
-
-    </p>
-<div class="pedido-info">
-<h2>
-
-            Pedido
-            <span id="numeroPedido"></span>
-</h2>
-<p>
-
-            Tempo estimado
-
-        </p>
-<strong>
-
-            30 - 45 minutos
-
-        </strong>
-</div>
-<div class="acoes">
-<a class="btn" href="meus-pedidos.html">
-
-            Acompanhar Pedido
-
-        </a>
-<a class="btn secundario" href="../index.html">
-
-            Voltar para Home
-
-        </a>
-</div>
-</div>
-<script defer src="../js/core/app-utils.js?v=4.4.6"></script><script defer src="../js/pages/pedido-sucesso.js?v=4.2.0"></script>
+    <ol class="success-steps" aria-label="Próximas etapas">
+      <li class="active"><span>1</span><strong>Recebido</strong></li>
+      <li><span>2</span><strong>Preparando</strong></li>
+      <li><span>3</span><strong>Entrega</strong></li>
+    </ol>
+    <div class="acoes">
+      <a class="btn" href="meus-pedidos.html" id="acompanharPedido">Acompanhar pedido <span aria-hidden="true">→</span></a>
+      <a class="btn secundario" href="../index.html">Voltar ao início</a>
+    </div>
+  </section>
+</main>
+<script defer src="../js/core/app-utils.js?v=4.4.6"></script><script defer src="../js/pages/pedido-sucesso.js?v=4.5.7"></script>
 <script defer src="../js/core/client-mobile-4.5.js?v=4.5.0"></script><script defer src="../js/core/site-enhancements.js?v=4.4.6"></script></body>
 </html>
