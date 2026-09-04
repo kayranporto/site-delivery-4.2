@@ -13,7 +13,7 @@
 <link href="../css/modules/modal.css?v=4.2.0" rel="stylesheet"/>
 <link href="../css/core/accessibility.css?v=4.2.0" rel="stylesheet"/>
 <link href="../css/modules/restaurante-4.2.2.css?v=4.5.4" rel="stylesheet"/>
-<link href="../css/modules/carrinho-4.2.5.css?v=4.2.6" rel="stylesheet"/>
+<link href="../css/modules/carrinho-4.2.5.css?v=4.5.5" rel="stylesheet"/>
 <link href="../css/core/enhancements.css?v=4.4.6" rel="stylesheet"/>
 <link href="../css/modules/client-mobile-4.5.css?v=4.5.2" rel="stylesheet"/>
 <meta content="Confira o cardápio, personalize seus produtos e faça seu pedido pelo Multi Delivery." name="description"/>
@@ -70,8 +70,12 @@
 <span class="carrinho-eyebrow">SEU PEDIDO</span>
 <h2 id="carrinhoTitulo">Seu carrinho <span id="carrinhoQuantidadeResumo" aria-live="polite">0 itens</span></h2>
 <p id="carrinhoRestaurante">Revise os itens antes de continuar</p>
+<p id="carrinhoPrevisao" hidden></p>
 </div>
+<div class="carrinho-header-acoes">
+<button id="limparCarrinhoBtn" type="button">Limpar</button>
 <button aria-label="Fechar carrinho" id="fecharCarrinho" type="button">×</button>
+</div>
 </div>
 <div class="carrinho-itens"></div>
 <div class="carrinho-footer">
@@ -80,13 +84,12 @@
 <div class="carrinho-minimo-barra" role="progressbar" aria-label="Progresso do pedido mínimo" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
 </div>
 <div class="carrinho-resumo-titulo"><span>Resumo</span><small>Valores antes da confirmação</small></div>
-<div class="linha"><span>Subtotal</span><strong id="subtotal">R$ 0,00</strong></div>
-<div class="linha"><span>Entrega</span><strong id="taxaEntrega">R$ 0,00</strong></div>
-<div class="linha total"><span>Total</span><strong id="total">R$ 0,00</strong></div>
-<button id="btnCheckout" type="button"><span id="btnCheckoutTexto">Ir para o checkout</span><strong id="btnCheckoutTotal">R$ 0,00</strong></button>
+<div class="linha"><span>Subtotal</span><strong id="subtotal" aria-live="polite">R$ 0,00</strong></div>
+<div class="linha"><span>Entrega</span><strong id="taxaEntrega" aria-live="polite">R$ 0,00</strong></div>
+<div class="linha total"><span>Total</span><strong id="total" aria-live="polite">R$ 0,00</strong></div>
+<button id="btnCheckout" type="button"><span id="btnCheckoutTexto">Finalizar pedido</span><strong id="btnCheckoutTotal" aria-live="polite">R$ 0,00</strong></button>
 <div class="carrinho-acoes-secundarias">
 <button id="continuarComprando" type="button">Adicionar mais itens</button>
-<button id="limparCarrinhoBtn" type="button">Limpar carrinho</button>
 </div>
 </div>
 </aside>
@@ -123,9 +126,9 @@
 <script defer src="../js/core/cart-store.js?v=4.2.0"></script>
 <script defer src="../js/core/favorites-sync.js?v=4.2.1"></script>
 <script defer src="../js/pages/restaurante.js?v=4.5.3"></script>
-<script defer src="../js/modules/carrinho.js?v=4.2.6"></script>
+<script defer src="../js/modules/carrinho.js?v=4.5.5"></script>
 <script defer src="../js/modules/modal.js?v=4.5.4"></script>
-<script defer src="../js/modules/carrinho-4.2.5.js?v=4.2.6"></script>
+<script defer src="../js/modules/carrinho-4.2.5.js?v=4.5.5"></script>
 <script defer src="../js/core/client-mobile-4.5.js?v=4.5.0"></script>
 <script defer src="../js/core/site-enhancements.js?v=4.4.6"></script>
 </body>

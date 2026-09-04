@@ -125,3 +125,21 @@ test("produto mobile destaca adicionais, quantidade e total sem inventar opçõe
   assert.match(css, /safe-area-inset-bottom/);
   assert.doesNotMatch(html, /Escolha o tamanho/i);
 });
+
+test("carrinho mobile preserva o pedido e mantém a finalização acessível", () => {
+  const html = read("html/restaurante.html");
+  const cart = read("js/modules/carrinho.js");
+  const store = read("js/core/cart-store.js");
+  const css = read("css/modules/carrinho-4.2.5.css");
+  for (const id of ["carrinhoRestaurante", "carrinhoPrevisao", "carrinhoMinimo", "subtotal", "taxaEntrega", "total", "btnCheckout"]) {
+    assert.match(html, new RegExp(`id="${id}"`));
+  }
+  assert.match(html, /Finalizar pedido/);
+  assert.match(cart, /Trocar de restaurante\?/);
+  assert.match(cart, /tempo_estimado_min/);
+  assert.match(store, /carrinhoBackup/);
+  assert.match(css, /#carrinho\{z-index:999;width:100%;max-width:100%;height:100dvh/);
+  assert.match(css, /\.carrinho-footer\{position:relative/);
+  assert.match(css, /\.quantidade button\{width:44px;height:44px/);
+  assert.match(css, /safe-area-inset-bottom/);
+});

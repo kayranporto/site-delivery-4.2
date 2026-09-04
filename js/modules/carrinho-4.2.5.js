@@ -226,7 +226,7 @@
         }
         btnCheckout.disabled = !lerCarrinho().length || indisponiveis > 0;
         const textoCheckout = document.getElementById("btnCheckoutTexto");
-        if (textoCheckout) textoCheckout.textContent = indisponiveis ? "Revise os itens para continuar" : "Ir para o checkout";
+        if (textoCheckout) textoCheckout.textContent = indisponiveis ? "Revise os itens para continuar" : "Finalizar pedido";
     }
 
     const observer = new MutationObserver(() => queueMicrotask(adicionarControles));
