@@ -17,6 +17,7 @@ let filtroStatusPedido = "todos";
 let buscaPedido = "";
 let audioContexto = null;
 let alertasAtivos = localStorage.getItem("alertasRestaurante") === "true";
+let colunaPedidosMobile = "recebido";
 
 const listaPedidos = document.getElementById("pedidosEmpresa");
 const listaProdutos = document.getElementById("produtosEmpresa");
@@ -532,7 +533,19 @@ function renderizarPedidos() {
         bloco.append(cabecalho, lista); listaPedidos.append(bloco);
     });
     document.getElementById("ultimaAtualizacao").textContent = new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+    aplicarFiltroPedidosMobile();
     renderizarFilaCozinha();
+}
+
+function aplicarFiltroPedidosMobile() {
+    document.querySelectorAll(".mobile-order-tabs [data-order-mobile-filter]").forEach((botao) => {
+        const ativo = botao.dataset.orderMobileFilter === colunaPedidosMobile;
+        botao.classList.toggle("active", ativo);
+        botao.setAttribute("aria-pressed", String(ativo));
+    });
+    document.querySelectorAll("#pedidosEmpresa .kanban-column").forEach((coluna) => {
+        coluna.classList.toggle("mobile-column-active", coluna.dataset.column === colunaPedidosMobile);
+    });
 }
 function atualizarSelectCategorias() {
     const valorAtual = categoriaSelect.value;
@@ -946,6 +959,12 @@ function editarProduto(produto) {
 
 function preencherLoja() {
     document.getElementById("nomeEmpresa").textContent = empresa.nome || "Painel do Restaurante";
+    const logoMobile = document.getElementById("restaurantMobileLogo");
+    if (logoMobile && empresa.logo) {
+        logoMobile.textContent = "";
+        logoMobile.style.backgroundImage = `url("${String(empresa.logo).replace(/["\\\n\r]/g, "")}")`;
+        logoMobile.classList.add("has-image");
+    }
     const linkLoja = document.getElementById("linkLoja");
     linkLoja.href = `restaurante.html?id=${encodeURIComponent(empresa.id)}`;
     linkLoja.hidden = empresa.publicado !== true;
@@ -1437,14 +1456,26 @@ addEventListener("pointerdown", async () => {
 const sidebar = document.getElementById("dashboardSidebar");
 const sidebarOverlay = document.getElementById("sidebarOverlay");
 const menuDashboard = document.getElementById("menuDashboard");
+const maisDashboard = document.getElementById("maisDashboard");
 function fecharSidebar() {
-    sidebar.classList.remove("open"); sidebarOverlay.classList.remove("show"); menuDashboard.setAttribute("aria-expanded", "false");
+    sidebar.classList.remove("open"); sidebarOverlay.classList.remove("show"); menuDashboard.setAttribute("aria-expanded", "false"); maisDashboard?.setAttribute("aria-expanded", "false");
 }
 menuDashboard.addEventListener("click", () => {
     const abrir = !sidebar.classList.contains("open");
     sidebar.classList.toggle("open", abrir); sidebarOverlay.classList.toggle("show", abrir); menuDashboard.setAttribute("aria-expanded", String(abrir));
 });
 sidebarOverlay.addEventListener("click", fecharSidebar);
+maisDashboard?.addEventListener("click", () => {
+    const abrir = !sidebar.classList.contains("open");
+    sidebar.classList.toggle("open", abrir); sidebarOverlay.classList.toggle("show", abrir); maisDashboard.setAttribute("aria-expanded", String(abrir));
+});
+
+document.querySelectorAll(".mobile-order-tabs [data-order-mobile-filter]").forEach((botao) => {
+    botao.addEventListener("click", () => {
+        colunaPedidosMobile = botao.dataset.orderMobileFilter || "recebido";
+        aplicarFiltroPedidosMobile();
+    });
+});
 
 const dashboardViews = [...document.querySelectorAll("[data-dashboard-view]")];
 const dashboardLinks = [...document.querySelectorAll('.dashboard-sidebar nav a[href^="#"], [data-dashboard-link][href^="#"]')];
@@ -1469,6 +1500,10 @@ function mostrarSecaoPainel(id, { atualizarHistorico = false, focar = false } = 
         if (ativo) link.setAttribute("aria-current", "page");
         else link.removeAttribute("aria-current");
     });
+    if (maisDashboard) {
+        const principais = ["visaoGeral", "pedidos", "cardapio", "operacao"];
+        maisDashboard.classList.toggle("active", !principais.includes(secaoId));
+    }
     if (atualizarHistorico && location.hash !== `#${secaoId}`) {
         history.pushState({ dashboardView: secaoId }, "", `#${secaoId}`);
     }
