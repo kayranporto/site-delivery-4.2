@@ -223,6 +223,7 @@ html[data-theme=dark] body .restaurant-management-mobile a.active{border-color:#
   .restaurant-management-mobile button{cursor:pointer}
 
   .dashboard-sidebar{inset:auto 10px calc(76px + env(safe-area-inset-bottom));width:calc(100% - 20px);max-height:min(72vh,620px);padding:17px;color:#fff;background:#141619;border:1px solid #34373d;border-radius:22px;box-shadow:0 -22px 60px rgba(0,0,0,.65);transform:translateY(calc(100% + 100px));overflow-y:auto}
+  .dashboard-sidebar{z-index:65}
   .dashboard-sidebar.open{transform:translateY(0)}
   .dashboard-brand{padding:2px 5px 14px}.dashboard-brand>span{background:#2b191a;box-shadow:none}.dashboard-sidebar nav{grid-template-columns:1fr 1fr;gap:7px}
   .dashboard-sidebar nav a{min-height:50px;color:#c0c2c7;background:#1c1f23;border:1px solid #2c3035}.dashboard-sidebar nav a.active{color:#ff5966;background:#351a1f;box-shadow:none}.dashboard-sidebar nav a b{font-size:10px}

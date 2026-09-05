@@ -14,7 +14,7 @@ test("gestão mobile usa a navegação inferior aprovada", () => {
     assert.match(html, new RegExp(`href="${target}"[^>]*data-dashboard-link`));
   }
   assert.match(html, /id="maisDashboard"/);
-  assert.match(html, /empresa-dashboard\.css\?v=4\.6\.3/);
+  assert.match(html, /empresa-dashboard\.css\?v=4\.6\.5/);
   assert.match(html, /empresa-dashboard\.js\?v=4\.6\.3/);
 });
 
