@@ -24,7 +24,7 @@ test("Home carrega, oferece busca e filtros acessíveis", async ({ page, isMobil
     await abrir(page, "/");
 
     await expect(page).toHaveTitle(/Multi Delivery/i);
-    await expect(page.getByRole("heading", { level: 2, name: "Encontre seu sabor" })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 2, name: "Restaurantes perto de você" })).toBeVisible();
     const busca = isMobile
         ? page.locator("#campoBuscaMobile")
         : page.getByRole("textbox", { name: /Buscar restaurante ou comida/i });
@@ -43,7 +43,7 @@ test("Home carrega, oferece busca e filtros acessíveis", async ({ page, isMobil
     await pizza.click();
     await expect(pizza).toHaveAttribute("aria-pressed", "true");
 
-    const abertoAgora = page.getByRole("button", { name: "Aberto agora" });
+    const abertoAgora = page.locator("#toggleAberto");
     await abertoAgora.click();
     await expect(abertoAgora).toHaveAttribute("aria-pressed", "true");
     await expect(page.getByRole("button", { name: "Abrir carrinho" })).toBeVisible();
@@ -91,7 +91,7 @@ test("Página de restaurante sem id volta para a Home", async ({ page }) => {
     const semErroFatal = observarErrosFatais(page);
     await abrir(page, "/html/restaurante.html");
     await expect(page).toHaveURL(/\/(?:index\.html)?$/, { timeout: 12000 });
-    await expect(page.getByRole("heading", { level: 2, name: "Encontre seu sabor" })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 2, name: "Restaurantes perto de você" })).toBeVisible();
     semErroFatal();
 });
 

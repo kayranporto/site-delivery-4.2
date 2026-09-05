@@ -102,6 +102,8 @@ test("painel confere CSV e importa só depois de confirmar", async ({ page }) =>
 });
 
 test("painel bloqueia CSV inválido e permite cidade inteira sem preencher bairro", async ({ page }) => {
+    // Configuração de regiões pertence ao painel desktop; no mobile, Operação mostra as entregas.
+    await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto("/html/empresa-dashboard.html#cardapio");
     await expect(page.locator("#unidadePainelSelect")).toHaveValue("unidade-qa");
     await page.locator("#importacaoArquivo").setInputFiles({name:"produtos.csv",mimeType:"text/csv",buffer:Buffer.from("nome;preco\nSuco;-1")});

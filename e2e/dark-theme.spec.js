@@ -102,7 +102,7 @@ test("cardápio, carrinho vazio, modal e carrinho preenchido respeitam o tema", 
     await expect(page.getByRole("button", { name: "Personalizar Lanche de teste" })).toBeVisible();
     await legivel(page, "#infoEntrega, .produto-card .produto-info strong, .produto-card .produto-info p");
     await page.getByRole("button", { name: "Abrir carrinho vazio" }).click();
-    await expect(page.locator("#carrinho")).toHaveCSS("background-color", layoutMobile ? "rgb(9, 11, 13)" : "rgb(25, 30, 39)");
+    await expect(page.locator("#carrinho")).toHaveCSS("background-color", layoutMobile ? "rgb(25, 22, 20)" : "rgb(25, 30, 39)");
     await legivel(page, ".carrinho-vazio h3, .carrinho-vazio p");
     await page.getByRole("button", { name: "Fechar carrinho" }).click();
     await page.getByRole("button", { name: "Personalizar Lanche de teste" }).click();
@@ -121,7 +121,7 @@ test("checkout mantém endereço, pagamento, campos e rodapé legíveis", async 
     await ativarEscuro(page);
     await legivel(page, "#enderecoEntrega, #pagamentoNota, #enderecoStatus");
     if (!layoutMobile) await legivel(page, ".footer-total span, .footer-total strong");
-    await expect(page.locator(".checkout-footer")).toHaveCSS("background-color", layoutMobile ? "rgba(15, 17, 20, 0.97)" : "rgb(32, 38, 49)");
+    await expect(page.locator(".checkout-footer")).toHaveCSS("background-color", layoutMobile ? "rgb(25, 22, 20)" : "rgb(32, 38, 49)");
     const dinheiro = page.getByRole("radio", { name: /Dinheiro/ });
     if (await dinheiro.isEnabled()) {
         await dinheiro.check();
