@@ -52,7 +52,8 @@ const filtros = {
     abertoAgora: false,
     entregaGratis: false,
     ordenarPorTempo: false,
-    ordenarPorTaxa: false
+    ordenarPorTaxa: false,
+    ordenarPorNota: false
 };
 
 // Microanimações de entrada e acessibilidade sem alterar o fluxo de dados.
@@ -261,7 +262,7 @@ function renderizarEmpresas(lista) {
         favorite.className = "favorite";
         favorite.dataset.favoriteId = empresa.id;
         const favoritado = favoritos.has(String(empresa.id));
-        favorite.textContent = favoritado ? "❤️" : "🤍";
+        favorite.textContent = favoritado ? "♥" : "♡";
         favorite.setAttribute("aria-label", favoritado ? `Remover ${empresa.nome} dos favoritos` : `Adicionar ${empresa.nome} aos favoritos`);
         favorite.setAttribute("aria-pressed", String(favoritado));
         body.append(header);
@@ -269,7 +270,7 @@ function renderizarEmpresas(lista) {
         const info = document.createElement("div");
         info.className = "info";
         if (empresa.quantidade_avaliacoes > 0) {
-            info.append(criarTexto("span", "rating-info", `⭐ ${Number(empresa.nota_media).toFixed(1)} (${empresa.quantidade_avaliacoes})`));
+            info.append(criarTexto("span", "rating-info", `★ ${Number(empresa.nota_media).toFixed(1)} (${empresa.quantidade_avaliacoes})`));
         } else {
             info.append(criarTexto("span", "rating-info rating-new", "☆ Novo"));
         }
@@ -301,7 +302,7 @@ function renderizarResultadoBuscaMobile(lista) {
     listaBuscaMobile.replaceChildren(...Array.from(cards.children).map((item) => item.cloneNode(true)));
     if (totalBuscaMobile) totalBuscaMobile.textContent = `${lista.length} ${lista.length === 1 ? "resultado" : "resultados"}`;
     const temConsulta = Boolean(String(pesquisaMobile?.value || "").trim());
-    const temFiltro = filtros.abertoAgora || filtros.entregaGratis || filtros.ordenarPorTempo || filtros.ordenarPorTaxa;
+    const temFiltro = filtros.abertoAgora || filtros.entregaGratis || filtros.ordenarPorTempo || filtros.ordenarPorTaxa || filtros.ordenarPorNota;
     if (descobertaBuscaMobile) descobertaBuscaMobile.hidden = temConsulta || temFiltro;
     if (resultadosBuscaMobile) resultadosBuscaMobile.hidden = !temConsulta && !temFiltro;
 }
@@ -348,7 +349,9 @@ function aplicarFiltros() {
             (!filtros.entregaGratis || Number(empresa.taxa_entrega || 0) === 0);
     });
 
-    if (filtros.ordenarPorTempo) {
+    if (filtros.ordenarPorNota) {
+        resultado.sort((a, b) => Number(b.nota_media || 0) - Number(a.nota_media || 0));
+    } else if (filtros.ordenarPorTempo) {
         resultado.sort((a, b) => (Number(a?.tempo_estimado_min) || 999) - (Number(b?.tempo_estimado_min) || 999));
     } else if (filtros.ordenarPorTaxa) {
         resultado.sort((a, b) => (Number(a?.taxa_entrega) || 0) - (Number(b?.taxa_entrega) || 0));
@@ -420,6 +423,39 @@ function aplicarBuscaProdutos(texto = normalizar(pesquisa?.value)) {
         ? produtosDestaque.filter((produto) => normalizar(`${produto.nome} ${produto.descricao}`).includes(texto)).slice(0, 20)
         : produtosDestaque.slice(0, 6);
     renderizarDestaques(filtrados);
+    const produtosBusca = document.getElementById("listaProdutosBuscaMobile");
+    if (!produtosBusca) return;
+    const empresasPorId = new Map(empresas.map((empresa) => [String(empresa.id), empresa]));
+    const resultados = produtosDestaque.filter((produto) => {
+        const empresa = empresasPorId.get(String(produto.empresa_id));
+        if (!empresa) return false;
+        const corresponde = normalizar(`${produto.nome} ${produto.descricao} ${empresa.nome} ${empresa.categoria || ""}`).includes(texto);
+        return corresponde && (!filtros.abertoAgora || empresa.abertaAgora === true)
+            && (!filtros.entregaGratis || Number(empresa.taxa_entrega || 0) === 0);
+    });
+    if (filtros.ordenarPorNota) resultados.sort((a, b) => Number(empresasPorId.get(String(b.empresa_id)).nota_media || 0) - Number(empresasPorId.get(String(a.empresa_id)).nota_media || 0));
+    else if (filtros.ordenarPorTempo) resultados.sort((a, b) => Number(empresasPorId.get(String(a.empresa_id)).tempo_estimado_min || 999) - Number(empresasPorId.get(String(b.empresa_id)).tempo_estimado_min || 999));
+    else if (filtros.ordenarPorTaxa) resultados.sort((a, b) => Number(empresasPorId.get(String(a.empresa_id)).taxa_entrega || 0) - Number(empresasPorId.get(String(b.empresa_id)).taxa_entrega || 0));
+    produtosBusca.replaceChildren();
+    resultados.slice(0, 20).forEach((produto) => {
+        const link = document.createElement("a");
+        link.className = "produto-destaque";
+        link.href = `html/restaurante.html?id=${encodeURIComponent(produto.empresa_id)}`;
+        link.setAttribute("aria-label", `Ver ${produto.nome} no cardápio`);
+        link.append(imagemComFallback(produto.imagem, produto.nome, "assets/produto-padrao.svg"));
+        const textoProduto = document.createElement("div");
+        const promocao = Number(produto.promocao || 0);
+        textoProduto.append(criarTexto("h3", "", produto.nome || "Produto"), criarTexto("p", "", empresasPorId.get(String(produto.empresa_id)).nome), criarTexto("strong", "", dinheiro(promocao > 0 ? promocao : produto.preco)));
+        link.append(textoProduto);
+        produtosBusca.append(link);
+    });
+    if (!resultados.length) produtosBusca.append(criarTexto("p", "sem-restaurantes", "Nenhum produto encontrado para esta busca."));
+    const mostrarProdutos = document.querySelector('[data-search-kind="produtos"]')?.getAttribute("aria-pressed") === "true";
+    produtosBusca.hidden = !mostrarProdutos;
+    if (listaBuscaMobile) listaBuscaMobile.hidden = mostrarProdutos;
+    const titulo = document.getElementById("resultadosBuscaTitulo");
+    if (titulo) titulo.textContent = mostrarProdutos ? "Produtos" : "Restaurantes";
+    if (mostrarProdutos && totalBuscaMobile) totalBuscaMobile.textContent = `${Math.min(resultados.length, 20)} ${resultados.length === 1 ? "produto" : "produtos"}`;
 }
 
 async function carregarDestaques() {
@@ -676,6 +712,7 @@ verTodos?.addEventListener("click", (event) => {
     filtros.entregaGratis = false;
     filtros.ordenarPorTempo = false;
     filtros.ordenarPorTaxa = false;
+    filtros.ordenarPorNota = false;
     filtroAberto?.classList.remove("active");
     filtroGratis?.classList.remove("active");
     ordenarTempo?.classList.remove("active");
@@ -785,6 +822,7 @@ function atualizarTelaBuscaMobile() {
 document.getElementById("fecharBuscaMobile")?.addEventListener("click", () => {
     history.pushState(null, "", `${location.pathname}${location.search}`);
     atualizarTelaBuscaMobile();
+    dispatchEvent(new Event("hashchange"));
 });
 document.getElementById("limparBuscaMobile")?.addEventListener("click", () => aplicarTermoBuscaMobile("", false));
 document.getElementById("limparHistoricoBusca")?.addEventListener("click", () => {
@@ -794,6 +832,7 @@ document.getElementById("limparHistoricoBusca")?.addEventListener("click", () =>
 document.getElementById("ordenarBuscaMobile")?.addEventListener("click", (event) => {
     filtros.ordenarPorTempo = !filtros.ordenarPorTempo;
     filtros.ordenarPorTaxa = false;
+    filtros.ordenarPorNota = false;
     event.currentTarget.classList.toggle("active", filtros.ordenarPorTempo);
     event.currentTarget.setAttribute("aria-pressed", String(filtros.ordenarPorTempo));
     event.currentTarget.lastChild.textContent = filtros.ordenarPorTempo ? " Mais rápidos" : " Ordenar";
@@ -806,6 +845,12 @@ document.getElementById("filtrosBuscaMobile")?.addEventListener("click", (event)
     filtrosBusca?.classList.toggle("collapsed", expandido);
 });
 document.querySelector(".client-search-view")?.addEventListener("click", (event) => {
+    const tipo = event.target.closest("[data-search-kind]");
+    if (tipo) {
+        document.querySelectorAll("[data-search-kind]").forEach((botao) => botao.setAttribute("aria-pressed", String(botao === tipo)));
+        aplicarFiltros();
+        return;
+    }
     const sugestao = event.target.closest("[data-search-mobile]");
     if (sugestao) aplicarTermoBuscaMobile(sugestao.dataset.searchMobile);
     const filtro = event.target.closest("[data-mobile-filter]");
@@ -813,6 +858,9 @@ document.querySelector(".client-search-view")?.addEventListener("click", (event)
     const chave = filtro.dataset.mobileFilter;
     if (!(chave in filtros)) return;
     filtros[chave] = !filtros[chave];
+    if (["ordenarPorNota", "ordenarPorTempo", "ordenarPorTaxa"].includes(chave) && filtros[chave]) {
+        ["ordenarPorNota", "ordenarPorTempo", "ordenarPorTaxa"].forEach((outra) => { if (outra !== chave) filtros[outra] = false; });
+    }
     if (chave === "ordenarPorTempo" && filtros[chave]) filtros.ordenarPorTaxa = false;
     if (chave === "ordenarPorTaxa" && filtros[chave]) filtros.ordenarPorTempo = false;
     document.querySelectorAll("[data-mobile-filter]").forEach((botao) => {

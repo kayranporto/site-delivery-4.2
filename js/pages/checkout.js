@@ -199,7 +199,14 @@ function criarResumo(item) {
     const preco = document.createElement("div");
     preco.className = "item-preco";
     preco.textContent = App.dinheiro(valorUnitario(item) * Number(item.quantidade || 0));
-    container.append(info, preco);
+    const foto = document.createElement("img");
+    foto.className = "client-checkout-photo";
+    foto.alt = item.nome || "Produto";
+    foto.loading = "lazy";
+    const fonte = String(item.imagem || "");
+    foto.src = /^https?:\/\//i.test(fonte) || /^\.\.?\/assets\//.test(fonte) ? fonte : "../assets/produto-padrao.svg";
+    foto.addEventListener("error", () => { foto.src = "../assets/produto-padrao.svg"; }, { once: true });
+    container.append(foto, info, preco);
     return container;
 }
 

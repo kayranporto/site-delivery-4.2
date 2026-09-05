@@ -25,16 +25,16 @@ test("navegação inferior possui as cinco áreas e respeita safe area", () => {
   assert.match(css, /min-height:\s*58px/);
 });
 
-test("checkout e fluxos focados não recebem navegação inferior", () => {
+test("checkout e confirmação não recebem navegação inferior", () => {
   const js = read("js/core/client-mobile-4.5.js");
   const navPages = js.match(/const CLIENT_NAV_PAGES[\s\S]*?\]\);/)?.[0] || "";
-  assert.doesNotMatch(navPages, /checkout\.html|restaurante\.html|pedido-sucesso\.html/);
+  assert.doesNotMatch(navPages, /checkout\.html|pedido-sucesso\.html/);
 });
 
 test("camada mobile possui JavaScript e CSS próprios", () => {
   const shared = read("js/core/site-enhancements.js");
   assert.doesNotMatch(shared, /CLIENT_NAV_PAGES|client-bottom-nav|navItems/);
-  assert.match(read("sw.js"), /client-mobile-4\.5\.js\?v=4\.6\.0/);
+  assert.match(read("sw.js"), /client-mobile-4\.5\.js\?v=4\.7\.0/);
   assert.match(read("sw.js"), /client-mobile-4\.5\.css\?v=4\.6\.5/);
 });
 
@@ -56,7 +56,7 @@ test("assets mobile são carregados somente nas páginas do cliente", () => {
   for (const page of clientPages) {
     const html = read(page);
     assert.match(html, /client-mobile-4\.5\.css\?v=4\.6\.5/, `${page} deve carregar o CSS mobile`);
-    assert.match(html, /client-mobile-4\.5\.js\?v=4\.6\.0/, `${page} deve carregar o JS mobile`);
+    assert.match(html, /client-mobile-4\.5\.js\?v=4\.7\.0/, `${page} deve carregar o JS mobile`);
     assert.ok(html.indexOf("client-mobile-4.5.js") < html.indexOf("site-enhancements.js"), `${page} deve preparar o tema antes da camada compartilhada`);
   }
 

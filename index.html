@@ -31,6 +31,7 @@
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"WebSite","name":"Multi Delivery","url":"https://kayranporto.github.io/site-delivery-4.2/","description":"Plataforma de delivery com restaurantes, pedidos e acompanhamento em tempo real.","inLanguage":"pt-BR","publisher":{"@type":"Organization","name":"Multi Delivery","logo":{"@type":"ImageObject","url":"https://kayranporto.github.io/site-delivery-4.2/assets/favicon.svg"}}}
   </script>
+<link rel="stylesheet" href="css/modules/client-approved-4.7.css?v=4.7.0"/>
 </head>
 <body class="home-page">
   <div class="topbar">
@@ -43,12 +44,12 @@
   <noscript>Este site precisa de JavaScript habilitado para funcionar.</noscript>
   <header class="header">
     <div class="container-header">
-      <a class="logo" href="index.html" aria-label="Delivery — página inicial"><span aria-hidden="true">🍔</span><span>Multi Delivery</span></a>
+      <a class="logo" href="index.html" aria-label="Delivery — página inicial"><span aria-hidden="true">🍔</span><span>Multi <span class="brand-accent">Delivery</span></span></a>
       <p class="client-mobile-greeting" id="saudacaoCliente">Olá! <span aria-hidden="true">👋</span></p>
       <button class="location" id="seletorEndereco" type="button" aria-label="Selecionar endereço de entrega">
         <span aria-hidden="true">📍</span><span class="location-content"><small>Entregar em</small><strong id="enderecoAtual">Selecionar endereço</strong></span>
       </button>
-      <div class="search"><span class="search-icon" aria-hidden="true">⌕</span><input aria-label="Buscar restaurante ou comida" autocomplete="off" id="campoBusca" maxlength="120" placeholder="Busque por prato, restaurante ou categoria" type="text"/><kbd aria-hidden="true">Ctrl K</kbd></div>
+      <div class="search"><span class="search-icon" aria-hidden="true">⌕</span><input aria-label="Buscar restaurante ou comida" autocomplete="off" id="campoBusca" maxlength="120" placeholder="O que você quer comer?" type="text"/><kbd aria-hidden="true">Ctrl K</kbd></div>
       <nav id="menuUsuario" aria-label="Navegação da conta"><a href="html/login.html">Entrar</a></nav>
       <button class="cart" id="abrirCarrinho" type="button" aria-label="Abrir carrinho">🛒<span class="cart-count">0</span></button>
     </div>
@@ -80,14 +81,24 @@
         <div class="client-search-filters" aria-label="Filtros da busca">
           <button type="button" data-mobile-filter="abertoAgora" aria-pressed="false">Aberto agora</button>
           <button type="button" data-mobile-filter="entregaGratis" aria-pressed="false">Entrega grátis</button>
+          <button type="button" data-mobile-filter="ordenarPorNota" aria-pressed="false">Melhor avaliação</button>
           <button type="button" data-mobile-filter="ordenarPorTempo" aria-pressed="false">Mais rápidos</button>
           <button type="button" data-mobile-filter="ordenarPorTaxa" aria-pressed="false">Menor taxa</button>
         </div>
+        <div class="client-search-tabs" role="group" aria-label="Tipo de resultado">
+          <button type="button" data-search-kind="restaurantes" aria-pressed="true">Restaurantes</button>
+          <button type="button" data-search-kind="produtos" aria-pressed="false">Produtos</button>
+        </div>
         <div class="cards client-search-cards" id="listaBuscaMobile"></div>
+        <div class="client-search-products" id="listaProdutosBuscaMobile" hidden></div>
       </section>
     </div>
   </section>
   <main>
+    <section class="client-approved-hero" aria-labelledby="clientHeroTitle">
+      <div class="client-hero-photo" aria-hidden="true"></div>
+      <div class="client-hero-copy"><h2 id="clientHeroTitle">Seu próximo pedido começa aqui</h2><a href="#restaurantes">Ver restaurantes</a></div>
+    </section>
     <section class="banner" aria-labelledby="heroTitulo">
       <span class="hero-orb hero-orb-one" aria-hidden="true"></span><span class="hero-orb hero-orb-two" aria-hidden="true"></span><span class="hero-orb hero-orb-three" aria-hidden="true"></span>
       <div class="banner-content">
@@ -124,11 +135,11 @@
     <section class="categorias" aria-labelledby="categoriasTitulo">
       <div class="section-title category-heading"><div><span class="eyebrow">Escolha pelo que está com vontade</span><h2 id="categoriasTitulo">Encontre seu sabor</h2></div></div>
       <div class="categoria-lista">
-        <button type="button" class="categoria" data-categoria="" aria-pressed="true"><div aria-hidden="true">🍽️</div><span>Todos</span></button><button type="button" class="categoria" data-categoria="Hambúrguer"><div aria-hidden="true">🍔</div><span>Hambúrguer</span></button><button type="button" class="categoria" data-categoria="Pizza"><div aria-hidden="true">🍕</div><span>Pizza</span></button><button type="button" class="categoria" data-categoria="Sushi"><div aria-hidden="true">🍣</div><span>Sushi</span></button><button type="button" class="categoria" data-categoria="Churrasco"><div aria-hidden="true">🥩</div><span>Churrasco</span></button><button type="button" class="categoria" data-categoria="Doces"><div aria-hidden="true">🍰</div><span>Doces</span></button>
+        <button type="button" class="categoria" data-categoria="" aria-pressed="true"><div aria-hidden="true">🍽️</div><span>Todos</span></button><button type="button" class="categoria" data-categoria="Hambúrguer" data-food="burger"><div aria-hidden="true">🍔</div><span>Hambúrguer</span></button><button type="button" class="categoria" data-categoria="Pizza" data-food="pizza"><div aria-hidden="true">🍕</div><span>Pizza</span></button><button type="button" class="categoria" data-categoria="Sushi" data-food="sushi"><div aria-hidden="true">🍣</div><span>Sushi</span></button><button type="button" class="categoria" data-categoria="Churrasco" data-food="steak"><div aria-hidden="true">🥩</div><span>Churrasco</span></button><button type="button" class="categoria" data-categoria="Doces" data-food="sweet"><div aria-hidden="true">🍰</div><span>Doces</span></button>
       </div>
     </section>
     <section class="restaurantes" id="restaurantes" aria-labelledby="restaurantesTitulo">
-      <div class="section-title"><div><span class="eyebrow">Perto de você</span><h2 id="restaurantesTitulo">Restaurantes em destaque</h2></div><a href="#restaurantes" id="verTodosRestaurantes">Ver todos <span aria-hidden="true">→</span></a></div>
+      <div class="section-title"><div><span class="eyebrow">Perto de você</span><h2 id="restaurantesTitulo">Restaurantes perto de você</h2></div><a href="#restaurantes" id="verTodosRestaurantes">Ver todos <span aria-hidden="true">→</span></a></div>
       <div class="restaurant-tools" aria-label="Ferramentas de filtro e ordenação de restaurantes"><button type="button" id="toggleAberto" class="filter-pill" aria-pressed="false">Aberto agora</button><button type="button" id="toggleGratis" class="filter-pill" aria-pressed="false">Entrega grátis</button><button type="button" id="ordenarTempo" class="filter-pill" aria-pressed="false">Mais rápidos</button><button type="button" id="ordenarTaxa" class="filter-pill" aria-pressed="false">Menor taxa</button><div class="resultado-info" id="resultadoResumo" aria-live="polite">Mostrando restaurantes disponíveis.</div></div>
       <div class="cards" id="listaRestaurantes"><div class="loading">Carregando restaurantes...</div></div>
     </section>
@@ -139,6 +150,6 @@
   </main>
   <footer><div class="footer-container"><div><h2>🍔 Multi Delivery</h2><p>Comida boa na sua porta.</p></div><div><h3>Cliente</h3><p><a href="html/perfil.html">Minha conta</a></p><p><a href="html/meus-pedidos.html">Meus pedidos</a></p><p><a href="html/suporte.html">Ajuda</a></p><p><a href="html/privacidade.html">Privacidade</a></p></div><div><h3>Restaurante</h3><p><a href="html/empresa-cadastro.html">Cadastrar restaurante</a></p><p><a href="html/empresa-login.html">Área do parceiro</a></p></div><div><h3>Entregador</h3><p><a href="html/entregador.html">Quero fazer entregas</a></p><p><a href="html/entregador.html">Painel do entregador</a></p></div></div><div class="copyright">© 2026 Multi Delivery</div></footer>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.111.0" defer></script>
-  <script src="js/core/app-utils.js?v=4.4.6" defer></script><script src="js/core/supabase.js?v=4.2.0" defer></script><script src="js/core/config.js?v=4.4.6" defer></script><script src="js/core/monitoring.js?v=4.2.0" defer></script><script src="js/core/notifications.js?v=4.2.0" defer></script><script src="js/core/favorites-sync.js?v=4.2.1" defer></script><script src="js/modules/pos-pedido.js?v=4.5.1" defer></script><script src="js/pages/home.js?v=4.6.1" defer></script><script src="js/core/client-mobile-4.5.js?v=4.6.0" defer></script><script src="js/core/site-enhancements.js?v=4.4.6" defer></script>
+  <script src="js/core/app-utils.js?v=4.4.6" defer></script><script src="js/core/supabase.js?v=4.2.0" defer></script><script src="js/core/config.js?v=4.4.6" defer></script><script src="js/core/monitoring.js?v=4.2.0" defer></script><script src="js/core/notifications.js?v=4.2.0" defer></script><script src="js/core/favorites-sync.js?v=4.2.1" defer></script><script src="js/modules/pos-pedido.js?v=4.5.1" defer></script><script src="js/pages/home.js?v=4.7.0" defer></script><script src="js/core/client-mobile-4.5.js?v=4.7.0" defer></script><script src="js/core/site-enhancements.js?v=4.4.6" defer></script>
 </body>
 </html>

@@ -15,7 +15,7 @@
     "suporte.html",
     "privacidade.html"
   ]);
-  const CLIENT_NAV_PAGES = new Set(["index.html", "meus-pedidos.html", "favoritos.html", "perfil.html"]);
+  const CLIENT_NAV_PAGES = new Set(["index.html", "restaurante.html", "acompanhamento.html", "meus-pedidos.html", "favoritos.html", "perfil.html"]);
   const lastPathSegment = location.pathname.split("/").filter(Boolean).at(-1)?.toLowerCase() || "";
   const currentPage = lastPathSegment.endsWith(".html") ? lastPathSegment : "index.html";
 
@@ -37,7 +37,7 @@
   document.documentElement.dataset.theme = initialTheme;
   document.documentElement.style.colorScheme = initialTheme;
   document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => {
-    meta.content = initialTheme === "dark" ? "#090b0d" : "#ea1d2c";
+    meta.content = initialTheme === "dark" ? "#191614" : "#ea1d2c";
   });
 
   if (!CLIENT_NAV_PAGES.has(currentPage)) return;
@@ -51,6 +51,8 @@
   ];
   const routeKey = {
     "index.html": "home",
+    "restaurante.html": "home",
+    "acompanhamento.html": "orders",
     "meus-pedidos.html": "orders",
     "favoritos.html": "favorites",
     "perfil.html": "profile"
