@@ -18,6 +18,10 @@ let buscaPedido = "";
 let audioContexto = null;
 let alertasAtivos = localStorage.getItem("alertasRestaurante") === "true";
 let colunaPedidosMobile = "recebido";
+let filtroProdutoMobile = "todos";
+let categoriaProdutoMobile = "todos";
+let buscaProdutoMobile = "";
+let filtroEntregaMobile = "aguardando";
 
 const listaPedidos = document.getElementById("pedidosEmpresa");
 const listaProdutos = document.getElementById("produtosEmpresa");
@@ -321,12 +325,26 @@ function criarCardPedido(pedido, indice) {
     const pagamento = criarElemento("span", `payment-chip ${pedido.pagamento_status === "pago" ? "pago" : ""}`, pedido.pagamento_status === "pago" ? "Pago" : pedido.pagamento_modalidade === "online" ? "Online pendente" : `${pedido.pagamento || "Pagamento"} pendente`);
     total.append(pagamento, criarElemento("strong", "", App.dinheiro(pedido.total))); card.append(total);
     const acoes = criarElemento("div", "order-card-actions");
+    let preparoSelecionado = Math.max(20, Number(pedido.preparo_estimado_minutos || empresa?.tempo_estimado_min || 30));
     if (pedido.status === "recebido") {
+        const preparo = criarElemento("div", "mobile-prep-time");
+        preparo.append(criarElemento("strong", "", "Tempo estimado de preparo"));
+        const opcoes = criarElemento("div", "mobile-prep-options");
+        [20, 30, 40, 50].forEach((minutos) => {
+            const opcao = criarElemento("button", minutos === preparoSelecionado ? "active" : "", `${minutos} min`);
+            opcao.type = "button";
+            opcao.addEventListener("click", () => {
+                preparoSelecionado = minutos;
+                [...opcoes.children].forEach((item) => item.classList.toggle("active", item === opcao));
+            });
+            opcoes.append(opcao);
+        });
+        preparo.append(opcoes); card.append(preparo);
         const foraDaJanela = pedido.agendado_para && new Date(pedido.agendado_para).getTime() > Date.now() + 30 * 60 * 1000;
-        const avancar = criarElemento("button", "order-action primary", foraDaJanela ? "Aguardando horário" : "Iniciar preparo");
+        const avancar = criarElemento("button", "order-action primary", foraDaJanela ? "Aguardando horário" : "Aceitar pedido");
         avancar.type = "button"; avancar.disabled = Boolean(foraDaJanela);
         if (foraDaJanela) avancar.title = "O preparo é liberado 30 minutos antes do horário agendado.";
-        else avancar.addEventListener("click", () => executarAcaoOperacional(pedido, "iniciar_preparo", avancar, Number(empresa?.tempo_estimado_min || 30)));
+        else avancar.addEventListener("click", () => executarAcaoOperacional(pedido, "iniciar_preparo", avancar, preparoSelecionado));
         acoes.append(avancar);
     } else if (pedido.status === "preparando" && !pedido.pronto_em) {
         const pronto = criarElemento("button", "order-action primary", "Marcar pronto"); pronto.type = "button";
@@ -535,6 +553,8 @@ function renderizarPedidos() {
     document.getElementById("ultimaAtualizacao").textContent = new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
     aplicarFiltroPedidosMobile();
     renderizarFilaCozinha();
+    renderizarEntregasMobile();
+    renderizarFinanceiroMobile();
 }
 
 function aplicarFiltroPedidosMobile() {
@@ -545,6 +565,88 @@ function aplicarFiltroPedidosMobile() {
     });
     document.querySelectorAll("#pedidosEmpresa .kanban-column").forEach((coluna) => {
         coluna.classList.toggle("mobile-column-active", coluna.dataset.column === colunaPedidosMobile);
+    });
+}
+
+function grupoEntregaMobile(pedido) {
+    if (pedido.status === "saiu_para_entrega") return pedido.retirado_em ? "retirados" : "entrega";
+    if (pedido.status === "preparando" && pedido.pronto_em) return pedido.entregador_id ? "chegando" : "aguardando";
+    return null;
+}
+
+function renderizarEntregasMobile() {
+    const container = document.getElementById("entregasMobile");
+    if (!container) return;
+    const contagens = { aguardando: 0, chegando: 0, retirados: 0, entrega: 0 };
+    pedidos.forEach((pedido) => { const grupo = grupoEntregaMobile(pedido); if (grupo) contagens[grupo] += 1; });
+    const ids = { aguardando: "entregasAguardando", chegando: "entregasChegando", retirados: "entregasRetiradas", entrega: "entregasEmRota" };
+    Object.entries(ids).forEach(([grupo, id]) => { const alvo = document.getElementById(id); if (alvo) alvo.textContent = String(contagens[grupo]); });
+    const entregas = pedidos.filter((pedido) => grupoEntregaMobile(pedido) === filtroEntregaMobile);
+    container.replaceChildren();
+    if (!entregas.length) {
+        container.append(criarElemento("div", "mobile-delivery-empty", "Nenhuma entrega neste status."));
+        return;
+    }
+    entregas.forEach((pedido) => {
+        const card = criarElemento("article", `mobile-delivery-card delivery-${filtroEntregaMobile}`);
+        const topo = criarElemento("header", "mobile-delivery-head");
+        const numero = criarElemento("div");
+        numero.append(criarElemento("strong", "", `#${pedido.numero || String(pedido.id).slice(0, 8)}`), criarElemento("small", "", pedido.created_at ? new Date(pedido.created_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) : "—"));
+        const cliente = criarElemento("div", "mobile-delivery-customer");
+        cliente.append(criarElemento("strong", "", pedido.cliente_nome || "Cliente"), criarElemento("span", "", `⌖ ${pedido.endereco || "Endereço não informado"}`));
+        topo.append(numero, cliente);
+        const status = criarElemento("div", "mobile-delivery-status");
+        const rotulo = filtroEntregaMobile === "aguardando" ? "Aguardando entregador" : filtroEntregaMobile === "chegando" ? "Entregador a caminho" : filtroEntregaMobile === "retirados" ? "Pedido retirado" : "Entrega em andamento";
+        status.append(criarElemento("strong", "", rotulo), criarElemento("span", "", pedido.entregador_id ? (pedido.entregador_nome || "Entregador atribuído") : "Entrega própria ou plataforma"));
+        const acao = criarElemento("button", "mobile-delivery-action", "Ver pedido");
+        acao.type = "button";
+        acao.addEventListener("click", () => {
+            colunaPedidosMobile = pedido.status === "saiu_para_entrega" ? "saiu_para_entrega" : "pronto";
+            mostrarSecaoPainel("pedidos", { atualizarHistorico: true });
+            aplicarFiltroPedidosMobile();
+        });
+        status.append(acao);
+        card.append(topo, status);
+        container.append(card);
+    });
+}
+
+function renderizarFinanceiroMobile() {
+    const lista = document.getElementById("financePaymentsList");
+    const grafico = document.getElementById("financeChart");
+    if (!lista || !grafico) return;
+    const dias = Number(document.querySelector(".mobile-finance-period .active")?.dataset.financeDays || 30);
+    const inicio = Date.now() - dias * 86400000;
+    const periodo = pedidos.filter((pedido) => new Date(pedido.created_at).getTime() >= inicio);
+    const pagos = periodo.filter((pedido) => pedido.pagamento_status === "pago" && pedido.status !== "cancelado");
+    const total = pagos.reduce((soma, pedido) => soma + Number(pedido.total || 0), 0);
+    document.getElementById("financeChartTotal").textContent = App.dinheiro(total);
+    const grupos = Array.from({ length: 7 }, (_, indice) => ({ indice, valor: 0 }));
+    pagos.forEach((pedido) => {
+        const idade = Math.max(0, Date.now() - new Date(pedido.created_at).getTime());
+        const faixa = Math.min(6, Math.floor((idade / Math.max(1, dias * 86400000)) * 7));
+        grupos[6 - faixa].valor += Number(pedido.total || 0);
+    });
+    const maximo = Math.max(1, ...grupos.map((grupo) => grupo.valor));
+    const pontos = grupos.map((grupo, indice) => `${(indice / 6) * 100},${42 - (grupo.valor / maximo) * 36}`).join(" ");
+    grafico.replaceChildren();
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("viewBox", "0 0 100 46"); svg.setAttribute("preserveAspectRatio", "none");
+    const base = document.createElementNS(svg.namespaceURI, "path"); base.setAttribute("d", "M0 42H100"); base.setAttribute("class", "finance-chart-base");
+    const area = document.createElementNS(svg.namespaceURI, "polygon"); area.setAttribute("points", `0,42 ${pontos} 100,42`); area.setAttribute("class", "finance-chart-area");
+    const linha = document.createElementNS(svg.namespaceURI, "polyline"); linha.setAttribute("points", pontos); linha.setAttribute("class", "finance-chart-line");
+    svg.append(base, area, linha); grafico.append(svg);
+    const recentes = periodo.slice(0, 8);
+    document.getElementById("financePaymentsCount").textContent = `${periodo.length} ${periodo.length === 1 ? "pedido" : "pedidos"}`;
+    lista.replaceChildren();
+    if (!recentes.length) { lista.append(criarElemento("p", "mobile-delivery-empty", "Nenhum pagamento no período.")); return; }
+    recentes.forEach((pedido) => {
+        const item = criarElemento("article", "mobile-payment-row");
+        const numero = criarElemento("div"); numero.append(criarElemento("strong", "", `#${pedido.numero || String(pedido.id).slice(0, 8)}`), criarElemento("small", "", new Date(pedido.created_at).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })));
+        const metodo = criarElemento("div", "mobile-payment-method"); metodo.append(criarElemento("strong", "", pedido.pagamento || (pedido.pagamento_modalidade === "online" ? "Pagamento online" : "Pagamento na entrega")), criarElemento("small", "", pedido.cliente_nome || "Cliente"));
+        const valor = criarElemento("strong", "mobile-payment-value", App.dinheiro(pedido.total));
+        const estado = criarElemento("span", `mobile-payment-state ${pedido.pagamento_status === "pago" ? "paid" : pedido.status === "cancelado" ? "refunded" : "pending"}`, pedido.pagamento_status === "pago" ? "Pago" : pedido.status === "cancelado" ? "Cancelado" : "Pendente");
+        item.append(numero, metodo, valor, estado); lista.append(item);
     });
 }
 function atualizarSelectCategorias() {
@@ -571,6 +673,7 @@ function renderizarCategorias() {
         vazio.textContent = "Nenhuma categoria cadastrada.";
         categoriasContainer.append(vazio);
         atualizarSelectCategorias();
+        renderizarCategoriasMobile();
         return;
     }
 
@@ -612,10 +715,49 @@ function renderizarCategorias() {
         categoriasContainer.append(chip);
     });
     atualizarSelectCategorias();
+    renderizarCategoriasMobile();
 }
 
 function nomeCategoria(id) {
     return categorias.find((categoria) => String(categoria.id) === String(id))?.nome || "Sem categoria";
+}
+
+function renderizarCategoriasMobile() {
+    const container = document.getElementById("categoriasMobile");
+    if (!container) return;
+    const opcoes = [{ id: "todos", nome: "Todos" }, ...categorias.map((categoria) => ({ id: String(categoria.id), nome: categoria.nome }))];
+    container.replaceChildren();
+    opcoes.forEach((opcao) => {
+        const botao = criarElemento("button", opcao.id === categoriaProdutoMobile ? "active" : "", opcao.nome);
+        botao.type = "button";
+        botao.dataset.categoryId = opcao.id;
+        botao.addEventListener("click", () => {
+            categoriaProdutoMobile = opcao.id;
+            renderizarCategoriasMobile();
+            aplicarFiltrosProdutosMobile();
+        });
+        container.append(botao);
+    });
+}
+
+function produtoVisivelMobile(produto) {
+    const termo = buscaProdutoMobile.trim().toLocaleLowerCase("pt-BR");
+    const correspondeBusca = !termo || `${produto.nome || ""} ${nomeCategoria(produto.categoria_id)}`.toLocaleLowerCase("pt-BR").includes(termo);
+    const correspondeCategoria = categoriaProdutoMobile === "todos" || String(produto.categoria_id || "") === categoriaProdutoMobile;
+    const estoque = Number(produto.estoque || 0);
+    const esgotado = produto.controle_estoque === true && estoque <= 0;
+    const correspondeEstado = filtroProdutoMobile === "todos"
+        || (filtroProdutoMobile === "disponiveis" && produto.disponivel !== false && !esgotado)
+        || (filtroProdutoMobile === "esgotados" && esgotado)
+        || (filtroProdutoMobile === "ocultos" && produto.disponivel === false);
+    return correspondeBusca && correspondeCategoria && correspondeEstado;
+}
+
+function aplicarFiltrosProdutosMobile() {
+    document.querySelectorAll("#produtosEmpresa tr[data-product-id]").forEach((linha) => {
+        const produto = produtos.find((item) => String(item.id) === linha.dataset.productId);
+        linha.hidden = Boolean(produto && !produtoVisivelMobile(produto));
+    });
 }
 
 function renderizarProdutos() {
@@ -628,16 +770,27 @@ function renderizarProdutos() {
 
     produtos.forEach((produto) => {
         const tr = document.createElement("tr");
+        tr.dataset.productId = String(produto.id || "");
         const nome = document.createElement("td");
+        const imagem = document.createElement("img");
+        imagem.className = "mobile-product-image";
+        imagem.src = produto.imagem || "../assets/produto-padrao.svg";
+        imagem.alt = "";
+        imagem.loading = "lazy";
+        imagem.addEventListener("error", () => { imagem.src = "../assets/produto-padrao.svg"; }, { once: true });
+        nome.append(imagem);
+        const nomeTexto = document.createElement("span");
+        nomeTexto.className = "mobile-product-copy";
         const nomeProduto = document.createElement("strong");
         nomeProduto.textContent = produto.nome || "Produto";
-        nome.append(nomeProduto);
+        nomeTexto.append(nomeProduto);
         if (produto.controle_estoque) {
             const estoque = document.createElement("small");
             estoque.className = Number(produto.estoque || 0) <= Number(produto.estoque_minimo || 0) ? "stock-low" : "stock-ok";
             estoque.textContent = `Estoque: ${Number(produto.estoque || 0)}${estoque.className === "stock-low" ? " • baixo" : ""}`;
-            nome.append(estoque);
+            nomeTexto.append(estoque);
         }
+        nome.append(nomeTexto);
         const categoria = document.createElement("td");
         categoria.textContent = nomeCategoria(produto.categoria_id);
         const preco = document.createElement("td");
@@ -649,6 +802,8 @@ function renderizarProdutos() {
         variantes.textContent = totalVariantes ? String(totalVariantes) : "—";
 
         const disponibilidade = document.createElement("td");
+        const produtoEsgotado = produto.controle_estoque === true && Number(produto.estoque || 0) <= 0;
+        disponibilidade.dataset.label = produto.disponivel === false ? "Oculto" : produtoEsgotado ? "Esgotado" : "Disponível";
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.checked = produto.disponivel !== false;
@@ -664,6 +819,8 @@ function renderizarProdutos() {
                 return;
             }
             produto.disponivel = checkbox.checked;
+            disponibilidade.dataset.label = checkbox.checked ? (produtoEsgotado ? "Esgotado" : "Disponível") : "Oculto";
+            aplicarFiltrosProdutosMobile();
         });
         disponibilidade.append(checkbox);
 
@@ -710,6 +867,8 @@ function renderizarProdutos() {
         listaProdutos.append(tr);
     });
     atualizarIndicadores();
+    renderizarCategoriasMobile();
+    aplicarFiltrosProdutosMobile();
     atualizarSelectsPersonalizacao();
     atualizarSelectVariantes();
     renderizarVariantes();
@@ -1477,6 +1636,47 @@ document.querySelectorAll(".mobile-order-tabs [data-order-mobile-filter]").forEa
     });
 });
 
+document.getElementById("buscaProdutoMobile")?.addEventListener("input", (event) => {
+    buscaProdutoMobile = event.currentTarget.value;
+    aplicarFiltrosProdutosMobile();
+});
+document.querySelectorAll("[data-product-state]").forEach((botao) => {
+    botao.addEventListener("click", () => {
+        filtroProdutoMobile = botao.dataset.productState || "todos";
+        document.querySelectorAll("[data-product-state]").forEach((item) => item.classList.toggle("active", item === botao));
+        document.getElementById("filtroProdutoMobile")?.setAttribute("aria-pressed", String(filtroProdutoMobile === "disponiveis"));
+        aplicarFiltrosProdutosMobile();
+    });
+});
+document.getElementById("filtroProdutoMobile")?.addEventListener("click", (event) => {
+    const ativar = event.currentTarget.getAttribute("aria-pressed") !== "true";
+    filtroProdutoMobile = ativar ? "disponiveis" : "todos";
+    event.currentTarget.setAttribute("aria-pressed", String(ativar));
+    document.querySelectorAll("[data-product-state]").forEach((item) => item.classList.toggle("active", item.dataset.productState === filtroProdutoMobile));
+    aplicarFiltrosProdutosMobile();
+});
+document.getElementById("novoProdutoMobile")?.addEventListener("click", () => {
+    const cardapio = document.getElementById("cardapio");
+    cardapio?.classList.add("mobile-editor-open");
+    document.getElementById("produtoFormTitulo")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    document.getElementById("produtoNome")?.focus({ preventScroll: true });
+});
+document.querySelectorAll("[data-delivery-filter]").forEach((botao) => {
+    botao.addEventListener("click", () => {
+        filtroEntregaMobile = botao.dataset.deliveryFilter || "aguardando";
+        document.querySelectorAll("[data-delivery-filter]").forEach((item) => item.classList.toggle("active", item === botao));
+        renderizarEntregasMobile();
+    });
+});
+document.querySelectorAll("[data-finance-days]").forEach((botao) => {
+    botao.addEventListener("click", () => {
+        document.querySelectorAll("[data-finance-days]").forEach((item) => item.classList.toggle("active", item === botao));
+        const select = document.getElementById("financeiroPeriodo");
+        if (select) { select.value = botao.dataset.financeDays; select.dispatchEvent(new Event("change", { bubbles: true })); }
+        renderizarFinanceiroMobile();
+    });
+});
+
 const dashboardViews = [...document.querySelectorAll("[data-dashboard-view]")];
 const dashboardLinks = [...document.querySelectorAll('.dashboard-sidebar nav a[href^="#"], [data-dashboard-link][href^="#"]')];
 const dashboardViewIds = new Set(dashboardViews.map((view) => view.id));
@@ -1504,6 +1704,9 @@ function mostrarSecaoPainel(id, { atualizarHistorico = false, focar = false } = 
         const principais = ["visaoGeral", "pedidos", "cardapio", "operacao"];
         maisDashboard.classList.toggle("active", !principais.includes(secaoId));
     }
+    const tituloMobile = { visaoGeral: empresa?.nome || "Painel do restaurante", pedidos: "Pedidos", cardapio: "Cardápio", operacao: "Entregas", financeiro: "Financeiro", cozinha: "Cozinha", promocoes: "Promoções", avaliacoes: "Avaliações", configuracoes: "Configurações" };
+    const titulo = document.getElementById("nomeEmpresa");
+    if (titulo && matchMedia("(max-width: 620px)").matches) titulo.textContent = tituloMobile[secaoId] || document.getElementById(secaoId)?.getAttribute("aria-label") || empresa?.nome || "Restaurante";
     if (atualizarHistorico && location.hash !== `#${secaoId}`) {
         history.pushState({ dashboardView: secaoId }, "", `#${secaoId}`);
     }

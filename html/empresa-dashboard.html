@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="../css/pages/empresa-dashboard.css?v=4.6.0"/>
+  <link rel="stylesheet" href="../css/pages/empresa-dashboard.css?v=4.6.1"/>
   <link rel="stylesheet" href="../css/core/accessibility.css?v=4.2.0"/>
   <link rel="stylesheet" href="../css/core/enhancements.css?v=4.4.6"/>
 </head>
@@ -155,6 +155,17 @@
 
       <section class="management-section dashboard-view" id="cardapio" data-dashboard-view tabindex="-1" aria-label="Cardápio" hidden>
         <div class="section-heading"><div><span class="section-kicker">GESTÃO</span><h2>Cardápio</h2><p>Organize categorias e mantenha seus produtos atualizados.</p></div></div>
+        <div class="mobile-catalog-tools" aria-label="Filtros do cardápio">
+          <label class="mobile-catalog-search"><span aria-hidden="true">⌕</span><input id="buscaProdutoMobile" type="search" placeholder="Buscar produto" maxlength="120"/></label>
+          <button class="mobile-filter-button" id="filtroProdutoMobile" type="button" aria-label="Mostrar somente produtos disponíveis" aria-pressed="false">☷</button>
+          <div class="mobile-product-states" role="group" aria-label="Disponibilidade dos produtos">
+            <button class="active" type="button" data-product-state="todos">Todos</button>
+            <button type="button" data-product-state="disponiveis">Disponíveis</button>
+            <button type="button" data-product-state="esgotados">Esgotados</button>
+            <button type="button" data-product-state="ocultos">Ocultos</button>
+          </div>
+          <nav class="mobile-category-tabs" id="categoriasMobile" aria-label="Categorias do cardápio"></nav>
+        </div>
         <div class="management-grid">
           <article class="dashboard-card">
             <h3>Categorias</h3>
@@ -200,6 +211,7 @@
           <div class="section-heading"><h3>Produtos cadastrados</h3><span id="resumoProdutos">0 produtos</span></div>
           <div class="table-wrap"><table><thead><tr><th>Produto</th><th>Categoria</th><th>Preço</th><th>Variações</th><th>Disponível</th><th>Ações</th></tr></thead><tbody id="produtosEmpresa"><tr><td colspan="6">Carregando...</td></tr></tbody></table></div>
         </article>
+        <button class="mobile-add-product" id="novoProdutoMobile" type="button" aria-label="Cadastrar novo produto">+</button>
         <article class="dashboard-card variants-card">
           <div class="section-heading"><div><h3>Tamanhos e variações</h3><p>Use para tamanhos, volumes, sabores-base ou versões com preços diferentes.</p></div><span id="resumoVariantes">0 variações</span></div>
           <form id="varianteForm" class="variant-form">
@@ -265,6 +277,15 @@
 
       <section class="management-section operation-section dashboard-view" id="operacao" data-dashboard-view tabindex="-1" aria-label="Operação" hidden>
         <div class="section-heading"><div><span class="section-kicker">OPERAÇÃO REAL</span><h2>Horários, pausas e regiões</h2><p>Automatize a disponibilidade da loja e cobre a entrega correta para cada bairro.</p></div><span class="operation-live" id="operacaoStatus">Verificando operação...</span></div>
+        <div class="mobile-deliveries-panel">
+          <nav class="mobile-delivery-tabs" aria-label="Status das entregas">
+            <button class="active" type="button" data-delivery-filter="aguardando">Aguardando <span id="entregasAguardando">0</span></button>
+            <button type="button" data-delivery-filter="chegando">Chegando <span id="entregasChegando">0</span></button>
+            <button type="button" data-delivery-filter="retirados">Retirados <span id="entregasRetiradas">0</span></button>
+            <button type="button" data-delivery-filter="entrega">Em entrega <span id="entregasEmRota">0</span></button>
+          </nav>
+          <div class="mobile-delivery-list" id="entregasMobile" aria-live="polite"><p class="empty">Carregando entregas...</p></div>
+        </div>
         <div class="operation-grid">
           <article class="dashboard-card operation-card">
             <h3>Horários de funcionamento</h3>
@@ -301,8 +322,11 @@
       </section>
 
       <section class="management-section dashboard-view" id="financeiro" data-dashboard-view tabindex="-1" aria-label="Financeiro" hidden>
-        <div class="section-heading"><div><span class="section-kicker">FINANCEIRO</span><h2>Resumo de repasses</h2><p>Acompanhe vendas, taxa da plataforma, saldo líquido e pendências.</p></div><label class="finance-period">Período <select id="financeiroPeriodo"><option value="7">7 dias</option><option value="30" selected>30 dias</option><option value="90">90 dias</option><option value="365">1 ano</option></select></label></div>
+        <div class="section-heading"><div><span class="section-kicker">FINANCEIRO</span><h2>Resumo de repasses</h2><p>Acompanhe vendas, taxa da plataforma, saldo líquido e pendências.</p></div><label class="finance-period">Período <select id="financeiroPeriodo"><option value="1">Hoje</option><option value="7">7 dias</option><option value="30" selected>30 dias</option><option value="90">90 dias</option><option value="365">1 ano</option></select></label></div>
+        <div class="mobile-finance-period" role="group" aria-label="Período financeiro"><button type="button" data-finance-days="1">Hoje</button><button type="button" data-finance-days="7">7 dias</button><button class="active" type="button" data-finance-days="30">30 dias</button></div>
         <div class="finance-grid" id="financeiroResumo"><article><small>Vendas brutas</small><strong id="financeBruto">R$ 0,00</strong></article><article><small>Taxa da plataforma</small><strong id="financeTaxa">R$ 0,00</strong></article><article class="highlight"><small>Saldo líquido estimado</small><strong id="financeLiquido">R$ 0,00</strong></article><article><small>Online pendente</small><strong id="financePendente">R$ 0,00</strong></article><article><small>Reembolsos pendentes</small><strong id="financeReembolsos">0</strong></article><article><small>Pedidos entregues</small><strong id="financeEntregues">0</strong></article></div>
+        <article class="mobile-finance-chart-card"><div><small>Vendas ao longo do período</small><strong id="financeChartTotal">R$ 0,00</strong></div><div class="mobile-finance-chart" id="financeChart" role="img" aria-label="Gráfico de vendas"></div></article>
+        <section class="mobile-payments"><div class="mobile-section-title"><h3>Pagamentos de pedidos</h3><span id="financePaymentsCount">0 pedidos</span></div><div id="financePaymentsList"></div></section>
         <p class="finance-note" id="financeNota">Valores estimados; a conciliação final depende do provedor de pagamento.</p>
       </section>
 
@@ -351,7 +375,7 @@
   <script defer src="../js/core/config.js?v=4.4.6"></script>
   <script defer src="../js/core/monitoring.js?v=4.2.0"></script>
   <script defer src="../js/core/notifications.js?v=4.2.0"></script>
-  <script defer src="../js/pages/empresa-dashboard.js?v=4.6.0"></script>
+  <script defer src="../js/pages/empresa-dashboard.js?v=4.6.1"></script>
   <script defer src="../js/modules/operacao-empresa.js?v=4.4.6"></script>
   <script defer src="../js/core/product-import.js?v=4.4.6"></script>
   <script defer src="../js/modules/empresa-importacao.js?v=4.4.6"></script>

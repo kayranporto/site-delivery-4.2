@@ -14,8 +14,8 @@ test("gestão mobile usa a navegação inferior aprovada", () => {
     assert.match(html, new RegExp(`href="${target}"[^>]*data-dashboard-link`));
   }
   assert.match(html, /id="maisDashboard"/);
-  assert.match(html, /empresa-dashboard\.css\?v=4\.6\.0/);
-  assert.match(html, /empresa-dashboard\.js\?v=4\.6\.0/);
+  assert.match(html, /empresa-dashboard\.css\?v=4\.6\.1/);
+  assert.match(html, /empresa-dashboard\.js\?v=4\.6\.1/);
 });
 
 test("navegação rápida usa o mesmo controlador das seções do painel", () => {
@@ -57,4 +57,35 @@ test("pedidos mobile usam abas de status e uma coluna por vez", () => {
   }
   assert.match(js, /aplicarFiltroPedidosMobile/);
   assert.match(css, /\.kanban-column\.mobile-column-active\{display:block\}/);
+});
+
+test("cardápio mobile possui busca, filtros reais, categorias e fotos", () => {
+  const html = read("html/empresa-dashboard.html");
+  const js = read("js/pages/empresa-dashboard.js");
+  const css = read("css/pages/empresa-dashboard.css");
+  assert.match(html, /id="buscaProdutoMobile"/);
+  assert.match(html, /data-product-state="esgotados"/);
+  assert.match(html, /id="categoriasMobile"/);
+  assert.match(js, /function produtoVisivelMobile/);
+  assert.match(js, /produto\.imagem \|\| "\.\.\/assets\/produto-padrao\.svg"/);
+  assert.match(css, /\.mobile-add-product\{position:fixed/);
+});
+
+test("operação mobile mostra entregas derivadas dos pedidos reais", () => {
+  const html = read("html/empresa-dashboard.html");
+  const js = read("js/pages/empresa-dashboard.js");
+  assert.match(html, /id="entregasMobile"/);
+  for (const filtro of ["aguardando", "chegando", "retirados", "entrega"]) assert.match(html, new RegExp(`data-delivery-filter="${filtro}"`));
+  assert.match(js, /function grupoEntregaMobile\(pedido\)/);
+  assert.match(js, /pedidos\.filter\(\(pedido\) => grupoEntregaMobile\(pedido\)/);
+});
+
+test("financeiro mobile usa pedidos reais para gráfico e pagamentos", () => {
+  const html = read("html/empresa-dashboard.html");
+  const js = read("js/pages/empresa-dashboard.js");
+  assert.match(html, /id="financeChart"/);
+  assert.match(html, /id="financePaymentsList"/);
+  assert.match(js, /function renderizarFinanceiroMobile/);
+  assert.match(js, /const periodo = pedidos\.filter/);
+  assert.match(js, /pedido\.pagamento_status === "pago"/);
 });
