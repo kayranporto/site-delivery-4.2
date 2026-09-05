@@ -1,0 +1,39 @@
+/* Compact overview, scoped to the restaurant dashboard. Desktop is unchanged. */
+.metric-icon svg{display:block;width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:620px){
+  body #visaoGeral{gap:12px}
+  body #visaoGeral .overview-copy h2{font-size:19px!important;line-height:1.25!important;margin-bottom:4px!important}
+  body #visaoGeral .overview-copy p{font-size:12px!important;line-height:1.4}
+  body #visaoGeral .store-control{margin-top:10px!important;padding:10px 12px!important;gap:10px}
+  body #visaoGeral .store-control small{font-size:9px;letter-spacing:.06em}
+  body #visaoGeral .store-control strong{font-size:12px}
+  body #visaoGeral .store-switch{min-height:44px;gap:6px}
+  body #visaoGeral .store-switch em{font-size:10px}
+  body #visaoGeral .dashboard-toolbar{gap:8px}
+  body #visaoGeral .dashboard-toolbar>div{gap:6px;font-size:9px}
+  body #visaoGeral .dashboard-toolbar strong{white-space:nowrap;font-weight:500}
+  body #visaoGeral .dashboard-toolbar label{font-size:10px;gap:5px}
+  body #visaoGeral .dashboard-toolbar select{min-width:86px;min-height:44px}
+  body #visaoGeral .metrics-grid{gap:8px}
+  body #visaoGeral .metric-card{min-height:86px;padding:10px;gap:8px;border-radius:14px;align-items:center}
+  body #visaoGeral .metric-icon{width:30px;height:30px;border-radius:10px}
+  body #visaoGeral .metric-icon svg{width:19px;height:19px}
+  body #visaoGeral .metric-card>div{min-width:0}
+  body #visaoGeral .metric-card small{font-size:10px;font-weight:500}
+  body #visaoGeral .metric-card strong{font-size:18px;white-space:normal;overflow-wrap:anywhere;line-height:1.2}
+  body #visaoGeral .metric-card p{font-size:9px;line-height:1.3}
+  body #visaoGeral .metric-card:last-child{min-height:56px;padding-block:8px}
+  body #visaoGeral .metric-card:last-child>div{display:flex;align-items:center;gap:10px;flex:1;flex-wrap:wrap}
+  body #visaoGeral .metric-card:last-child p{margin-left:auto}
+  body #visaoGeral .analytics-grid{gap:10px}
+  body #visaoGeral .sales-chart-card{padding:12px}
+  body #visaoGeral .sales-chart-card .section-heading{gap:10px}
+  body #visaoGeral .sales-chart-card h2{font-size:15px}
+  body #visaoGeral .sales-chart{height:150px;margin-top:12px;overflow:visible}
+  body #visaoGeral .sales-chart svg{min-width:0}
+}
+@media(max-width:360px){
+  body #visaoGeral #ultimaAtualizacao{display:none}
+  body #visaoGeral .metric-card{gap:6px;padding:9px}
+  body #visaoGeral .metric-card strong{font-size:16px}
+}
