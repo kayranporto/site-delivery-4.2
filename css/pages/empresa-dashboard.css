@@ -274,3 +274,31 @@ html[data-theme=dark] body .restaurant-management-mobile a.active{border-color:#
   #financeiro .finance-grid{grid-template-columns:repeat(2,1fr)}#financeiro .finance-grid article,#financeiro .finance-grid article.highlight,#financeiro .finance-grid article:nth-child(n+4){grid-column:span 1}.mobile-payment-row{grid-template-columns:52px 1fr}.mobile-payment-value,.mobile-payment-state{grid-column:2;justify-self:start}
 }
 @media(max-width:620px){.products-table-card td:nth-child(5)[data-label="Esgotado"]:before{color:#ff626d;background:#3c191d}}
+
+/* Correções mobile 4.6.2 — conflitos com módulos injetados e overlays globais. */
+body:has(.dashboard-shell)>.notification-center,body:has(.dashboard-shell)>.install-app{display:none!important}
+@media(max-width:620px){
+  .dashboard-header{position:sticky!important;display:grid!important;grid-template-columns:62px minmax(0,1fr) 46px!important;grid-template-rows:auto!important;align-items:center!important;gap:12px!important;min-height:94px!important;padding:14px!important}
+  .dashboard-header .restaurant-mobile-logo{grid-column:1;grid-row:1;width:62px;height:62px}
+  .dashboard-header .header-copy{grid-column:2;grid-row:1;align-self:center;min-width:0;padding-bottom:18px}
+  .dashboard-header .header-copy>span{display:none!important}
+  .dashboard-header .header-copy h1{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:18px!important}
+  .dashboard-header .header-copy h1:after{display:none!important;content:none!important}
+  .dashboard-header .header-actions{position:static!important;grid-column:3;grid-row:1;display:block!important;width:46px!important;margin:0!important}
+  .dashboard-header .alert-button{display:grid!important;width:46px;height:46px;margin:0!important}
+  .dashboard-header .unit-switcher{position:absolute!important;left:88px!important;right:74px!important;bottom:17px!important;z-index:2!important;display:block!important;width:auto!important;min-width:0!important;min-height:20px!important;padding:0!important;background:transparent!important;border:0!important;border-radius:0!important}
+  .dashboard-header .unit-switcher>span,.dashboard-header .unit-switcher small{display:none!important}
+  .dashboard-header .unit-switcher label{display:block!important}
+  .dashboard-header .unit-switcher select{width:100%!important;height:22px!important;padding:0 20px 0 0!important;overflow:hidden!important;color:#a5a8ae!important;background:transparent!important;border:0!important;text-overflow:ellipsis!important;white-space:nowrap!important;font-size:11px!important;font-weight:500!important}
+  #visaoGeral .overview-copy h2{font-size:23px!important;line-height:1.22!important}
+  #visaoGeral .overview-copy p{font-size:13px!important}
+  #visaoGeral .store-control{margin-top:14px!important;padding:14px!important}
+  #visaoGeral .metrics-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  #visaoGeral .metric-card{min-height:104px;padding:13px;gap:11px}
+  #visaoGeral .metric-card:last-child{min-height:88px}
+  #visaoGeral .metric-card strong{font-size:19px}
+  html[data-theme=dark] body .restaurant-management-mobile{background:rgba(10,11,13,.98)!important;border-color:#303238!important}
+  html[data-theme=dark] body .restaurant-management-mobile a,html[data-theme=dark] body .restaurant-management-mobile button{color:#a0a3a9!important;background:transparent!important;border:0!important;border-radius:0!important}
+  html[data-theme=dark] body .restaurant-management-mobile a.active,html[data-theme=dark] body .restaurant-management-mobile button.active{color:#ff3544!important;background:transparent!important;border:0!important;box-shadow:inset 0 3px #ef2435!important}
+  .restaurant-management-mobile svg{display:block;width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+}

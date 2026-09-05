@@ -14,8 +14,8 @@ test("gestão mobile usa a navegação inferior aprovada", () => {
     assert.match(html, new RegExp(`href="${target}"[^>]*data-dashboard-link`));
   }
   assert.match(html, /id="maisDashboard"/);
-  assert.match(html, /empresa-dashboard\.css\?v=4\.6\.1/);
-  assert.match(html, /empresa-dashboard\.js\?v=4\.6\.1/);
+  assert.match(html, /empresa-dashboard\.css\?v=4\.6\.2/);
+  assert.match(html, /empresa-dashboard\.js\?v=4\.6\.2/);
 });
 
 test("navegação rápida usa o mesmo controlador das seções do painel", () => {
@@ -88,4 +88,11 @@ test("financeiro mobile usa pedidos reais para gráfico e pagamentos", () => {
   assert.match(js, /function renderizarFinanceiroMobile/);
   assert.match(js, /const periodo = pedidos\.filter/);
   assert.match(js, /pedido\.pagamento_status === "pago"/);
+});
+
+test("cabeçalho mobile mantém unidade compacta e remove overlays duplicados", () => {
+  const css = read("css/pages/empresa-dashboard.css");
+  assert.match(css, /body:has\(\.dashboard-shell\)>\.notification-center,body:has\(\.dashboard-shell\)>\.install-app\{display:none!important\}/);
+  assert.match(css, /\.dashboard-header \.unit-switcher\{position:absolute!important/);
+  assert.match(css, /html\[data-theme=dark\] body \.restaurant-management-mobile a\.active/);
 });
