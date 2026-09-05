@@ -277,6 +277,10 @@ html[data-theme=dark] body .restaurant-management-mobile a.active{border-color:#
 
 /* Correções mobile 4.6.2 — conflitos com módulos injetados e overlays globais. */
 body:has(.dashboard-shell)>.notification-center,body:has(.dashboard-shell)>.install-app{display:none!important}
+body:has(.dashboard-shell)>.app-toast-region{inset:auto 12px calc(84px + env(safe-area-inset-bottom))!important;display:flex!important;height:auto!important;max-height:calc(100vh - 120px)!important;flex-direction:column!important;justify-content:flex-end!important;align-items:stretch!important}
+body:has(.dashboard-shell)>.app-toast-region>.app-toast{width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;flex:0 0 auto!important;padding:13px 14px!important}
+body:has(.dashboard-shell)>.app-toast-region>.app-toast .app-toast-copy{min-width:0!important}
+body:has(.dashboard-shell)>.app-toast-region>.app-toast p{line-height:1.45!important}
 @media(max-width:620px){
   .dashboard-header{position:sticky!important;display:grid!important;grid-template-columns:62px minmax(0,1fr) 46px!important;grid-template-rows:auto!important;align-items:center!important;gap:12px!important;min-height:94px!important;padding:14px!important}
   .dashboard-header .restaurant-mobile-logo{grid-column:1;grid-row:1;width:62px;height:62px}
