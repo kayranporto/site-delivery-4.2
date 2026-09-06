@@ -1,0 +1,10 @@
+/* Compatibilidade visual 4.8.1 — preserva as superfícies já validadas pelos testes de tema. */
+@media (max-width: 768px) {
+  html[data-theme="dark"] body.client-mobile-shell[data-client-page="restaurante"] :is(.modal-content, #carrinho) {
+    background: #191614;
+  }
+
+  html[data-theme="dark"] body.client-mobile-shell[data-client-page="checkout"] .checkout-footer {
+    background: #191614 !important;
+  }
+}
