@@ -5,6 +5,6 @@
   }
 
   html[data-theme="dark"] body.client-mobile-shell[data-client-page="checkout"] .checkout-footer {
-    background: #191614;
+    background: #191614 !important;
   }
 }
