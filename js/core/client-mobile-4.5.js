@@ -49,6 +49,15 @@
     document.head.append(homeStyles);
   }
 
+  const homeFilterStylesHref = `${assetRoot}css/modules/client-home-approved-4.8.3.css?v=4.8.3`;
+  if (!document.querySelector('link[data-client-mockups="home-approved-4.8.3"]')) {
+    const homeFilterStyles = document.createElement("link");
+    homeFilterStyles.rel = "stylesheet";
+    homeFilterStyles.href = homeFilterStylesHref;
+    homeFilterStyles.dataset.clientMockups = "home-approved-4.8.3";
+    document.head.append(homeFilterStyles);
+  }
+
   document.body.classList.add("client-mobile-shell");
   document.body.dataset.clientPage = currentPage.replace(/\.html$/i, "") || "index";
   document.documentElement.dataset.clientMobile = "true";
