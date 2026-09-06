@@ -68,7 +68,7 @@
   });
 
   function prepareApprovedHome() {
-    if (currentPage !== "index.html") return;
+    if (currentPage !== "index.html" || !matchMedia("(max-width: 768px)").matches) return;
 
     const homeSearch = document.getElementById("campoBusca");
     if (homeSearch) homeSearch.placeholder = "Pesquisar restaurantes, pratos ou culinárias...";
