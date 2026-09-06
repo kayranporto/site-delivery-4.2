@@ -1,0 +1,789 @@
+/* Home mobile 4.9 — reconstrução estrutural baseada no mockup aprovado do cliente. */
+@media (max-width: 768px) {
+  html[data-theme="dark"] body.home-page.client-home-rebuilt-4-9 {
+    --home-bg: #0b0908;
+    --home-surface: #15110e;
+    --home-surface-2: #1c1612;
+    --home-border: #3a2d25;
+    --home-text: #fbf8f5;
+    --home-muted: #b8aea6;
+    --home-accent: #ff6a1a;
+    --home-accent-2: #ff3d24;
+    background: var(--home-bg);
+    color: var(--home-text);
+  }
+
+  html[data-theme="light"] body.home-page.client-home-rebuilt-4-9 {
+    --home-bg: #fffaf6;
+    --home-surface: #ffffff;
+    --home-surface-2: #f7eee7;
+    --home-border: #ead8ca;
+    --home-text: #1d1713;
+    --home-muted: #76685f;
+    --home-accent: #ef5b16;
+    --home-accent-2: #e63b23;
+    background: var(--home-bg);
+    color: var(--home-text);
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .topbar,
+  body.home-page.client-home-rebuilt-4-9 .banner,
+  body.home-page.client-home-rebuilt-4-9 main > .cupom,
+  body.home-page.client-home-rebuilt-4-9 .como-funciona,
+  body.home-page.client-home-rebuilt-4-9 .beneficios,
+  body.home-page.client-home-rebuilt-4-9 .partner-cta,
+  body.home-page.client-home-rebuilt-4-9 footer,
+  body.home-page.client-home-rebuilt-4-9 .client-mobile-greeting,
+  body.home-page.client-home-rebuilt-4-9 #menuUsuario,
+  body.home-page.client-home-rebuilt-4-9 .search kbd {
+    display: none !important;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .header {
+    position: relative;
+    z-index: 10;
+    border: 0;
+    background:
+      radial-gradient(circle at 92% 14%, rgba(255, 106, 26, .08), transparent 32%),
+      var(--home-bg);
+    box-shadow: none;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .container-header {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 46px 46px;
+    grid-template-rows: auto auto auto;
+    gap: 10px 8px;
+    min-height: 0;
+    padding: calc(18px + env(safe-area-inset-top)) 16px 14px;
+    background: transparent;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .container-header .logo {
+    display: inline-flex !important;
+    grid-column: 1;
+    grid-row: 1;
+    align-items: center;
+    gap: 10px;
+    width: max-content;
+    min-height: 44px;
+    padding: 0;
+    color: var(--home-text);
+    font-size: 24px;
+    line-height: 1;
+    text-decoration: none;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .client-home-brand-mark {
+    position: relative;
+    display: block;
+    width: 30px;
+    height: 10px;
+    border-radius: 2px 0 0 2px;
+    background: var(--home-accent);
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .client-home-brand-mark::after {
+    content: "";
+    position: absolute;
+    top: -6px;
+    right: -12px;
+    border-top: 11px solid transparent;
+    border-bottom: 11px solid transparent;
+    border-left: 14px solid var(--home-accent);
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .client-home-brand-name {
+    font-size: clamp(22px, 6.7vw, 28px);
+    font-weight: 800;
+    letter-spacing: -.045em;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .client-home-brand-name > span {
+    color: var(--home-accent);
+    font-style: italic;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .location {
+    grid-column: 1 / 3;
+    grid-row: 2;
+    justify-self: start;
+    display: inline-flex !important;
+    width: auto;
+    max-width: min(100%, 270px);
+    min-height: 44px;
+    padding: 0 14px;
+    gap: 9px;
+    border: 1px solid var(--home-border);
+    border-radius: 999px;
+    background: var(--home-surface-2);
+    color: var(--home-text);
+    box-shadow: none;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .location > span:first-child {
+    color: var(--home-accent-2);
+    font-size: 17px;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .location-content small { display: none; }
+  body.home-page.client-home-rebuilt-4-9 .location-content strong {
+    display: block;
+    max-width: 205px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--home-text);
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .search {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    display: grid !important;
+    grid-template-columns: 28px minmax(0, 1fr) 48px;
+    align-items: center;
+    min-height: 54px;
+    padding: 0 4px 0 13px;
+    border: 1px solid var(--home-border);
+    border-radius: 13px;
+    background: var(--home-surface-2);
+    box-shadow: none;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .search-icon {
+    color: var(--home-text);
+    font-size: 22px;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .search input {
+    width: 100%;
+    min-width: 0;
+    height: 50px;
+    padding: 0 5px;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--home-text);
+    font-size: 13px;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .search input::placeholder { color: var(--home-muted); }
+
+  body.home-page.client-home-rebuilt-4-9 .client-home-filter {
+    display: grid !important;
+    width: 44px;
+    height: 44px;
+    place-items: center;
+    border: 1px solid var(--home-border);
+    border-radius: 11px;
+    background: var(--home-surface);
+    color: var(--home-text);
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .notification-center {
+    top: calc(18px + env(safe-area-inset-top));
+    right: 68px;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .notification-trigger,
+  body.home-page.client-home-rebuilt-4-9 #abrirCarrinho {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--home-text);
+    box-shadow: none;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 #abrirCarrinho {
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: end;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 main {
+    display: block !important;
+    max-width: 100%;
+    padding: 0 0 calc(var(--client-nav-height) + 28px + env(safe-area-inset-bottom));
+    background: var(--home-bg);
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .client-approved-hero {
+    position: relative;
+    display: block !important;
+    min-height: 245px;
+    margin: 0 16px 14px;
+    padding: 21px 18px;
+    overflow: hidden;
+    border: 1px solid var(--home-border);
+    border-radius: 18px;
+    background: #130c08;
+    box-shadow: none;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .client-approved-hero::before {
+    content: "Sabor sem limites";
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 3;
+    padding: 6px 11px;
+    border-radius: 999px;
+    background: var(--home-accent);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .client-approved-hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(90deg, rgba(10, 7, 5, .98) 0%, rgba(12, 8, 5, .88) 43%, rgba(12, 8, 5, .18) 72%, rgba(12, 8, 5, 0) 100%);
+    pointer-events: none;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .client-hero-photo {
+    position: absolute;
+    inset: 0 0 0 auto;
+    z-index: 0;
+    width: 76%;
+    height: 100%;
+    background-image: url("../../assets/client-food-atlas.png") !important;
+    background-size: 300% 200% !important;
+    background-position: 0 0 !important;
+    background-repeat: no-repeat;
+    filter: saturate(1.08) contrast(1.04);
+    mask-image: none;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .client-hero-copy {
+    position: relative;
+    z-index: 2;
+    width: 63%;
+    padding-top: 55px;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .client-hero-copy h2 {
+    margin: 0;
+    color: #fff;
+    font-size: clamp(27px, 8vw, 34px);
+    font-weight: 800;
+    line-height: 1.02;
+    letter-spacing: -.055em;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .client-hero-copy h2 span { color: var(--home-accent); }
+
+  body.home-page.client-home-rebuilt-4-9 .client-hero-subtitle {
+    max-width: 195px;
+    margin: 13px 0 0;
+    color: #d3c9c1;
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .client-hero-copy > a { display: none; }
+  body.home-page.client-home-rebuilt-4-9 .client-hero-dots { margin-top: 14px; }
+
+  body.home-page.client-home-rebuilt-4-9 .categorias {
+    margin: 0 0 22px;
+    padding: 0 16px;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .categorias > .section-title { display: none; }
+  body.home-page.client-home-rebuilt-4-9 .categoria-lista {
+    display: flex;
+    gap: 14px;
+    padding: 4px 2px 9px;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .categoria-lista::-webkit-scrollbar { display: none; }
+
+  body.home-page.client-home-rebuilt-4-9 .categoria {
+    position: relative;
+    flex: 0 0 67px;
+    min-width: 67px;
+    min-height: 88px;
+    padding: 0 0 9px;
+    gap: 7px;
+    border: 0;
+    background: transparent;
+    color: var(--home-text);
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .categoria > div {
+    display: grid;
+    width: 57px;
+    height: 57px;
+    place-items: center;
+    margin-inline: auto;
+    border: 1px solid var(--home-border);
+    border-radius: 50%;
+    background-color: var(--home-surface-2);
+    background-image: url("../../assets/client-food-atlas.png");
+    background-size: 300% 200%;
+    color: transparent;
+    font-size: 0;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .categoria[data-food="burger"] > div { background-position: 0 0; }
+  body.home-page.client-home-rebuilt-4-9 .categoria[data-food="pizza"] > div { background-position: 50% 0; }
+  body.home-page.client-home-rebuilt-4-9 .categoria[data-food="sushi"] > div { background-position: 100% 0; }
+  body.home-page.client-home-rebuilt-4-9 .categoria[data-food="steak"] > div { background-position: 0 100%; }
+  body.home-page.client-home-rebuilt-4-9 .categoria[data-food="sweet"] > div { background-position: 50% 100%; }
+  body.home-page.client-home-rebuilt-4-9 .categoria:first-child > div {
+    background-image: none;
+    color: var(--home-accent);
+    font-size: 22px;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .categoria > span {
+    color: var(--home-text);
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .categoria[aria-pressed="true"]::after,
+  body.home-page.client-home-rebuilt-4-9 .categoria.ativa::after {
+    content: "";
+    position: absolute;
+    right: 8px;
+    bottom: 0;
+    left: 8px;
+    height: 3px;
+    border-radius: 999px;
+    background: var(--home-accent);
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .categoria[aria-pressed="true"] > div,
+  body.home-page.client-home-rebuilt-4-9 .categoria.ativa > div {
+    outline: 2px solid var(--home-accent);
+    outline-offset: 2px;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-section,
+  body.home-page.client-home-rebuilt-4-9 #restaurantes,
+  body.home-page.client-home-rebuilt-4-9 #destaques,
+  body.home-page.client-home-rebuilt-4-9 #pedirNovamente,
+  body.home-page.client-home-rebuilt-4-9 #favoritosInicio {
+    margin: 0 0 25px;
+    padding: 0 16px;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-heading,
+  body.home-page.client-home-rebuilt-4-9 #restaurantes > .section-title,
+  body.home-page.client-home-rebuilt-4-9 #destaques > .section-title,
+  body.home-page.client-home-rebuilt-4-9 .client-section-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0 0 12px;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-heading h2,
+  body.home-page.client-home-rebuilt-4-9 #restaurantes h2,
+  body.home-page.client-home-rebuilt-4-9 #destaques h2,
+  body.home-page.client-home-rebuilt-4-9 .client-section-heading h2 {
+    margin: 0;
+    color: var(--home-text);
+    font-size: 19px;
+    line-height: 1.2;
+    letter-spacing: -.035em;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 #restaurantes .eyebrow,
+  body.home-page.client-home-rebuilt-4-9 #destaques .eyebrow { display: none; }
+
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-heading a,
+  body.home-page.client-home-rebuilt-4-9 #verTodosRestaurantes,
+  body.home-page.client-home-rebuilt-4-9 .client-section-heading a {
+    color: var(--home-accent);
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-offers-list {
+    display: flex;
+    gap: 10px;
+    min-height: 164px;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-offers-list::-webkit-scrollbar { display: none; }
+
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-offer-card {
+    position: relative;
+    flex: 0 0 165px;
+    min-height: 164px;
+    overflow: hidden;
+    border: 1px solid var(--home-border);
+    border-radius: 14px;
+    background: var(--home-surface);
+    color: var(--home-text);
+    text-decoration: none;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-offer-card > img {
+    display: block;
+    width: 100%;
+    height: 104px;
+    object-fit: cover;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-offer-badge {
+    position: absolute;
+    top: 9px;
+    left: 9px;
+    z-index: 2;
+    padding: 5px 8px;
+    border-radius: 8px;
+    background: #ff2c3f;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-offer-copy {
+    display: grid;
+    gap: 2px;
+    padding: 9px 10px 10px;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-offer-copy strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 13px;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-offer-copy span {
+    color: var(--home-accent);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-empty {
+    width: 100%;
+    margin: 0;
+    padding: 18px;
+    border: 1px dashed var(--home-border);
+    border-radius: 13px;
+    background: var(--home-surface);
+    color: var(--home-muted);
+    font-size: 12px;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 #restaurantes .restaurant-tools {
+    display: flex;
+    gap: 8px;
+    margin: 0 0 11px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  body.home-page.client-home-rebuilt-4-9 #restaurantes .restaurant-tools::-webkit-scrollbar { display: none; }
+  body.home-page.client-home-rebuilt-4-9 #restaurantes .resultado-info { display: none; }
+  body.home-page.client-home-rebuilt-4-9 #restaurantes .filter-pill {
+    flex: 0 0 auto;
+    min-height: 36px;
+    padding: 7px 11px;
+    border: 1px solid var(--home-border);
+    border-radius: 999px;
+    background: var(--home-surface);
+    color: var(--home-muted);
+    font-size: 11px;
+  }
+  body.home-page.client-home-rebuilt-4-9 #restaurantes .filter-pill[aria-pressed="true"] {
+    border-color: var(--home-accent);
+    color: var(--home-accent);
+  }
+
+  body.home-page.client-home-rebuilt-4-9 #listaRestaurantes {
+    display: grid;
+    gap: 11px;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 #listaRestaurantes > .card {
+    display: none;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 #listaRestaurantes > .card.client-home-v2-featured-card {
+    display: block;
+    overflow: hidden;
+    border: 1px solid var(--home-border);
+    border-radius: 15px;
+    background: var(--home-surface);
+    box-shadow: none;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 #listaRestaurantes .card-link {
+    display: grid;
+    grid-template-columns: 78px minmax(0, 1fr);
+    min-height: 92px;
+    padding: 11px;
+    gap: 10px;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 #listaRestaurantes .card-link > img {
+    grid-column: 1;
+    width: 78px;
+    height: 78px;
+    min-height: 78px;
+    border-radius: 13px;
+    object-fit: cover;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 #listaRestaurantes .card-body {
+    grid-column: 2;
+    min-width: 0;
+    padding: 2px 34px 0 0;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 #listaRestaurantes .card-header h3 {
+    margin: 0 0 5px;
+    color: var(--home-text);
+    font-size: 15px;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 #listaRestaurantes .info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 9px;
+    color: var(--home-muted);
+    font-size: 10px;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 #listaRestaurantes .rating-info { color: #ffca28; }
+  body.home-page.client-home-rebuilt-4-9 #listaRestaurantes .status {
+    display: inline-flex;
+    margin-top: 5px;
+    font-size: 9px;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 #listaRestaurantes .favorite {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 3;
+    display: grid;
+    width: 36px;
+    height: 36px;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--home-text);
+    font-size: 24px;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 #listaRestaurantes > .card { position: relative; }
+
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-product-strip {
+    display: flex;
+    gap: 8px;
+    padding: 0 11px 11px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-product-strip::-webkit-scrollbar { display: none; }
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-product-strip > a {
+    flex: 1 0 92px;
+    min-width: 92px;
+    color: var(--home-text);
+    text-decoration: none;
+  }
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-product-strip img {
+    display: block;
+    width: 100%;
+    height: 64px;
+    margin-bottom: 5px;
+    border-radius: 10px;
+    object-fit: cover;
+  }
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-product-strip span,
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-product-strip strong {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 10px;
+  }
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-product-strip strong { color: var(--home-muted); font-weight: 500; }
+
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-cuisines-list {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-cuisines-list::-webkit-scrollbar { display: none; }
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-cuisine {
+    flex: 0 0 112px;
+    min-height: 154px;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--home-border);
+    border-radius: 14px;
+    background: var(--home-surface);
+    color: var(--home-text);
+    text-align: left;
+  }
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-cuisine-art {
+    display: grid;
+    width: 100%;
+    height: 92px;
+    place-items: center;
+    background-color: var(--home-surface-2);
+    background-image: url("../../assets/client-food-atlas.png");
+    background-size: 300% 200%;
+    color: transparent;
+    font-size: 0;
+  }
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-cuisine-art[data-food="burger"] { background-position: 0 0; }
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-cuisine-art[data-food="pizza"] { background-position: 50% 0; }
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-cuisine-art[data-food="sushi"] { background-position: 100% 0; }
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-cuisine-art[data-food="steak"] { background-position: 0 100%; }
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-cuisine strong,
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-cuisine small {
+    display: block;
+    padding-inline: 9px;
+  }
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-cuisine strong { margin-top: 8px; font-size: 12px; }
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-cuisine small { margin-top: 2px; color: #d99b72; font-size: 10px; }
+
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-nearby-list {
+    display: grid;
+    gap: 9px;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-nearby-card {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--home-border);
+    border-radius: 14px;
+    background: var(--home-surface);
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-nearby-card .card-link {
+    display: grid;
+    grid-template-columns: 68px minmax(0, 1fr) 88px;
+    min-height: 92px;
+    padding: 10px;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-nearby-card .card-link > img {
+    grid-column: 3;
+    grid-row: 1;
+    width: 88px;
+    height: 92px;
+    margin: -10px -10px -10px 0;
+    border-radius: 0 13px 13px 0;
+    object-fit: cover;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-nearby-card .card-body {
+    grid-column: 1 / 3;
+    grid-row: 1;
+    padding: 2px 32px 0 0;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-nearby-card .favorite {
+    top: 8px;
+    right: 94px;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 #destaques {
+    display: block;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 #listaProdutos {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  body.home-page.client-home-rebuilt-4-9 #listaProdutos::-webkit-scrollbar { display: none; }
+  body.home-page.client-home-rebuilt-4-9 #listaProdutos .produto-destaque {
+    flex: 0 0 126px;
+    display: block;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    background: transparent;
+    color: var(--home-text);
+  }
+  body.home-page.client-home-rebuilt-4-9 #listaProdutos .produto-destaque > img {
+    width: 126px;
+    height: 82px;
+    border-radius: 11px;
+    object-fit: cover;
+  }
+  body.home-page.client-home-rebuilt-4-9 #listaProdutos .produto-destaque > div { padding: 6px 0 0; }
+  body.home-page.client-home-rebuilt-4-9 #listaProdutos .produto-destaque h3 { margin: 0 0 2px; font-size: 11px; }
+  body.home-page.client-home-rebuilt-4-9 #listaProdutos .produto-destaque p { display: none; }
+  body.home-page.client-home-rebuilt-4-9 #listaProdutos .produto-destaque strong { color: var(--home-muted); font-size: 10px; }
+
+  body.home-page.client-home-rebuilt-4-9 #pedirNovamente,
+  body.home-page.client-home-rebuilt-4-9 #favoritosInicio {
+    padding-top: 0;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .client-repeat-list,
+  body.home-page.client-home-rebuilt-4-9 .client-favorites-list {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .client-repeat-list::-webkit-scrollbar,
+  body.home-page.client-home-rebuilt-4-9 .client-favorites-list::-webkit-scrollbar { display: none; }
+
+  body.home-page.client-home-rebuilt-4-9 .client-bottom-nav {
+    border-top: 1px solid var(--home-border);
+    background: color-mix(in srgb, var(--home-bg) 94%, transparent);
+    backdrop-filter: blur(16px);
+  }
+
+  body.home-page.client-home-rebuilt-4-9 .client-bottom-nav a { color: var(--home-muted); }
+  body.home-page.client-home-rebuilt-4-9 .client-bottom-nav a.active { color: var(--home-accent); }
+}
+
+@media (max-width: 390px) {
+  body.home-page.client-home-rebuilt-4-9 .client-approved-hero { min-height: 232px; }
+  body.home-page.client-home-rebuilt-4-9 .client-hero-copy h2 { font-size: 29px; }
+}
+
+@media (max-width: 360px) {
+  body.home-page.client-home-rebuilt-4-9 .container-header { padding-inline: 13px; }
+  body.home-page.client-home-rebuilt-4-9 .client-approved-hero,
+  body.home-page.client-home-rebuilt-4-9 .categorias,
+  body.home-page.client-home-rebuilt-4-9 .client-home-v2-section,
+  body.home-page.client-home-rebuilt-4-9 #restaurantes,
+  body.home-page.client-home-rebuilt-4-9 #destaques,
+  body.home-page.client-home-rebuilt-4-9 #pedirNovamente,
+  body.home-page.client-home-rebuilt-4-9 #favoritosInicio {
+    margin-left: 13px;
+    margin-right: 13px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  body.home-page.client-home-rebuilt-4-9 .client-approved-hero { min-height: 220px; }
+  body.home-page.client-home-rebuilt-4-9 .client-hero-copy h2 { font-size: 27px; }
+}
