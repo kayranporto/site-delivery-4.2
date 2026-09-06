@@ -10,7 +10,7 @@
     <title>Área do Restaurante | Delivery</title>
     <link href="../css/core/auth.css?v=4.2.0" rel="stylesheet">
     <link href="../css/core/accessibility.css?v=4.2.0" rel="stylesheet">
-<link rel="manifest" href="../manifest.webmanifest"><meta name="theme-color" content="#ea1d2c"><link rel="stylesheet" href="../css/core/enhancements.css?v=4.4.6"></head>
+<link rel="manifest" href="../manifest.webmanifest"><meta name="theme-color" content="#ea1d2c"><link rel="stylesheet" href="../css/core/enhancements.css?v=4.4.6"><link rel="stylesheet" href="../css/core/auth-mobile-mockup.css?v=4.4.7"></head>
 <body class="auth-page auth-business auth-login-page">
 <noscript>Este site precisa de JavaScript habilitado para funcionar.</noscript>
 
@@ -48,9 +48,9 @@
 
     <section class="auth-panel">
         <div class="auth-panel-inner">
-            <a class="auth-mobile-brand" href="../index.html">
+            <a class="auth-mobile-brand" href="../index.html" aria-label="MultiDelivery - página inicial">
                 <span class="auth-brand-mark" aria-hidden="true">🍔</span>
-                <span>Delivery</span>
+                <span class="auth-mobile-brand-name">Multi<span>Delivery</span></span>
             </a>
 
             <a class="auth-back" href="../index.html">
@@ -65,8 +65,14 @@
             </header>
 
             <nav class="auth-role-switch" aria-label="Escolher tipo de acesso">
-                <a href="login.html">👤 Cliente</a>
-                <a class="active" href="empresa-login.html" aria-current="page">🏪 Restaurante</a>
+                <a href="login.html">
+                    <span class="auth-role-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"></circle><path d="M5.5 20a6.5 6.5 0 0 1 13 0"></path></svg></span>
+                    <span>Cliente</span>
+                </a>
+                <a class="active" href="empresa-login.html" aria-current="page">
+                    <span class="auth-role-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 9h16"></path><path d="M5 9l1-5h12l1 5"></path><path d="M6 9v10h12V9"></path><path d="M9 19v-5h6v5"></path></svg></span>
+                    <span>Restaurante</span>
+                </a>
             </nav>
 
             <form class="auth-form" id="empresaLoginForm">
