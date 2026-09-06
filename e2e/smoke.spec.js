@@ -24,7 +24,8 @@ test("Home carrega, oferece busca e filtros acessíveis", async ({ page, isMobil
     await abrir(page, "/");
 
     await expect(page).toHaveTitle(/Multi Delivery/i);
-    await expect(page.getByRole("heading", { level: 2, name: "Restaurantes perto de você" })).toBeVisible();
+    const tituloRestaurantes = isMobile ? "Restaurantes em destaque" : "Restaurantes perto de você";
+    await expect(page.getByRole("heading", { level: 2, name: tituloRestaurantes })).toBeVisible();
     const busca = isMobile
         ? page.locator("#campoBuscaMobile")
         : page.getByRole("textbox", { name: /Buscar restaurante ou comida/i });
@@ -87,11 +88,12 @@ test("Navegação principal leva ao login e protege a central de ajuda", async (
     await expect.poll(() => page.evaluate(() => localStorage.getItem("redirect"))).toBe("suporte.html");
 });
 
-test("Página de restaurante sem id volta para a Home", async ({ page }) => {
+test("Página de restaurante sem id volta para a Home", async ({ page, isMobile }) => {
     const semErroFatal = observarErrosFatais(page);
     await abrir(page, "/html/restaurante.html");
     await expect(page).toHaveURL(/\/(?:index\.html)?$/, { timeout: 12000 });
-    await expect(page.getByRole("heading", { level: 2, name: "Restaurantes perto de você" })).toBeVisible();
+    const tituloRestaurantes = isMobile ? "Restaurantes em destaque" : "Restaurantes perto de você";
+    await expect(page.getByRole("heading", { level: 2, name: tituloRestaurantes })).toBeVisible();
     semErroFatal();
 });
 
