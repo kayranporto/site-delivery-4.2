@@ -22,6 +22,15 @@
   if (!CLIENT_PAGES.has(currentPage)) return;
 
   const assetRoot = /\/html\/[^/]+\.html$/i.test(location.pathname) ? "../" : "";
+  const mockupStylesHref = `${assetRoot}css/modules/client-mockups-approved-4.8.css?v=4.8.0`;
+  if (!document.querySelector('link[data-client-mockups="approved-4.8"]')) {
+    const mockupStyles = document.createElement("link");
+    mockupStyles.rel = "stylesheet";
+    mockupStyles.href = mockupStylesHref;
+    mockupStyles.dataset.clientMockups = "approved-4.8";
+    document.head.append(mockupStyles);
+  }
+
   document.body.classList.add("client-mobile-shell");
   document.body.dataset.clientPage = currentPage.replace(/\.html$/i, "") || "index";
   document.documentElement.dataset.clientMobile = "true";
@@ -37,7 +46,7 @@
   document.documentElement.dataset.theme = initialTheme;
   document.documentElement.style.colorScheme = initialTheme;
   document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => {
-    meta.content = initialTheme === "dark" ? "#191614" : "#ea1d2c";
+    meta.content = initialTheme === "dark" ? "#0b0908" : "#ea1d2c";
   });
 
   if (!CLIENT_NAV_PAGES.has(currentPage)) return;
