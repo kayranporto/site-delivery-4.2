@@ -117,9 +117,6 @@
       heading.append(title, link);
       couponSection.prepend(heading);
     }
-
-    const restaurantsTitle = document.getElementById("restaurantesTitulo");
-    if (restaurantsTitle) restaurantsTitle.textContent = "Restaurantes próximos";
   }
 
   prepareApprovedHome();
