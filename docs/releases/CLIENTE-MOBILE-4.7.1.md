@@ -11,6 +11,8 @@ Esta etapa conclui Favoritos, Notificações e Perfil:
 - Perfil: atalhos legíveis, dados pessoais, saída da conta e benefícios reais por restaurante acessíveis no celular.
 - Cache dos assets atualizado para 4.7.1, sem mudanças nas regras do banco ou dos pagamentos.
 
+Correção 4.7.2: o painel de notificações permanece aberto ao tentar novamente após uma falha de rede; o fechamento considera o caminho original do clique mesmo quando o botão já saiu do DOM.
+
 Verificação: `npm run package` e os workflows CI e E2E do repositório. Os testes usam dados simulados e não enviam pedidos nem notificações reais.
 
 Próxima etapa do plano: estados de erro e carregamento e acessibilidade nas demais telas do cliente. Depois: performance e refinamentos.

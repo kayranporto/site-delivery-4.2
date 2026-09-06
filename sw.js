@@ -1,7 +1,7 @@
 "use strict";
 
 const VERSION = "4.4.6";
-const CLIENT_RELEASE = "4.7.1";
+const CLIENT_RELEASE = "4.7.2";
 const CACHE = `multi-delivery-v${VERSION}-client-${CLIENT_RELEASE}`;
 const DYNAMIC_CACHE = `multi-delivery-dynamic-v${VERSION}-client-${CLIENT_RELEASE}`;
 const SHELL = [
@@ -32,7 +32,7 @@ const SHELL = [
   "./js/core/app-utils.js?v=4.4.6",
   "./js/core/config.js?v=4.4.6",
   "./js/core/monitoring.js?v=4.2.0",
-  "./js/core/notifications.js?v=4.7.1",
+  "./js/core/notifications.js?v=4.7.2",
   "./js/core/favorites-sync.js?v=4.2.1",
   "./js/core/client-mobile-4.5.js?v=4.7.0",
   "./js/modules/pos-pedido.js?v=4.5.1",

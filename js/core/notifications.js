@@ -80,7 +80,8 @@
             if (event.key === "Escape" && !painel.hidden) { event.preventDefault(); fecharPainel(true); }
         });
         document.addEventListener("click", (event) => {
-            if (!centro.contains(event.target) && !event.target.closest?.("[data-open-notifications]")) fecharPainel();
+            // O alvo pode sair do DOM quando a lista é substituída durante o carregamento.
+            if (!event.composedPath().includes(centro) && !event.target.closest?.("[data-open-notifications]")) fecharPainel();
         });
         marcar.addEventListener("click", marcarLidas);
         ativar.addEventListener("click", ativarPush);
