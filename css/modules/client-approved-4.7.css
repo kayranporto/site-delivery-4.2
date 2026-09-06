@@ -1,9 +1,10 @@
-/* Paleta e composição aprovadas para o mobile dos clientes — 4.7.0. */
+/* Paleta e composição aprovadas para o mobile dos clientes — 4.7.1. */
 .client-approved-hero { display: none; }
 .client-checkout-photo { display: none; }
 .client-search-tabs { display: flex; }
 .client-search-tabs button { flex: 1; min-height: 48px; }
 .client-search-products[hidden] { display: none; }
+.notification-close { min-width: 36px; min-height: 36px; }
 
 @media (max-width: 768px) {
   html[data-client-mobile="true"] {
@@ -251,4 +252,101 @@
   body.client-mobile-shell[data-client-page="checkout"] .item-resumo { grid-template-columns: 52px minmax(0,1fr); }
   body.client-mobile-shell[data-client-page="checkout"] .client-checkout-photo { width: 52px; height: 52px; grid-row: span 2; }
   body.client-mobile-shell[data-client-page="checkout"] .item-preco { grid-column: 2; }
+}
+
+/* Favoritos, notificações e perfil completam a mesma experiência mobile. */
+@media (max-width: 768px) {
+  body.client-mobile-shell[data-client-page="favoritos"] .page-header { gap: 14px; border-bottom: 0; }
+  body.client-mobile-shell[data-client-page="favoritos"] .page-header h1 { font-size: 26px; letter-spacing: -.5px; }
+  body.client-mobile-shell[data-client-page="favoritos"] .page-main { padding: 12px 16px 28px; }
+  body.client-mobile-shell .favorites-summary { margin: 0 0 20px; color: var(--client-muted); font-size: 14px; }
+  body.client-mobile-shell[data-client-page="favoritos"] #listaFavoritos { display: grid; gap: 16px; }
+  html[data-theme="dark"] body.client-mobile-shell[data-client-page="favoritos"] .restaurant-row {
+    position: relative; display: grid; grid-template-columns: 88px minmax(0,1fr); gap: 12px 14px;
+    padding: 16px; background: var(--client-surface); border: 1px solid var(--client-border); border-radius: 16px; box-shadow: none;
+  }
+  body.client-mobile-shell[data-client-page="favoritos"] .restaurant-row > img { width: 88px; height: 96px; border-radius: 12px; object-fit: cover; }
+  body.client-mobile-shell[data-client-page="favoritos"] .favorite-info { min-width: 0; }
+  body.client-mobile-shell[data-client-page="favoritos"] .favorite-info h3 { margin: 0 0 8px; color: var(--client-text); font-size: 18px; line-height: 1.3; overflow-wrap: anywhere; }
+  body.client-mobile-shell[data-client-page="favoritos"] .favorite-info p { margin: 0; color: var(--client-muted); font-size: 14px; line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  body.client-mobile-shell[data-client-page="favoritos"] .restaurant-row .actions { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 10px; }
+  html[data-theme="dark"] body.client-mobile-shell[data-client-page="favoritos"] .btn { display: inline-flex; justify-content: center; align-items: center; min-height: 48px; padding: 12px 16px; border-radius: 12px; background: var(--client-accent); color: var(--client-on-accent); border: 1px solid var(--client-accent); font-size: 14px; font-weight: 700; }
+  body.client-mobile-shell[data-client-page="favoritos"] .actions a { flex: 1; }
+  html[data-theme="dark"] body.client-mobile-shell[data-client-page="favoritos"] .favorite-remove { background: transparent; color: var(--client-muted); border-color: var(--client-border); }
+  body.client-mobile-shell[data-client-page="favoritos"] .favorite-remove::before { content: "♥"; color: var(--client-accent); margin-right: 8px; }
+  html[data-theme="dark"] body.client-mobile-shell[data-client-page="favoritos"] .empty { padding: 32px 20px; border: 1px solid var(--client-border); border-radius: 16px; background: var(--client-surface); color: var(--client-muted); }
+  body.client-mobile-shell[data-client-page="favoritos"] .empty h2 { margin: 0; color: var(--client-text); font-size: 22px; }
+  body.client-mobile-shell[data-client-page="favoritos"] .empty p { font-size: 16px; line-height: 1.5; margin: 12px 0 22px; }
+  body.client-mobile-shell button:disabled { cursor: default; }
+  body.client-mobile-shell button[aria-busy="true"] { opacity: .7; }
+
+  /* O painel é rolável e mantém o fechamento e a ativação dos alertas acessíveis. */
+  body.client-mobile-shell .notification-center:has(.notification-panel:not([hidden])) { z-index: 1100; }
+  html[data-theme="dark"] body.client-mobile-shell .notification-panel {
+    position: fixed; inset: auto 12px calc(var(--client-nav-height) + 18px + env(safe-area-inset-bottom));
+    display: flex; flex-direction: column; width: auto; max-width: none;
+    max-height: calc(100dvh - var(--client-nav-height) - 50px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    border: 1px solid var(--client-border); border-radius: 20px; background: var(--client-bg); color: var(--client-text); box-shadow: 0 15px 70px rgba(0,0,0,.55);
+  }
+  body.client-mobile-shell .notification-panel[hidden] { display: none !important; }
+  html[data-theme="dark"] body.client-mobile-shell .notification-panel > header { display: grid; grid-template-columns: minmax(0,1fr) 44px; gap: 6px 12px; padding: 16px; background: var(--client-bg); border-color: var(--client-border); }
+  body.client-mobile-shell .notification-panel > header > strong { color: var(--client-text); font-size: 22px; }
+  html[data-theme="dark"] body.client-mobile-shell .notification-panel > header button { min-height: 44px; color: var(--client-accent); font-size: 14px; }
+  body.client-mobile-shell #markNotificationsRead { grid-column: 1; justify-self: start; padding: 4px 0; text-align: left; }
+  body.client-mobile-shell #markNotificationsRead:disabled { color: var(--client-muted); opacity: .65; }
+  html[data-theme="dark"] body.client-mobile-shell #closeNotifications { grid-column: 2; grid-row: 1; padding: 0; border: 1px solid var(--client-border); border-radius: 50%; background: var(--client-surface); color: var(--client-text); font-size: 26px; }
+  body.client-mobile-shell .notification-list { min-height: 0; max-height: none; overflow-y: auto; overscroll-behavior: contain; }
+  html[data-theme="dark"] body.client-mobile-shell .notification-item { display: grid; gap: 8px; padding: 18px 16px; background: var(--client-surface); border-color: var(--client-border); box-shadow: inset 3px 0 var(--client-accent); }
+  html[data-theme="dark"] body.client-mobile-shell .notification-item.read { background: var(--client-bg); opacity: 1; box-shadow: none; }
+  body.client-mobile-shell .notification-item strong { color: var(--client-text); font-size: 16px; line-height: 1.35; overflow-wrap: anywhere; }
+  body.client-mobile-shell .notification-item span { color: var(--client-muted); font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
+  body.client-mobile-shell .notification-item small { color: var(--client-muted); font-size: 12px; }
+  body.client-mobile-shell .notification-empty { padding: 30px 20px; color: var(--client-muted); font-size: 16px; line-height: 1.5; }
+  html[data-theme="dark"] body.client-mobile-shell .notification-retry { min-height: 48px; padding: 10px 16px; border: 1px solid var(--client-accent); border-radius: 12px; background: var(--client-accent); color: var(--client-on-accent); font-family: inherit; font-size: 14px; font-weight: 700; }
+  html[data-theme="dark"] body.client-mobile-shell .notification-permission { flex-shrink: 0; min-height: 58px; padding: 16px; background: var(--client-surface); color: var(--client-accent); border-color: var(--client-border); font-size: 14px; line-height: 1.5; }
+  body.client-mobile-shell .notification-permission:disabled { color: var(--client-muted); }
+
+  html[data-theme="dark"] body.client-mobile-shell[data-client-page="perfil"] .perfil-container { padding: 12px 16px calc(var(--client-nav-height) + 28px + env(safe-area-inset-bottom)); }
+  body.client-mobile-shell[data-client-page="perfil"] .perfil-mobile-brand { gap: 4px; font-size: 21px; }
+  body.client-mobile-shell[data-client-page="perfil"] .perfil-mobile-brand > span { display: none; }
+  body.client-mobile-shell[data-client-page="perfil"] .perfil-mobile-brand em { color: var(--client-accent); font-style: normal; }
+  body.client-mobile-shell[data-client-page="perfil"] .perfil-mobile-title { margin: 8px 0 20px; font-size: 28px; }
+  html[data-theme="dark"] body.client-mobile-shell[data-client-page="perfil"] .usuario-card { padding: 18px 16px; margin: 0 0 22px; border: 1px solid var(--client-border); border-radius: 18px; background: var(--client-surface); }
+  body.client-mobile-shell[data-client-page="perfil"] .avatar { width: 68px; height: 68px; border-color: var(--client-border); background: var(--client-red-soft); color: var(--client-accent); }
+  body.client-mobile-shell[data-client-page="perfil"] .avatar-camera { color: var(--client-on-accent); background: var(--client-accent); }
+  body.client-mobile-shell[data-client-page="perfil"] .usuario-info { min-width: 0; }
+  body.client-mobile-shell[data-client-page="perfil"] .usuario-info h2 { font-size: 20px; overflow-wrap: anywhere; }
+  body.client-mobile-shell[data-client-page="perfil"] .usuario-info > p { color: var(--client-muted); font-size: 14px; overflow-wrap: anywhere; }
+  body.client-mobile-shell[data-client-page="perfil"] .usuario-meta { display: none; }
+  body.client-mobile-shell[data-client-page="perfil"] .perfil-principal { gap: 18px; }
+  body.client-mobile-shell[data-client-page="perfil"] .perfil-principal > .painel-card:not(.loyalty-card):not(.pedido-destaque) { order: 0; margin-bottom: 0; }
+  body.client-mobile-shell[data-client-page="perfil"] .menu { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
+  html[data-theme="dark"] body.client-mobile-shell[data-client-page="perfil"] :is(.menu-item.mobile-profile-shortcut,.menu-item[href="dados.html"],.theme-toggle-profile) { display: flex; flex-direction: row; justify-content: flex-start; gap: 12px; min-height: 76px; padding: 14px 12px; border: 1px solid var(--client-border); border-radius: 14px; background: var(--client-surface); color: var(--client-text); text-align: left; }
+  body.client-mobile-shell[data-client-page="perfil"] .menu-icone { flex: 0 0 26px; width: 26px; height: 30px; background: transparent; color: var(--client-accent); font-size: 24px; }
+  body.client-mobile-shell[data-client-page="perfil"] .menu-texto { min-width: 0; }
+  body.client-mobile-shell[data-client-page="perfil"] .menu-texto strong { color: var(--client-text); font-size: 14px; line-height: 1.4; white-space: normal; }
+  body.client-mobile-shell[data-client-page="perfil"] .pedido-destaque { order: 1; margin: 0; }
+  body.client-mobile-shell[data-client-page="perfil"] .secao-cabecalho h2 { color: var(--client-text); font-size: 20px; }
+  body.client-mobile-shell[data-client-page="perfil"] .secao-cabecalho a { color: var(--client-accent); font-size: 14px; }
+  body.client-mobile-shell[data-client-page="perfil"] :is(.pedido-restaurante h3,.pedido-vazio h3) { color: var(--client-text); font-size: 18px; }
+  body.client-mobile-shell[data-client-page="perfil"] :is(.pedido-vazio p,.pedido-restaurante p,.pedido-previsao) { color: var(--client-muted); font-size: 14px; }
+  html[data-theme="dark"] body.client-mobile-shell[data-client-page="perfil"] :is(.pedido-acao,.pedido-vazio a,.loyalty-redeem) { display: inline-flex; min-height: 48px; align-items: center; justify-content: center; padding: 12px 16px; border: 0; border-radius: 12px; background: var(--client-accent); color: var(--client-on-accent); font-size: 14px; }
+  html[data-theme="dark"] body.client-mobile-shell[data-client-page="perfil"] .loyalty-card { order: 2; padding: 18px 16px; border: 1px solid var(--client-border); border-radius: 16px; background: var(--client-surface); }
+  body.client-mobile-shell[data-client-page="perfil"] .fidelity-heading small { color: var(--client-muted); font-size: 14px; line-height: 1.5; }
+  body.client-mobile-shell[data-client-page="perfil"] :is(.fidelity-level,.fidelity-all,.fidelity-progress,.fidelity-progress-copy),
+  body.client-mobile-shell[data-client-page="perfil"] .fidelity-summary > div:not(:first-child) { display: none; }
+  body.client-mobile-shell[data-client-page="perfil"] .fidelity-summary { grid-template-columns: 1fr; }
+  body.client-mobile-shell[data-client-page="perfil"] .fidelity-summary > div { border: 0; padding: 0; }
+  body.client-mobile-shell[data-client-page="perfil"] .fidelity-summary :is(span,small) { font-size: 14px; }
+  body.client-mobile-shell[data-client-page="perfil"] .fidelity-summary strong { color: var(--client-accent); font-size: 26px; }
+  body.client-mobile-shell[data-client-page="perfil"] .loyalty-list { display: grid; gap: 12px; margin-top: 14px; }
+  html[data-theme="dark"] body.client-mobile-shell[data-client-page="perfil"] .loyalty-row { display: flex; flex-wrap: wrap; gap: 14px; padding: 12px 0; border: 0; border-bottom: 1px solid var(--client-border); background: transparent; }
+  body.client-mobile-shell[data-client-page="perfil"] .loyalty-row strong { color: var(--client-text); font-size: 16px; }
+  body.client-mobile-shell[data-client-page="perfil"] :is(.loyalty-row small,.loyalty-empty,.perfil-loading) { color: var(--client-muted); font-size: 14px; line-height: 1.5; }
+  body.client-mobile-shell[data-client-page="perfil"] .loyalty-points b { color: var(--client-accent); }
+  body.client-mobile-shell[data-client-page="perfil"] .perfil-lateral { display: block; margin-top: 18px; }
+  body.client-mobile-shell[data-client-page="perfil"] .perfil-lateral > :not(.sair) { display: none; }
+  html[data-theme="dark"] body.client-mobile-shell[data-client-page="perfil"] .sair { display: flex; width: 100%; min-height: 52px; align-items: center; justify-content: center; gap: 10px; padding: 14px; border: 1px solid var(--client-border); border-radius: 14px; background: transparent; color: var(--client-muted); font-size: 16px; }
+  html[data-theme="dark"] body.client-mobile-shell .logout-dialog :is(.logout-dialog-card,.logout-dialog-actions) { background: var(--client-surface); color: var(--client-text); border-color: var(--client-border); }
+  html[data-theme="dark"] body.client-mobile-shell .logout-dialog :is(h2,p) { color: var(--client-text); }
 }

@@ -4,6 +4,7 @@
     let usuario = null;
     let canal = null;
     let notificacoes = [];
+    let origemPainel = null;
     const emPastaHtml = /\/html\/[^/]+\.html$/i.test(location.pathname);
 
     function paginaAplicacao(caminho) {
@@ -46,16 +47,41 @@
     function montarInterface() {
         if (document.getElementById("notificationCenter")) return;
         const centro = criar("div", "notification-center"); centro.id = "notificationCenter";
-        const botao = criar("button", "notification-trigger", "🔔"); botao.type = "button"; botao.id = "notificationTrigger"; botao.setAttribute("aria-label", "Abrir notificações");
+        const botao = criar("button", "notification-trigger"); botao.type = "button"; botao.id = "notificationTrigger"; botao.setAttribute("aria-label", "Abrir notificações");
+        const sino = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        sino.setAttribute("viewBox", "0 0 24 24"); sino.setAttribute("width", "24"); sino.setAttribute("height", "24"); sino.setAttribute("fill", "none"); sino.setAttribute("stroke", "currentColor"); sino.setAttribute("stroke-width", "1.8"); sino.setAttribute("aria-hidden", "true");
+        sino.innerHTML = '<path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z"/><path d="M10 21h4"/>';
+        botao.append(sino);
+        botao.setAttribute("aria-controls", "notificationPanel"); botao.setAttribute("aria-expanded", "false");
         const contador = criar("span", "", "0"); contador.id = "notificationCount"; botao.append(contador);
         const painel = criar("section", "notification-panel"); painel.id = "notificationPanel"; painel.hidden = true; painel.setAttribute("aria-label", "Notificações");
         const header = criar("header"); header.append(criar("strong", "", "Notificações"));
         const marcar = criar("button", "", "Marcar como lidas"); marcar.type = "button"; marcar.id = "markNotificationsRead"; header.append(marcar);
-        const lista = criar("div", "notification-list"); lista.id = "notificationList";
+        const fechar = criar("button", "notification-close", "×"); fechar.type = "button"; fechar.id = "closeNotifications"; fechar.setAttribute("aria-label", "Fechar notificações"); header.append(fechar);
+        const lista = criar("div", "notification-list"); lista.id = "notificationList"; lista.setAttribute("aria-live", "polite");
         const ativar = criar("button", "notification-permission", "Ativar alertas no dispositivo"); ativar.type = "button"; ativar.id = "enablePushNotifications";
         painel.append(header, lista, ativar); centro.append(botao, painel); document.body.append(centro);
-        botao.addEventListener("click", () => { painel.hidden = !painel.hidden; if (!painel.hidden) botao.setAttribute("aria-expanded", "true"); else botao.removeAttribute("aria-expanded"); });
-        document.addEventListener("click", (event) => { if (!centro.contains(event.target)) painel.hidden = true; });
+        function fecharPainel(devolverFoco = false) {
+            painel.hidden = true;
+            botao.setAttribute("aria-expanded", "false");
+            document.querySelector("[data-open-notifications]")?.setAttribute("aria-expanded", "false");
+            if (devolverFoco) origemPainel?.focus();
+        }
+        window.AbrirNotificacoes = (origem = botao) => {
+            origemPainel = origem;
+            painel.hidden = false;
+            botao.setAttribute("aria-expanded", "true");
+            document.querySelector("[data-open-notifications]")?.setAttribute("aria-expanded", "true");
+            fechar.focus({ preventScroll: true });
+        };
+        botao.addEventListener("click", () => painel.hidden ? window.AbrirNotificacoes(botao) : fecharPainel());
+        fechar.addEventListener("click", () => fecharPainel(true));
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape" && !painel.hidden) { event.preventDefault(); fecharPainel(true); }
+        });
+        document.addEventListener("click", (event) => {
+            if (!centro.contains(event.target) && !event.target.closest?.("[data-open-notifications]")) fecharPainel();
+        });
         marcar.addEventListener("click", marcarLidas);
         ativar.addEventListener("click", ativarPush);
     }
@@ -68,6 +94,8 @@
         const naoLidas = notificacoes.filter((item) => !item.lida).length;
         contador.textContent = naoLidas > 99 ? "99+" : String(naoLidas);
         contador.hidden = naoLidas === 0;
+        document.getElementById("notificationTrigger")?.setAttribute("aria-label", naoLidas ? `Abrir notificações, ${naoLidas} não lidas` : "Abrir notificações");
+        document.getElementById("markNotificationsRead").disabled = naoLidas === 0;
         if (!notificacoes.length) { lista.append(criar("p", "notification-empty", "Nenhuma notificação por enquanto.")); return; }
         notificacoes.slice(0, 20).forEach((item) => {
             const link = criar("a", `notification-item ${item.lida ? "read" : ""}`);
@@ -82,24 +110,50 @@
     }
 
     async function carregar() {
-        const { data, error } = await db.from("notificacoes").select("*").eq("usuario_id", usuario.id).order("created_at", { ascending: false }).limit(50);
-        if (!error) { notificacoes = data || []; renderizar(); }
+        const lista = document.getElementById("notificationList");
+        lista.setAttribute("aria-busy", "true");
+        lista.replaceChildren(criar("p", "notification-empty", "Carregando notificações..."));
+        document.getElementById("markNotificationsRead").disabled = true;
+        try {
+            const { data, error } = await db.from("notificacoes").select("*").eq("usuario_id", usuario.id).order("created_at", { ascending: false }).limit(50);
+            if (error) throw error;
+            notificacoes = data || [];
+            renderizar();
+        } catch (erro) {
+            console.warn("Notificações indisponíveis:", erro?.message || erro);
+            const estado = criar("div", "notification-empty");
+            const texto = criar("p", "", "Não foi possível carregar seus avisos.");
+            const tentar = criar("button", "notification-retry", "Tentar novamente"); tentar.type = "button";
+            tentar.addEventListener("click", async () => { await carregar(); document.getElementById("closeNotifications")?.focus(); });
+            estado.append(texto, tentar);
+            lista.replaceChildren(estado);
+        } finally {
+            lista.setAttribute("aria-busy", "false");
+        }
     }
 
     async function marcarLidas() {
+        const botao = document.getElementById("markNotificationsRead");
+        if (botao.disabled) return;
         const ids = notificacoes.filter((item) => !item.lida).map((item) => item.id);
         if (!ids.length) {
             avisar("Tudo em dia", "Você não possui notificações novas.", "info", 3500);
             return;
         }
-        const { error } = await db.from("notificacoes").update({ lida: true }).in("id", ids).eq("usuario_id", usuario.id);
-        if (error) {
+        botao.disabled = true;
+        botao.setAttribute("aria-busy", "true");
+        try {
+            const { error } = await db.from("notificacoes").update({ lida: true }).in("id", ids).eq("usuario_id", usuario.id);
+            if (error) throw error;
+            notificacoes.forEach((item) => { if (ids.includes(item.id)) item.lida = true; });
+            renderizar();
+            avisar("Notificações atualizadas", "Todas foram marcadas como lidas.", "success", 3500);
+        } catch {
+            botao.disabled = false;
             avisar("Não foi possível atualizar", "Tente marcar as notificações como lidas novamente.", "error");
-            return;
+        } finally {
+            botao.removeAttribute("aria-busy");
         }
-        notificacoes.forEach((item) => { if (ids.includes(item.id)) item.lida = true; });
-        renderizar();
-        avisar("Notificações atualizadas", "Todas foram marcadas como lidas.", "success", 3500);
     }
 
     function base64Uint8(base64) {
@@ -141,7 +195,12 @@
 
     async function atualizarBotaoPush() {
         const ativar = document.getElementById("enablePushNotifications");
-        if (!ativar || !("Notification" in window) || !("serviceWorker" in navigator)) return;
+        if (!ativar) return;
+        if (!("Notification" in window) || !("serviceWorker" in navigator) || !("PushManager" in window)) {
+            ativar.textContent = "Seus avisos continuam disponíveis aqui";
+            ativar.disabled = true;
+            return;
+        }
         if (Notification.permission === "denied") {
             ativar.textContent = "Alertas bloqueados no navegador";
             ativar.disabled = true;
@@ -199,7 +258,7 @@
     }
 
     function mostrarNotificacaoLocal(item) {
-        if (Notification.permission !== "granted" || !document.hidden) return;
+        if (!("Notification" in window) || Notification.permission !== "granted" || !document.hidden) return;
         const destino = destinoSeguro(item);
         const alerta = new Notification(item.titulo || "Multi Delivery", {
             body: item.mensagem || "Você tem uma nova atualização.",
@@ -222,7 +281,7 @@
         await carregar();
         await atualizarBotaoPush();
 
-        if (Notification.permission === "granted") {
+        if ("Notification" in window && Notification.permission === "granted") {
             registrarSubscription()
                 .then(() => atualizarBotaoPush())
                 .then(() => window.dispatchEvent(new CustomEvent("multi-delivery:push-state")))
@@ -241,5 +300,5 @@
     window.AtualizarEstadoPush = atualizarBotaoPush;
 
     addEventListener("beforeunload", () => { if (canal) db.removeChannel(canal); });
-    iniciar();
+    iniciar().catch((erro) => console.warn("Não foi possível iniciar notificações:", erro?.message || erro));
 })();

@@ -142,7 +142,7 @@ async function carregarFidelidade() {
     const container = document.getElementById("fidelidadePerfil");
     const { data: saldos, error } = await window.db.rpc("meus_beneficios_fidelidade");
     if (error) {
-        container.replaceChildren(criar("p", "loyalty-empty", "Os pontos serão exibidos após ativar a migração operacional."));
+        container.replaceChildren(criar("p", "loyalty-empty", "Não foi possível consultar seus benefícios agora. Tente novamente mais tarde."));
         return;
     }
     const ids = (saldos || []).map((item) => item.empresa_id);
@@ -316,8 +316,9 @@ modalLogout.confirmar.addEventListener("click", async () => {
     }
 });
 
-document.querySelector("[data-open-notifications]")?.addEventListener("click", () => {
-    document.getElementById("notificationTrigger")?.click();
+document.querySelector("[data-open-notifications]")?.addEventListener("click", (event) => {
+    if (window.AbrirNotificacoes) window.AbrirNotificacoes(event.currentTarget);
+    else window.AppToast?.("Notificações", "Seus avisos ainda estão carregando. Tente novamente em instantes.", "info");
 });
 
 carregarPerfil();

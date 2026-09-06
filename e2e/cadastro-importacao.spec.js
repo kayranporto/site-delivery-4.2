@@ -10,6 +10,7 @@ test.beforeEach(async ({ page }) => {
         const tabelas = {
             empresas: [empresa], empresas_catalogo: [empresa], empresa_unidades: [unidade],
             usuarios: [{ id: user.id, nome: "Cliente QA" }], produtos: [], categorias: [],
+            notificacoes: [{ id: "aviso-qa", usuario_id: user.id, titulo: "Seu pedido saiu para entrega", mensagem: "Acompanhe sua entrega pelo pedido.", created_at: "2026-09-06T12:00:00Z", lida: false, pedido_id: "pedido-qa" }],
             enderecos: [{id:"endereco-qa",usuario_id:user.id,apelido:"Casa",logradouro:"Rua QA",numero:"10",bairro:"Centro",cidade:"Recife",uf:"PE",principal:true}]
         };
         window.qaChamadas = [];
@@ -18,6 +19,10 @@ test.beforeEach(async ({ page }) => {
                 let unico = false; const filtros = [];
                 const consulta = new Proxy({}, { get(_alvo, metodo) {
                     if (metodo === "then") return (resolve) => {
+                        if (sessionStorage.getItem(`qaErro:${tabela}`) === "1") {
+                            sessionStorage.removeItem(`qaErro:${tabela}`);
+                            return Promise.resolve({ data: null, error: { message: "Falha temporária simulada" } }).then(resolve);
+                        }
                         const dados = (tabelas[tabela] || []).filter((item) => filtros.every(([key,value]) => String(item[key]) === String(value)));
                         return Promise.resolve({data:unico ? (dados[0] || null) : dados,error:null,count:dados.length}).then(resolve);
                     };
@@ -50,6 +55,62 @@ test.beforeEach(async ({ page }) => {
             removeChannel:async()=>{},functions:{invoke:async()=>({data:[],error:null})}
         };
     });
+});
+
+test("favoritos recuperam falha de carregamento e removem o último restaurante", async ({ page }) => {
+    await page.goto("/html/favoritos.html");
+    await expect(page.getByRole("heading", { name: "Sem favoritos" })).toBeVisible();
+    await page.evaluate(() => {
+        localStorage.setItem("favoritos", JSON.stringify(["empresa-qa"]));
+        sessionStorage.setItem("qaErro:empresas_catalogo", "1");
+    });
+    await page.reload();
+    await expect(page.getByRole("alert")).toContainText("Não foi possível carregar");
+    await page.getByRole("button", { name: "Tentar novamente" }).click();
+    await expect(page.getByRole("heading", { name: "Restaurante QA" })).toBeVisible();
+    await expect(page.locator("#resumoFavoritos")).toHaveText("1 restaurante salvo");
+    await page.getByRole("button", { name: "Remover Restaurante QA dos favoritos" }).click();
+    await expect(page.getByRole("heading", { name: "Sem favoritos" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Explorar restaurantes" })).toBeFocused();
+    expect(await page.evaluate(() => JSON.parse(localStorage.getItem("favoritos")))).toEqual([]);
+});
+
+test("notificações abrem pelo perfil, recuperam erro e devolvem o foco ao fechar", async ({ page, isMobile }) => {
+    await page.addInitScript(() => { delete window.Notification; });
+    await page.goto("/html/perfil.html");
+    await expect(page.locator("#notificationCount")).toHaveText("1");
+    await page.evaluate(() => sessionStorage.setItem("qaErro:notificacoes", "1"));
+    await page.reload();
+    const abrir = isMobile ? page.locator("[data-open-notifications]") : page.locator("#notificationTrigger");
+    await abrir.click();
+    const painel = page.locator("#notificationPanel");
+    await expect(painel).toBeVisible();
+    await expect(page.locator("#enablePushNotifications")).toBeDisabled();
+    await expect(painel).toContainText("Não foi possível carregar seus avisos.");
+    await painel.getByRole("button", { name: "Tentar novamente" }).click();
+    await expect(painel.getByRole("link", { name: /Seu pedido saiu para entrega/ })).toHaveAttribute("href", "acompanhamento.html?id=pedido-qa");
+    await painel.getByRole("button", { name: "Marcar como lidas" }).click();
+    await expect(page.locator("#notificationCount")).toBeHidden();
+    await page.keyboard.press("Escape");
+    await expect(painel).toBeHidden();
+    await expect(abrir).toBeFocused();
+    await expect(page.locator("#notificationTrigger")).toHaveAttribute("aria-expanded", "false");
+    await abrir.click();
+    await painel.getByRole("button", { name: "Fechar notificações" }).click();
+    await expect(abrir).toBeFocused();
+});
+
+test("perfil mantém dados pessoais e saída da conta acessíveis no celular", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/html/perfil.html");
+    await expect(page.locator("#nomeUsuario")).toHaveText("Cliente QA");
+    await expect(page.getByRole("link", { name: /Dados e segurança/ })).toBeVisible();
+    await expect(page.locator("#fidelidadePerfil")).toBeVisible();
+    await page.getByRole("button", { name: "Encerrar sessão" }).click();
+    await expect(page.locator(".logout-dialog")).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(page.locator(".logout-dialog")).toBeHidden();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1);
 });
 
 test("perfil oferece tema no menu e persiste a escolha nas outras páginas", async ({ page, isMobile }) => {

@@ -1,7 +1,7 @@
 "use strict";
 
 const VERSION = "4.4.6";
-const CLIENT_RELEASE = "4.7.0";
+const CLIENT_RELEASE = "4.7.1";
 const CACHE = `multi-delivery-v${VERSION}-client-${CLIENT_RELEASE}`;
 const DYNAMIC_CACHE = `multi-delivery-dynamic-v${VERSION}-client-${CLIENT_RELEASE}`;
 const SHELL = [
@@ -16,7 +16,7 @@ const SHELL = [
   "./assets/banner-padrao.svg",
   "./assets/banner1.svg",
   "./assets/client-food-atlas.png",
-  "./css/modules/client-approved-4.7.css?v=4.7.0",
+  "./css/modules/client-approved-4.7.css?v=4.7.1",
   "./css/core/style.css?v=4.2.0",
   "./css/pages/home-4.2.1.css?v=4.2.1.4",
   "./css/core/paginas.css?v=4.2.0",
@@ -32,12 +32,14 @@ const SHELL = [
   "./js/core/app-utils.js?v=4.4.6",
   "./js/core/config.js?v=4.4.6",
   "./js/core/monitoring.js?v=4.2.0",
-  "./js/core/notifications.js?v=4.4.3",
+  "./js/core/notifications.js?v=4.7.1",
   "./js/core/favorites-sync.js?v=4.2.1",
   "./js/core/client-mobile-4.5.js?v=4.7.0",
   "./js/modules/pos-pedido.js?v=4.5.1",
   "./js/pages/pedido-sucesso.js?v=4.6.1",
   "./js/pages/home.js?v=4.7.0",
+  "./js/pages/favoritos.js?v=4.7.1",
+  "./js/pages/perfil.js?v=4.7.1",
   "./js/pages/restaurante.js?v=4.6.0",
   "./js/modules/modal.js?v=4.5.4",
   "./js/core/cart-store.js?v=4.2.0",
