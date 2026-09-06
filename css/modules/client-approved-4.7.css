@@ -1,10 +1,11 @@
-/* Paleta e composição aprovadas para o mobile dos clientes — 4.7.1. */
+/* Paleta e composição aprovadas para o mobile dos clientes — 4.7.3. */
 .client-approved-hero { display: none; }
 .client-checkout-photo { display: none; }
 .client-search-tabs { display: flex; }
 .client-search-tabs button { flex: 1; min-height: 48px; }
 .client-search-products[hidden] { display: none; }
 .notification-close { min-width: 36px; min-height: 36px; }
+#notificationCount[hidden] { display: none !important; }
 
 @media (max-width: 768px) {
   html[data-client-mobile="true"] {

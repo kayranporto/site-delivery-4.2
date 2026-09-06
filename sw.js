@@ -1,7 +1,7 @@
 "use strict";
 
 const VERSION = "4.4.6";
-const CLIENT_RELEASE = "4.7.2";
+const CLIENT_RELEASE = "4.7.3";
 const CACHE = `multi-delivery-v${VERSION}-client-${CLIENT_RELEASE}`;
 const DYNAMIC_CACHE = `multi-delivery-dynamic-v${VERSION}-client-${CLIENT_RELEASE}`;
 const SHELL = [
@@ -16,7 +16,7 @@ const SHELL = [
   "./assets/banner-padrao.svg",
   "./assets/banner1.svg",
   "./assets/client-food-atlas.png",
-  "./css/modules/client-approved-4.7.css?v=4.7.1",
+  "./css/modules/client-approved-4.7.css?v=4.7.3",
   "./css/core/style.css?v=4.2.0",
   "./css/pages/home-4.2.1.css?v=4.2.1.4",
   "./css/core/paginas.css?v=4.2.0",
