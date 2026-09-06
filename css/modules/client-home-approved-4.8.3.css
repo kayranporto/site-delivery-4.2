@@ -1,0 +1,35 @@
+/* Home mobile 4.8.3 — mantém os filtros reais acessíveis sem perder o acabamento do mockup. */
+@media (max-width: 768px) {
+  body.home-page.client-mobile-shell #restaurantes .restaurant-tools {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 8px;
+    margin: 0 0 12px;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+  }
+
+  body.home-page.client-mobile-shell #restaurantes .restaurant-tools::-webkit-scrollbar { display: none; }
+
+  html[data-theme="dark"] body.home-page.client-mobile-shell #restaurantes .filter-pill {
+    flex: 0 0 auto;
+    min-height: 38px;
+    padding: 8px 12px;
+    border: 1px solid #403128;
+    border-radius: 999px;
+    background: #17120f;
+    color: var(--client-text);
+    box-shadow: none;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  html[data-theme="dark"] body.home-page.client-mobile-shell #restaurantes .filter-pill[aria-pressed="true"] {
+    border-color: var(--client-accent);
+    background: rgba(255, 106, 26, .14);
+    color: var(--client-accent);
+  }
+
+  body.home-page.client-mobile-shell #restaurantes .resultado-info { display: none; }
+}
