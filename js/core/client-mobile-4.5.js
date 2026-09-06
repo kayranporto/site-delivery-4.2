@@ -40,6 +40,15 @@
     document.head.append(compatibilityStyles);
   }
 
+  const homeStylesHref = `${assetRoot}css/modules/client-home-approved-4.8.2.css?v=4.8.2`;
+  if (!document.querySelector('link[data-client-mockups="home-approved-4.8.2"]')) {
+    const homeStyles = document.createElement("link");
+    homeStyles.rel = "stylesheet";
+    homeStyles.href = homeStylesHref;
+    homeStyles.dataset.clientMockups = "home-approved-4.8.2";
+    document.head.append(homeStyles);
+  }
+
   document.body.classList.add("client-mobile-shell");
   document.body.dataset.clientPage = currentPage.replace(/\.html$/i, "") || "index";
   document.documentElement.dataset.clientMobile = "true";
@@ -57,6 +66,63 @@
   document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => {
     meta.content = initialTheme === "dark" ? "#0b0908" : "#ea1d2c";
   });
+
+  function prepareApprovedHome() {
+    if (currentPage !== "index.html") return;
+
+    const homeSearch = document.getElementById("campoBusca");
+    if (homeSearch) homeSearch.placeholder = "Pesquisar restaurantes, pratos ou culinárias...";
+
+    const searchBox = document.querySelector(".container-header .search");
+    if (searchBox && !searchBox.querySelector(".client-home-filter")) {
+      const filterButton = document.createElement("button");
+      filterButton.type = "button";
+      filterButton.className = "client-home-filter";
+      filterButton.setAttribute("aria-label", "Abrir busca e filtros");
+      filterButton.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10M8 4v6M16 14v6"></path></svg>';
+      filterButton.addEventListener("click", () => {
+        location.hash = "#buscar";
+      });
+      searchBox.append(filterButton);
+    }
+
+    const heroTitle = document.getElementById("clientHeroTitle");
+    const heroCopy = heroTitle?.closest(".client-hero-copy");
+    if (heroTitle && heroCopy) {
+      heroTitle.innerHTML = 'Seja qual for a fome,<br><span>a gente leva!</span>';
+      if (!heroCopy.querySelector(".client-hero-subtitle")) {
+        const subtitle = document.createElement("p");
+        subtitle.className = "client-hero-subtitle";
+        subtitle.textContent = "Os melhores restaurantes pertinho de você.";
+        heroTitle.insertAdjacentElement("afterend", subtitle);
+      }
+      if (!heroCopy.querySelector(".client-hero-dots")) {
+        const dots = document.createElement("div");
+        dots.className = "client-hero-dots";
+        dots.setAttribute("aria-hidden", "true");
+        dots.innerHTML = "<span></span><span></span><span></span>";
+        heroCopy.append(dots);
+      }
+    }
+
+    const couponSection = document.querySelector("main > .cupom");
+    if (couponSection && !couponSection.querySelector(".client-offers-heading")) {
+      const heading = document.createElement("div");
+      heading.className = "client-offers-heading";
+      const title = document.createElement("h2");
+      title.textContent = "Ofertas especiais";
+      const link = document.createElement("a");
+      link.href = "#destaques";
+      link.textContent = "Ver todas ›";
+      heading.append(title, link);
+      couponSection.prepend(heading);
+    }
+
+    const restaurantsTitle = document.getElementById("restaurantesTitulo");
+    if (restaurantsTitle) restaurantsTitle.textContent = "Restaurantes próximos";
+  }
+
+  prepareApprovedHome();
 
   if (!CLIENT_NAV_PAGES.has(currentPage)) return;
 
