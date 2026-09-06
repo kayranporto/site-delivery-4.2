@@ -58,6 +58,23 @@
     document.head.append(homeFilterStyles);
   }
 
+  if (currentPage === "index.html") {
+    const rebuiltStylesHref = `${assetRoot}css/modules/client-home-approved-4.9.css?v=4.9.0`;
+    if (!document.querySelector('link[data-client-mockups="home-approved-4.9"]')) {
+      const rebuiltStyles = document.createElement("link");
+      rebuiltStyles.rel = "stylesheet";
+      rebuiltStyles.href = rebuiltStylesHref;
+      rebuiltStyles.dataset.clientMockups = "home-approved-4.9";
+      document.head.append(rebuiltStyles);
+    }
+    if (matchMedia("(max-width: 768px)").matches && !document.querySelector('script[data-client-home="approved-4.9"]')) {
+      const rebuiltScript = document.createElement("script");
+      rebuiltScript.src = `${assetRoot}js/pages/home-mobile-approved-4.9.js?v=4.9.0`;
+      rebuiltScript.dataset.clientHome = "approved-4.9";
+      document.body.append(rebuiltScript);
+    }
+  }
+
   document.body.classList.add("client-mobile-shell");
   document.body.dataset.clientPage = currentPage.replace(/\.html$/i, "") || "index";
   document.documentElement.dataset.clientMobile = "true";
