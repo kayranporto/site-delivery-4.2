@@ -31,6 +31,15 @@
     document.head.append(mockupStyles);
   }
 
+  const compatibilityStylesHref = `${assetRoot}css/modules/client-mockups-approved-4.8.1.css?v=4.8.1`;
+  if (!document.querySelector('link[data-client-mockups="approved-4.8.1"]')) {
+    const compatibilityStyles = document.createElement("link");
+    compatibilityStyles.rel = "stylesheet";
+    compatibilityStyles.href = compatibilityStylesHref;
+    compatibilityStyles.dataset.clientMockups = "approved-4.8.1";
+    document.head.append(compatibilityStyles);
+  }
+
   document.body.classList.add("client-mobile-shell");
   document.body.dataset.clientPage = currentPage.replace(/\.html$/i, "") || "index";
   document.documentElement.dataset.clientMobile = "true";
