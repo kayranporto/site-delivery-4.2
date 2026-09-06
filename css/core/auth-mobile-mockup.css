@@ -312,6 +312,135 @@
     .auth-login-page .auth-captcha-note {
         color: #899ab6;
     }
+
+    /* O mockup é a versão escura; o modo claro continua funcional para respeitar a preferência global. */
+    html[data-theme="light"] body.auth-page.auth-login-page {
+        background:
+            radial-gradient(circle at 92% 4%, rgba(234, 29, 44, .09), transparent 18rem),
+            radial-gradient(circle at -6% 88%, rgba(255, 176, 0, .09), transparent 18rem),
+            #f7f7f9;
+        color: #171923;
+    }
+
+    html[data-theme="light"] body.auth-page.auth-login-page::before,
+    html[data-theme="light"] body.auth-page.auth-login-page::after {
+        border-color: rgba(234, 29, 44, .12);
+        box-shadow: none;
+        opacity: .7;
+    }
+
+    html[data-theme="light"] .auth-login-page .auth-mobile-brand,
+    html[data-theme="light"] .auth-mobile-brand-name,
+    html[data-theme="light"] .auth-login-page .auth-heading h1 {
+        color: #171923;
+    }
+
+    html[data-theme="light"] .auth-login-page .auth-mobile-brand .auth-brand-mark {
+        border-color: rgba(234, 29, 44, .18);
+        background: #fff0f1;
+        box-shadow: 0 10px 24px rgba(23, 25, 35, .08);
+    }
+
+    html[data-theme="light"] .auth-business.auth-login-page .auth-back,
+    html[data-theme="light"] .auth-login-page .auth-heading p:not(.auth-eyebrow),
+    html[data-theme="light"] .auth-login-page .auth-switch-prompt {
+        color: #667085;
+    }
+
+    html[data-theme="light"] .auth-login-page .auth-eyebrow,
+    html[data-theme="light"] .auth-login-page .auth-link,
+    html[data-theme="light"] .auth-login-page .auth-switch-prompt a {
+        color: #ea1d2c;
+    }
+
+    html[data-theme="light"] .auth-login-page .auth-role-switch {
+        border-color: #e8e8ed;
+        background: #f2f3f5;
+        box-shadow: none;
+    }
+
+    html[data-theme="light"] .auth-login-page .auth-role-switch a {
+        color: #667085;
+    }
+
+    html[data-theme="light"] .auth-login-page .auth-role-switch a:hover {
+        color: #171923;
+    }
+
+    html[data-theme="light"] .auth-login-page .auth-role-switch a.active {
+        color: #fff;
+    }
+
+    html[data-theme="light"] .auth-login-page .auth-field label {
+        color: #30323d;
+    }
+
+    html[data-theme="light"] .auth-login-page .auth-field input {
+        border-color: #dfe1e7;
+        background: #fff;
+        color: #171923;
+        box-shadow: none;
+    }
+
+    html[data-theme="light"] .auth-login-page .auth-field input::placeholder {
+        color: #a1a6b1;
+    }
+
+    html[data-theme="light"] .auth-login-page .auth-field input:hover {
+        border-color: #c8cbd3;
+    }
+
+    html[data-theme="light"] .auth-login-page .auth-field input:focus,
+    html[data-theme="light"] .auth-login-page .auth-field input:focus-visible {
+        border-color: #ea1d2c;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(234, 29, 44, .10);
+    }
+
+    html[data-theme="light"] .auth-login-page .auth-input-icon,
+    html[data-theme="light"] .auth-login-page .auth-password-toggle {
+        color: #7a818e;
+    }
+
+    html[data-theme="light"] .auth-login-page .auth-password-toggle:hover {
+        background: #fff0f1;
+        color: #ea1d2c;
+    }
+
+    html[data-theme="light"] .auth-login-page .auth-check {
+        color: #4f5663;
+    }
+
+    html[data-theme="light"] .auth-login-page .auth-divider {
+        color: #8a909c;
+    }
+
+    html[data-theme="light"] .auth-login-page .auth-divider::before,
+    html[data-theme="light"] .auth-login-page .auth-divider::after {
+        background: #e8e8ed;
+    }
+
+    html[data-theme="light"] .auth-login-page .auth-security-note {
+        border-color: #e4e7ec;
+        background: #f7f8fa;
+        color: #667085;
+    }
+
+    html[data-theme="light"] .auth-login-page .login-security-status {
+        border-color: #cbead7;
+        background: #e9f8ef;
+        color: #176b42;
+    }
+
+    html[data-theme="light"] .auth-login-page .login-security-status.error {
+        border-color: #f3c9cd;
+        background: #fff0f1;
+        color: #9d1c29;
+    }
+
+    html[data-theme="light"] .auth-login-page .auth-captcha-note {
+        color: #667085;
+    }
 }
 
 @media (max-width: 420px) {
