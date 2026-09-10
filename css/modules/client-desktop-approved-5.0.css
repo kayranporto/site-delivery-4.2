@@ -1,0 +1,223 @@
+/* Multi Delivery — identidade desktop aprovada. A versão mobile permanece isolada. */
+@media (min-width: 769px) {
+  html[data-client-mobile="true"] {
+    color-scheme: dark;
+    --desktop-bg: #090807;
+    --desktop-surface: #12100f;
+    --desktop-surface-2: #191512;
+    --desktop-line: #342923;
+    --desktop-text: #fffaf6;
+    --desktop-muted: #a79d96;
+    --desktop-orange: #ff5a1f;
+    --desktop-red: #ef2435;
+    --desktop-green: #32c66d;
+  }
+
+  body.client-mobile-shell {
+    color: var(--desktop-text);
+    background:
+      radial-gradient(circle at 8% 0, rgba(255, 90, 31, .09), transparent 24rem),
+      radial-gradient(circle at 96% 22%, rgba(119, 44, 18, .14), transparent 32rem),
+      var(--desktop-bg);
+  }
+
+  body.client-mobile-shell :is(input, select, textarea) { color-scheme: dark; }
+  body.client-mobile-shell :is(.page-header, .perfil-header, .orders-header, .track-header, .checkout-header) {
+    color: var(--desktop-text);
+    background: rgba(9, 8, 7, .92);
+    border-color: var(--desktop-line);
+    box-shadow: none;
+  }
+  body.client-mobile-shell :is(.voltar, .back-button, .explore-link, .explorar-link, .icon-action) {
+    color: var(--desktop-text);
+    background: var(--desktop-surface-2);
+    border-color: var(--desktop-line);
+  }
+  body.client-mobile-shell :is(.page-card, .item-card, .painel-card, .usuario-card, .resumo-card, .order-card, .track-card, .checkout-card) {
+    color: var(--desktop-text);
+    background: linear-gradient(145deg, #151210, #100e0d);
+    border-color: var(--desktop-line);
+    box-shadow: 0 22px 54px rgba(0, 0, 0, .22);
+  }
+  body.client-mobile-shell :is(.muted, .favorites-summary, .item-card p, .perfil-header small, .usuario-info p, .resumo-card span, .secao-cabecalho p, .order-date, .order-items, .payment-label, .results-row p, .track-card dt, .track-card small, .pedido-minimo, .pagamento-note) { color: var(--desktop-muted); }
+  body.client-mobile-shell :is(.field label, .checkout-card h2, .timeline strong, .order-store, .order-number, .perfil-header h1, .orders-header h1, .track-header h1) { color: var(--desktop-text); }
+  body.client-mobile-shell :is(.field input, .field select, .field textarea, .chat-form input, .review-card textarea, .troco-field input, .checkout-optional textarea, .cupom-box input) {
+    color: var(--desktop-text);
+    background: #1b1714;
+    border-color: #40342d;
+  }
+  body.client-mobile-shell :is(.field input, .field textarea, .chat-form input, .review-card textarea, .cupom-box input)::placeholder { color: #746b65; }
+  body.client-mobile-shell :is(.btn, #finalizarPedido, #btnCheckout, #confirmarProduto, .review-submit, .chat-form button) {
+    background: linear-gradient(135deg, var(--desktop-orange), var(--desktop-red));
+    color: #fff;
+  }
+
+  /* Início */
+  body.home-page .topbar { display: none; }
+  body.home-page .header {
+    background: rgba(9, 8, 7, .9);
+    border-color: var(--desktop-line);
+  }
+  body.home-page .container-header { width: min(calc(100% - 56px), 1240px); min-height: 92px; }
+  body.home-page .logo { color: #fff; font-size: 1.45rem; }
+  body.home-page .brand-accent { color: var(--desktop-orange); font-style: italic; }
+  body.home-page :is(.location, .search, .cart) {
+    color: var(--desktop-text);
+    background: #171310;
+    border: 1px solid var(--desktop-line);
+    box-shadow: none;
+  }
+  body.home-page .location small, body.home-page .search kbd { color: var(--desktop-muted); }
+  body.home-page .search input { color: var(--desktop-text); }
+  body.home-page .search input::placeholder { color: #8d827b; }
+  body.home-page .search kbd { background: #251e19; }
+  body.home-page #menuUsuario a { color: #fff; background: #211915; border: 1px solid var(--desktop-line); }
+  body.home-page #menuUsuario a:first-child { background: linear-gradient(135deg, #ff672c, #ef2435); border-color: transparent; }
+  body.home-page .cart-count { background: var(--desktop-orange); }
+  body.home-page .client-mobile-greeting { display: none; }
+  body.home-page .banner { display: none; }
+  body.home-page .client-approved-hero {
+    position: relative;
+    display: grid;
+    width: min(calc(100% - 56px), 1240px);
+    min-height: 460px;
+    margin: 34px auto 48px;
+    overflow: hidden;
+    grid-template-columns: minmax(0, .95fr) minmax(440px, 1.05fr);
+    border: 1px solid #3b2d26;
+    border-radius: 30px;
+    background: linear-gradient(92deg, #120e0c 0%, #15100d 45%, rgba(14, 9, 6, .28) 72%), #120e0c;
+    box-shadow: 0 28px 80px rgba(0,0,0,.36);
+  }
+  body.home-page .client-hero-photo {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, #120e0c 4%, rgba(18,14,12,.92) 37%, rgba(18,14,12,.1) 73%),
+      url('../../assets/client-food-atlas.png') 78% 44% / 900px auto no-repeat;
+  }
+  body.home-page .client-hero-copy {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    max-width: 590px;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 64px;
+  }
+  body.home-page .client-hero-copy::before {
+    content: "SABOR SEM LIMITES";
+    margin-bottom: 20px;
+    padding: 9px 15px;
+    color: #fff;
+    background: var(--desktop-orange);
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .08em;
+  }
+  body.home-page .client-hero-copy h2 { margin: 0; font-size: clamp(40px, 5vw, 64px); line-height: 1.04; letter-spacing: -.055em; }
+  body.home-page .client-hero-copy h2::after { content: "Os melhores restaurantes perto de você."; display: block; max-width: 440px; margin-top: 22px; color: #c1b6af; font-size: 15px; font-weight: 400; line-height: 1.6; letter-spacing: 0; }
+  body.home-page .client-hero-copy a { margin-top: 28px; padding: 14px 22px; color: #fff; background: linear-gradient(135deg, var(--desktop-orange), var(--desktop-red)); border-radius: 13px; font-weight: 800; }
+  body.home-page :is(.cupom, .categorias, .restaurantes, .destaques, .como-funciona, .beneficios, .client-home-quick) { width: min(calc(100% - 56px), 1240px); margin-inline: auto; }
+  body.home-page :is(.section-title, .categoria-lista, .restaurant-tools, .steps-grid) { width: 100%; }
+  body.home-page .section-title h2, body.home-page .client-section-heading h2 { color: var(--desktop-text); }
+  body.home-page .eyebrow, body.home-page .section-title a, body.home-page .client-section-heading a { color: var(--desktop-orange); }
+  body.home-page .cupom-box {
+    width: 100%;
+    color: var(--desktop-text);
+    background: linear-gradient(120deg, #1c1511, #27160f);
+    border: 1px solid #493226;
+    box-shadow: none;
+  }
+  body.home-page .cupom-box p { color: var(--desktop-muted); }
+  body.home-page .categoria {
+    color: var(--desktop-text);
+    background: #151210;
+    border: 1px solid var(--desktop-line);
+    box-shadow: none;
+  }
+  body.home-page .categoria[aria-pressed="true"] { color: #fff; border-color: var(--desktop-orange); box-shadow: inset 0 -4px var(--desktop-orange); }
+  body.home-page .restaurant-tools { background: #100e0d; border-color: var(--desktop-line); }
+  body.home-page .filter-pill { color: #d7cec8; background: #191512; border-color: var(--desktop-line); }
+  body.home-page .filter-pill[aria-pressed="true"] { color: #fff; background: var(--desktop-orange); border-color: var(--desktop-orange); }
+  body.home-page :is(.restaurant-card, .produto-card, .step-card, .beneficio, .client-repeat-card, .client-favorite-card) {
+    color: var(--desktop-text);
+    background: #151210;
+    border-color: var(--desktop-line);
+    box-shadow: none;
+  }
+  body.home-page :is(.restaurant-card p, .produto-card p, .step-card p, .beneficio p, .resultado-info) { color: var(--desktop-muted); }
+  body.home-page .partner-cta { background: linear-gradient(130deg, #2b140c, #411609); }
+  body.home-page footer { color: #d8d0ca; background: #080706; border-top: 1px solid var(--desktop-line); }
+
+  /* Restaurante, carrinho e produto */
+  body[data-client-page="restaurante"] { background: var(--desktop-bg); }
+  body[data-client-page="restaurante"] header { background: rgba(9,8,7,.92); border-color: var(--desktop-line); }
+  body[data-client-page="restaurante"] :is(.info-restaurante, .restaurante-meta, .pesquisa-produtos, .avaliacoes-publicas) { color: var(--desktop-text); background: #12100f; border-color: var(--desktop-line); }
+  body[data-client-page="restaurante"] :is(.meta-chip, .categorias button) { color: #ded6d1; background: #1b1714; border-color: var(--desktop-line); }
+  body[data-client-page="restaurante"] .categorias button.active { color: #fff; background: var(--desktop-orange); border-color: var(--desktop-orange); }
+  body[data-client-page="restaurante"] #pesquisaProduto { color: #fff; background: #1a1613; border-color: #40342d; }
+  body[data-client-page="restaurante"] :is(.produto, .avaliacao-card) { color: var(--desktop-text); background: #161310; border-color: var(--desktop-line); box-shadow: none; }
+  body[data-client-page="restaurante"] :is(.produto p, .avaliacao-card p, #descricaoRestaurante, #infoEntrega) { color: var(--desktop-muted); }
+  body[data-client-page="restaurante"] :is(#carrinho, .modal-content) { color: var(--desktop-text); background: #12100f; border-color: var(--desktop-line); }
+  body[data-client-page="restaurante"] :is(.carrinho-footer, .carrinho-item, .produto-modal-rodape, #listaVariantes label, #listaAdicionais label) { background: #191512; border-color: var(--desktop-line); }
+
+  /* Perfil, favoritos e pedidos */
+  body[data-client-page="perfil"] .perfil-container { max-width: 1180px; }
+  body[data-client-page="perfil"] :is(.menu-item, .pedido-conteudo) { color: var(--desktop-text); background: #191512; border-color: var(--desktop-line); }
+  body[data-client-page="perfil"] :is(.menu-item small, .pedido-conteudo p) { color: var(--desktop-muted); }
+  body[data-client-page="perfil"] .conta-badge { color: var(--desktop-green); background: rgba(50,198,109,.12); }
+  body[data-client-page="perfil"] #adminLink { color: #fff; background: linear-gradient(135deg, #ff672c, #ef2435); border-color: transparent; }
+  body[data-client-page="perfil"] #logoutBtn { color: #ff8279; background: #2b1513; border-color: #65302a; }
+  body[data-client-page="favoritos"] .favorite-card { color: var(--desktop-text); background: #151210; border-color: var(--desktop-line); }
+  body[data-client-page="meus-pedidos"] .orders-intro { background: linear-gradient(125deg, #1b1511, #33160c); border: 1px solid #4b2b20; }
+  body[data-client-page="meus-pedidos"] .order-filters { background: #100e0d; border-color: var(--desktop-line); }
+  body[data-client-page="meus-pedidos"] .order-filters button { color: #bdb3ac; }
+  body[data-client-page="meus-pedidos"] .order-filters button.active { color: #fff; background: linear-gradient(135deg, var(--desktop-orange), var(--desktop-red)); }
+
+  /* Checkout e acompanhamento */
+  body[data-client-page="checkout"] { background: var(--desktop-bg); }
+  body[data-client-page="checkout"] .checkout-progress { background: #100e0d; border-color: var(--desktop-line); }
+  body[data-client-page="checkout"] .checkout-step { color: var(--desktop-muted); }
+  body[data-client-page="checkout"] .checkout-step[data-estado="ativo"], body[data-client-page="checkout"] .checkout-step[data-estado="concluido"] { color: var(--desktop-text); }
+  body[data-client-page="checkout"] :is(.endereco, .delivery-preview, .payment-option, .checkout-fast-lane, .summary-context, .summary-trust) { color: var(--desktop-text); background: #1b1714; border-color: #40342d; }
+  body[data-client-page="checkout"] :is(.payment-copy small, .delivery-preview small, .summary-context, .summary-trust small) { color: var(--desktop-muted); }
+  body[data-client-page="checkout"] .payment-option:has(input:checked) { border-color: var(--desktop-orange); box-shadow: inset 0 0 0 1px var(--desktop-orange); }
+  body[data-client-page="checkout"] .checkout-footer { background: rgba(14,12,10,.96); border-color: var(--desktop-line); }
+  body[data-client-page="acompanhamento"] .track-hero { background: linear-gradient(125deg, #2a150d, #6d1e0e 62%, #38110b); }
+  body[data-client-page="acompanhamento"] :is(.chat-messages, .order-note, .restaurant-response) { background: #1b1714; border-color: var(--desktop-line); }
+  body[data-client-page="acompanhamento"] .chat-message { color: var(--desktop-text); background: #211b17; box-shadow: none; }
+  body[data-client-page="acompanhamento"] .chat-message.mine { background: linear-gradient(135deg, #ff672c, #ef2435); }
+  body[data-client-page="acompanhamento"] .timeline li:not(.done):not(.active) > span { background: #302720; }
+  body[data-client-page="acompanhamento"] .timeline li:not(:last-child)::before { background: #342b25; }
+}
+
+/* Login e cadastro desktop aprovados. */
+@media (min-width: 769px) {
+  body.auth-page {
+    --auth-page: #090807;
+    --auth-surface: #12100f;
+    --auth-ink: #fffaf6;
+    --auth-muted: #a79d96;
+    --auth-line: #3a2e27;
+    --auth-primary: #ff5a1f;
+    --auth-primary-dark: #e33b1f;
+    color-scheme: dark;
+    background: radial-gradient(circle at 7% 4%, rgba(255,90,31,.13), transparent 30rem), #090807;
+  }
+  body.auth-page::before { background: rgba(255,90,31,.08); }
+  body.auth-page::after { background: rgba(111,41,15,.12); }
+  body.auth-page .auth-shell { background: #12100f; border-color: #3a2e27; box-shadow: 0 32px 90px rgba(0,0,0,.42); }
+  body.auth-page .auth-showcase { background: linear-gradient(145deg, #2b150d 0%, #45180b 55%, #160c08 100%); }
+  body.auth-page .auth-panel { background: #12100f; }
+  body.auth-page :is(.auth-heading h1, .auth-field label, .auth-back, .auth-role-switch a) { color: #fffaf6; }
+  body.auth-page :is(.auth-heading p, .auth-form-note, .auth-footer, .auth-checkbox) { color: #a79d96; }
+  body.auth-page .auth-role-switch { background: #1b1714; border-color: #3a2e27; }
+  body.auth-page .auth-role-switch a.active { color: #fff; background: linear-gradient(135deg, #ff672c, #ef2435); }
+  body.auth-page .auth-input-wrap { background: #1b1714; border-color: #40342d; }
+  body.auth-page .auth-input-wrap input { color: #fffaf6; background: transparent; }
+  body.auth-page .auth-input-wrap input::placeholder { color: #776d66; }
+  body.auth-page .auth-submit { background: linear-gradient(135deg, #ff672c, #ef2435); box-shadow: 0 14px 32px rgba(239,36,53,.2); }
+}
