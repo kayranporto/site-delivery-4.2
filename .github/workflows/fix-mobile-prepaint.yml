@@ -85,6 +85,7 @@ jobs:
               assert 'data-client-mobile="true"' in text, filename
               assert 'client-mobile-shell' in text, filename
               assert f'data-client-page="{page}"' in text, filename
+          assert 'const VERSION = "4.4.6"' in Path("sw.js").read_text(encoding="utf-8")
       - name: Run project checks
         run: npm test
       - name: Commit migration
