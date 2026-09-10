@@ -342,10 +342,16 @@ function atualizarMetricasAdmin() {
     document.getElementById("adminTotalEmpresas").textContent = String(adminEmpresas.length);
     document.getElementById("adminPendentes").textContent = String(pendentes);
     document.getElementById("pendentesMenu").textContent = String(pendentes);
+    const pendentesMobile = document.getElementById("pendentesMobileMenu");
+    pendentesMobile.textContent = String(pendentes);
+    pendentesMobile.hidden = pendentes === 0;
     document.getElementById("adminTotalUsuarios").textContent = String(adminUsuarios.length);
     document.getElementById("adminBloqueados").textContent = String(bloqueados);
     document.getElementById("adminTotalPedidos").textContent = String(adminPedidos.length);
     document.getElementById("pedidosMenu").textContent = String(adminPedidos.length);
+    const pedidosMobile = document.getElementById("pedidosMobileMenu");
+    pedidosMobile.textContent = String(adminPedidos.length);
+    pedidosMobile.hidden = adminPedidos.length === 0;
     document.getElementById("adminFaturamento").textContent = App.dinheiro(faturamento);
     const entregadoresPendentes = adminEntregadores.filter((item) => !item.aprovado).length;
     document.getElementById("entregadoresPendentesMenu").textContent = String(entregadoresPendentes);
@@ -905,18 +911,25 @@ function aplicarTamanhoFonte(valor) {
 
 function configurarNavegacao() {
     const links = [...document.querySelectorAll(".admin-sidebar nav a")];
-    links.forEach((link) => link.addEventListener("click", () => {
-        links.forEach((item) => item.classList.toggle("active", item === link));
+    const linksMobile = [...document.querySelectorAll("[data-admin-mobile-link]")];
+    const todosLinks = [...links, ...linksMobile];
+    const ativarDestino = (destino) => {
+        todosLinks.forEach((item) => item.classList.toggle("active", item.getAttribute("href") === destino));
+    };
+    todosLinks.forEach((link) => link.addEventListener("click", () => {
+        ativarDestino(link.getAttribute("href"));
         adminSidebar.classList.remove("open"); adminOverlay.classList.remove("show");
     }));
     if ("IntersectionObserver" in window) {
         const observador = new IntersectionObserver((entradas) => {
             const visivel = entradas.filter((entrada) => entrada.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
             if (!visivel) return;
-            links.forEach((link) => link.classList.toggle("active", link.getAttribute("href") === `#${visivel.target.id}`));
+            ativarDestino(`#${visivel.target.id}`);
         }, { rootMargin: "-20% 0px -65%", threshold: [0.05, 0.3] });
         document.querySelectorAll("main section[id]").forEach((secao) => observador.observe(secao));
     }
+    const destinoInicial = location.hash.slice(1);
+    ativarDestino(destinoInicial && document.getElementById(destinoInicial) ? `#${destinoInicial}` : "#overview");
 }
 
 async function iniciarAdmin() {
@@ -929,6 +942,7 @@ async function iniciarAdmin() {
         await carregarDadosAdmin();
         document.getElementById("adminLoading").hidden = true;
         document.getElementById("adminApp").hidden = false;
+        document.getElementById("adminMobileNav").hidden = false;
         canalAdmin = db.channel("admin-plataforma")
             .on("postgres_changes", { event: "*", schema: "public", table: "pedidos" }, agendarRecarregamento)
             .on("postgres_changes", { event: "*", schema: "public", table: "empresas" }, agendarRecarregamento)
@@ -964,6 +978,7 @@ document.getElementById("periodoRelatorio").addEventListener("change", carregarR
 document.getElementById("exportarRelatorio").addEventListener("click", exportarRelatorioCsv);
 document.getElementById("adminFontSize").addEventListener("change", ({ target }) => aplicarTamanhoFonte(target.value));
 document.getElementById("adminMenu").addEventListener("click", () => { adminSidebar.classList.add("open"); adminOverlay.classList.add("show"); });
+document.getElementById("adminMobileMore").addEventListener("click", () => { adminSidebar.classList.add("open"); adminOverlay.classList.add("show"); });
 adminOverlay.addEventListener("click", () => { adminSidebar.classList.remove("open"); adminOverlay.classList.remove("show"); });
 document.querySelectorAll("[data-modal-close]").forEach((item) => item.addEventListener("click", () => fecharModal(false)));
 modal.addEventListener("keydown", (evento) => {

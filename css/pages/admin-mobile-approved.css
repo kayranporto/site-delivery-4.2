@@ -1,0 +1,411 @@
+/* Painel administrativo mobile 4.9 — direção aprovada, sem alterar o desktop. */
+.admin-mobile-nav{display:none}
+.admin-mobile-nav[hidden]{display:none!important}
+
+@media(max-width:760px){
+  body.admin-platform{
+    --admin-mobile-bg:#0b0908;
+    --admin-mobile-surface:#17120f;
+    --admin-mobile-surface-2:#211914;
+    --admin-mobile-border:#3a2b22;
+    --admin-mobile-text:#fff8f1;
+    --admin-mobile-muted:#b9aca2;
+    --admin-mobile-accent:#ff641a;
+    --admin-mobile-accent-2:#ff3d24;
+    min-width:320px;
+    color:var(--admin-mobile-text);
+    background:var(--admin-mobile-bg);
+  }
+
+  body.admin-platform .admin-loading{
+    color:var(--admin-mobile-muted);
+    background:var(--admin-mobile-bg);
+  }
+
+  body.admin-platform .admin-loading span{
+    border-color:var(--admin-mobile-border);
+    border-top-color:var(--admin-mobile-accent);
+  }
+
+  body.admin-platform .admin-shell{background:var(--admin-mobile-bg)}
+
+  body.admin-platform .admin-header{
+    min-height:68px;
+    padding:calc(10px + env(safe-area-inset-top)) 16px 10px;
+    color:var(--admin-mobile-text);
+    background:rgba(11,9,8,.94);
+    border-color:var(--admin-mobile-border);
+    backdrop-filter:blur(16px);
+  }
+
+  body.admin-platform .admin-menu{
+    display:grid;
+    place-items:center;
+    width:44px;
+    height:44px;
+    color:var(--admin-mobile-text);
+    background:var(--admin-mobile-surface-2);
+    border:1px solid var(--admin-mobile-border);
+  }
+
+  body.admin-platform .admin-header>div>span{color:var(--admin-mobile-accent);font-size:9px}
+  body.admin-platform .admin-header h1{margin-top:1px;color:var(--admin-mobile-text);font-size:18px}
+  body.admin-platform .admin-header-actions{gap:6px}
+  body.admin-platform .admin-header-actions .font-size-control{display:none}
+  body.admin-platform .admin-header-actions a{display:none}
+  body.admin-platform .admin-header-actions button{
+    min-width:44px;
+    min-height:44px;
+    padding:0 12px;
+    color:#fff;
+    background:var(--admin-mobile-surface-2);
+    border:1px solid var(--admin-mobile-border);
+  }
+
+  body.admin-platform .admin-sidebar{
+    width:min(86vw,320px);
+    padding:calc(22px + env(safe-area-inset-top)) 18px calc(22px + env(safe-area-inset-bottom));
+    color:var(--admin-mobile-text);
+    background:#100d0b;
+    border-right:1px solid var(--admin-mobile-border);
+    box-shadow:24px 0 70px rgba(0,0,0,.48);
+  }
+
+  body.admin-platform .admin-brand{padding-bottom:22px}
+  body.admin-platform .admin-brand>span{background:linear-gradient(135deg,var(--admin-mobile-accent),var(--admin-mobile-accent-2))}
+  body.admin-platform .admin-sidebar nav{gap:6px}
+  body.admin-platform .admin-sidebar nav a{
+    min-height:48px;
+    color:var(--admin-mobile-muted);
+    border:1px solid transparent;
+    border-radius:13px;
+  }
+  body.admin-platform .admin-sidebar nav a:hover,
+  body.admin-platform .admin-sidebar nav a.active{
+    color:#fff;
+    background:rgba(255,100,26,.13);
+    border-color:rgba(255,100,26,.28);
+  }
+  body.admin-platform .admin-sidebar-footer{background:var(--admin-mobile-surface)}
+  body.admin-platform .admin-sidebar-footer small{color:#ff9b6c}
+
+  body.admin-platform .admin-main{
+    gap:14px;
+    max-width:none;
+    padding:16px 14px calc(94px + env(safe-area-inset-bottom));
+    background:var(--admin-mobile-bg);
+  }
+
+  body.admin-platform .admin-hero{
+    display:grid;
+    gap:16px;
+    padding:22px 18px;
+    color:var(--admin-mobile-text);
+    background:
+      radial-gradient(circle at 92% 12%,rgba(255,100,26,.22),transparent 40%),
+      linear-gradient(145deg,#21150f,#130f0c 68%);
+    border:1px solid var(--admin-mobile-border);
+    border-radius:20px;
+    box-shadow:none;
+  }
+  body.admin-platform .admin-hero .admin-kicker{color:#ff9b6c}
+  body.admin-platform .admin-hero h2{margin:6px 0 7px;font-size:27px;line-height:1.08;letter-spacing:-.04em}
+  body.admin-platform .admin-hero p{color:var(--admin-mobile-muted);font-size:14px;line-height:1.5}
+  body.admin-platform .admin-health{
+    min-width:0;
+    margin:0;
+    padding:14px 15px;
+    background:rgba(255,255,255,.055);
+    border-color:rgba(255,255,255,.1);
+  }
+
+  body.admin-platform .admin-metrics{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+  }
+  body.admin-platform .admin-metrics article{
+    display:grid;
+    grid-template-columns:40px minmax(0,1fr);
+    align-items:start;
+    gap:10px;
+    min-height:132px;
+    padding:15px;
+    color:var(--admin-mobile-text);
+    background:var(--admin-mobile-surface);
+    border-color:var(--admin-mobile-border);
+    border-radius:17px;
+    box-shadow:none;
+  }
+  body.admin-platform .admin-metrics article>span{
+    width:40px;
+    height:40px;
+    color:#fff;
+    background:linear-gradient(135deg,var(--admin-mobile-accent),var(--admin-mobile-accent-2));
+  }
+  body.admin-platform .admin-metrics article>div{min-width:0}
+  body.admin-platform .admin-metrics small{color:var(--admin-mobile-muted);font-size:12px}
+  body.admin-platform .admin-metrics strong{display:block;margin-top:4px;color:var(--admin-mobile-text);font-size:24px}
+  body.admin-platform .admin-metrics p{margin-top:5px;color:var(--admin-mobile-muted);font-size:11px;line-height:1.35}
+  body.admin-platform .admin-metrics p b{color:#ff8c56}
+
+  body.admin-platform .admin-overview-grid{gap:12px}
+  body.admin-platform .admin-card,
+  body.admin-platform .admin-section{
+    padding:18px 15px;
+    color:var(--admin-mobile-text);
+    background:var(--admin-mobile-surface);
+    border-color:var(--admin-mobile-border);
+    border-radius:18px;
+    box-shadow:none;
+    scroll-margin-top:84px;
+  }
+  body.admin-platform .admin-section-title{gap:12px}
+  body.admin-platform .admin-section-title h2{color:var(--admin-mobile-text);font-size:21px}
+  body.admin-platform .admin-section-title p{color:var(--admin-mobile-muted);font-size:13px;line-height:1.5}
+  body.admin-platform .admin-kicker{color:var(--admin-mobile-accent);font-size:10px}
+  body.admin-platform .admin-section-title>strong{color:var(--admin-mobile-text)}
+
+  body.admin-platform .admin-chart{height:205px;border-color:var(--admin-mobile-border)}
+  body.admin-platform .admin-chart-column strong{color:var(--admin-mobile-text);font-size:10px}
+  body.admin-platform .admin-chart-column span{color:var(--admin-mobile-muted);font-size:10px}
+  body.admin-platform .admin-chart-bar{background:linear-gradient(180deg,var(--admin-mobile-accent),var(--admin-mobile-accent-2))}
+  body.admin-platform .recent-order{
+    min-height:58px;
+    color:var(--admin-mobile-text);
+    background:var(--admin-mobile-surface-2);
+    border:1px solid var(--admin-mobile-border);
+  }
+  body.admin-platform .recent-order:hover{background:#2a1e18}
+  body.admin-platform .recent-order>span{background:#302219}
+  body.admin-platform .recent-order small{color:var(--admin-mobile-muted)}
+
+  body.admin-platform .admin-search,
+  body.admin-platform .admin-filters{
+    background:var(--admin-mobile-surface-2);
+    border-color:var(--admin-mobile-border);
+  }
+  body.admin-platform .admin-search{min-height:48px}
+  body.admin-platform .admin-search input{height:46px;color:var(--admin-mobile-text);font-size:14px}
+  body.admin-platform .admin-search input::placeholder{color:#93857c}
+  body.admin-platform .admin-filters{gap:10px;padding:13px}
+  body.admin-platform .admin-filters label span,
+  body.admin-platform .admin-form-field>span{color:var(--admin-mobile-muted);font-size:12px}
+  body.admin-platform .admin-filters input,
+  body.admin-platform .admin-filters select,
+  body.admin-platform .admin-form-field input,
+  body.admin-platform .admin-form-field select,
+  body.admin-platform .admin-form-field textarea{
+    min-height:48px;
+    color:var(--admin-mobile-text);
+    background:#100d0b;
+    border-color:var(--admin-mobile-border);
+    font-size:14px;
+    color-scheme:dark;
+  }
+  body.admin-platform .admin-primary-button,
+  body.admin-platform .admin-secondary-button{
+    min-height:48px;
+    font-size:14px;
+  }
+  body.admin-platform .admin-primary-button{background:linear-gradient(135deg,var(--admin-mobile-accent),var(--admin-mobile-accent-2));box-shadow:none}
+  body.admin-platform .admin-secondary-button{color:var(--admin-mobile-text);background:#302219}
+
+  body.admin-platform .admin-table-wrap{
+    margin-top:14px;
+    overflow:visible;
+    border:0;
+    border-radius:0;
+  }
+  body.admin-platform .admin-table-wrap table,
+  body.admin-platform .admin-table-wrap tbody,
+  body.admin-platform .admin-table-wrap tr,
+  body.admin-platform .admin-table-wrap td{display:block;width:100%;min-width:0}
+  body.admin-platform .admin-table-wrap thead{display:none}
+  body.admin-platform .admin-table-wrap tbody{display:grid;gap:10px}
+  body.admin-platform .admin-table-wrap tr{
+    padding:12px 14px;
+    overflow:hidden;
+    background:var(--admin-mobile-surface-2);
+    border:1px solid var(--admin-mobile-border);
+    border-radius:15px;
+  }
+  body.admin-platform .admin-table-wrap td{
+    display:grid;
+    grid-template-columns:minmax(92px,35%) minmax(0,1fr);
+    gap:10px;
+    align-items:center;
+    min-height:38px;
+    padding:8px 0;
+    color:var(--admin-mobile-text);
+    border-color:var(--admin-mobile-border);
+    font-size:13px;
+    text-align:right;
+  }
+  body.admin-platform .admin-table-wrap td::before{
+    color:var(--admin-mobile-muted);
+    font-size:11px;
+    font-weight:700;
+    text-align:left;
+  }
+  body.admin-platform .admin-table-wrap td[colspan]{display:block;padding:20px 4px;text-align:center}
+  body.admin-platform .admin-table-wrap td[colspan]::before{content:none}
+  body.admin-platform .admin-table-wrap td strong,
+  body.admin-platform .admin-table-wrap td small{text-align:right}
+  body.admin-platform .admin-table-wrap td small{color:var(--admin-mobile-muted)}
+  body.admin-platform #pedidos td:nth-child(1)::before{content:"Pedido"}
+  body.admin-platform #pedidos td:nth-child(2)::before{content:"Restaurante"}
+  body.admin-platform #pedidos td:nth-child(3)::before{content:"Data"}
+  body.admin-platform #pedidos td:nth-child(4)::before{content:"Status"}
+  body.admin-platform #pedidos td:nth-child(5)::before{content:"Pagamento"}
+  body.admin-platform #pedidos td:nth-child(6)::before{content:"Total"}
+  body.admin-platform #pedidos td:nth-child(7)::before{content:"Ação"}
+  body.admin-platform #restaurantes td:nth-child(1)::before{content:"Restaurante"}
+  body.admin-platform #restaurantes td:nth-child(2)::before{content:"Contato"}
+  body.admin-platform #restaurantes td:nth-child(3)::before{content:"Cadastro"}
+  body.admin-platform #restaurantes td:nth-child(4)::before{content:"Publicação"}
+  body.admin-platform #restaurantes td:nth-child(5)::before{content:"Operação"}
+  body.admin-platform #restaurantes td:nth-child(6)::before{content:"Ações"}
+  body.admin-platform #usuarios td:nth-child(1)::before{content:"Usuário"}
+  body.admin-platform #usuarios td:nth-child(2)::before{content:"Telefone"}
+  body.admin-platform #usuarios td:nth-child(3)::before{content:"Cadastro"}
+  body.admin-platform #usuarios td:nth-child(4)::before{content:"Status"}
+  body.admin-platform #usuarios td:nth-child(5)::before{content:"Ação"}
+  body.admin-platform #cupons td:nth-child(1)::before{content:"Código"}
+  body.admin-platform #cupons td:nth-child(2)::before{content:"Escopo"}
+  body.admin-platform #cupons td:nth-child(3)::before{content:"Benefício"}
+  body.admin-platform #cupons td:nth-child(4)::before{content:"Uso"}
+  body.admin-platform #cupons td:nth-child(5)::before{content:"Validade"}
+  body.admin-platform #cupons td:nth-child(6)::before{content:"Status"}
+  body.admin-platform #cupons td:nth-child(7)::before{content:"Ações"}
+  body.admin-platform #entregadores td:nth-child(1)::before{content:"Entregador"}
+  body.admin-platform #entregadores td:nth-child(2)::before{content:"Contato"}
+  body.admin-platform #entregadores td:nth-child(3)::before{content:"Veículo"}
+  body.admin-platform #entregadores td:nth-child(4)::before{content:"Cadastro"}
+  body.admin-platform #entregadores td:nth-child(5)::before{content:"Status"}
+  body.admin-platform #entregadores td:nth-child(6)::before{content:"Ação"}
+
+  body.admin-platform .status-pill{justify-self:end;font-size:11px}
+  body.admin-platform .admin-action-group{justify-content:flex-end}
+  body.admin-platform .admin-action{min-height:40px;padding:8px 11px;font-size:12px}
+  body.admin-platform .admin-action.secondary{color:#dce6ff;background:#253044}
+  body.admin-platform .admin-action.warning{color:#ffd48a;background:#47351c}
+  body.admin-platform .admin-action.danger{color:#ffbbc1;background:#492126}
+
+  body.admin-platform .report-actions{width:100%;display:grid;grid-template-columns:1fr 1fr}
+  body.admin-platform .report-actions select,
+  body.admin-platform .report-actions button{
+    min-height:46px;
+    color:var(--admin-mobile-text);
+    background:var(--admin-mobile-surface-2);
+    border-color:var(--admin-mobile-border);
+    font-size:13px;
+    color-scheme:dark;
+  }
+  body.admin-platform .report-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  body.admin-platform .report-grid article,
+  body.admin-platform .admin-report-detail>div,
+  body.admin-platform .ops-health-grid article,
+  body.admin-platform .ops-admin-grid>article{
+    color:var(--admin-mobile-text);
+    background:var(--admin-mobile-surface-2);
+    border-color:var(--admin-mobile-border);
+  }
+  body.admin-platform .report-grid small,
+  body.admin-platform .ops-health-grid small{color:var(--admin-mobile-muted);font-size:11px}
+  body.admin-platform .report-row,
+  body.admin-platform .log-row,
+  body.admin-platform .audit-row,
+  body.admin-platform .ops-row{border-color:var(--admin-mobile-border)}
+  body.admin-platform .audit-row span,
+  body.admin-platform .audit-row time,
+  body.admin-platform .ops-row small{color:var(--admin-mobile-muted)}
+  body.admin-platform .ops-health-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+
+  body.admin-platform .admin-pagination{color:var(--admin-mobile-muted);font-size:12px}
+  body.admin-platform .admin-pagination strong{color:var(--admin-mobile-text)}
+  body.admin-platform .admin-pagination button{
+    min-height:44px;
+    color:var(--admin-mobile-text);
+    background:var(--admin-mobile-surface-2);
+    border-color:var(--admin-mobile-border);
+  }
+
+  body.admin-platform .admin-mobile-nav{
+    position:fixed;
+    inset:auto 0 0;
+    z-index:55;
+    display:grid;
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    min-height:68px;
+    padding:7px 8px calc(7px + env(safe-area-inset-bottom));
+    background:rgba(17,13,11,.96);
+    border-top:1px solid var(--admin-mobile-border);
+    box-shadow:0 -14px 34px rgba(0,0,0,.32);
+    backdrop-filter:blur(16px);
+  }
+  body.admin-platform .admin-mobile-nav a,
+  body.admin-platform .admin-mobile-nav button{
+    position:relative;
+    display:grid;
+    place-items:center;
+    align-content:center;
+    gap:3px;
+    min-width:0;
+    min-height:54px;
+    padding:4px 2px;
+    color:var(--admin-mobile-muted);
+    background:transparent;
+    border:0;
+    border-radius:12px;
+    text-decoration:none;
+  }
+  body.admin-platform .admin-mobile-nav a>span,
+  body.admin-platform .admin-mobile-nav button>span{font-size:20px;line-height:1}
+  body.admin-platform .admin-mobile-nav small{font-size:10px;font-weight:700}
+  body.admin-platform .admin-mobile-nav a.active{
+    color:#fff;
+    background:rgba(255,100,26,.14);
+  }
+  body.admin-platform .admin-mobile-nav a.active>span{color:var(--admin-mobile-accent)}
+  body.admin-platform .admin-mobile-nav b{
+    position:absolute;
+    top:3px;
+    right:calc(50% - 22px);
+    display:grid;
+    min-width:18px;
+    height:18px;
+    place-items:center;
+    padding:0 4px;
+    color:#fff;
+    background:var(--admin-mobile-accent-2);
+    border:2px solid #110d0b;
+    border-radius:99px;
+    font-size:9px;
+  }
+  body.admin-platform .admin-mobile-nav b[hidden]{display:none!important}
+
+  body.admin-platform .admin-overlay{background:rgba(0,0,0,.72);backdrop-filter:blur(3px)}
+  body.admin-platform .admin-modal-panel,
+  body.admin-platform .ops-dialog-panel{
+    color:var(--admin-mobile-text);
+    background:var(--admin-mobile-surface);
+    border:1px solid var(--admin-mobile-border);
+  }
+  body.admin-platform .admin-modal-panel>header,
+  body.admin-platform .admin-modal-actions{background:var(--admin-mobile-surface);border-color:var(--admin-mobile-border)}
+  body.admin-platform .admin-modal-close{color:var(--admin-mobile-text);background:var(--admin-mobile-surface-2)}
+  body.admin-platform .order-summary-grid article{background:var(--admin-mobile-surface-2)}
+  body.admin-platform .order-product{border-color:var(--admin-mobile-border)}
+  body.admin-platform .order-summary-grid small,
+  body.admin-platform .order-product small,
+  body.admin-platform .confirm-content p{color:var(--admin-mobile-muted)}
+}
+
+@media(max-width:390px){
+  body.admin-platform .admin-main{padding-inline:10px}
+  body.admin-platform .admin-metrics{grid-template-columns:1fr}
+  body.admin-platform .admin-metrics article{min-height:0}
+  body.admin-platform .admin-mobile-nav small{font-size:9px}
+  body.admin-platform .admin-mobile-nav a>span,
+  body.admin-platform .admin-mobile-nav button>span{font-size:18px}
+}
