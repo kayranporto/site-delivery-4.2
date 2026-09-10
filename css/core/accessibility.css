@@ -41,6 +41,17 @@ textarea:disabled {
     border: 0 !important;
 }
 
+/* Evita o flash do layout desktop antes do bootstrap mobile do cliente. */
+@media (max-width: 768px) {
+    html:has(head link[href*="client-mobile-4.5.css"]):not([data-client-mobile="true"]) {
+        background: #090b0d;
+    }
+
+    html:has(head link[href*="client-mobile-4.5.css"]):not([data-client-mobile="true"]) body {
+        visibility: hidden;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
