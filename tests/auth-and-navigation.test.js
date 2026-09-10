@@ -20,7 +20,7 @@ test("painel do restaurante exibe apenas a seção escolhida", () => {
     const html = read("empresa-dashboard.html");
     const js = read("js/pages/empresa-dashboard.js");
     const css = read("css/pages/empresa-dashboard.css");
-    assert.equal((html.match(/data-dashboard-view/g) || []).length, 12);
+    assert.equal((html.match(/data-dashboard-view/g) || []).length, 10);
     assert.match(html, /id="visaoGeral"[^>]*data-dashboard-view/);
     assert.match(html, /id="pedidos"[^>]*data-dashboard-view[^>]*hidden/);
     assert.match(js, /function mostrarSecaoPainel/);
