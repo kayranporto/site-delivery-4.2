@@ -910,24 +910,34 @@ function aplicarTamanhoFonte(valor) {
 }
 
 function configurarNavegacao() {
-    const links = [...document.querySelectorAll(".admin-sidebar nav a")];
+    const links = [...document.querySelectorAll('.admin-sidebar nav a[href^="#"]')];
     const linksMobile = [...document.querySelectorAll("[data-admin-mobile-link]")];
     const todosLinks = [...links, ...linksMobile];
-    const ativarDestino = (destino) => {
+    const views = [...document.querySelectorAll("[data-admin-view]")];
+    const destinos = new Set(views.map((view) => view.dataset.adminView));
+    const ativarDestino = (destino, { atualizarHistorico = false } = {}) => {
+        const id = String(destino || "#overview").replace(/^#/, "");
+        const viewAtiva = destinos.has(id) ? id : "overview";
+        views.forEach((view) => {
+            const ativa = view.dataset.adminView === viewAtiva;
+            view.hidden = !ativa;
+            view.setAttribute("aria-hidden", String(!ativa));
+        });
         todosLinks.forEach((item) => item.classList.toggle("active", item.getAttribute("href") === destino));
+        if (atualizarHistorico && location.hash !== `#${viewAtiva}`) history.pushState({ adminView: viewAtiva }, "", `#${viewAtiva}`);
+        window.scrollTo({ top: 0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
     };
-    todosLinks.forEach((link) => link.addEventListener("click", () => {
-        ativarDestino(link.getAttribute("href"));
+    todosLinks.forEach((link) => link.addEventListener("click", (event) => {
+        event.preventDefault();
+        ativarDestino(link.getAttribute("href"), { atualizarHistorico: true });
         adminSidebar.classList.remove("open"); adminOverlay.classList.remove("show");
     }));
-    if ("IntersectionObserver" in window) {
-        const observador = new IntersectionObserver((entradas) => {
-            const visivel = entradas.filter((entrada) => entrada.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-            if (!visivel) return;
-            ativarDestino(`#${visivel.target.id}`);
-        }, { rootMargin: "-20% 0px -65%", threshold: [0.05, 0.3] });
-        document.querySelectorAll("main section[id]").forEach((secao) => observador.observe(secao));
-    }
+    document.querySelectorAll('.admin-settings-grid a[href^="#"]').forEach((link) => link.addEventListener("click", (event) => {
+        event.preventDefault();
+        ativarDestino(link.getAttribute("href"), { atualizarHistorico: true });
+    }));
+    addEventListener("popstate", () => ativarDestino(location.hash));
+    addEventListener("hashchange", () => ativarDestino(location.hash));
     const destinoInicial = location.hash.slice(1);
     ativarDestino(destinoInicial && document.getElementById(destinoInicial) ? `#${destinoInicial}` : "#overview");
 }

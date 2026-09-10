@@ -1700,11 +1700,17 @@ function mostrarSecaoPainel(id, { atualizarHistorico = false, focar = false } = 
         if (ativo) link.setAttribute("aria-current", "page");
         else link.removeAttribute("aria-current");
     });
+    if (secaoId === "relatorios") {
+        document.querySelectorAll("[data-report-source]").forEach((destino) => {
+            const origem = document.getElementById(destino.dataset.reportSource);
+            if (origem) destino.textContent = origem.textContent;
+        });
+    }
     if (maisDashboard) {
         const principais = ["visaoGeral", "pedidos", "cardapio", "operacao"];
         maisDashboard.classList.toggle("active", !principais.includes(secaoId));
     }
-    const tituloMobile = { visaoGeral: empresa?.nome || "Painel do restaurante", pedidos: "Pedidos", cardapio: "Cardápio", operacao: "Entregas", financeiro: "Financeiro", cozinha: "Cozinha", promocoes: "Promoções", avaliacoes: "Avaliações", configuracoes: "Configurações" };
+    const tituloMobile = { visaoGeral: empresa?.nome || "Painel do restaurante", pedidos: "Pedidos", cardapio: "Cardápio", categorias: "Categorias", operacao: "Entregas", financeiro: "Financeiro", relatorios: "Relatórios", cozinha: "Cozinha", promocoes: "Promoções", avaliacoes: "Avaliações", configuracoes: "Configurações" };
     const titulo = document.getElementById("nomeEmpresa");
     if (titulo && matchMedia("(max-width: 620px)").matches) titulo.textContent = tituloMobile[secaoId] || document.getElementById(secaoId)?.getAttribute("aria-label") || empresa?.nome || "Restaurante";
     if (atualizarHistorico && location.hash !== `#${secaoId}`) {
