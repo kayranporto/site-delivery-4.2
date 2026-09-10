@@ -48,5 +48,5 @@ test("painel exige o nome da loja e chama somente a RPC protegida", () => {
   assert.match(js, /Todos os dados e arquivos da loja foram removidos permanentemente/);
   assert.match(js, /consulta\.is\("excluida_em", null\)/);
   assert.doesNotMatch(js, /from\("empresas"\)\.delete/);
-  assert.match(read("html/admin.html"), /admin\.js\?v=4\.4\.5\.1/);
+  assert.match(read("html/admin.html"), /admin\.js\?v=4\.9\.0/);
 });
