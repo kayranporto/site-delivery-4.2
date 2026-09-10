@@ -1,0 +1,63 @@
+/* Painel do restaurante — desktop aprovado. */
+@media (min-width: 821px) {
+  :root { --red:#ff5a1f; --red-dark:#df351b; --ink:#fffaf6; --ink-2:#1d1815; --muted:#a79d96; --line:#382e28; --page:#090807; --surface:#14110f; --green:#32c66d; --orange:#ff8a37; --blue:#ff7140; --purple:#ef2435; --sidebar:252px; --shadow:0 20px 55px rgba(0,0,0,.25); }
+  body { color-scheme:dark; color:var(--ink); background:var(--page); }
+  .dashboard-sidebar { padding:28px 18px; background:linear-gradient(180deg,#100d0b,#090807 74%); border-right:1px solid var(--line); box-shadow:none; }
+  .dashboard-brand>span { background:linear-gradient(135deg,#ff672c,#ef2435); box-shadow:0 10px 26px rgba(255,90,31,.18); }
+  .dashboard-brand strong { font-size:20px; }
+  .dashboard-brand small { color:#8d827b; }
+  .dashboard-sidebar nav { gap:5px; }
+  .dashboard-sidebar nav a { min-height:45px; color:#a99f98; border-radius:12px; }
+  .dashboard-sidebar nav a:hover { color:#fff; background:#1a1512; }
+  .dashboard-sidebar nav a.active { color:#fff; background:linear-gradient(90deg,rgba(255,90,31,.22),rgba(255,90,31,.04)); box-shadow:inset 3px 0 #ff5a1f; }
+  .sidebar-footer { background:#171310; border-color:var(--line); }
+  .sidebar-footer p { color:#928880; }
+  .sidebar-footer a { color:#ff7b46; }
+  .sidebar-logout { display:flex; width:100%; min-height:42px; align-items:center; gap:10px; margin-top:14px; padding:9px 11px; color:#ff8c80; background:#281411; border:1px solid #5b2c25; border-radius:11px; cursor:pointer; font-weight:800; }
+  .dashboard-header { min-height:80px; background:rgba(9,8,7,.9); border-color:var(--line); }
+  .header-copy span,.section-kicker { color:#ff6b35; }
+  .header-copy h1 { color:#fff; }
+  .alert-button,.logout-button,.refresh-button { color:#eee8e4; background:#171310; border-color:var(--line); }
+  .logout-button { color:#ff7f72; background:#281411; border-color:#5b2c25; }
+  .dashboard-main { max-width:1360px; padding-top:30px; }
+  .overview-hero { background:linear-gradient(125deg,#1c1511,#37170d 62%,#5a1c0d); border:1px solid #4c2c20; box-shadow:0 25px 65px rgba(0,0,0,.28); }
+  .overview-hero:after { background:radial-gradient(circle,rgba(255,90,31,.52),transparent 68%); }
+  .overview-copy p,.store-control small { color:#c2b8b1; }
+  .store-control { background:rgba(9,8,7,.46); border-color:rgba(255,255,255,.11); }
+  .dashboard-toolbar strong { color:#fff; }
+  .dashboard-toolbar select,.order-filters select { color:#fff; background:#171310; border-color:var(--line); }
+  .dashboard-card,.orders-section,.management-section,.metric-card { color:#fffaf6; background:linear-gradient(145deg,#16120f,#110f0d); border-color:var(--line); box-shadow:var(--shadow); }
+  .metric-card { box-shadow:none; }
+  .metric-card :is(strong,small,p),.section-heading :is(h2,h3) { color:inherit; }
+  .metric-card p,.metric-card small,.section-heading p,.section-heading>span { color:var(--muted); }
+  .metric-card.red .metric-icon,.metric-card.orange .metric-icon,.metric-card.blue .metric-icon,.metric-card.purple .metric-icon { color:#ff7b46; background:#32170f; }
+  .metric-card.green .metric-icon { color:#4ad37d; background:#14301e; }
+  .search-field,.kanban-column,.order-customer,.personalization-grid form,.link-form,.media-upload,.hours-row,.operation-item,.region-item,.stock-movement { background:#1b1714; border-color:#40342d; }
+  .search-field input,.field input,.field select,.field textarea,.review-response-form input,.prep-time-select,.hours-row input[type=time],.finance-period select { color:#fff; background:#1b1714; border-color:#40342d; }
+  .field input::placeholder,.field textarea::placeholder,.search-field input::placeholder { color:#746b65; }
+  .field label,.checkbox-admin { color:#eee7e2; }
+  .btn,.order-action.primary { background:linear-gradient(135deg,#ff672c,#ef2435); }
+  .order-card,.promo-card,.review-admin-card,.grupo-admin-card,.kitchen-ticket { color:#fffaf6; background:#1a1613; border-color:#40342d; box-shadow:none; }
+  .order-card strong,.top-product strong,.top-product>em,.review-customer strong { color:#fff; }
+  .order-card small,.top-product small,.promo-card p,.review-admin-card p { color:var(--muted); }
+  .table-wrap { border-color:var(--line); }
+  .table-wrap th { color:#a79d96; background:#1c1714; }
+  .table-wrap td { color:#e7dfda; border-color:#342b25; }
+  .chart-grid { stroke:#342b25; }
+  .chart-label { fill:#8f847d; }
+  .chart-point { fill:#14110f; }
+  .product-bar { background:#332a24; }
+  .finance-grid article,.kitchen-metrics article,.report-grid article { background:#1b1714; border-color:#40342d; }
+  .finance-grid article.highlight { background:linear-gradient(135deg,#4b190d,#24120c); border-color:#74301d; }
+  .operation-live { color:#49d77e; background:#15321f; }
+  .approval-alert { color:#ffd6a6; background:#291b0e; border-color:#5d401d; }
+  #cardapio .management-grid { grid-template-columns:1fr; }
+  .restaurant-report-grid { grid-template-columns:repeat(4,minmax(0,1fr)); }
+  .report-shortcuts { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-top:18px; }
+  .report-shortcuts a { padding:16px; color:#fff; background:#1b1714; border:1px solid #40342d; border-radius:13px; text-align:center; text-decoration:none; font-size:12px; font-weight:800; }
+  .report-shortcuts a:hover { color:#ff7b46; border-color:#7c3823; transform:translateY(-2px); }
+}
+
+@media (max-width: 820px) {
+  .sidebar-logout { display:flex; width:100%; min-height:44px; align-items:center; gap:10px; margin-top:12px; padding:10px 12px; color:#ff7c72; background:#291514; border:1px solid #5b2d29; border-radius:11px; font-weight:800; }
+}

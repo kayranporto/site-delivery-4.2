@@ -53,7 +53,7 @@
     const pagamento = () => document.querySelector("input[name='pagamento']:checked:not(:disabled)")?.value || "";
     const rotuloPagamento = (valor) => ({
         PIX: "PIX na entrega",
-        "Cartão": "Cartão na entrega",
+        "Cartão": "Cartão",
         Dinheiro: "Dinheiro",
         Online: "Pagamento online"
     })[valor] || "Não selecionado";

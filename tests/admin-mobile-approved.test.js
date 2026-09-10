@@ -42,7 +42,8 @@ test("navegação mobile e menu lateral permanecem sincronizados", () => {
   const js = read("js/pages/admin.js");
   assert.match(js, /\[data-admin-mobile-link\]/);
   assert.match(js, /const todosLinks = \[\.\.\.links, \.\.\.linksMobile\]/);
-  assert.match(js, /ativarDestino\(`#\$\{visivel\.target\.id\}`\)/);
+  assert.match(js, /document\.querySelectorAll\("\[data-admin-view\]"\)/);
+  assert.match(js, /view\.hidden = !ativa/);
   assert.match(js, /adminMobileMore/);
   assert.match(js, /adminMobileNav/);
   assert.match(js, /pendentesMobileMenu/);
