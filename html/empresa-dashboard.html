@@ -17,7 +17,6 @@
   <link rel="stylesheet" href="../css/core/accessibility.css?v=4.2.0"/>
   <link rel="stylesheet" href="../css/core/enhancements.css?v=4.4.6"/>
   <link rel="stylesheet" href="../css/pages/empresa-overview-mobile.css?v=4.6.4"/>
-  <link rel="stylesheet" href="../css/pages/empresa-desktop-approved.css?v=5.0.0"/>
 </head>
 <body>
   <noscript>Este site precisa de JavaScript habilitado para funcionar.</noscript>
@@ -28,19 +27,20 @@
       <div><strong>Multi</strong><small>RESTAURANTE</small></div>
     </a>
     <nav aria-label="Seções do painel">
-      <a class="active" href="#visaoGeral" aria-current="page"><span>⌂</span> Dashboard</a>
+      <a class="active" href="#visaoGeral" aria-current="page"><span>⌂</span> Visão geral</a>
       <a href="#pedidos"><span>▣</span> Pedidos <b id="pedidosAtivosMenu">0</b></a>
+      <a href="#cozinha"><span>♨</span> Cozinha <b id="pedidosCozinhaMenu">0</b></a>
       <a href="#cardapio"><span>☷</span> Cardápio</a>
-      <a href="#categorias"><span>▤</span> Categorias</a>
+      <a href="#personalizacoes"><span>✦</span> Personalizações</a>
       <a href="#promocoes"><span>%</span> Promoções</a>
       <a href="#avaliacoes"><span>★</span> Avaliações</a>
+      <a href="#operacao"><span>◷</span> Operação</a>
       <a href="#financeiro"><span>R$</span> Financeiro</a>
-      <a href="#relatorios"><span>↗</span> Relatórios</a>
       <a href="#configuracoes"><span>⚙</span> Configurações</a>
     </nav>
     <div class="sidebar-footer">
+      <p>Precisa conferir a experiência do cliente?</p>
       <a id="linkLoja" href="../index.html">Abrir minha loja <span>↗</span></a>
-      <button class="sidebar-logout" id="logoutEmpresa" type="button"><span aria-hidden="true">↪</span> Sair</button>
     </div>
   </aside>
 
@@ -56,6 +56,7 @@
         <button class="alert-button" id="ativarAlertas" type="button" aria-pressed="false">
           <span aria-hidden="true">🔔</span><span class="alert-label">Ativar alertas</span>
         </button>
+        <button class="logout-button" id="logoutEmpresa" type="button">Sair</button>
       </div>
     </header>
 
@@ -168,6 +169,14 @@
         </div>
         <div class="management-grid">
           <article class="dashboard-card">
+            <h3>Categorias</h3>
+            <form class="inline-form" id="categoriaForm">
+              <div class="field"><label for="novaCategoria">Nome da categoria</label><input id="novaCategoria" maxlength="80" placeholder="Ex.: Hambúrgueres" required/></div>
+              <button class="btn" type="submit">Adicionar</button>
+            </form>
+            <div class="chips-admin" id="categoriasEmpresa" aria-live="polite"></div>
+          </article>
+          <article class="dashboard-card">
             <h3 id="produtoFormTitulo">Novo produto</h3>
             <form id="produtoForm">
               <div class="grid">
@@ -215,18 +224,6 @@
             <button class="btn" id="varianteSalvar" type="submit">Adicionar variação</button>
           </form>
           <div class="variants-list" id="variantesEmpresa"><p class="empty">Cadastre um produto para adicionar variações.</p></div>
-        </article>
-      </section>
-
-      <section class="management-section dashboard-view" id="categorias" data-dashboard-view tabindex="-1" aria-label="Categorias" hidden>
-        <div class="section-heading"><div><span class="section-kicker">ORGANIZAÇÃO</span><h2>Categorias do cardápio</h2><p>Crie e organize as seções usadas pelos clientes para encontrar seus produtos.</p></div></div>
-        <article class="dashboard-card settings-card">
-          <h3>Nova categoria</h3>
-          <form class="inline-form" id="categoriaForm">
-            <div class="field"><label for="novaCategoria">Nome da categoria</label><input id="novaCategoria" maxlength="80" placeholder="Ex.: Hambúrgueres" required/></div>
-            <button class="btn" type="submit">Adicionar categoria</button>
-          </form>
-          <div class="chips-admin" id="categoriasEmpresa" aria-live="polite"></div>
         </article>
       </section>
 
@@ -332,20 +329,6 @@
         <article class="mobile-finance-chart-card"><div><small>Vendas ao longo do período</small><strong id="financeChartTotal">R$ 0,00</strong></div><div class="mobile-finance-chart" id="financeChart" role="img" aria-label="Gráfico de vendas"></div></article>
         <section class="mobile-payments"><div class="mobile-section-title"><h3>Pagamentos de pedidos</h3><span id="financePaymentsCount">0 pedidos</span></div><div id="financePaymentsList"></div></section>
         <p class="finance-note" id="financeNota">Valores estimados; a conciliação final depende do provedor de pagamento.</p>
-      </section>
-
-      <section class="management-section dashboard-view" id="relatorios" data-dashboard-view tabindex="-1" aria-label="Relatórios" hidden>
-        <div class="section-heading"><div><span class="section-kicker">DESEMPENHO</span><h2>Relatórios da loja</h2><p>Acompanhe os principais números da operação e acesse os detalhes financeiros.</p></div><a class="btn" href="#financeiro" data-dashboard-link>Ver financeiro</a></div>
-        <div class="finance-grid restaurant-report-grid" aria-label="Resumo do relatório">
-          <article><small>Pedidos</small><strong data-report-source="totalPedidos">0</strong></article>
-          <article><small>Faturamento</small><strong data-report-source="faturamento">R$ 0,00</strong></article>
-          <article><small>Ticket médio</small><strong data-report-source="ticketMedio">R$ 0,00</strong></article>
-          <article><small>Produtos disponíveis</small><strong data-report-source="produtosDisponiveis">0 disponíveis</strong></article>
-        </div>
-        <article class="dashboard-card">
-          <div class="section-heading"><div><h3>Visão consolidada</h3><p>Os indicadores respeitam o período selecionado no Dashboard. Use o Financeiro para consultar repasses, taxas e pagamentos.</p></div></div>
-          <div class="report-shortcuts"><a href="#visaoGeral" data-dashboard-link>Atualizar período</a><a href="#pedidos" data-dashboard-link>Consultar pedidos</a><a href="#financeiro" data-dashboard-link>Detalhes financeiros</a></div>
-        </article>
       </section>
 
       <section class="management-section dashboard-view" id="configuracoes" data-dashboard-view tabindex="-1" aria-label="Configurações" hidden>
