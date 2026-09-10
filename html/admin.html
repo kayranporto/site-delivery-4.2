@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' https://cdn.jsdelivr.net https://challenges.cloudflare.com 'sha256-u0u1ecLVPYNekrgEx+XAUkD4bQUKUR6DUioTn79RARQ='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://challenges.cloudflare.com https://va.vercel-scripts.com; frame-src 'self' https://challenges.cloudflare.com; worker-src 'self' blob:; manifest-src 'self'; form-action 'self'; upgrade-insecure-requests"/>
   <meta name="referrer" content="strict-origin-when-cross-origin"/>
-  <meta name="theme-color" content="#111522"/>
+  <meta name="theme-color" content="#0b0908"/>
   <meta name="description" content="Administração da plataforma Multi Delivery."/>
   <title>Administração | Multi Delivery</title>
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml"/>
@@ -16,8 +16,9 @@
   <link rel="stylesheet" href="../css/pages/admin.css?v=4.4.5"/>
   <link rel="stylesheet" href="../css/core/accessibility.css?v=4.2.0"/>
   <link rel="stylesheet" href="../css/core/enhancements.css?v=4.4.6"/>
+  <link rel="stylesheet" href="../css/pages/admin-mobile-approved.css?v=4.9.0"/>
 </head>
-<body>
+<body class="admin-platform">
   <noscript>Este site precisa de JavaScript habilitado.</noscript>
   <div class="admin-loading" id="adminLoading"><span></span><strong>Verificando acesso administrativo...</strong></div>
 
@@ -126,6 +127,13 @@
       </main>
     </div>
   </div>
+  <nav class="admin-mobile-nav" id="adminMobileNav" aria-label="Navegação administrativa" hidden>
+    <a class="active" href="#overview" data-admin-mobile-link><span aria-hidden="true">⌂</span><small>Início</small></a>
+    <a href="#pedidos" data-admin-mobile-link><span aria-hidden="true">▣</span><small>Pedidos</small><b id="pedidosMobileMenu" hidden>0</b></a>
+    <a href="#restaurantes" data-admin-mobile-link><span aria-hidden="true">▦</span><small>Restaurantes</small><b id="pendentesMobileMenu" hidden>0</b></a>
+    <a href="#usuarios" data-admin-mobile-link><span aria-hidden="true">♙</span><small>Usuários</small></a>
+    <button id="adminMobileMore" type="button" aria-label="Abrir mais opções"><span aria-hidden="true">•••</span><small>Mais</small></button>
+  </nav>
   <div class="admin-overlay" id="adminOverlay"></div>
   <div class="admin-modal" id="adminModal" hidden>
     <button class="admin-modal-backdrop" type="button" data-modal-close aria-label="Fechar janela"></button>
@@ -143,7 +151,7 @@
   <script defer src="../js/core/config.js?v=4.4.6"></script>
   <script defer src="../js/core/monitoring.js?v=4.2.0"></script>
   <script defer src="../js/core/notifications.js?v=4.2.0"></script>
-  <script defer src="../js/pages/admin.js?v=4.4.5.1"></script>
+  <script defer src="../js/pages/admin.js?v=4.9.0"></script>
   <script defer src="../js/modules/operacao-admin.js?v=4.2.0"></script>
   <script defer src="../js/core/site-enhancements.js?v=4.4.6"></script>
 </body>
